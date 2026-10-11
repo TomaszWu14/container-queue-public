@@ -5,7 +5,7 @@
 **Jeden wspólny obraz dostaw kontenerowych dla logistyki kilku spółek, magazynów, spedytorów i agencji
 celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
-![demo](docs/screenshots/demo.gif) <!-- DO UZUPEŁNIENIA: nagranie GIF, patrz docs/screenshots/README.md -->
+![Błędny numer kontenera zatrzymany walidacją ISO 6346, poprawka i wpis w historii zmian](docs/screenshots/demo.gif)
 
 📹 [Prezentacja działania — 2 min](<DO UZUPEŁNIENIA: link YouTube>)
 
