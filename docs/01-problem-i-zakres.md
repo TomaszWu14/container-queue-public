@@ -12,14 +12,17 @@ Skutki, które wynikają z tego układu:
   Etapu kontenera nie było, każdy wyciągał go z dat po swojemu
   (`backend/app/importers/queue.py:158-182`).
 - **Brak historii.** Nie było wiadomo, kto zmienił datę dostawy i dlaczego.
+- **Brak walidacji.** Arkusz przyjmował dowolną wartość, także błędny numer kontenera.
+- **Gubienie informacji** między kolejnymi wersjami pliku i mailami.
 - **Brak widoczności dla partnerów.** Magazyny, spedytorzy i agencja celna pracowali na
   kopiach pliku albo na mailach.
 - **Awizacja i dokumenty mailem.** Termin dostawy ustalano korespondencją ze spedytorem,
   drafty zgłoszeń celnych przychodziły jako załączniki (`tools/outlook-sad/Zbierz-SAD.ps1`).
 
-Skala i koszt: `<DO UZUPEŁNIENIA: liczba kontenerów miesięcznie, liczba osób zaangażowanych,
-koszt przestoju / demurrage, czas tygodniowo na uzgadnianie arkusza>`.
-Jedyna liczba z dokumentacji projektu: przy migracji z Excela wczytano **214 kontenerów, z czego 84
+Skala i koszt: **ok. 200 kontenerów miesięcznie**, 4 spółki, 2 magazyny, 3 spedytorów.
+Arkusz prowadziły **4 osoby w logistyce**; jego utrzymanie, uzgadnianie wersji i wyjaśnianie
+mailowe zajmowało łącznie **ok. 30 godzin tygodniowo**.
+Przy migracji z Excela wczytano **214 kontenerów, z czego 84
 zrealizowane** (`docs/SPECYFIKACJA.md`, §8).
 
 ## Cel
@@ -80,8 +83,8 @@ z magazynu zewnętrznego, kartoteka dostawców, analityka, baza wiedzy. Szczegó
 | Czego nie ma | Dlaczego | Źródło |
 |---|---|---|
 | Zapisu do SAP | system tylko czyta pliki eksportu i raporty Power BI; SAP pozostaje źródłem zamówień | `backend/app/routers/imports_master.py`, `backend/app/powerbi.py` |
-| Trackingu kontenerów u armatora | integracja z zewnętrznym dostawcą została usunięta decyzją biznesową; ETA wpisuje logistyka albo import z Excela, statki śledzi AIS | `docs/SPECYFIKACJA.md` §4, `backend/app/tracking/service.py:1-4` |
-| Publicznego linku dla klienta i strony kierowcy | usunięte 2026-10-07; publiczne zostały tylko formularze awizacji i wywołania palet | `backend/app/models/links.py:1` — powód `<DO UZUPEŁNIENIA>` |
+| Trackingu kontenerów u armatora | integracja z zewnętrznym dostawcą wyłączona w obecnej wersji, planowany powrót w kolejnym etapie; do tego czasu ETA wpisuje logistyka albo import z Excela, statki śledzi AIS | `docs/SPECYFIKACJA.md` §4, `backend/app/tracking/service.py:1-4` |
+| Publicznego linku dla klienta i strony kierowcy | usunięte 2026-10-07; publiczne zostały tylko formularze awizacji i wywołania palet; powód: ryzyko udostępnienia danych osobom trzecim | `backend/app/models/links.py:1` |
 | Twardej blokady statusu przy brakujących dokumentach | brak dokumentu daje ostrzeżenie z powodem w historii, nie blokadę | [06-decyzje.md](06-decyzje.md), D4 |
 | Twardej blokady limitu dziennego magazynu | przekroczenie = ostrzeżenie i wpis „kto zignorował limit” | [06-decyzje.md](06-decyzje.md), D5 |
 | Automatycznej zmiany statusu z bramy i rozładunku | brama i rampa to osobny wymiar (`ramp_stage`); status DOSTARCZONY potwierdza człowiek | `backend/app/routers/warehouse_ops.py:107` |

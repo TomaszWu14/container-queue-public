@@ -6,7 +6,7 @@ Obserwacje z analizy kodu (commit `9dd73a1`). To lista stanu, nie plan prac.
 ## Czego system nie robi
 
 Pełna lista z uzasadnieniem: [01-problem-i-zakres.md](01-problem-i-zakres.md#poza-zakresem--czego-system-świadomie-nie-robi).
-W skrócie: nie zapisuje do SAP, nie śledzi kontenerów u armatora, nie blokuje statusu przy brakach
+W skrócie: nie zapisuje do SAP, w obecnej wersji nie śledzi kontenerów u armatora, nie blokuje statusu przy brakach
 dokumentów ani przy przekroczonym limicie magazynu, nie ma publicznego linku dla klienta.
 
 ## Ograniczenia architektury
@@ -80,7 +80,11 @@ Dokumenty 01–07 opisują stan z kodu i mają pierwszeństwo przed starszymi op
 
 ## Co dalej
 
-`<DO UZUPEŁNIENIA: priorytety dalszego rozwoju — np. zamknięcie okresu przejściowego z Excelem,
-decyzja o maszynie stanów odprawy, ujednolicenie reguły ETA + N>`
+Stan: aplikacja jest w fazie testów z użytkownikami.
+
+1. Zakończenie testów i wejście na produkcję; koniec okresu przejściowego z Excelem ([06](06-decyzje.md), D6).
+2. Powrót trackingu kontenerów ([06](06-decyzje.md), D10).
+3. Kandydaci z analizy kodu: jedna reguła „ETA + N” (P-02, P-03), kraj magazynu zamiast stałego PL
+   (P-06), poprawka fałszywego sukcesu przy awizacji (P-01), limit żądań na linku palet (T-01).
 
 Lista pomysłów na automatyzację: [`pomysly-automatyzacje.md`](pomysly-automatyzacje.md).

@@ -17,7 +17,8 @@ pokazowymi uruchomisz lokalnie trzema komendami — sekcja [Jak uruchomić](#jak
 
 ## Problem → rozwiązanie
 
-Kolejka dostaw kilku spółek żyła w jednym arkuszu Excel. Arkusz nie miał statusu kontenera ani
+Kolejka dostaw kilku spółek — ok. 200 kontenerów miesięcznie — żyła w jednym arkuszu Excel, który
+4 osobom w logistyce zabierał łącznie ok. 30 godzin tygodniowo. Arkusz nie miał statusu kontenera ani
 historii zmian, a magazyny, spedytorzy i agencja celna pracowali na kopiach pliku i na mailach.
 Aplikacja daje każdej stronie ten sam stan kontenera — od zamówienia, przez statek i odprawę, po
 rozładunek — z historią każdej zmiany i z podziałem danych między spółki i partnerów.
@@ -95,7 +96,7 @@ Testy backendu: `pip install -r requirements-dev.txt && python -m pytest tests/`
 
 W zakresie jest rdzeń procesu: kolejka, cykl kontenera, odprawa, dokumenty, plan i awizacja dostawy,
 rozładunek, separacja danych i historia zmian. Czego system świadomie nie robi — nie zapisuje do SAP,
-nie śledzi kontenerów u armatora, nie blokuje statusu przy brakach dokumentów — opisuje
+na razie nie śledzi kontenerów u armatora, nie blokuje statusu przy brakach dokumentów — opisuje
 [01](docs/01-problem-i-zakres.md); znane problemy i ograniczenia — [07](docs/07-ograniczenia.md).
 
 Aplikacja ma też moduły poboczne (wyceny transportu, śledzenie statków AIS, faktury, reklamacje,
@@ -103,5 +104,10 @@ analityka), opisane technicznie w [`docs/TECHNICZNE.md`](docs/TECHNICZNE.md).
 
 ## Kontekst projektu
 
-<DO UZUPEŁNIENIA: dla kogo powstał system, Twoja rola (analiza, wywiad projektowy, wdrożenie),
-czas trwania, czy i jak długo działał produkcyjnie, co się zmieniło po wdrożeniu>
+System powstał dla działu logistyki grupy kilku spółek importujących towar w kontenerach
+(ok. 200 kontenerów miesięcznie, 4 spółki, 2 magazyny, 3 spedytorów). Arkusz kolejki kosztował
+4 osoby łącznie ok. 30 godzin tygodniowo.
+
+Prowadziłem projekt sam, od lipca do października 2026: wywiad projektowy i wymagania
+([SPECYFIKACJA.md](docs/SPECYFIKACJA.md)), model procesu i danych, decyzje, implementację,
+testy i wdrożenie. Aplikacja jest obecnie w fazie testów z użytkownikami.

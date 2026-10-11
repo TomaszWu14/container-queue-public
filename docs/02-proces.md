@@ -47,7 +47,8 @@ flowchart TD
 ```
 
 Problemy tego układu opisuje [01-problem-i-zakres.md](01-problem-i-zakres.md).
-`<DO UZUPEŁNIENIA: kto prowadził arkusz, jak często, ile trwało uzgodnienie jednej dostawy>`
+Skala: ok. 200 kontenerów miesięcznie, arkusz prowadziły 4 osoby w logistyce, łącznie ok. 30 godzin
+tygodniowo na utrzymanie arkusza i uzgadnianie wersji.
 
 ## Proces PO wdrożeniu
 

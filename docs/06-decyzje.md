@@ -62,7 +62,8 @@ Tam, gdzie powód nie został nigdzie zapisany, jest to zaznaczone.
 - **Wybór.** Przekroczenie limitu jest dozwolone; system ostrzega i zapisuje w historii, kto
   zignorował limit.
 - **Dlaczego.** Ustalone w wywiadzie projektowym (`SPECYFIKACJA.md` §3) i potwierdzone 2026-09-28
-  (`REGULY-PROCESU.md`). Uzasadnienie: `<DO UZUPEŁNIENIA>`.
+  (`REGULY-PROCESU.md`). Pilne dostawy muszą się zmieścić mimo limitu, więc decyzja zostaje
+  u człowieka; system pilnuje tylko, żeby było wiadomo, kto limit przekroczył.
 - **Skutki.** Do limitu liczą się tylko dostawy potwierdzone, niezakończone i nie-tranzytowe
   (`planning.py:92-115`).
 
@@ -111,18 +112,20 @@ Tam, gdzie powód nie został nigdzie zapisany, jest to zaznaczone.
   jednej warstwy ([04](04-model-danych.md), niespójność 9).
 - **Źródło.** `deps.py:60-142`, `deps.py:363-468`; `CLAUDE.md` repozytorium.
 
-## D10. Rezygnacja z zewnętrznego trackingu kontenerów
+## D10. Wyłączenie zewnętrznego trackingu kontenerów na obecny etap
 
-- **Wybór.** Integracja z dostawcą trackingu kontenerów została usunięta; pozycje statków daje AIS,
+- **Wybór.** Integracja z dostawcą trackingu kontenerów została usunięta z obecnej wersji; pozycje statków daje AIS,
   a status kontenera zmienia człowiek.
-- **Dlaczego.** „Decyzja biznesowa” (`SPECYFIKACJA.md` §4). Szczegóły: `<DO UZUPEŁNIENIA>`.
+- **Dlaczego.** „Decyzja biznesowa” (`SPECYFIKACJA.md` §4): integracja wyłączona w obecnej wersji,
+  a tracking kontenerów jest planowany w kolejnym etapie rozwoju.
 - **Źródło.** `tracking/service.py:1-4`.
 
 ## D11. Usunięcie publicznych linków dla klienta i kierowcy
 
 - **Wybór (2026-10-07).** Usunięto link „mój kontener” dla klienta i stronę dostawy dla kierowcy.
   Publiczne zostały tylko formularze awizacji i wywołania palet.
-- **Dlaczego.** `<DO UZUPEŁNIENIA>`
+- **Dlaczego.** Ryzyko udostępnienia danych osobom trzecim: link przesłany dalej otwierał dane
+  dostawy bez logowania. Publiczne zostały tylko formularze, które są jednorazowe i krótko ważne.
 - **Skutki.** Informacja o przyjeździe auta do logistyki idzie teraz z bramy magazynu
   (`routers/warehouse_ops.py:139`).
 - **Źródło.** `models/links.py:1`.
