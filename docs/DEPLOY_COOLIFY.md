@@ -9,7 +9,7 @@ nie wdraża** — wdrożenie to ręczny Redeploy w Coolify (sekcja 4).
 
 1. **+ New Resource → Public Repository** (lub **Private Repository (GitHub App)**,
    jeśli repo jest prywatne — zainstaluj GitHub App wg kreatora Coolify).
-2. Adres repozytorium: `https://github.com/TomaszWu14/container-queue`, gałąź: `main`.
+2. Adres repozytorium: `https://github.com/TomaszWu14/container-queue-public`, gałąź: `main`.
 3. **Build Pack: Docker Compose**.
 4. **Docker Compose Location:** `/docker-compose.coolify.yml`.
 
