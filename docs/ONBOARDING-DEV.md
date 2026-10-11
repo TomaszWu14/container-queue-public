@@ -5,7 +5,7 @@
 
 ## 1. Kod (2 min)
 ```sh
-git clone https://github.com/TomaszWu14/container-queue.git && cd container-queue
+git clone https://github.com/TomaszWu14/container-queue-public.git && cd container-queue-public
 ```
 Przeczytaj: `CLAUDE.md` (reguły repo — skrót w pkt 5), `docs/ARCHITEKTURA.md`,
 `graphify-out/wiki/index.md` (mapa kodu), `docs/REGULY-PROCESU.md` (reguły biznesowe).
