@@ -7,6 +7,8 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 ![Błędny numer kontenera zatrzymany walidacją ISO 6346, poprawka i wpis w historii zmian](docs/screenshots/demo.gif)
 
+📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
+
 Publicznego demo nie ma: wersja produkcyjna działa na danych firmowych. Aplikację z danymi
 pokazowymi uruchomisz lokalnie trzema komendami — sekcja [Jak uruchomić](#jak-uruchomić).
 
