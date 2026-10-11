@@ -7,3 +7,5 @@ backend/tests/test_master_quality.py:generic-api-key:51
 backend/tests/test_import_autodetect.py:generic-api-key:92
 backend/tests/test_login_limiter.py:generic-api-key:11
 backend/tests/test_log_file.py:generic-api-key:12
+# Przykładowa wartość DEMO_PASSWORD w instrukcji README (placeholder, nie sekret)
+6490a129c71122b69b17530188e7840079917c28:README.md:generic-api-key:75

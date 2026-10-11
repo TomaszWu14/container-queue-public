@@ -73,7 +73,7 @@ dotyczy, i wgrywa 150 fikcyjnych kontenerów oraz konto `demo` tylko do odczytu:
 
 ```bash
 cd backend
-export DEMO_READONLY_LOGINS=demo DEMO_PASSWORD='haslo-min-12-znakow'
+export DEMO_READONLY_LOGINS=demo DEMO_PASSWORD='<min. 12 znaków>'
 python -m scripts.seed_demo --wyczysc-wszystko
 uvicorn app.main:app                          # zaloguj się jako demo
 ```
