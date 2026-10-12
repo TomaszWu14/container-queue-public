@@ -9,8 +9,9 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
 
-Publicznego demo nie ma: wersja produkcyjna działa na danych firmowych. Aplikację z danymi
-pokazowymi uruchomisz lokalnie trzema komendami — sekcja [Jak uruchomić](#jak-uruchomić).
+🌐 **Demo online: [container.queue.twapp.pl](https://container.queue.twapp.pl)** — login `demo`,
+hasło `demoportfolio2026` (tylko podgląd, 150 fikcyjnych kontenerów, dane wgrywane od nowa przy każdym
+wdrożeniu). Lokalnie uruchomisz to samo trzema komendami — sekcja [Jak uruchomić](#jak-uruchomić).
 
 > **Projekt portfolio.** Nazwy firm są zamienione na fikcyjne, dane demo i testowe są syntetyczne.
 > Kod udostępniony do wglądu, wszelkie prawa zastrzeżone — [`LICENSE`](LICENSE).
