@@ -124,4 +124,14 @@ def public_branding():
     return {"name": settings.portal_brand_name or settings.app_name,
             "logo_url": settings.portal_logo_url,
             # tylko instancja portfolio: dane konta demo na ekranie logowania
-            "demo_hint": settings.demo_login_hint}
+            "demo_hint": settings.demo_login_hint,
+            **_demo_account(),
+            "support_email": settings.support_email}
+
+
+def _demo_account() -> dict:
+    """Login i hasło konta demo (jawne z założenia — konto tylko do odczytu) albo puste."""
+    logins = [x.strip() for x in settings.demo_readonly_logins.split(",") if x.strip()]
+    if not logins or not settings.demo_password:
+        return {"demo_login": "", "demo_password": ""}
+    return {"demo_login": logins[0], "demo_password": settings.demo_password}

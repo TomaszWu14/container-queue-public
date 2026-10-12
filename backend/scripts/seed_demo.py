@@ -12,13 +12,15 @@ import datetime as dt
 import os
 import pathlib
 import random
+import secrets
 import sys
 
 from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.main import bootstrap  # przez app.main: kolejność importów omija cykl modułów (ARCH-002)
 from app.iso6346 import check_digit
-from app.models import Company, Container, CustomsAgency, Forwarder, User, Warehouse
+from app.models import (AuditLog, Company, Container, CustomsAgency, Forwarder, TrackingEvent, User,
+                        Warehouse)
 from app.models.enums import ContainerStatus, Role, today_pl
 from app.security import hash_password, validate_password_policy
 
@@ -26,6 +28,10 @@ FLAG = "--wyczysc-wszystko"
 SUPPLIERS = ["Ningbo Demo Trading Co.", "Qingdao Przykładowe Tekstylia", "Shenzhen Pokazowa Elektronika",
              "Xiamen Wzorcowe Meble", "Dostawca Portugalski Demo Lda", "Foshan Testowe Oświetlenie"]
 VESSELS = ["DEMO EXPRESS", "SAMPLE STAR", "PRZYKŁAD MAERSK", "TEST HORIZON"]
+# ostatnie zdarzenie trackingu wg etapu — porty z tracking/geo.py, żeby punkt trafił na mapę
+TRACK = {ContainerStatus.TRANSPORT_WSTEPNY: ("LOAD", "Załadunek na statek", ["NINGBO", "QINGDAO", "SHENZHEN", "XIAMEN"]),
+         ContainerStatus.W_TRANSPORCIE: ("TRANSSHIP", "Przeładunek", ["SINGAPORE", "COLOMBO", "PORT SAID", "PIRAEUS"]),
+         ContainerStatus.W_PORCIE: ("DISCHARGE", "Wyładunek w porcie", ["GDANSK", "HAMBURG", "ROTTERDAM"])}
 
 
 def refuse(msg: str) -> None:
@@ -77,12 +83,24 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
         db.add(User(login=login, hashed_password=hash_password(password), role=Role.logistics,
                     company_id=acme.id, view_all_companies=True, full_name="Konto demo",
                     email=f"{login}@example.com"))
+    # autor historii zmian — fikcyjna, nieaktywna (nie zaloguje się), hasło losowe i nieznane
+    author = User(login="m.przykladowa", full_name="Marta Przykładowa", role=Role.logistics,
+                  company_id=acme.id, email="m.przykladowa@example.com", is_active=False,
+                  hashed_password=hash_password(secrets.token_urlsafe(24)))
+    db.add(author)
+    db.flush()
     statuses, today = list(ContainerStatus), today_pl()
-    for i in range(n):
-        eta = today + dt.timedelta(days=random.randint(-45, 90))
+    # ETA zagęszczone wokół dziś (domyślny widok kolejki = bieżący tydzień nie może świecić
+    # pustką); status wg ETA w kolejności procesu: najpóźniejsze ZAPOWIEDZIANY, minione zrealizowane
+    offsets = sorted((round(random.triangular(-45, 45, -10)) for _ in range(n)), reverse=True)
+    for i, offset in enumerate(offsets):
+        eta = today + dt.timedelta(days=offset)
         driver = i % 4 == 0
-        db.add(Container(
-            container_no=container_no(i), company_id=acme.id, status=statuses[i % len(statuses)],
+        status = statuses[i * len(statuses) // n]
+        track = TRACK.get(status)
+        container = Container(
+            container_no=container_no(i), company_id=acme.id, status=status,
+            rf_number=f"RF-DEMO-{i:04d}" if track else "",
             warehouse_id=[dlt.id, wz.id, None][i % 3], supplier_raw=SUPPLIERS[i % len(SUPPLIERS)],
             vessel=VESSELS[i % len(VESSELS)], eta=eta, notify_date=eta + dt.timedelta(days=5) if i % 3 else None,
             forwarder_id=fw.id if i % 2 == 0 else None, customs_agency_id=agency.id if i % 5 == 0 else None,
@@ -90,11 +108,34 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
             driver_name=f"Kierowca Demo {i}" if driver else "",
             driver_phone=f"+48 000 000 {i:03d}" if driver else "",
             truck_no=f"DEMO{i:03d}" if driver else "",
-        ))
+        )
+        db.add(container)
+        db.flush()
+        _history(db, container, statuses, author, today)
+        if track:   # mapa śledzenia pokazuje kontenery z RF i ostatnim faktycznym zdarzeniem
+            code, desc, ports = track
+            db.add(TrackingEvent(container_id=container.id, event_code=code, description=desc,
+                                 location=ports[i % len(ports)], vessel=container.vessel,
+                                 occurred_at=dt.datetime.combine(today, dt.time(8)) - dt.timedelta(days=1 + i % 5),
+                                 source="demo"))
     db.commit()
     count = db.query(Container).count()
     db.close()
     return count
+
+
+def _history(db, container: Container, statuses: list, author: User, today: dt.date) -> None:
+    """Historia kontenera: utworzenie + kolejne zmiany statusu do bieżącego (rosnące daty)."""
+    reached = statuses.index(container.status)
+    start = dt.datetime.combine(min(container.eta, today) - dt.timedelta(days=50), dt.time(9))
+    end = dt.datetime.combine(min(container.eta + dt.timedelta(days=5), today), dt.time(15))
+    step = (end - start) / (reached + 1)
+    rows = [("created", None, container.container_no)] + [
+        ("status", statuses[k - 1].value, statuses[k].value) for k in range(1, reached + 1)]
+    for k, (field, old, new) in enumerate(rows):
+        db.add(AuditLog(entity_type="containers", entity_id=container.id, field=field,
+                        old_value=old, new_value=new, user_id=author.id,
+                        created_at=(start + step * k).replace(second=0, microsecond=0)))
 
 
 def main(argv: list[str]) -> None:
