@@ -406,11 +406,16 @@ def _enforce_password_change(request: Request, user: User) -> None:
 _DEMO_ALLOWED_WRITES = {"/api/auth/logout", "/api/auth/refresh"}
 
 
+def is_demo_login(login: str) -> bool:
+    """Konto z DEMO_READONLY_LOGINS (instancja portfolio) — wspólne dla wielu osób naraz."""
+    demo = {x.strip().lower() for x in settings.demo_readonly_logins.split(",") if x.strip()}
+    return login.strip().lower() in demo
+
+
 def _enforce_demo_readonly(request: Request, user: User) -> None:
     """Instancja portfolio: konta z DEMO_READONLY_LOGINS tylko czytają (egzekwowane w API,
     nie ukryciem przycisków)."""
-    demo = {x.strip().lower() for x in settings.demo_readonly_logins.split(",") if x.strip()}
-    if (demo and user.login.lower() in demo and request.method not in ("GET", "HEAD", "OPTIONS")
+    if (is_demo_login(user.login) and request.method not in ("GET", "HEAD", "OPTIONS")
             and request.url.path not in _DEMO_ALLOWED_WRITES):
         raise HTTPException(status.HTTP_403_FORBIDDEN,
                             "Konto demo — tylko podgląd, zmiany są wyłączone.")

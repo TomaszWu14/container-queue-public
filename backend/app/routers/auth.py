@@ -44,6 +44,7 @@ from ..security import (
     get_current_user,
     hash_backup_code,
     hash_password,
+    is_demo_login,
     issue_refresh_token,
     login_limiter,
     revoke_user_refresh_tokens,
@@ -108,9 +109,12 @@ def login(request: Request, response: Response,
     # SEC-012: trzeci licznik — konto ze wszystkich IP (rozproszony brute force), z
     # progresywną przerwą; liczony też dla nieistniejących loginów (bez wyroczni istnienia)
     acct_key = f"acct:{form.username.strip().lower()}"
+    # wspólne konto demo: blokada konta (SEC-012) odcięłaby je wszystkim — zostają limity IP
+    demo = is_demo_login(form.username)
     login_limiter.check(ip_key, limit=settings.login_max_attempts_per_ip)
     login_limiter.check(pair_key)
-    login_limiter.check_account(acct_key)
+    if not demo:
+        login_limiter.check_account(acct_key)
     user = db.scalar(select(User).where(User.login == form.username))
     password_ok = verify_password(form.password, user.hashed_password) if user else (
         dummy_verify())  # stały narzut czasu, gdy login nie istnieje
@@ -118,7 +122,7 @@ def login(request: Request, response: Response,
     if user and is_service_login(user.login):
         password_ok = False
     if not user or not user.is_active or not password_ok:
-        login_limiter.register_failure(ip_key, pair_key, acct_key)
+        login_limiter.register_failure(ip_key, pair_key, *(() if demo else (acct_key,)))
         record(db, entity_type="auth", entity_id=user.id if user else 0, field="login_failed",
                old_value=None, user=user, note=f"nieudane logowanie z {ip}",
                # GDPR-004: nieistniejący login bywa pomyłkowo wpisanym hasłem — tylko skrót
@@ -318,6 +322,9 @@ def logout(request: Request, response: Response, db: Session = Depends(get_db)):
     raw = request.cookies.get(REFRESH_COOKIE) or request.cookies.get(ACCESS_COOKIE)
     user_id = user_id_from_token_lenient(raw) if raw else None
     user = db.get(User, user_id) if user_id is not None else None
+    if user is not None and is_demo_login(user.login):
+        # wspólne konto demo: wylogowanie jednej osoby nie może zrywać sesji pozostałych
+        user = None
     if user is not None:
         user.session_version += 1
         revoke_user_refresh_tokens(db, user.id)
