@@ -42,3 +42,33 @@ def test_seed_refuses_without_demo_instance_or_flag(monkeypatch):
     with pytest.raises(SystemExit, match="brak flagi"):
         seed_demo.check_guards([])
     assert seed_demo.check_guards(["--wyczysc-wszystko"]) == ["demo"]
+
+
+def _add_demo(db_session, monkeypatch):
+    monkeypatch.setattr(settings, "demo_readonly_logins", "demo")
+    db_session.add(User(login="demo", hashed_password=hash_password(PW), role=Role.logistics,
+                        view_all_companies=True))
+    db_session.commit()
+
+
+def test_demo_logout_keeps_other_demo_sessions(client, db_session, monkeypatch):
+    # wspólne konto demo: wylogowanie jednej osoby nie zrywa sesji pozostałych
+    _add_demo(db_session, monkeypatch)
+    first, second = login(client, "demo", PW), login(client, "demo", PW)
+    assert client.post("/api/auth/logout", headers=first).status_code == 204
+    assert client.get("/api/auth/me", headers=second).status_code == 200
+
+
+def test_demo_account_not_locked_by_distributed_failures(client, db_session, monkeypatch):
+    # rozproszone złe hasła (każde z innego IP) nie odcinają demo innym — zwykłe konto tak
+    import itertools
+
+    from app.routers import auth
+    _add_demo(db_session, monkeypatch)
+    ips = (f"203.0.113.{i}" for i in itertools.count(1))
+    monkeypatch.setattr(auth, "_client_ip", lambda _request: next(ips))
+    bad = {"username": "demo", "password": "zle-haslo-123"}
+    for _ in range(settings.login_account_lock_after + 2):
+        assert client.post("/api/auth/login", data=bad).status_code == 401
+    assert client.post("/api/auth/login",
+                       data={"username": "demo", "password": PW}).status_code == 200
