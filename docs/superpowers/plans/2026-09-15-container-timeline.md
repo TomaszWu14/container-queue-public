@@ -421,5 +421,5 @@ git commit -m "feat(ui): satelitarny podklad NASA Blue Marble na mapie trackingu
 ```
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01KEVcYV7LAU69MxTTmrJkoj
+<link do sesji>
 ```

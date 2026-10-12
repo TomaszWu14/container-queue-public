@@ -10,7 +10,7 @@ import type { DayRow } from './queueRows'
 // z sumy i kafle nie zgadzałyby się z licznikiem dnia.
 export const NO_WAREHOUSE = '—'
 
-// Nazwa magazynu bywa zapisana jako „DLT Radom" czy „ACME DLT", więc dopasowujemy
+// Nazwa magazynu bywa zapisana jako „DLT Centralny" czy „ACME DLT", więc dopasowujemy
 // po słowie (jak kolor magazynu w kolejce). DLT sprawdzamy pierwszy: „ACME DLT" to DLT.
 const KNOWN_WAREHOUSES = ['DLT', 'ACME', 'BOREALIS', 'COBALTSPORT', 'IBERIA']
 

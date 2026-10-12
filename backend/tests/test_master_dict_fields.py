@@ -3,7 +3,7 @@
 
 def test_forwarder_contact_fields_roundtrip(client, admin_headers):
     body = {"name": "SPEDALFA Test", "email": "biuro@spedalfa.pl", "contact_person": "Jan Kowalski",
-            "contact_phone": "600100200", "address": "Hutnicza 1, Gdynia", "note": "kontakt 24/7"}
+            "contact_phone": "600100200", "address": "Portowa 1, Gdynia", "note": "kontakt 24/7"}
     created = client.post("/api/forwarders", headers=admin_headers, json=body)
     assert created.status_code == 201, created.text
     fid = created.json()["id"]
@@ -12,7 +12,7 @@ def test_forwarder_contact_fields_roundtrip(client, admin_headers):
                if f["id"] == fid)
     assert got["contact_person"] == "Jan Kowalski"
     assert got["contact_phone"] == "600100200"
-    assert got["address"] == "Hutnicza 1, Gdynia"
+    assert got["address"] == "Portowa 1, Gdynia"
     assert got["note"] == "kontakt 24/7"
 
     upd = client.patch(f"/api/forwarders/{fid}", headers=admin_headers,

@@ -65,8 +65,8 @@ export interface Warehouse {
   alt?: boolean
 }
 export const WAREHOUSES: Warehouse[] = [
-  { id: 'RAD', name: 'MAG RADOM', company: 'Borealis', addr: 'ul. Magazynowa 1, 26-600 Radom, PL',
-    lon: 21.147, lat: 51.402, color: '#e9a13b', dx: 74, dy: -30, fromLon: 18.66, fromLat: 54.40 },
+  { id: 'CEN', name: 'MAG CENTRALNY', company: 'Borealis', addr: 'ul. Magazynowa 1, 00-001 Przykładowo, PL',
+    lon: 20.30, lat: 52.05, color: '#e9a13b', dx: 74, dy: -30, fromLon: 18.66, fromLat: 54.40 },
   { id: 'DLT', name: 'MAG DLT', company: 'Acme · DLT', addr: 'ul. Logistyczna 2, 90-001 Łódź, PL',
     lon: 19.456, lat: 51.759, color: '#e0396b', dx: 74, dy: 26, fromLon: 18.66, fromLat: 54.40, alt: true },
   { id: 'PT', name: 'MAG IBERIA', company: 'Iberia', addr: 'Rua Logística 1, 7520-000 Sines, PT',

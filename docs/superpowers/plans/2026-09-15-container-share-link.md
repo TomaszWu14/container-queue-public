@@ -386,5 +386,5 @@ git commit -m "feat(ui): publiczna strona /k/{token} + przycisk Link dla klienta
 ```
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01QPtr6gmknEkM3RJCErodMe
+<link do sesji>
 ```

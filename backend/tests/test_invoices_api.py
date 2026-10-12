@@ -327,7 +327,7 @@ def test_roles_and_isolation(client, admin_headers, fake_pdf):
     batch = _upload(client, admin_headers, cid).json()
     company = _company_id(client, admin_headers)
     wh = client.post("/api/warehouses", headers=admin_headers,
-                     json={"name": "Radom", "company_id": company}).json()
+                     json={"name": "Centralny", "company_id": company}).json()
     agency = client.post("/api/customs-agencies", headers=admin_headers,
                          json={"name": "Agencja A"}).json()
     for login_name, role, extra in (

@@ -19,7 +19,7 @@ def _setup(client, admin_headers, notify_days=1):
     companies = client.get("/api/companies", headers=admin_headers).json()
     borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "MAG-SMS", "company_id": borealis, "address": "Hutnicza 1, Radom",
+        "name": "MAG-SMS", "company_id": borealis, "address": "Magazynowa 1, Przykładowo",
         "contact_phone": "500600700", "entry_instructions": "Brama B, zgłoś się na portierni",
     }).json()
     day = (today_pl() + datetime.timedelta(days=notify_days)).isoformat()
@@ -46,7 +46,7 @@ def test_driver_sms_without_link(client, admin_headers):
     sent = client.post(f"/api/containers/{cid}/driver-sms", headers=admin_headers)
     assert sent.status_code == 200 and sent.json()["status"] == "sent", sent.text
     body = mock_outbox[0]["body"]
-    assert VALID_NO in body and "Hutnicza 1, Radom" in body and "500600700" in body
+    assert VALID_NO in body and "Magazynowa 1, Przykładowo" in body and "500600700" in body
     assert "http" not in body and "/dostawa/" not in body          # żadnego linku publicznego
 
     # historia wysyłek widoczna w panelu

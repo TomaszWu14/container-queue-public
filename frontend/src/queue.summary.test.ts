@@ -11,7 +11,7 @@ const make = (id: number, warehouse_name: string | null, is_delayed = false) =>
 
 describe('warehouseKey', () => {
   it('dopasowuje po słowie, nie po całej nazwie', () => {
-    expect(warehouseKey('DLT Radom')).toBe('DLT')
+    expect(warehouseKey('DLT Centralny')).toBe('DLT')
     expect(warehouseKey('Magazyn BOREALIS')).toBe('BOREALIS')
   })
 

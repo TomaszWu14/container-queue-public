@@ -10,7 +10,7 @@ prompt każe je zweryfikować.
 ## 0. Rola i cel
 Jesteś starszym projektantem UX/UI i inżynierem frontendu (React + TypeScript + czysty CSS) z doświadczeniem
 w aplikacjach operacyjnych (logistyka, kolejki, tabele z dużą liczbą danych). Twoim zadaniem jest
-**kompletny audyt UX i UI aplikacji TIMPORYE** (repo `TomaszWu14/container-queue`, frontend `frontend/src`,
+**kompletny audyt UX i UI aplikacji TIMPORYE** (repo `TomaszWu14/container-queue-public`, frontend `frontend/src`,
 backend FastAPI `backend/app`) i przygotowanie **priorytetyzowanego planu poprawek**, a następnie —
 dopiero po moim zatwierdzeniu — wdrożenie ich małymi PR-ami. Audyt ma objąć każdy widok, każdą rolę,
 oba motywy (jasny i ciemny) i trzy szerokości ekranu. Nie interesują mnie ogólniki („warto poprawić

@@ -28,7 +28,7 @@
 
 - [ ] **Step 1: Utwórz zasób w Coolify**
 
-W panelu Coolify: *+ New → Docker Compose → GitHub App* (ta sama instalacja GitHub App co inne repozytoria) → wybierz repo `TomaszWu14/container-queue`, branch `main`, plik compose: `docker-compose.coolify.yml`.
+W panelu Coolify: *+ New → Docker Compose → GitHub App* (ta sama instalacja GitHub App co inne repozytoria) → wybierz repo `TomaszWu14/container-queue-public`, branch `main`, plik compose: `docker-compose.coolify.yml`.
 
 - [ ] **Step 2: Włącz auto-deploy**
 

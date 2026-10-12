@@ -12,16 +12,16 @@ HEADER = ["Dostawca", "Klucz kraju/regionu", "Nazwa 1", "Nazwa 2", "Nazwa 3", "N
           "Miasto", "Kod pocztowy", "Szukany ciąg zn.", "Ulica", "Nr ident. VAT",
           "Centralna blokada księgowania", "Utworzone przez"]
 
-TRANSLOG = ["10000085", "DE", "TRANSLOG GMBH", "", "", "", "Hamburg", "21107", "TRANSLOG G",
-            "Stenzelring 33", "DE123", "", "JNOWAK"]
-NORDMED = ["10000189", "FR", "NORDMED CARDIO", "EUROPE GMBH", "", "", "Cologne", "00000",
-          "NORDMED COL", "", "", "X", "JNOWAK"]
+DEMOLOG = ["90000001", "DE", "DEMOLOG GMBH", "", "", "", "Hamburg", "20000", "DEMOLOG G",
+            "Beispielweg 1", "DE123", "", "DEMOUSER"]
+MEDDEMO = ["90000002", "FR", "MEDDEMO CARDIO", "EUROPE GMBH", "", "", "Cologne", "00000",
+          "MEDDEMO COL", "", "", "X", "DEMOUSER"]
 ROWS = [
-    TRANSLOG,
-    NORDMED,
+    DEMOLOG,
+    MEDDEMO,
     ["", "CN", "BEZ KODU", "", "", "", "", "", "", "", "", "", ""],          # błąd: brak kodu
     ["10000500", "CN", "", "", "", "", "", "", "", "", "", "", ""],          # błąd: brak nazwy
-    TRANSLOG,                                                                # błąd: powtórzony
+    DEMOLOG,                                                                # błąd: powtórzony
     [None] * 13,                                                             # pusty — pomijany
 ]
 
@@ -43,9 +43,9 @@ def _plan(db, content=None):
 
 def test_parse_rows_and_row_errors():
     rows, errors = parse_lfa1(_xlsx())
-    assert [r["sap_code"] for r in rows] == ["10000085", "10000189", "10000085"]
-    assert rows[1]["name"] == "NORDMED CARDIO EUROPE GMBH"   # Nazwa 1 + Nazwa 2
-    assert rows[0]["address"] == "Stenzelring 33, 21107 Hamburg, DE"
+    assert [r["sap_code"] for r in rows] == ["90000001", "90000002", "90000001"]
+    assert rows[1]["name"] == "MEDDEMO CARDIO EUROPE GMBH"   # Nazwa 1 + Nazwa 2
+    assert rows[0]["address"] == "Beispielweg 1, 20000 Hamburg, DE"
     assert (rows[0]["vat"], rows[0]["sap_status"], rows[1]["sap_status"]) == ("DE123", "active", "blocked")
     assert [(e["row"], e["reason"]) for e in errors] == [(4, "brak kodu SAP"), (5, "brak nazwy")]
 
@@ -55,11 +55,11 @@ def test_first_import_new_and_errors_then_idempotent(db_session):
     view = preview(plan)
     assert view["counts"] == {"total": 5, "new": 2, "changed": 0, "disappeared": 0, "errors": 3}
     assert "powtórzony" in view["errors"][-1]["reason"] and view["errors"][-1]["row"] == 6
-    assert db_session.scalar(select(Supplier).where(Supplier.sap_code == "10000085")) is None  # podgląd
+    assert db_session.scalar(select(Supplier).where(Supplier.sap_code == "90000001")) is None  # podgląd
 
     log = apply_plan(db_session, plan, full_export=False, user=None, filename="lfa1.xlsx")
     db_session.commit()
-    stored = db_session.scalars(select(Supplier).where(Supplier.sap_code == "10000189")).one()
+    stored = db_session.scalars(select(Supplier).where(Supplier.sap_code == "90000002")).one()
     assert (stored.client_company_id, stored.sap_status, stored.city) == (None, "blocked", "Cologne")
     assert log.kind == "lfa1" and log.counts["new"] == 2 and len(log.errors) == 3
 
@@ -68,24 +68,24 @@ def test_first_import_new_and_errors_then_idempotent(db_session):
 
 
 def test_changed_field_by_field_with_audit(db_session):
-    db_session.add(Supplier(name="TRANSLOG OLD", sap_code="10000085", country="PL",
-                            street="Stenzelring 33", vat="DE123", note="ręczna notatka"))
+    db_session.add(Supplier(name="DEMOLOG OLD", sap_code="90000001", country="PL",
+                            street="Beispielweg 1", vat="DE123", note="ręczna notatka"))
     db_session.commit()
     plan = _plan(db_session)
     change = preview(plan)["changed"][0]
     fields = {c["field"]: (c["old"], c["new"]) for c in change["changes"]}
-    assert fields["name"] == ("TRANSLOG OLD", "TRANSLOG GMBH")
+    assert fields["name"] == ("DEMOLOG OLD", "DEMOLOG GMBH")
     assert fields["country"] == ("PL", "DE")
     assert "street" not in fields and "vat" not in fields   # bez zmian — nie pokazujemy
 
     apply_plan(db_session, plan, full_export=False, user=None, filename="lfa1.xlsx")
     db_session.commit()
-    supplier = db_session.scalars(select(Supplier).where(Supplier.sap_code == "10000085")).one()
-    assert (supplier.name, supplier.note) == ("TRANSLOG GMBH", "ręczna notatka")  # dane aplikacji nietknięte
+    supplier = db_session.scalars(select(Supplier).where(Supplier.sap_code == "90000001")).one()
+    assert (supplier.name, supplier.note) == ("DEMOLOG GMBH", "ręczna notatka")  # dane aplikacji nietknięte
     audit = db_session.scalars(select(AuditLog).where(
         AuditLog.entity_type == "suppliers", AuditLog.entity_id == supplier.id,
         AuditLog.field == "name")).one()
-    assert (audit.old_value, audit.new_value, audit.note) == ("TRANSLOG OLD", "TRANSLOG GMBH",
+    assert (audit.old_value, audit.new_value, audit.note) == ("DEMOLOG OLD", "DEMOLOG GMBH",
                                                               "import SAP lfa1.xlsx")
 
 
@@ -113,16 +113,16 @@ def test_disappeared_deactivated_only_with_full_export(db_session):
 
 def test_fills_sap_code_on_catalog_record_not_on_client_sender(db_session):
     borealis = db_session.scalar(select(Company).where(Company.code == "BOREALIS"))
-    db_session.add_all([Supplier(name="TRANSLOG GMBH"),
-                        Supplier(name="TRANSLOG GMBH", client_company_id=borealis.id)])
+    db_session.add_all([Supplier(name="DEMOLOG GMBH"),
+                        Supplier(name="DEMOLOG GMBH", client_company_id=borealis.id)])
     db_session.commit()
     plan = _plan(db_session)
-    assert preview(plan)["counts"]["new"] == 1          # tylko NORDMED; TRANSLOG dopasowany po nazwie
+    assert preview(plan)["counts"]["new"] == 1          # tylko MEDDEMO; DEMOLOG dopasowany po nazwie
     apply_plan(db_session, plan, full_export=True, user=None, filename="lfa1.xlsx")
     db_session.commit()
     catalog = db_session.scalars(select(Supplier).where(
-        Supplier.name == "TRANSLOG GMBH", Supplier.client_company_id.is_(None))).one()
-    assert catalog.sap_code == "10000085"
+        Supplier.name == "DEMOLOG GMBH", Supplier.client_company_id.is_(None))).one()
+    assert catalog.sap_code == "90000001"
     sender = db_session.scalars(select(Supplier).where(Supplier.client_company_id == borealis.id)).one()
     assert (sender.sap_code, sender.sap_status) == ("", "active")   # nadawca klienta nietknięty
 
