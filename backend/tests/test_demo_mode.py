@@ -115,3 +115,11 @@ def test_seed_gives_recruiter_a_full_first_screen(client, monkeypatch):
         assert all(e.occurred_at < dt.datetime.now() for e in db.query(TrackingEvent))
     hdr = login(client, "demo", PW)
     assert len(client.get("/api/tracking/map", headers=hdr).json()["points"]) == 45
+
+
+def test_demo_presence_ping_allowed(client, db_session, monkeypatch):
+    # obecność „online” (stan w pamięci) nie jest zapisem danych — bez 403 w konsoli demo
+    _add_demo(db_session, monkeypatch)
+    hdr = login(client, "demo", PW)
+    assert client.post("/api/presence", headers=hdr, json={"path": "/kolejka", "active": True}).status_code == 200
+    assert client.post("/api/presence/leave", headers=hdr).status_code == 204

@@ -402,8 +402,9 @@ def _enforce_password_change(request: Request, user: User) -> None:
                             "Najpierw ustaw własne hasło (konto z hasłem tymczasowym).")
 
 
-# konto demo może się tylko wylogować / odświeżyć sesję — reszta zapisów zablokowana
-_DEMO_ALLOWED_WRITES = {"/api/auth/logout", "/api/auth/refresh"}
+# konto demo może się tylko wylogować / odświeżyć sesję i zgłaszać obecność (presence trzyma stan
+# w pamięci procesu, bez zapisu w bazie; bez tego każda strona sypie 403 w konsoli) — reszta zablokowana
+_DEMO_ALLOWED_WRITES = {"/api/auth/logout", "/api/auth/refresh", "/api/presence", "/api/presence/leave"}
 
 
 def is_demo_login(login: str) -> bool:
