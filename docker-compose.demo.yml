@@ -39,6 +39,7 @@ services:
       DEMO_READONLY_LOGINS: demo
       DEMO_PASSWORD: demoportfolio2026   # celowo jawne: konto tylko do odczytu, podane w README
       PUBLIC_BASE_URL: https://container.queue.twapp.pl
+      SECURE_COOKIES: "true"             # demo za HTTPS (Traefik); bez tego produkcja nie wstaje
       MAIL_BACKEND: console              # demo nie wysyła maili
       UPLOADS_DIR: /data/uploads
     command: >-
