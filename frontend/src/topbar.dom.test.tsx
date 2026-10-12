@@ -53,9 +53,9 @@ describe('Górny pasek 48 px', () => {
     expect(css).toMatch(/@media \(max-width: 1439px\) \{\s*\.tn-link:not\(\.active\) \.tn-label \{ display: none; \}/)
   })
 
-  it('zegar w jednej linii: RAD · SHA · POR w formacie gg:mm', () => {
+  it('zegar w jednej linii: PL · SHA · POR w formacie gg:mm', () => {
     renderBar({ role: 'admin' })
     const txt = document.querySelector('.worldclock')?.textContent ?? ''
-    expect(txt).toMatch(/^RAD \d\d:\d\d·SHA \d\d:\d\d·POR \d\d:\d\d$/)
+    expect(txt).toMatch(/^PL \d\d:\d\d·SHA \d\d:\d\d·POR \d\d:\d\d$/)
   })
 })
