@@ -1,0 +1,71 @@
+// @vitest-environment jsdom
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
+import DemoMode from './DemoMode'
+
+afterEach(() => { cleanup(); vi.restoreAllMocks(); localStorage.clear() })
+
+const jsonResponse = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } })
+
+// fetch: branding instancji portfolio + zapis treści logowania (form-urlencoded)
+function stubFetch(branding: Record<string, string>, logins: string[] = []) {
+  vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input)
+    if (url.includes('/api/public/branding')) return jsonResponse(branding)
+    if (url.includes('/api/auth/login')) { logins.push(String(init?.body)); return jsonResponse({}) }
+    return jsonResponse({})
+  }))
+}
+
+describe('Ekran logowania — instancja portfolio', () => {
+  it('karta demo pokazuje login i hasło, „Wejdź jako demo” loguje tym kontem', async () => {
+    const logins: string[] = []
+    stubFetch({ demo_login: 'demo', demo_password: 'haslo-demo-123' }, logins)
+    const onLogin = vi.fn()
+    render(<MemoryRouter><LoginPage onLogin={onLogin} /></MemoryRouter>)
+
+    const card = await screen.findByTestId('demo-card')
+    expect(card.textContent).toContain('haslo-demo-123')
+    fireEvent.click(screen.getByRole('button', { name: 'Wejdź jako demo' }))
+    await waitFor(() => expect(onLogin).toHaveBeenCalled())
+    expect(logins[0]).toContain('username=demo')
+    expect(logins[0]).toContain('password=haslo-demo-123')
+  })
+
+  it('adres zgłoszeń zastępuje fikcyjną wizytówkę administratora', async () => {
+    stubFetch({ support_email: 'autor@example.org' })
+    render(<MemoryRouter><LoginPage onLogin={() => {}} /></MemoryRouter>)
+    const box = await screen.findByTestId('support-box')
+    expect(box.querySelector('a')?.getAttribute('href')).toBe('mailto:autor@example.org')
+    expect(screen.queryByText('admin@example.com')).toBeNull()
+  })
+
+  it('zwykła instancja: bez karty demo, wizytówka administratora jak dotąd', async () => {
+    stubFetch({})
+    render(<MemoryRouter><LoginPage onLogin={() => {}} /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByText('admin@example.com')).toBeTruthy())
+    expect(screen.queryByTestId('demo-card')).toBeNull()
+  })
+})
+
+describe('Konto demo po zalogowaniu', () => {
+  it('baner + ekran powitalny przy pierwszym wejściu; „Zaczynam” zapamiętuje', async () => {
+    stubFetch({ support_email: 'autor@example.org' })
+    const { unmount } = render(<MemoryRouter><DemoMode /></MemoryRouter>)
+    expect(screen.getByTestId('demo-banner').textContent).toContain('dane fikcyjne')
+    expect(screen.getByRole('dialog').textContent).toContain('Kalendarz rozładunków')
+    await waitFor(() => expect(screen.getByTestId('demo-banner').textContent).toContain('autor@example.org'))
+    fireEvent.click(screen.getByRole('button', { name: 'Zaczynam' }))
+    expect(screen.queryByRole('dialog')).toBeNull()
+    unmount()
+
+    render(<MemoryRouter><DemoMode /></MemoryRouter>)
+    expect(screen.queryByRole('dialog')).toBeNull()
+    // z banera można otworzyć ponownie
+    fireEvent.click(screen.getByRole('button', { name: 'Co warto zobaczyć' }))
+    expect(screen.getByRole('dialog')).toBeTruthy()
+  })
+})

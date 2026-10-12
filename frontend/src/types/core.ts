@@ -118,6 +118,7 @@ export interface User {
   totp_enabled?: boolean
   must_enroll_2fa?: boolean  // SEC-006: admin bez 2FA — ekran włączania zamiast panelu
   impersonated?: boolean
+  is_demo?: boolean   // konto z DEMO_READONLY_LOGINS (instancja portfolio)
   allowed_warehouse_ids?: number[] | null
   has_avatar?: boolean
   // tylko w odpowiedzi na utworzenie z zaproszeniem / reset-invite (jednorazowo)

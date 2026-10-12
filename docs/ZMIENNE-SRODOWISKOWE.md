@@ -81,6 +81,8 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | `PORTAL_LOGO_URL` | str | puste = funkcja wyłączona / auto | **nie** | opcjonalny URL logo w nagłówku portalu |
 | `DEMO_READONLY_LOGINS` | str | puste = funkcja wyłączona / auto | **nie** | instancja pokazowa (portfolio): loginy tylko do odczytu (CSV) — każdy zapis z tych kont = 403; puste = zwykła instancja |
 | `DEMO_LOGIN_HINT` | str | puste = funkcja wyłączona / auto | **nie** | podpowiedź „login / hasło” na ekranie logowania instancji pokazowej |
+| `DEMO_PASSWORD` | str | puste = funkcja wyłączona / auto | **nie** | hasło konta demo (to samo czyta `scripts/seed_demo.py`); z `DEMO_READONLY_LOGINS` — karta konta demo i przycisk „Wejdź jako demo” na ekranie logowania |
+| `SUPPORT_EMAIL` | str | puste = funkcja wyłączona / auto | **nie** | adres „Zgłoś problem” na ekranie logowania i w banerze konta demo; puste = wizytówka administratora |
 | `ALLOWED_HOSTS` | str | puste = funkcja wyłączona / auto | tak | dozwolone nagłówki Host (CSV) — ochrona przed host-header injection; puste = bez filtra |
 | `TRUSTED_PROXY_COUNT` | int | ma bezpieczny domyślny | tak | liczba zaufanych proxy przed aplikacją — IP klienta bierzemy z tej pozycji X-Forwarded-For |
 | `TRUSTED_PROXY_CIDRS` | str | ma bezpieczny domyślny | **nie** | X-Forwarded-For honorujemy TYLKO, gdy bezpośredni peer jest w tych sieciach (CSV CIDR); domyślnie sieci prywatne = proxy Coolify/Traefik w sieci dockera. Pee… |

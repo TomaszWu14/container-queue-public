@@ -45,6 +45,13 @@ const STYLE = `
 .kl2-forgot{background:none;border:none;padding:0;font:inherit;font-size:13px;color:#0b5fff;cursor:pointer}
 .kl2-forgot:hover{text-decoration:underline}
 .kl2-demo{margin:0;padding:8px 10px;border-radius:6px;font-size:13px;background:var(--info-bg);color:var(--text)}
+.kl2-democard{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #b9d3f5;
+  border-radius:12px;background:#eef5ff}
+.kl2-democard p{margin:0;font-size:13px;line-height:1.5;color:#2c3a4a}
+.kl2-democard code{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;padding:1px 6px;
+  border-radius:4px;background:#fff;border:1px solid #d4e2f4;color:#1c2733}
+.kl2-or{display:flex;align-items:center;gap:10px;font-size:12px;color:#7b8898}
+.kl2-or::before,.kl2-or::after{content:'';flex:1;height:1px;background:#dde3ec}
 .kl2-submit{width:100%;padding:11px 20px;border:1px solid transparent;border-radius:8px;
   background:#0b5fff;color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer;
   transition:background .15s,transform .08s}
@@ -70,6 +77,10 @@ const STYLE = `
 @media(prefers-reduced-motion:reduce){.kl2 *{transition:none!important}}
 `
 
+type Branding = {
+  demo_hint?: string; demo_login?: string; demo_password?: string; support_email?: string
+}
+
 const CHIPS = ['Awizacje', 'Limity magazynów', 'Odprawa celna', 'Zlecenia transportowe', 'Powiadomienia']
 
 export default function LoginPage({ onLogin }: { onLogin: () => void }) {
@@ -77,12 +88,14 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   const navigate = useNavigate()
   const { lang, setLang } = useContext(LangContext)
   const [username, setUsername] = useState('')
-  // instancja portfolio: dane konta demo z /api/public/branding (puste = zwykła instancja)
-  const [demoHint, setDemoHint] = useState('')
+  // instancja portfolio: konto demo i kontakt z /api/public/branding (puste = zwykła instancja)
+  const [brand, setBrand] = useState<Branding>({})
   useEffect(() => {
-    api.get<{ demo_hint?: string }>('/api/public/branding')
-      .then(b => setDemoHint(typeof b?.demo_hint === 'string' ? b.demo_hint : '')).catch(() => {})
+    api.get<Branding>('/api/public/branding').then(b => setBrand(b ?? {})).catch(() => {})
   }, [])
+  const demoHint = typeof brand.demo_hint === 'string' ? brand.demo_hint : ''
+  const demo = brand.demo_login && brand.demo_password
+    ? { login: brand.demo_login, password: brand.demo_password } : null
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -90,12 +103,13 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [pendingToken, setPendingToken] = useState('')
   const [totpCode, setTotpCode] = useState('')
 
-  const submit = async (event: FormEvent) => {
-    event.preventDefault()
+  const submit = (event: FormEvent) => { event.preventDefault(); void signIn(username, password) }
+
+  const signIn = async (user: string, pass: string) => {
     setBusy(true)
     setError('')
     try {
-      const result = await login(username, password)
+      const result = await login(user, pass)
       if (result.totp_required && result.pending_token) {
         setPendingToken(result.pending_token)
       } else {
@@ -174,7 +188,20 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             </form>
           ) : (
           <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {demoHint && <p className="kl2-demo" data-testid="demo-hint">{t('demoLoginHint')}: <b>{demoHint}</b></p>}
+            {demo ? (
+              <>
+                <div className="kl2-democard" data-testid="demo-card">
+                  <div className="kl2-admin-label">{t('demoLoginHint')}</div>
+                  <p>{t('demoCardBody')}</p>
+                  <p>{t('loginField')} <code>{demo.login}</code> · {t('password')} <code>{demo.password}</code></p>
+                  <button type="button" className="kl2-submit" disabled={busy}
+                          onClick={() => void signIn(demo.login, demo.password)}>
+                    {t('demoEnter')}
+                  </button>
+                </div>
+                <div className="kl2-or">{t('demoOrOwnAccount')}</div>
+              </>
+            ) : demoHint && <p className="kl2-demo" data-testid="demo-hint">{t('demoLoginHint')}: <b>{demoHint}</b></p>}
             <div className="kl2-field">
               <label htmlFor="kl2-login">{t('loginField')}</label>
               <input id="kl2-login" type="text" autoComplete="username" autoFocus
@@ -202,14 +229,22 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
           <div className="kl2-hr" />
           <div className="kl2-fwd">{t('loginForwarderHint')}</div>
           <div style={{ flex: 1 }} />
-          <div className="kl2-admin">
-            <div className="kl2-admin-label">{t('loginAdminLabel')}</div>
-            <div className="kl2-admin-name">Administrator systemu</div>
-            <a href="mailto:admin@example.com">admin@example.com</a>
-            <div className="kl2-admin-help">{t('loginAdminHelp')}</div>
-          </div>
+          {brand.support_email ? (
+            <div className="kl2-admin" data-testid="support-box">
+              <div className="kl2-admin-label">{t('supportLabel')}</div>
+              <div className="kl2-admin-help">{t('supportHelp')}</div>
+              <a href={`mailto:${brand.support_email}`}>{brand.support_email}</a>
+            </div>
+          ) : (
+            <div className="kl2-admin">
+              <div className="kl2-admin-label">{t('loginAdminLabel')}</div>
+              <div className="kl2-admin-name">Administrator systemu</div>
+              <a href="mailto:admin@example.com">admin@example.com</a>
+              <div className="kl2-admin-help">{t('loginAdminHelp')}</div>
+            </div>
+          )}
           <div className="kl2-foot">
-            kolejka.example.com ·
+            {window.location.host} ·
             {LANGS.map(l => (
               <button key={l} type="button" className={lang === l ? 'active' : ''}
                       onClick={() => setLang(l as Lang)}>{l.toUpperCase()}</button>

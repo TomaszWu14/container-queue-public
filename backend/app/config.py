@@ -90,6 +90,11 @@ class Settings(BaseSettings):
     # kont = 403; podpowiedź „login / hasło” na ekranie logowania. Puste = zwykła instancja.
     demo_readonly_logins: str = ""
     demo_login_hint: str = ""
+    # hasło konta demo (to samo DEMO_PASSWORD co dla scripts/seed_demo.py) — jawne na ekranie
+    # logowania i w przycisku „Wejdź jako demo”, tylko gdy DEMO_READONLY_LOGINS ustawione
+    demo_password: str = ""
+    # adres „Zgłoś problem” na ekranie logowania i w banerze demo; puste = bez kontaktu
+    support_email: str = ""
     # dozwolone nagłówki Host (CSV) — ochrona przed host-header injection; puste = bez filtra
     allowed_hosts: str = ""
     # liczba zaufanych proxy przed aplikacją — IP klienta bierzemy z tej pozycji X-Forwarded-For
