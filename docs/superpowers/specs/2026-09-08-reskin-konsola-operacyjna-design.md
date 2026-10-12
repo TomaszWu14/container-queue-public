@@ -48,7 +48,7 @@ głębia przez hairline `--border`.
 
 Tło `--chrome` `#10161f`, dolna krawędź `2px solid var(--accent)`. Logo: Archivo 800 +
 podpis „CONTAINER FLOW" mono w bursztynie. Aktywna zakładka: jasny tekst +
-`inset 0 -2px 0 var(--accent)`. Zegary Radom/Shanghai i badge licznika: IBM Plex Mono.
+`inset 0 -2px 0 var(--accent)`. Zegary Polska/Shanghai i badge licznika: IBM Plex Mono.
 Kropka statusu online zostaje.
 
 ## 4. Komponenty (restyling istniejących klas)

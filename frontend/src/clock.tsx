@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
-// Zegar trzech stref w jednej linii: Radom (Europe/Warsaw), Chiny/Szanghaj (Asia/Shanghai)
-// i Iberia (Europe/Lisbon) — „RAD 08:29 · SHA 14:29 · POR 07:29" (górny pasek 48 px).
+// Zegar trzech stref w jednej linii: Polska (Europe/Warsaw), Chiny/Szanghaj (Asia/Shanghai)
+// i Iberia (Europe/Lisbon) — „PL 08:29 · SHA 14:29 · POR 07:29" (górny pasek 48 px).
 const ZONES: [string, string][] = [
-  ['RAD', 'Europe/Warsaw'], ['SHA', 'Asia/Shanghai'], ['POR', 'Europe/Lisbon'],
+  ['PL', 'Europe/Warsaw'], ['SHA', 'Asia/Shanghai'], ['POR', 'Europe/Lisbon'],
 ]
 
 const hhmm = (tz: string, at: Date) =>
@@ -16,7 +16,7 @@ export default function WorldClock() {
     return () => clearInterval(id)
   }, [])
   return (
-    <div className="worldclock" title="Radom · Chiny (Szanghaj) · Iberia (Lizbona)">
+    <div className="worldclock" title="Polska · Chiny (Szanghaj) · Iberia (Lizbona)">
       {ZONES.map(([label, tz], i) => (
         <span key={label} className="wc-zone">
           {i > 0 && <span className="wc-sep" aria-hidden="true">·</span>}

@@ -28,7 +28,7 @@
 - Commity kończą się trailerami:
   ```
   Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-  Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU
+  Claude-Session: <link do sesji>
   ```
 
 ---
@@ -690,7 +690,7 @@ git add backend/migrations/versions/kartoteka001_kartoteka_dostawcow.py backend/
 git commit -m "feat(dostawcy): schemat globalnej kartoteki dostawców (kartoteka001)
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -1061,7 +1061,7 @@ git add backend/app/config.py backend/app/deps.py backend/app/schemas/dictionari
 git commit -m "feat(dostawcy): widoczność kartoteki w deps (SUPPLIER_COMPANY_CODES)
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -1460,7 +1460,7 @@ git add backend/app/routers/containers_common.py backend/app/routers/containers_
 git commit -m "feat(dostawcy): dostawca do użycia w spółce — kartoteka lub nadawca klienta; bez czyszczenia słownika
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -1704,7 +1704,7 @@ git add backend/app/routers/dictionaries_merge.py backend/tests/test_supplier_me
 git commit -m "feat(dostawcy): merge_into — scalanie w kartotece globalnej z porządkami kolizji
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -1744,17 +1744,17 @@ HEADER = ["Dostawca", "Klucz kraju/regionu", "Nazwa 1", "Nazwa 2", "Nazwa 3", "N
           "Grupa uprawnień", "Utworzono dnia", "Utworzone przez", "Klucz języka"]
 
 ROWS = [
-    ["10000085", "DE", "TRANSLOG GMBH", "", "", "", "Hamburg", "21107", "TRANSLOG G",
-     "Stenzelring 33", "51426", "HAMBURG", "", None, "JNOWAK", "PL"],
-    ["10000189", "FR", "NORDMED CARDIO", "EUROPE GMBH", "", "", "Cologne", "00000",
-     "NORDMED COL", "", "51576", "COLOGNE", "", None, "JNOWAK", "PL"],
+    ["90000001", "DE", "DEMOLOG GMBH", "", "", "", "Hamburg", "20000", "DEMOLOG G",
+     "Beispielweg 1", "51426", "HAMBURG", "", None, "DEMOUSER", "PL"],
+    ["90000002", "FR", "MEDDEMO CARDIO", "EUROPE GMBH", "", "", "Cologne", "00000",
+     "MEDDEMO COL", "", "51576", "COLOGNE", "", None, "DEMOUSER", "PL"],
     # ta sama nazwa, inny kod SAP — osobny dostawca (możliwy dubel w SAP, jakość danych PR6)
-    ["10000999", "CN", "NORDMED CARDIO", "EUROPE GMBH", "", "", "Shanghai", "200000",
-     "NORDMED SH", "Nanjing Road", "51577", "SHANGHAI", "", None, "JNOWAK", "EN"],
+    ["90000003", "CN", "MEDDEMO CARDIO", "EUROPE GMBH", "", "", "Shanghai", "200000",
+     "MEDDEMO SH", "Nanjing Road", "51577", "SHANGHAI", "", None, "DEMOUSER", "EN"],
     ["", "CN", "BEZ KODU", "", "", "", "", "", "", "", "", "", "", None, "", "EN"],
     # powtórzony kod SAP w pliku — pomijany
-    ["10000085", "DE", "TRANSLOG GMBH", "", "", "", "Hamburg", "21107", "TRANSLOG G",
-     "Stenzelring 33", "51426", "HAMBURG", "", None, "JNOWAK", "PL"],
+    ["90000001", "DE", "DEMOLOG GMBH", "", "", "", "Hamburg", "20000", "DEMOLOG G",
+     "Beispielweg 1", "51426", "HAMBURG", "", None, "DEMOUSER", "PL"],
 ]
 
 
@@ -1771,9 +1771,9 @@ def _xlsx() -> bytes:
 
 def test_parse_rows():
     rows = _parse_lfa1_rows(_xlsx())
-    assert [r["sap_code"] for r in rows] == ["10000085", "10000189", "10000999", "10000085"]
-    assert rows[1]["name"] == "NORDMED CARDIO EUROPE GMBH"   # Nazwa 1 + Nazwa 2
-    assert rows[0]["address"] == "Stenzelring 33, 21107 Hamburg, DE"
+    assert [r["sap_code"] for r in rows] == ["90000001", "90000002", "90000003", "90000001"]
+    assert rows[1]["name"] == "MEDDEMO CARDIO EUROPE GMBH"   # Nazwa 1 + Nazwa 2
+    assert rows[0]["address"] == "Beispielweg 1, 20000 Hamburg, DE"
     assert rows[0]["country"] == "DE"
 
 
@@ -1782,9 +1782,9 @@ def test_import_is_idempotent_and_skips_repeated_sap_code(db_session):
     counts = _lfa1_upsert(db_session, rows)
     db_session.commit()
     assert counts == {"total": 4, "new": 3, "updated": 0, "skipped_duplicate": 1}
-    stored = db_session.scalars(select(Supplier).where(Supplier.sap_code == "10000085")).one()
+    stored = db_session.scalars(select(Supplier).where(Supplier.sap_code == "90000001")).one()
     assert stored.client_company_id is None and stored.country == "DE"
-    assert stored.address.startswith("Stenzelring 33")
+    assert stored.address.startswith("Beispielweg 1")
 
     again = _lfa1_upsert(db_session, rows)
     db_session.commit()
@@ -1793,8 +1793,8 @@ def test_import_is_idempotent_and_skips_repeated_sap_code(db_session):
 
 def test_import_fills_sap_code_on_catalog_record_not_on_client_sender(db_session):
     borealis = db_session.scalar(select(Company).where(Company.code == "BOREALIS"))
-    db_session.add_all([Supplier(name="TRANSLOG GMBH"),
-                        Supplier(name="TRANSLOG GMBH", client_company_id=borealis.id)])
+    db_session.add_all([Supplier(name="DEMOLOG GMBH"),
+                        Supplier(name="DEMOLOG GMBH", client_company_id=borealis.id)])
     db_session.commit()
 
     counts = _lfa1_upsert(db_session, _parse_lfa1_rows(_xlsx()))
@@ -1802,8 +1802,8 @@ def test_import_fills_sap_code_on_catalog_record_not_on_client_sender(db_session
 
     assert counts["new"] == 2 and counts["updated"] == 1
     catalog = db_session.scalars(select(Supplier).where(
-        Supplier.name == "TRANSLOG GMBH", Supplier.client_company_id.is_(None))).one()
-    assert catalog.sap_code == "10000085"
+        Supplier.name == "DEMOLOG GMBH", Supplier.client_company_id.is_(None))).one()
+    assert catalog.sap_code == "90000001"
     sender = db_session.scalars(select(Supplier).where(
         Supplier.client_company_id == borealis.id)).one()
     assert sender.sap_code == ""
@@ -1996,7 +1996,7 @@ git add -A backend/app/importers/master_data.py backend/app/routers/imports_mast
 git commit -m "feat(dostawcy): import LFA1 do globalnej kartoteki; jakość i skrypty bez company_id
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -2286,7 +2286,7 @@ git add backend/app/supplier_consolidation.py backend/scripts/consolidate_suppli
 git commit -m "feat(dostawcy): scalanie dubli kartoteki — podgląd, komenda, endpointy Do rozstrzygnięcia
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -2683,7 +2683,7 @@ git add frontend/src/types/core.ts frontend/src/pages/MasterDataPage.tsx fronten
 git commit -m "feat(dostawcy): zakładka Dostawcy — kartoteka/nadawca zamiast spółki, bez czyszczenia słownika
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -3006,7 +3006,7 @@ git add frontend/src/pages/masterdata/SupplierResolvePanel.tsx frontend/src/page
 git commit -m "feat(dostawcy): ekran Do rozstrzygnięcia — scalanie dubli kodu SAP i dostawców bez SAP
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 ```
 
 ---
@@ -3060,7 +3060,7 @@ Spec: docs/superpowers/specs/2026-09-25-kartoteka-dostawcy-design.md (§9 pkt 1)
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU
+<link do sesji>
 ```
 
 - [ ] **Step 4: Obserwuj CI/automerge**
@@ -3282,13 +3282,13 @@ git add backend/migrations/versions/kartoteka002_unikalnosci_kartoteki.py backen
 git commit -m "feat(dostawcy): unikalny kod SAP w kartotece i e-mail kontaktu (kartoteka002)
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+Claude-Session: <link do sesji>"
 git push -u origin claude/kartoteka-dostawcy-1b-unikalnosci
 gh pr create --draft --base main --title "Kartoteka dostawców PR1b: unikalności (po scaleniu na prod)" --body "Draft do czasu, aż na prod \`python -m scripts.consolidate_suppliers\` pokaże \`Grup do scalenia: 0\`. Migracja kartoteka002 ma precheck: przy dublach kodu SAP zatrzyma start aplikacji (Dockerfile: alembic upgrade head && uvicorn).
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01DuL7wEFJzFdfPbCLUGEMNU"
+<link do sesji>"
 ```
 
 Oznaczenie jako gotowy (`gh pr ready`) — dopiero po potwierdzeniu użytkownika, że podgląd na prod pokazuje 0 grup.
