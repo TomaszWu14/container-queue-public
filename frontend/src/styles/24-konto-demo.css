@@ -9,7 +9,7 @@
 .demo-steps li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px;
   border: 1px solid var(--border); border-radius: 10px; counter-increment: demo; }
 .demo-steps li::before { content: counter(demo); flex: none; width: 24px; height: 24px;
-  border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px;
+  border-radius: 50%; background: var(--accent); color: var(--text-on-fill); font-weight: 700; font-size: 13px;
   display: grid; place-items: center; }
 .demo-steps li > div { flex: 1; min-width: 0; }
 .demo-steps p { margin: 2px 0 0; font-size: 13px; line-height: 1.45; }

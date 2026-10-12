@@ -133,5 +133,5 @@ def _demo_account() -> dict:
     """Login i hasło konta demo (jawne z założenia — konto tylko do odczytu) albo puste."""
     logins = [x.strip() for x in settings.demo_readonly_logins.split(",") if x.strip()]
     if not logins or not settings.demo_password:
-        return {"demo_login": "", "demo_password": ""}
+        return {"demo_login": "", "demo_password": ""}  # nosec B105 — puste = brak konta demo
     return {"demo_login": logins[0], "demo_password": settings.demo_password}
