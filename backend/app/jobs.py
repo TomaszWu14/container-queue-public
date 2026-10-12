@@ -137,7 +137,7 @@ def _congestion_job() -> Job:
 
 
 def _verify_backup_fn() -> Callable:
-    """W14 #47: raz na dobę w dniu VERIFY_BACKUP_WEEKDAY (0=pon … 6=niedziela)."""
+    """W14 #47: raz na dobę w dniu VERIFY_BACKUP_WEEKDAY (0=pon … 6=niedziela, -1 = nigdy)."""
     from .backup_verify import verify_backup
     last_run_day: list[datetime.date | None] = [None]
 

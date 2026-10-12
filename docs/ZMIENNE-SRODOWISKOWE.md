@@ -60,7 +60,7 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 
 | Zmienna | Typ | Kategoria domyślnej | W compose | Przeznaczenie (z komentarza w kodzie) |
 |---|---|---|---|---|
-| `VERIFY_BACKUP_WEEKDAY` | int | ma bezpieczny domyślny | **nie** | W14 #47: dzień tygodnia cotygodniowej weryfikacji backupu (0=pon … 6=niedziela) |
+| `VERIFY_BACKUP_WEEKDAY` | int | ma bezpieczny domyślny | **nie** | W14 #47: dzień tygodnia cotygodniowej weryfikacji backupu (0=pon … 6=niedziela; `-1` = wyłączona, np. demo bez kopii) |
 | `BACKUP_DIR` | str | ma bezpieczny domyślny | tak |  |
 | `ALLOWED_UPLOAD_EXTENSIONS` | str | ma bezpieczny domyślny | **nie** |  |
 
