@@ -69,8 +69,8 @@ class Settings(BaseSettings):
     require_2fa_admin: bool = False
     # W14 #50: limit beaconów błędów JS z panelu (na IP, okno minutowe)
     client_error_rate_per_minute: int = Field(default=10, ge=1)
-    # W14 #47: dzień tygodnia cotygodniowej weryfikacji backupu (0=pon … 6=niedziela)
-    verify_backup_weekday: int = Field(default=6, ge=0, le=6)
+    # W14 #47: dzień tygodnia cotygodniowej weryfikacji backupu (0=pon … 6=niedziela; -1 = wyłączona, demo)
+    verify_backup_weekday: int = Field(default=6, ge=-1, le=6)
     backup_dir: str = "/data/backups"
     # najstarsza akceptowana kopia przy weryfikacji; backup raz w tygodniu (sobota, decyzja 2026-09-28)
     backup_max_age_hours: int = Field(default=194, ge=1)

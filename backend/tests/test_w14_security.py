@@ -339,6 +339,25 @@ def test_verify_backup_skips_on_sqlite(client, admin_headers):
     assert body["backup_verify"]["status"] == "skip"
 
 
+def test_verify_backup_weekday_minus_one_never_runs(monkeypatch):
+    # demo bez kopii: VERIFY_BACKUP_WEEKDAY=-1 — zadanie nie odpala się w żaden dzień
+    import datetime
+
+    import pytest
+
+    from app import backup_verify, jobs
+    from app.config import Settings
+    monkeypatch.setenv("VERIFY_BACKUP_WEEKDAY", "-1")
+    assert Settings().verify_backup_weekday == -1   # walidacja przepuszcza -1
+    monkeypatch.setattr(settings, "verify_backup_weekday", -1)
+    monkeypatch.setattr(backup_verify, "verify_backup", lambda: pytest.fail("nie powinno ruszyć"))
+    run = jobs._verify_backup_fn()
+    for offset in range(7):
+        day = datetime.date(2026, 10, 12) + datetime.timedelta(days=offset)
+        monkeypatch.setattr(jobs, "today_pl", lambda d=day: d)
+        assert run(None) is None
+
+
 def test_backup_codes_hashed_in_db(client):
     headers = login(client)
     _, codes = _enable_2fa(client, headers)
