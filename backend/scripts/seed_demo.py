@@ -133,9 +133,11 @@ def _history(db, container: Container, statuses: list, author: User, today: dt.d
     rows = [("created", None, container.container_no)] + [
         ("status", statuses[k - 1].value, statuses[k].value) for k in range(1, reached + 1)]
     for k, (field, old, new) in enumerate(rows):
+        at = start + step * k   # dzień z osi czasu, godzina w czasie pracy biura (8–16)
         db.add(AuditLog(entity_type="containers", entity_id=container.id, field=field,
                         old_value=old, new_value=new, user_id=author.id,
-                        created_at=(start + step * k).replace(second=0, microsecond=0)))
+                        created_at=at.replace(hour=8 + (container.id + k) % 9, minute=(k * 17) % 60,
+                                              second=0, microsecond=0)))
 
 
 def main(argv: list[str]) -> None:
