@@ -9,6 +9,7 @@ import { SESSION_EXPIRED_EVENT } from './sessionEvents'
 import { CSRF_HEADERS } from './csrf'
 import GlobalSearch from './GlobalSearch'
 import Onboarding from './Onboarding'
+import DemoMode from './DemoMode'
 import Sidebar from './Sidebar'
 import { Lang, LangContext, useT } from './i18n'
 import { AppSkeleton, Skeleton, ToastProvider } from './feedback'
@@ -165,8 +166,9 @@ export default function App() {
         ) : user ? (
           <div className="app-shell" data-tour="ctrlk">
             {user.impersonated && <ImpersonationBanner role={user.role} />}
+            {user.is_demo && <DemoMode />}
             <GlobalSearch />
-            <Onboarding />
+            {!user.is_demo && <Onboarding />}
             <Sidebar onLogout={logout} />
             <BulletinBanner />
             <div className="app-main">

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from .models import Company, CustomsAgency, User
 from .schemas import UserOut
+from .security import is_demo_login
 from .twofa_policy import must_enroll_2fa
 
 
@@ -12,6 +13,7 @@ def serialize_user(db: Session, user: User) -> UserOut:
     out.totp_enabled = bool(user.totp_secret)
     out.impersonated = bool(getattr(user, "impersonated", False))
     out.must_enroll_2fa = must_enroll_2fa(user)
+    out.is_demo = is_demo_login(user.login)
     if user.company_id:
         company = db.get(Company, user.company_id)
         out.company_code = company.code if company else None
