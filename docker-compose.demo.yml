@@ -1,4 +1,4 @@
-﻿# Publiczne demo portfolio w Coolify (Docker Compose): dane fikcyjne, konto „demo” tylko do odczytu.
+# Publiczne demo portfolio w Coolify (Docker Compose): dane fikcyjne, konto „demo” tylko do odczytu.
 # Hasła i klucz generuje Coolify (zmienne SERVICE_PASSWORD_* — nikt ich nie wpisuje ręcznie).
 # Przy każdym starcie kontenera dane demo są wgrywane od nowa (seed_demo kasuje poprzednie).
 # Domena w Coolify dla usługi „app”: https://container.queue.twapp.pl:8000 (8000 = port kontenera).
