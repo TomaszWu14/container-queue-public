@@ -22,6 +22,26 @@ zmienne: [docs/ZMIENNE-SRODOWISKOWE.md](ZMIENNE-SRODOWISKOWE.md), onboarding: [d
 Kilka aplikacji na jednej domenie (brama nginx + niezależny stack n8n,
 token serwisowy dla workflow, webhook zdarzeń): [docs/N8N.md](N8N.md).
 
+### Instancja demo (portfolio)
+
+`docker-compose.demo.yml` w Coolify (Public Repository → Docker Compose, domena usługi `app`
+z portem `:8000`). Hasła i klucz generuje Coolify (`SERVICE_PASSWORD_*`); konto `demo` tylko do
+odczytu (`DEMO_READONLY_LOGINS`, `DEMO_PASSWORD`), kontakt „Zgłoś problem” — `SUPPORT_EMAIL`.
+Dane pokazowe wgrywa od nowa każdy start kontenera (`seed_demo --wyczysc-wszystko` w `command`).
+
+Nocny reset bez restartu — w Coolify: zasób demo → **Scheduled Tasks → + Add**:
+
+| Pole | Wartość |
+|---|---|
+| Name | `reset-demo` |
+| Command | `python -m scripts.seed_demo --wyczysc-wszystko` |
+| Frequency | `0 3 * * *` (codziennie 3:00) |
+| Container name | `app` |
+
+Skrypt odmawia działania bez `DEMO_READONLY_LOGINS` i bez flagi, więc na zwykłej instancji nic
+nie skasuje. Konto demo i tak nie może niczego zapisać — reset przywraca daty względem „dziś”
+(kolejka bieżącego tygodnia, statusy zgodne z ETA).
+
 ## Szybki start (Docker)
 
 ```bash

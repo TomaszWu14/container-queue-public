@@ -9,9 +9,30 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
 
-🌐 **Demo online: [container.queue.twapp.pl](https://container.queue.twapp.pl)** — login `demo`,
-hasło `demoportfolio2026` (tylko podgląd, 150 fikcyjnych kontenerów, dane wgrywane od nowa przy każdym
-wdrożeniu). Lokalnie uruchomisz to samo trzema komendami — sekcja [Jak uruchomić](#jak-uruchomić).
+🌐 **Demo online: [container.queue.twapp.pl](https://container.queue.twapp.pl)** — na ekranie
+logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
+odczytu, 150 fikcyjnych kontenerów; ekran powitalny prowadzi przez 4 miejsca na 5 minut. Coś nie działa?
+Napisz: tomasz.wierzbowski@op.pl. Lokalnie uruchomisz to samo trzema komendami — sekcja
+[Jak uruchomić](#jak-uruchomić).
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/powitanie-demo.png" alt="Ekran powitalny konta demo: cztery miejsca do obejrzenia"></td>
+    <td><img src="docs/screenshots/kolejka.png" alt="Kolejka dostaw w bieżącym tygodniu, pogrupowana dniami awizacji"></td>
+  </tr>
+  <tr>
+    <td align="center">Ekran powitalny konta demo</td>
+    <td align="center">Kolejka: dostawy pogrupowane dniami, status, magazyn, spedytor, demurrage</td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/karta-kontenera.png" alt="Karta kontenera z historią zmian statusu"></td>
+    <td><img src="docs/screenshots/sledzenie.png" alt="Mapa śledzenia: kontenery w portach załadunku, przeładunku i docelowych"></td>
+  </tr>
+  <tr>
+    <td align="center">Karta kontenera: etap procesu i historia każdej zmiany</td>
+    <td align="center">Śledzenie: kontenery na trasie Chiny → Europa</td>
+  </tr>
+</table>
 
 > **Projekt portfolio.** Nazwy firm są zamienione na fikcyjne, dane demo i testowe są syntetyczne.
 > Kod udostępniony do wglądu, wszelkie prawa zastrzeżone — [`LICENSE`](LICENSE).
