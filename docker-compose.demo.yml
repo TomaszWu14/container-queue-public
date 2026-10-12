@@ -1,7 +1,7 @@
 # Publiczne demo portfolio w Coolify (Docker Compose): dane fikcyjne, konto „demo” tylko do odczytu.
 # Hasła i klucz generuje Coolify (zmienne SERVICE_PASSWORD_* — nikt ich nie wpisuje ręcznie).
 # Przy każdym starcie kontenera dane demo są wgrywane od nowa (seed_demo kasuje poprzednie).
-# Domena w Coolify dla usługi „app”: https://con.queue.twapp.pl:8000 (8000 = port kontenera).
+# Domena w Coolify dla usługi „app”: https://container.queue.twapp.pl:8000 (8000 = port kontenera).
 services:
   db:
     image: postgres:16-alpine
@@ -38,7 +38,8 @@ services:
       ADMIN_PASSWORD: ${SERVICE_PASSWORD_ADMIN}
       DEMO_READONLY_LOGINS: demo
       DEMO_PASSWORD: demoportfolio2026   # celowo jawne: konto tylko do odczytu, podane w README
-      PUBLIC_BASE_URL: https://con.queue.twapp.pl
+      PUBLIC_BASE_URL: https://container.queue.twapp.pl
+      SECURE_COOKIES: "true"             # demo za HTTPS (Traefik); bez tego produkcja nie wstaje
       MAIL_BACKEND: console              # demo nie wysyła maili
       UPLOADS_DIR: /data/uploads
     command: >-
