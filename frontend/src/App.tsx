@@ -270,7 +270,7 @@ export default function App() {
               ))}
               {/* Trasy tylko dla gościa (login/reset) — zalogowany trafia na nie tuż po
                   logowaniu (URL zostaje na /login); bez tego łapie je „*" → mylące 404. */}
-              {['/login', '/forgot-password', '/reset-password'].map(path => (
+              {['/login', '/demo', '/forgot-password', '/reset-password'].map(path => (
                 <Route key={path} path={path} element={<Navigate to="/" replace />} />
               ))}
               <Route path="*" element={<NotFound />} />
@@ -292,6 +292,7 @@ export default function App() {
             <Route path="/" element={<LoginPage onLogin={reload} />} />
             <Route path="/o-systemie" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage onLogin={reload} />} />
+            <Route path="/demo" element={<LoginPage onLogin={reload} autoDemo />} />
             <Route path="*" element={<LoginPage onLogin={reload} />} />
           </Routes>
           </Suspense>

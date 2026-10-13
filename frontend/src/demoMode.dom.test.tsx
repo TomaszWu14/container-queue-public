@@ -43,6 +43,26 @@ describe('Ekran logowania — instancja portfolio', () => {
     expect(screen.queryByText('admin@example.com')).toBeNull()
   })
 
+  it('link /demo (autoDemo) loguje kontem demo bez klikania — jeden raz', async () => {
+    const logins: string[] = []
+    stubFetch({ demo_login: 'demo', demo_password: 'haslo-demo-123' }, logins)
+    const onLogin = vi.fn()
+    render(<MemoryRouter><LoginPage onLogin={onLogin} autoDemo /></MemoryRouter>)
+    await waitFor(() => expect(onLogin).toHaveBeenCalled())
+    expect(logins).toHaveLength(1)
+    expect(logins[0]).toContain('username=demo')
+  })
+
+  it('link /demo na zwykłej instancji: nic nie loguje, zwykły ekran logowania', async () => {
+    const logins: string[] = []
+    stubFetch({}, logins)
+    const onLogin = vi.fn()
+    render(<MemoryRouter><LoginPage onLogin={onLogin} autoDemo /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByText('admin@example.com')).toBeTruthy())
+    expect(logins).toHaveLength(0)
+    expect(onLogin).not.toHaveBeenCalled()
+  })
+
   it('zwykła instancja: bez karty demo, wizytówka administratora jak dotąd', async () => {
     stubFetch({})
     render(<MemoryRouter><LoginPage onLogin={() => {}} /></MemoryRouter>)

@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useEffect, useState } from 'react'
+import { FormEvent, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ApiError, api, login } from '../api'
 import { LANGS, Lang, LangContext, useT } from '../i18n'
@@ -83,7 +83,9 @@ type Branding = {
 
 const CHIPS = ['Awizacje', 'Limity magazynów', 'Odprawa celna', 'Zlecenia transportowe', 'Powiadomienia']
 
-export default function LoginPage({ onLogin }: { onLogin: () => void }) {
+// autoDemo: wejście z linku /demo (README, YouTube) — na instancji portfolio loguje od razu kontem
+// demo, bez klikania; na zwykłej instancji (branding bez konta demo) zostaje zwykły ekran logowania
+export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () => void; autoDemo?: boolean }) {
   const t = useT()
   const navigate = useNavigate()
   const { lang, setLang } = useContext(LangContext)
@@ -102,6 +104,13 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   // 2FA: drugi krok logowania — backend zwrócił pending_token zamiast cookies
   const [pendingToken, setPendingToken] = useState('')
   const [totpCode, setTotpCode] = useState('')
+
+  const autoTried = useRef(false)
+  useEffect(() => {
+    if (!autoDemo || !demo || autoTried.current) return
+    autoTried.current = true
+    void signIn(demo.login, demo.password)
+  })
 
   const submit = (event: FormEvent) => { event.preventDefault(); void signIn(username, password) }
 
