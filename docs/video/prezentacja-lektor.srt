@@ -1,0 +1,131 @@
+1
+00:00:04,500 --> 00:00:06,242
+Kolejka dostaw kontenerów.
+
+2
+00:00:06,242 --> 00:00:12,203
+Około dwustu kontenerów miesięcznie, cztery spółki, magazyny, spedytorzy i agencja celna.
+
+3
+00:00:12,203 --> 00:00:18,232
+Dotąd wszystko żyło w jednym Excelu rozsyłanym mailem, bez historii zmian i bez walidacji.
+
+4
+00:00:18,232 --> 00:00:23,256
+Cztery osoby w logistyce traciły na to około trzydziestu godzin tygodniowo.
+
+5
+00:00:24,456 --> 00:00:26,831
+Każdy kontener ma jedną kartę.
+
+6
+00:00:26,831 --> 00:00:30,314
+Numer jest sprawdzany według normy ISO 6346.
+
+7
+00:00:30,314 --> 00:00:34,827
+Literówka nie przejdzie, bo system liczy cyfrę kontrolną.
+
+8
+00:00:36,456 --> 00:00:40,398
+Zamiast kolejnych wersji pliku jest jeden status.
+
+9
+00:00:40,398 --> 00:00:43,133
+A każda zmiana trafia do historii:
+
+10
+00:00:43,133 --> 00:00:45,547
+kto, kiedy, co było i co jest.
+
+11
+00:00:46,747 --> 00:00:47,551
+Śledzenie:
+
+12
+00:00:47,551 --> 00:00:52,859
+statki z sygnału AIS, kontenery na trasie i w portach przeładunku.
+
+13
+00:00:54,747 --> 00:00:55,793
+Odprawa celna.
+
+14
+00:00:55,793 --> 00:00:59,081
+Faktura PDF od dostawcy trafia do kontenera.
+
+15
+00:00:59,081 --> 00:01:06,554
+System dzieli plik na fakturę i packing listę, i sprawdza, czy to na pewno dokumenty tego kontenera.
+
+16
+00:01:07,754 --> 00:01:11,705
+Pozycje odczytane z PDF są dopasowane do kartoteki:
+
+17
+00:01:11,705 --> 00:01:15,114
+polska nazwa, kod CN i wagi z packing listy.
+
+18
+00:01:15,114 --> 00:01:19,762
+Do agencji celnej idzie gotowy mail z plikiem XML do WinSAD.
+
+19
+00:01:19,762 --> 00:01:23,558
+Pozycje zgłoszenia są wyliczone prosto z faktury.
+
+20
+00:01:27,754 --> 00:01:28,408
+Awizacja.
+
+21
+00:01:28,408 --> 00:01:32,772
+Logistyka wysyła spedytorowi prośbę o potwierdzenie terminu.
+
+22
+00:01:32,772 --> 00:01:38,516
+Spedytor dostaje link w mailu i odpowiada bez zakładania konta i bez logowania.
+
+23
+00:01:47,754 --> 00:01:51,039
+Logistyka zatwierdza odpowiedź jednym kliknięciem.
+
+24
+00:01:51,039 --> 00:01:54,259
+System rezerwuje termin i prosi o dane kierowców.
+
+25
+00:01:54,259 --> 00:01:55,573
+To świadoma decyzja:
+
+26
+00:01:55,573 --> 00:02:00,502
+spedytor nie musi mieć konta, więc małe spedycje nie wypadają z planowania.
+
+27
+00:02:01,702 --> 00:02:05,941
+Link działa tylko raz i wygasa po kilku dniach.
+
+28
+00:02:05,941 --> 00:02:11,262
+W bazie nie ma samego linku, jest tylko jego skrót SHA-256.
+
+29
+00:02:12,462 --> 00:02:14,441
+Świadomie poza zakresem:
+
+30
+00:02:14,441 --> 00:02:20,705
+zapis do SAP, bo system tylko czyta jego eksporty, oraz tracking u armatora.
+
+31
+00:02:20,705 --> 00:02:22,023
+To kolejny etap.
+
+32
+00:02:23,223 --> 00:02:26,051
+Python, FastAPI, PostgreSQL i React.
+
+33
+00:02:26,051 --> 00:02:34,221
+Kod i dokumentacja analityczna są na GitHubie, a wersję demo, bez logowania, otworzysz z linku w opisie.

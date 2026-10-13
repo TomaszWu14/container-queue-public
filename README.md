@@ -7,10 +7,10 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 ![Błędny numer kontenera zatrzymany walidacją ISO 6346, poprawka i wpis w historii zmian](docs/screenshots/demo.gif)
 
-📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
+📹 [Prezentacja działania z lektorem — 2:42](docs/video/prezentacja-lektor.mp4) · [wersja bez dźwięku, 2 min](docs/video/prezentacja.mp4)
 
-🌐 **Demo online: [container.queue.twapp.pl](https://container.queue.twapp.pl)** — na ekranie
-logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
+🌐 **Demo online bez logowania: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** —
+link od razu wpuszcza na konto demo. Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
 odczytu, 150 fikcyjnych kontenerów; ekran powitalny prowadzi przez 4 miejsca na 5 minut. Coś nie działa?
 Napisz: tomasz.wierzbowski@op.pl. Lokalnie uruchomisz to samo trzema komendami — sekcja
 [Jak uruchomić](#jak-uruchomić).
