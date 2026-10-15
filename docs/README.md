@@ -54,6 +54,9 @@ Rozbieżności z kodem są wypisane w [07](07-ograniczenia.md#dokumentacja-niezg
 
 ## 5. Audyty i pomysły
 
+[AUDYT.md](AUDYT.md) — audyt repozytorium z trzech perspektyw (BA / DEV / SEC), stan na 2026-10-15,
+z listą ryzyk i pytaniami do Product Ownera.
+
 [audyt-nielsen-kolejka.md](audyt-nielsen-kolejka.md),
 [audyt-tracking-przeplywy-2026-09-15.md](audyt-tracking-przeplywy-2026-09-15.md),
 [PROMPT-AUDYT-UX.md](PROMPT-AUDYT-UX.md),
