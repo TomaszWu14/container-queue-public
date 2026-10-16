@@ -130,6 +130,40 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   `graphify-out/`; `docs/testy/E2E.md` i `docs/CLAUDE-GITHUB.md` z notą, że workflowy istnieją tylko w repo
   prywatnym; `README.md`: czas testów. `SECURITY.md` poprawiono w PR procesu.
 
+### US-027 · [BA][DEV] Demo pokazuje cały proces, nie tylko kolejkę
+- **Rozmiar:** M · **Źródło:** pomysły 1–5 PO, 2026-10-16 („aplikacja flagowa”) · **Wymagania:** FR-005, FR-009…FR-011,
+  FR-019, FR-020, FR-028 · **Priorytet:** Must (decyzja PO 2026-10-16: „rób”)
+- **Stan:** zrealizowane w PR #18; odbiór [BA] ✅, przegląd [SEC] ✅; czeka na scalenie i redeploy demo.
+- **Jako** osoba z zewnątrz oglądająca demo **chcę** zobaczyć odprawę, dokumenty, awizację, zamówienia i demurrage
+  na żywych danych, **aby** ocenić cały proces, a nie samą listę kontenerów.
+- **Kryteria akceptacji**
+  - Dane: świeży seed → Wtedy status odprawy zgodny z etapem (przed portem BRAK, ZREALIZOWANY = ROZLICZONY,
+    ODPRAWA nigdy BRAK), kilka REWIZJI z notatką i datą, agencja przypisana dokładnie wtedy, gdy odprawę zlecono.
+  - Wtedy każdy kontener ma armatora i port docelowy, a co najmniej 3 mają termin demurrage za ≤ 3 dni (alert FR-028).
+  - Wtedy 30 zamówień po 3 kontenery.
+  - Wtedy wymagane kafelki dokumentów (PI, CI, PL, BL, SAD) mają pliki PDF na dysku, z celowymi brakami
+    w części kontenerów; po rozładunku jest CMR; status obiegu dokumentów zgodny z odprawą.
+  - Wtedy awizacje w stanach: czeka na spedytora, odpowiedź do decyzji (zgoda + prośba o inny termin),
+    odrzucona z komentarzem, etap kierowców (wysłany i podany), zamknięta.
+  - Słowniki usuwane przez czyszczenie demo (typy dokumentów z migracji) są odtwarzane.
+- **[SEC]:** tylko dane syntetyczne (PDF z napisem „DEMO”, numery 000, domena example.com); bez nowych tras i danych osobowych.
+- **Test:** `backend/tests/test_seed_demo_process.py`.
+
+### US-028 · [BA][SEC] Konta demo per rola (spedytor, agencja celna, magazyn)
+- **Rozmiar:** S · **Źródło:** pomysł 7 PO, 2026-10-16 · **Wymagania:** FR-022…FR-024 · **Priorytet:** Must („rób”)
+- **Stan:** zrealizowane w PR #18; odbiór [BA] ✅, przegląd [SEC] ✅.
+- **Jako** osoba oglądająca demo **chcę** zalogować się jako spedytor, agencja i magazyn, **aby** zobaczyć,
+  że każdy partner widzi tylko swoje kontenery.
+- **Kryteria akceptacji**
+  - Dane: `DEMO_READONLY_LOGINS=demo,demo-spedytor,demo-agencja,demo-magazyn` → Gdy seed → Wtedy role wg słowa
+    w loginie (logistyka, spedytor, agencja celna, magazyn DLT), to samo hasło `DEMO_PASSWORD`.
+  - Gdy każde konto pobiera listę kontenerów → Wtedy ma co oglądać; spedytor widzi tylko swoje zlecenia,
+    agencja tylko zlecone odprawy, magazyn tylko swój magazyn.
+  - Gdy którekolwiek konto próbuje zapisu → Wtedy 403 „Konto demo — tylko podgląd”.
+- **[SEC]:** rola przypisywana tylko kontom z listy `DEMO_READONLY_LOGINS` (seed tworzy konta wyłącznie z niej),
+  więc każde jest tylko do odczytu po stronie API. Wyjątek E-05 rozszerzony o konta per rola.
+- **Test:** `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` (4 role).
+
 ## Should
 
 ### US-011 · [SEC] Strażnik izolacji danych dla nowych tras
@@ -150,6 +184,8 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 ### US-014 · [BA] Mierniki sukcesu liczone z danych aplikacji
 - **Rozmiar:** S · **Źródło:** `WIZJA.md` M-1…M-7 · **Zależy od:** Z-004.
 - Raport (skrypt albo ekran admina) z M-2…M-6 na podstawie `audit_log`, `users.last_seen`, tokenów awizacji.
+- Pomysł 6 PO (2026-10-16): **panel mierników dla kierownika logistyki** jako ekran w aplikacji — odpowiedź na
+  „ile to oszczędza”. Pomysły 8–10 z tej samej listy to US-009, US-003 i US-016.
 
 ### US-015 · [DEV] Jedna wersja Pythona i Node w README, CI i obrazie
 - **Rozmiar:** S · **Źródło:** `AUDYT.md` §2.6 pkt 4 · **Wymagania:** NFR-011

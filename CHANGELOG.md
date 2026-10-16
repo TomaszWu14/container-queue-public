@@ -8,6 +8,11 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Demo pokazuje cały proces** (US-027): odprawa zgodna z etapem kontenera (z rewizjami), armatorzy i porty
+  docelowe, alerty demurrage, 30 zamówień, dokumenty PDF z celowymi brakami, awizacje we wszystkich stanach.
+  Moduł `backend/scripts/seed_demo_process.py`; demo odtwarza też typy dokumentów, które czyszczenie kasowało.
+- **Konta demo per rola** (US-028): `demo-spedytor`, `demo-agencja`, `demo-magazyn` — tylko odczyt, każde widzi
+  tylko swoje kontenery (`docker-compose.demo.yml`, `README.md`).
 - Proces zespołowy BA / DEV / SEC z Product Ownerem: `CONTRIBUTING.md` (role, 7 kroków, Definition of
   Ready/Done, konwencje, narzędzia), ADR-0002.
 - Szablony issues (`historyjka`, `błąd`, `bezpieczeństwo`) i PR z checklistami BA/DEV/SEC; `CODEOWNERS`;

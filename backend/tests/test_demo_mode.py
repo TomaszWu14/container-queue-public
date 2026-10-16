@@ -92,7 +92,7 @@ def test_me_flags_demo_account(client, db_session, monkeypatch, admin_headers):
     assert client.get("/api/auth/me", headers=admin_headers).json()["is_demo"] is False
 
 
-def test_seed_gives_recruiter_a_full_first_screen(client, monkeypatch):
+def test_seed_gives_recruiter_a_full_first_screen(client, monkeypatch, tmp_path):
     # demo dla rekrutera: kolejka w bieżącym tygodniu niepusta, statusy zgodne z datami,
     # historia zmian na karcie kontenera, punkty na mapie śledzenia
     import datetime as dt
@@ -101,6 +101,7 @@ def test_seed_gives_recruiter_a_full_first_screen(client, monkeypatch):
     from app.models import AuditLog, Container, TrackingEvent
     from app.models.enums import ContainerStatus, today_pl
     monkeypatch.setattr(settings, "demo_readonly_logins", "demo")
+    monkeypatch.setattr(settings, "uploads_dir", str(tmp_path))   # dokumenty demo (US-027)
     seed_demo.wipe()
     assert seed_demo.seed(["demo"], PW) == 150
     today = today_pl()
