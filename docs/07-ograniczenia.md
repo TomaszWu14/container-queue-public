@@ -30,7 +30,7 @@ dokumentów ani przy przekroczonym limicie magazynu, nie ma publicznego linku dl
 | P-06 | Nowe magazyny zawsze z krajem PL | magazyn w Portugalii dostaje polskie święta | `routers/containers_write.py:266`, `importers/queue.py:207-208` |
 | P-07 | Alert przeciągającej się odprawy pomija statusy DRAFT_* | odprawa może wisieć bez alertu | `notification_alerts.py:240` |
 | P-08 | Alert „ETA minęło” ma okno jednego dnia | jeśli zadanie nie przebiegnie danego dnia, alertu nie będzie | `notification_alerts.py:157-160` |
-| P-09 | „Wyślij plan do spedycji” nie wysyła maila, tylko zmienia status | spedytor dowie się o planie dopiero z aplikacji | `routers/containers_planning.py:40-65` |
+| P-09 | **Naprawione (US-017, czeka na PR): przycisk „Wyślij plan” w kolejce i mail do spedytora.** „Wyślij plan do spedycji” nie wysyła maila, tylko zmienia status | spedytor dowie się o planie dopiero z aplikacji | `routers/containers_planning.py:40-65` |
 | P-10 | Wybór zwycięskiej oferty nie przypisuje spedytora do kontenera | potrzebny osobny ręczny krok | `routers/quotes_offers.py:173-228` |
 | P-11 | Zdarzenia do n8n ignorują odpowiedzi 4xx/5xx | nieudane zdarzenie znika bez śladu | `notifications.py:263` |
 | P-12 | Maile powiadomień (SMTP) bez ponawiania; bez skonfigurowanego serwera pomijane po cichu | utracone powiadomienia | `notifications.py:121-144` |

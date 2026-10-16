@@ -1,4 +1,4 @@
-import { CalendarIcon, MailIcon, XIcon } from 'lucide-react'
+import { CalendarIcon, MailIcon, SendIcon, XIcon } from 'lucide-react'
 // Kolejka Enterprise (plaster 3): pasek akcji masowych — zastępuje pasek filtrów, gdy coś
 // zaznaczono. Status i magazyn jednym żądaniem (POST /containers/bulk/*), awizacja i wycena
 // przez istniejące modale, data przez istniejące potwierdzenie przeniesienia, usuwanie — admin.
@@ -12,6 +12,20 @@ import type { QueueMove } from './useQueueMove'
 import { useConfirm } from '../../ConfirmDialog'
 
 type BulkResult = { ok: number[]; failed: { id: number; detail: string }[] }
+// POST /api/containers/plan/send (US-017)
+export type PlanResult = { sent: number; no_forwarder: string[]; skipped: string[]
+  emailed: { forwarder: string }[]; missing_email: string[]; failed: { forwarder: string }[] }
+
+/** Jedno zdanie wyniku „Wyślij plan” — co poszło mailem, czego brakuje (bez cichego pomijania). */
+export function planSummary(r: PlanResult, t: (k: string) => string): string {
+  const part = (key: string, list: string[]) => list.length ? t(key).replace('{list}', list.join(', ')) : ''
+  return [t('sendPlanSent').replace('{n}', String(r.sent)),
+          part('sendPlanMailed', r.emailed.map(e => e.forwarder)),
+          part('sendPlanNoEmail', r.missing_email),
+          part('sendPlanMailFailed', r.failed.map(f => f.forwarder)),
+          part('sendPlanNoForwarder', r.no_forwarder),
+          part('sendPlanSkipped', r.skipped)].filter(Boolean).join(' · ')
+}
 
 // ZREALIZOWANY zamyka rozliczenie — nie z kolejki (jak dawny masowy select)
 const BULK_STATUSES = CONTAINER_STATUSES.filter(s => s !== 'ZREALIZOWANY')
@@ -43,6 +57,21 @@ export default function BulkActionBar({ mv, isAdmin, warehouseOptions, onAvizo, 
     try {
       const r = await api.post<BulkResult>(`/api/containers/bulk/${path}`, { ids, ...body })
       finish(r.ok.length, ids.length, r.failed[0]?.detail)
+    } catch (err) {
+      showToast(errorMessage(err), 'error')
+    } finally {
+      setBusy(false)
+    }
+  }
+  const sendPlan = async () => {
+    if (!(await confirm(t('sendPlanConfirm').replace('{n}', String(ids.length))))) return
+    setBusy(true)
+    try {
+      const r = await api.post<PlanResult>('/api/containers/plan/send', { container_ids: ids })
+      const clean = !r.no_forwarder.length && !r.missing_email.length && !r.failed.length
+      showToast(planSummary(r, t), clean ? 'success' : 'error')
+      mv.setSelected(new Set())
+      reload()
     } catch (err) {
       showToast(errorMessage(err), 'error')
     } finally {
@@ -87,6 +116,9 @@ export default function BulkActionBar({ mv, isAdmin, warehouseOptions, onAvizo, 
         <button type="button" className="btn small secondary" disabled={busy}
                 onClick={() => mv.setBulkDatePick(true)}><CalendarIcon size={14} /> {t('bulkMoveDate')}</button>
       )}
+      <button type="button" className="btn small secondary" disabled={busy} onClick={sendPlan}>
+        <SendIcon size={14} /> {t('kqbSendPlan')}
+      </button>
       <button type="button" className="btn small avizo-btn" disabled={busy} onClick={onAvizo}>
         <MailIcon size={14} /> {t('kqdAvizo')}
       </button>

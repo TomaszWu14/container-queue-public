@@ -1,0 +1,11 @@
+<div style='font-family:Calibri,Arial,sans-serif;font-size:14px'>
+<p>Dzień dobry, / Hello,</p>
+<p>przesyłamy proponowane daty dostaw kontenerów. Prosimy o potwierdzenie albo zmianę daty
+w aplikacji: <a href="{{ link }}">{{ link }}</a> (zakładka Spedycja).<br>
+<span style='color:#64748b'>please find the proposed delivery dates below. Please confirm or change them
+in the application: <a href="{{ link }}">{{ link }}</a> (Forwarding tab).</span></p>
+{% include "mail/container_table.html" %}
+<p style='color:#64748b'>Godzinę i dane kierowcy ustalimy później w awizacji. /
+The time slot and driver details will follow in the delivery notification.</p>
+<p>Pozdrawiamy / Best regards,<br>{{ operator }}</p>
+</div>

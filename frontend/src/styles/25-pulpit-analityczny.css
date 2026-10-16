@@ -1,0 +1,97 @@
+/* Pulpit analityczny (widok w stylu Power BI): przepływ procesu, koła podziału, kolumny tygodni.
+   Paleta kategorii sprawdzona walidatorem (CVD ΔE ≥ 8, osobne stopnie dla ciemnego motywu);
+   stany odprawy biorą barwy statusów (--success-ink / --warning-ink), nie kategorii. */
+:root {
+  --viz-1: #2a78d6; --viz-2: #eb6834; --viz-3: #1baf7a; --viz-4: #eda100; --viz-rest: #a7aeb8;
+}
+:root[data-theme='dark'], .theme-dark {
+  --viz-1: #3987e5; --viz-2: #d95926; --viz-3: #199e70; --viz-4: #c98500; --viz-rest: #5b6675;
+}
+
+.ana-board { display: grid; gap: var(--sp-3, 12px); margin: 0 0 var(--sp-3, 12px); }
+.ana-grid { display: grid; gap: var(--sp-3, 12px); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ana-card { margin: 0; padding: 16px 18px; border-radius: var(--r-md, 10px); }
+.ana-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.ana-card-title { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-strong); }
+.ana-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.ana-empty { margin: 16px 0 4px; }
+
+/* --- tony serii (kolor = tożsamość; tekst zawsze w kolorach tekstu) --- */
+.tone-1 { --tone: var(--viz-1); } .tone-2 { --tone: var(--viz-2); } .tone-3 { --tone: var(--viz-3); }
+.tone-4 { --tone: var(--viz-4); } .tone-rest { --tone: var(--viz-rest); }
+.tone-good { --tone: var(--success-ink); } .tone-warn { --tone: var(--warning-ink); }
+.tone-done { --tone: var(--viz-1); }
+.ana-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--tone); flex: none; }
+.ana-swatch.tone-planned { background: repeating-linear-gradient(135deg, var(--viz-1) 0 2px, transparent 2px 4px);
+  box-shadow: inset 0 0 0 1px var(--viz-1); }
+
+/* --- koło (pierścień) --- */
+.ana-donut { display: flex; align-items: center; gap: 18px; margin-top: 10px; }
+.ana-donut-svg { width: 132px; height: 132px; flex: none; overflow: visible; }
+.ana-donut-track { stroke: var(--panel-2); }
+.ana-arc { stroke: var(--tone); transition: opacity .15s, stroke-width .15s; cursor: default; }
+.ana-arc.dim { opacity: .28; }
+.ana-donut-value { font-size: 26px; font-weight: 800; fill: var(--text); }
+.ana-donut-caption { font-size: 11px; font-weight: 600; fill: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.ana-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; flex: 1; min-width: 0; }
+.ana-legend li { display: grid; grid-template-columns: 10px 1fr auto 3.2em; align-items: center; gap: 8px;
+  padding: 4px 6px; border-radius: 6px; font-size: 13px; color: var(--text); }
+.ana-legend li.on, .ana-legend li:focus-visible { background: var(--panel-2); outline: none; }
+.ana-legend-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ana-legend-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+.ana-legend-pct { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* --- przepływ procesu (strzałki) --- */
+.ana-flow { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px 2px; margin-top: 12px; }
+.ana-phase { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  border-bottom: 2px solid var(--border); padding: 0 4px 4px; margin: 0 4px; }
+.ana-step { position: relative; background: var(--panel-2); padding: 10px 16px 10px 20px; min-width: 0;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%); }
+.ana-step:first-of-type { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); }
+.ana-step-head { display: flex; align-items: flex-start; gap: 6px; min-width: 0; min-height: 2.5em; }
+.ana-step-no { font-size: 11px; font-weight: 800; color: var(--muted-strong); flex: none; }
+.ana-step-name { font-size: 12px; line-height: 1.25; color: var(--muted-strong); overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.ana-step-count { font-size: 26px; font-weight: 800; line-height: 1.15; color: var(--text); font-variant-numeric: tabular-nums; }
+.ana-step.zero .ana-step-count { color: var(--muted); }
+.ana-step-track { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.ana-step-bar { height: 100%; border-radius: 3px; background: var(--accent); }
+.ana-step.top { background: color-mix(in srgb, var(--accent) 14%, var(--panel)); }
+.ana-step.top .ana-step-no { color: var(--accent-ink); }
+
+/* --- kolumny tygodni --- */
+.ana-key { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
+.ana-key span { display: inline-flex; align-items: center; gap: 6px; }
+.ana-cols { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; margin-top: 12px; }
+.ana-col { position: relative; display: flex; flex-direction: column; align-items: stretch; outline: none; }
+.ana-col-plot { height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+  border-bottom: 1px solid var(--border); }
+.ana-col-bar { width: min(100%, 44px); min-height: 2px; border-radius: 4px 4px 0 0; background: var(--viz-1); }
+.ana-col.planned .ana-col-bar { background: repeating-linear-gradient(135deg, var(--viz-1) 0 3px, transparent 3px 6px);
+  box-shadow: inset 0 0 0 1.5px var(--viz-1); }
+.ana-col.now .ana-col-bar { background: var(--accent); }
+.ana-col-value { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+.ana-col-label { font-size: 11px; color: var(--muted); text-align: center; margin-top: 6px; white-space: nowrap; }
+.ana-col.now .ana-col-label { color: var(--accent-ink); font-weight: 700; }
+.ana-col-tip { position: absolute; bottom: calc(100% - 20px); left: 50%; transform: translateX(-50%); z-index: 2;
+  background: var(--chrome); color: var(--text-on-fill); font-size: 12px; padding: 4px 8px; border-radius: 6px;
+  white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .12s; }
+.ana-col:hover .ana-col-tip, .ana-col:focus-visible .ana-col-tip { opacity: 1; }
+.ana-col:hover .ana-col-bar, .ana-col:focus-visible .ana-col-bar { filter: brightness(1.12); }
+
+@media (max-width: 900px) {
+  .ana-flow { grid-template-columns: 1fr; gap: 4px; }
+  .ana-phase { display: none; }
+  .ana-step, .ana-step:first-of-type { clip-path: none; border-radius: 8px; display: grid;
+    grid-template-columns: minmax(0, 1fr) 3em; grid-template-areas: "head count" "track track"; align-items: center;
+    padding: 8px 12px; column-gap: 8px; }
+  .ana-step-head { grid-area: head; min-height: 0; align-items: center; } .ana-step-count { grid-area: count; font-size: 20px; text-align: right; }
+  .ana-step-track { grid-area: track; margin-top: 4px; }
+}
+@media (max-width: 640px) {
+  .ana-donut { flex-direction: column; align-items: stretch; }
+  .ana-donut-svg { align-self: center; }
+  .ana-cols { gap: 3px; }
+  .ana-col-label { font-size: 10px; }
+  .ana-col.now .ana-col-label { white-space: normal; }
+}

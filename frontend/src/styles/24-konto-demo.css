@@ -18,3 +18,26 @@
    zapis i tak jest odcinany (api.ts, serwer); klik nadal pokaże powód */
 body.demo-readonly form button[type="submit"],
 body.demo-readonly form button:not([type]) { opacity: .45; cursor: not-allowed; }
+/* „historia jednego kontenera” — pierwszy, wyróżniony krok ekranu powitalnego */
+.demo-steps li.demo-step-story { border-color: var(--accent); background: var(--soft); }
+
+/* „Jak to zbudowano” (HowBuiltPage) — architektura w prostych blokach, tylko zmienne motywu */
+.hb-arch { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.hb-stack { flex: 1 1 280px; display: flex; flex-direction: column; }
+.hb-box { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 1px solid var(--border);
+  border-radius: 10px; background: var(--panel-2); }
+.hb-box.small { font-size: 13px; }
+.hb-arrow { text-align: center; color: var(--muted); line-height: 1.6; }
+.hb-side { flex: 1 1 220px; list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.hb-decisions { margin: 0; padding-left: 20px; display: grid; gap: 10px; }
+.hb-decisions p { margin: 2px 0 0; font-size: 14px; line-height: 1.5; }
+.hb-links { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+/* ryzyko kary za przestój (DemurrageRiskCard) */
+.risk-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.risk-list li { display: grid; grid-template-columns: 130px 1fr; gap: 10px; font-size: 14px; line-height: 1.45; }
+@media (max-width: 600px) { .risk-list li { grid-template-columns: 1fr; gap: 2px; } }
+
+/* panel „Ile to oszczędza”: podpis kafelka niesie założenie i „a z b” — na telefonie zostaje
+   (pulpit chowa .ctl-kpi-sub < 640 px, 05-status-pages.css A6) */
+@media (max-width: 640px) { .value-card .ctl-kpi-sub { display: block; } }

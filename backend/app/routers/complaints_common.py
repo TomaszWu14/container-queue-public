@@ -21,17 +21,12 @@ from ..models import (
     today_pl,
     utcnow,
 )
+from ..file_signatures import looks_like_image
 from ..schemas import ComplaintDetailOut, ComplaintOut, ComplaintPhotoOut
 
 def _looks_like_image(head: bytes) -> bool:
     """Rozpoznaje obraz po sygnaturze bajtowej — nie ufamy Content-Type/rozszerzeniu."""
-    if head.startswith((b"\xff\xd8\xff", b"\x89PNG\r\n\x1a\n", b"GIF87a", b"GIF89a")):
-        return True
-    if head[:4] == b"RIFF" and head[8:12] == b"WEBP":
-        return True
-    if head[4:8] == b"ftyp":  # HEIC/HEIF (kontener ISO-BMFF)
-        return True
-    return False
+    return looks_like_image(head)   # US-004: jedna definicja sygnatur (file_signatures)
 
 
 # --- reklamacje ---

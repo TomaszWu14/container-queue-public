@@ -119,14 +119,24 @@ def set_container_customer(container_id: int, body: ContainerCustomerIn,
 # --- strony publiczne (bez logowania, rate-limit) ---
 
 @router.get("/public/branding", dependencies=[Depends(public_rate_limit)])
-def public_branding():
+def public_branding(db: Session = Depends(get_db)):
     """Branding stron publicznych — z konfiguracji, bez hardkodu spółki."""
     return {"name": settings.portal_brand_name or settings.app_name,
             "logo_url": settings.portal_logo_url,
             # tylko instancja portfolio: dane konta demo na ekranie logowania
             "demo_hint": settings.demo_login_hint,
             **_demo_account(),
+            "demo_story_container_id": _demo_story_id(db),
             "support_email": settings.support_email}
+
+
+def _demo_story_id(db: Session) -> int | None:
+    """Kontener pokazowy „historii jednego kontenera” (seed_demo_story) — tylko instancja demo."""
+    if not settings.demo_readonly_logins.strip():
+        return None
+    from ..app_settings import get_setting
+    value = get_setting(db, "demo_story_container_id")
+    return int(value) if value.isdigit() else None
 
 
 def _demo_account() -> dict:

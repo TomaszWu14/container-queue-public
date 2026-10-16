@@ -13,7 +13,8 @@ from app.config import settings
 from app.document_tiles import required
 from app.models import (Attachment, AvizoFormToken, AvizoItem, AvizoRequest, AvizoStatus, Carrier,
                         Container, CustomsStatus, DeliveryConfirmation, DocumentStatus, DocumentType,
-                        Order, PlanningStatus, Port, PortCategory, Role, customs_rank, utcnow)
+                        Order, PlanningStatus, Port, PortCategory, Role, TransportType, customs_rank,
+                        utcnow)
 from app.models.enums import ContainerStatus as S
 
 # kody kafelków jak w migracji tile001 + typy bazowe; CMR bez kafelka (widzi go spedytor)
@@ -22,6 +23,7 @@ DOC_TYPES = (("PI", "Faktura proforma (PI)"), ("CI", "Faktura handlowa (CI)"),
              ("SAD_PZ", "SAD — po odprawie (PZ)"), ("SAD_PW", "SAD — zwolnienie (PW)"), (None, "CMR"))
 CARRIERS = (("Demo Ocean Line", 7), ("Przykładowa Żegluga", 10), ("Sample Container Lines", 5))
 DEST_PORTS = (("Gdańsk", "PL"), ("Hamburg", "DE"), ("Rotterdam", "NL"))
+_PORT_MIX = (0, 0, 0, 1, 1, 2)   # Gdańsk ½, Hamburg ⅓, Rotterdam ⅙
 REWIZJA_NOTE = "Kontrola fizyczna: weryfikacja kodu CN i wagi, czekamy na protokół (dane demo)."
 # rola konta demo wg słowa w loginie; konto MUSI być w DEMO_READONLY_LOGINS (tylko odczyt)
 ROLE_WORDS = ((("spedytor", "forwarder"), Role.forwarder), (("agencja", "celn", "customs"), Role.customs),
@@ -100,7 +102,10 @@ def process(db, containers: list[Container], agency_id: int, ctx: dict, today: d
             c.notify_date = c.eta + dt.timedelta(days=5)   # awizowany = ma datę dostawy
         _planning(c, i, now)
         c.carrier_id = ctx["carriers"][i % len(ctx["carriers"])].id
-        c.port_id = ctx["ports"][i % len(ctx["ports"])].id
+        # nierówny podział portów i transportu — wykresy kołowe pulpitu pokazują realną strukturę
+        c.port_id = ctx["ports"][_PORT_MIX[i % len(_PORT_MIX)] % len(ctx["ports"])].id
+        c.transport_type = TransportType.lotniczy if i % 17 == 0 else (
+            TransportType.kolej if i % 4 == 0 else TransportType.morski)
         if c.status != S.ZAPOWIEDZIANY:
             c.etd = c.eta - dt.timedelta(days=35)
         arrival = _arrival(c, i, today)

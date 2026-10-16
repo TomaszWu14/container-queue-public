@@ -77,7 +77,11 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - Dane: rozszerzenie dozwolone, sygnatura nieznana (np. `.msg`, `.eml`, `.doc`, `.xls`) → Gdy upload → Wtedy
     przyjęty, ale w rejestrze ryzyk wpis o braku weryfikacji dla tych typów.
 - **[SEC]:** wspólna funkcja z istniejącym sniffingiem zdjęć; pobieranie już idzie jako `attachment`.
-- **Test:** rozszerzenie `test_upload_limits.py` o przypadki sygnatur.
+- **Test:** `backend/tests/test_file_signatures.py` (31 przypadków: sygnatury, API, ZIP).
+- **Stan:** zrealizowane („rób A”, PO 2026-10-16). `backend/app/file_signatures.py` sprawdza zawartość w czterech
+  wejściach plików: załączniki kontenera, faktury transportowe, rozpakowywany ZIP i poczta przychodząca (ZIP
+  i poczta: plik niezgodny pominięty z powodem, reszta wgrana). Testy z „udawanymi” plikami .xlsx dostały
+  prawdziwe minimalne pliki (`tests/conftest.py::xlsx_bytes`).
 
 ### US-005 · [SEC] Jednolita ochrona wszystkich tras publicznych
 - **Rozmiar:** S · **Źródło:** R-06, T-01, T-03 · **Wymagania:** FR-021, SR-002
@@ -192,6 +196,23 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   `security._enforce_demo_readonly`); ekrany tylko chowają. Zwykłe konta bez zmian (test).
 - **Test:** `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` (4 role).
 
+### US-030 · [BA][DEV] Skaner kodu QR na bramie
+- **Rozmiar:** S · **Źródło:** PO, 2026-10-16 („wdrażaj wszystko”, pomysł 4) · **Wymagania:** brak spisanego (moduł bramy #60 sprzed procesu; Z-005) · **Priorytet:** Should
+- **Stan:** zrealizowane; czeka na merge. Założenie Z-021 do potwierdzenia.
+- **Jako** ochrona przy bramie **chcę** zeskanować telefonem kod QR z karty rozładunku (albo wpisać numer kontenera)
+  i jednym przyciskiem wpuścić auto, **aby** nie szukać go na liście przy kolejce aut.
+- **Kryteria akceptacji** (testy: `frontend/src/pages/gate/GateScanner.dom.test.tsx`, `gateScan.test.ts`)
+  1. Kod QR z karty rozładunku albo wpisany numer (spacje, myślniki, małe litery bez znaczenia) → karta auta
+     z numerem rejestracyjnym, kierowcą, magazynem i przyciskiem „Przyjechał — wpuść” (ten sam zapis co dotąd).
+  2. Kontener spoza dzisiejszej listy bramy → ostrzeżenie „nie wpuszczaj bez sprawdzenia z logistyką”, bez przycisku.
+  3. Auto już wpuszczone → godzina wpuszczenia zamiast przycisku.
+  4. Przeglądarka bez odczytu kodów (np. iPhone) albo brak zgody na aparat → jasna podpowiedź: zwykły aparat
+     albo wpisanie numeru.
+  5. Aparat gaśnie od razu po odczycie lub zamknięciu.
+- **[SEC]:** obraz z aparatu zostaje w telefonie (odczyt w przeglądarce, bez wysyłki); wyszukiwanie tylko na liście
+  z API bramy (zakres użytkownika, `scope_containers`); wpuszczenie przez istniejący `POST /api/gate/{id}/checkin`.
+  Aparat dozwolony już wcześniej tylko dla własnej domeny (`Permissions-Policy: camera=(self)`). Brak nowych zależności.
+
 ## Should
 
 ### US-011 · [SEC] Strażnik izolacji danych dla nowych tras
@@ -208,6 +229,11 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - **Rozmiar:** S · **Źródło:** R-10 · **Wymagania:** NFR-002, SR-014
 - Kopia `age` wysyłana na drugie miejsce (np. S3/B2) po każdym backupie; odtworzenie przećwiczone wg RUNBOOK
   raz na kwartał z wpisem w rejestrze.
+- **Stan:** kod gotowy (PR #28, „rób 3a” PO 2026-10-16). Kryteria: zaszyfrowane pliki z każdego uruchomienia idą
+  do magazynu S3 (`BACKUP_OFFSITE_*`); bez klucza age odmowa wysyłki; błąd wysyłki = błąd skryptu i brak
+  heartbeatu; klucze poza argumentami procesu. Obraz dostał `age` i `curl` (wcześniej ich brakowało:
+  szyfrowanie i heartbeat nie działały). **Do zrobienia przez PO:** magazyn, klucz tylko do zapisu, 4 zmienne
+  w Coolify, pierwsze próbne odtworzenie (`BACKUPY.md`).
 
 ### US-014 · [BA] Mierniki sukcesu liczone z danych aplikacji
 - **Rozmiar:** S · **Źródło:** `WIZJA.md` M-1…M-7 · **Zależy od:** Z-004.
@@ -228,6 +254,15 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 ### US-017 · [BA][DEV] „Wyślij plan do spedycji” wysyła wiadomość
 - **Rozmiar:** S · **Źródło:** P-09 · **Wymagania:** FR-015, FR-020
 - Zmiana statusu planu na WYSLANE wysyła mail etapu 1 (albo jawnie informuje, że mail nie jest skonfigurowany).
+- **Ustalenia PO (2026-10-16):** funkcja nie miała przycisku w aplikacji. Przycisk „Wyślij plan” w kolejce dla
+  zaznaczonych kontenerów; plan idzie **wcześniej niż awizacja i zawiera same daty**; spedytor odpowiada,
+  **logując się do aplikacji** (zakładka Spedycja), bez nowych linków publicznych.
+- **Kryteria akceptacji** (testy `backend/tests/test_plan_mail.py`, `BulkActionBar.plan.dom.test.tsx`)
+  - Gdy plan wysłany dla kilku kontenerów jednego spedytora i spółki → jeden mail z datami, numerami i linkiem
+    do zakładki Spedycja, bez danych dostawcy; wpis w historii kontenera.
+  - Gdy spedytor nie ma adresu albo poczta nie działa → wynik mówi to wprost; status planu i tak zapisany.
+  - Gdy plan już potwierdzony → bez maila („już potwierdzone”).
+- **Stan:** zrealizowane w PR #28, czeka na merge.
 
 ### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
 - **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)

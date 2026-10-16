@@ -24,6 +24,7 @@ from app.models import (AuditLog, Company, Container, CustomsAgency, Forwarder, 
 from app.models.enums import ContainerStatus, Role, today_pl
 from app.security import hash_password, validate_password_policy
 from scripts import seed_demo_process as process
+from scripts import seed_demo_story as story
 
 FLAG = "--wyczysc-wszystko"
 SUPPLIERS = ["Ningbo Demo Trading Co.", "Qingdao Przykładowe Tekstylia", "Shenzhen Pokazowa Elektronika",
@@ -129,6 +130,10 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     process.orders(db, containers, acme.id, ctx)
     process.documents(db, containers, ctx, author.id)
     process.avizo(db, containers, acme.id, fw.id, author.id)
+    # pomysł 1 i 3 PO: kroki procesu na osi „Przebieg” + kontener pokazowy na ekranie powitalnym
+    story.history(db, containers, agency.name, author.id)
+    story.showcase(db, containers)
+    story.warnings(db, containers, author.id, today)
     db.commit()
     count = db.query(Container).count()
     db.close()

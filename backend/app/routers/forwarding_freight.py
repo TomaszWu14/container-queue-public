@@ -31,6 +31,7 @@ from ..deps import (
     scope_company,
     scope_containers,
 )
+from ..file_signatures import content_matches, mismatch_message
 from ..models import (
     Container,
     Forwarder,
@@ -187,6 +188,8 @@ def create_freight_invoice(
                 f"Niedozwolony typ pliku „.{extension or '?'}”. "
                 f"Dozwolone: {', '.join(sorted(allowed_extensions()))}.")
         content = read_upload_capped(file, settings.max_upload_mb, label="Faktura")
+        if not content_matches(extension, content):   # US-004
+            raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, mismatch_message(extension))
         _refuse_same_file(db, company_id, content)
         filename = safe_filename(file.filename)
         stored_name = f"bl_{secrets.token_hex(8)}_{filename}"

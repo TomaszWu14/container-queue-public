@@ -8,6 +8,39 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Skaner kodu QR na bramie** (US-030, pomysł 4 PO): ochrona skanuje telefonem kod z karty rozładunku albo wpisuje
+  numer kontenera i jednym przyciskiem wpuszcza auto. Kontener spoza dzisiejszej listy dostaje ostrzeżenie zamiast
+  przycisku; obraz z aparatu nie opuszcza telefonu. Na iPhonie: zwykły aparat albo numer (Z-021).
+- **Pulpit analityczny** (prośba PO, widok w stylu Power BI): przepływ kontenerów przez 9 etapów procesu w 4 fazach
+  z nazwanym wąskim gardłem, trzy wykresy kołowe (rodzaj transportu, porty, stan odprawy — liczba i udział
+  w legendzie, podświetlanie po najechaniu) i rozładunki tydzień po tygodniu (minione / bieżący / zaplanowane).
+  Paleta sprawdzona pod kątem daltonizmu, osobne odcienie dla ciemnego motywu; `GET /api/stats/overview`
+  (zakres jak pulpit, odprawa ukryta dla spedytora). Demo dostało realny podział portów i transportu.
+- **„Ścieżka rekrutera” w testach przeglądarkowych** (`npm run e2e:demo`, workflow „E2E — ścieżka rekrutera”):
+  demo przeklikane na komputerze i telefonie — wejście bez hasła, historia kontenera, pulpit, „Jak to zbudowano”,
+  tryb tylko-do-odczytu; strona bez przewijania w bok, przyciski z nazwą dla czytnika ekranu. Film do README:
+  `docs/video/sciezka-rekrutera.mp4` (`scripts/record_demo_video.sh`).
+- **Ryzyko kary za przestój z wyjaśnieniem** (pomysł 10 PO): karta na pulpicie mówi, dlaczego grozi kara i co
+  zrobić — dostawa zaplanowana po końcu wolnych dni („3 dni kary, zaplanuj najpóźniej na …”) albo brak terminu
+  tuż przed końcem wolnych dni. Jawne reguły (`backend/app/demurrage_risk.py`), bez kwot (stawek armatorów nie
+  przechowujemy); `GET /api/stats/demurrage-risk`.
+- **Kopia zapasowa poza serwer** (US-013, R-10): po każdej kopii zaszyfrowane pliki trafiają do magazynu zgodnego
+  z S3 (`BACKUP_OFFSITE_*`, `docs/BACKUPY.md`). Jawna kopia nigdy nie wychodzi z serwera; błąd wysyłki = alert
+  (brak heartbeatu). Włączenie: magazyn + 4 zmienne w Coolify.
+- **„Wyślij plan” w kolejce** (US-017, P-09): zaznaczone kontenery → spedytor dostaje maila z proponowanymi datami
+  dostaw i linkiem do zakładki Spedycja, gdzie potwierdza albo zmienia datę. Jeden mail na spedytora i spółkę,
+  bez danych dostawcy; brak adresu e-mail lub działającej poczty jest pokazany wprost. Dotąd funkcja nie miała
+  przycisku i nie wysyłała maila.
+- **Demo: „historia jednego kontenera”** (pomysł 1 PO): ekran powitalny zaczyna od kontenera pokazowego, który
+  przeszedł cały proces — jeden klik otwiera jego „Przebieg”. Dane demo dostały kroki odprawy, dokumentów i planu
+  w kolejności zgodnej z etapami (`backend/scripts/seed_demo_story.py`).
+- **„Przebieg” kontenera** (pomysł 3 PO): w zakładce historii czytelna oś czasu najważniejszych kroków —
+  status, odprawa, dokumenty, plan, termin, slot, braki — z datą i osobą; pełna tabela zmian zostaje niżej.
+- **Panel „Ile to oszczędza” na pulpicie** (pomysł 2 PO, mierniki z `WIZJA.md`): z danych aplikacji za 30 dni —
+  zaoszczędzony czas (zmiany × 3 min, założenie Z-020 pokazane wprost), dostawy na czas, komplet dokumentów
+  u agencji, kontenery ostrzeżone o karze za przestój. Logistyka i admin; zakres jak cała aplikacja.
+- **Strona „Jak to zbudowano”** (pomysł 6 PO, `/jak-zbudowano`): architektura, jakość w liczbach i kluczowe decyzje
+  z linkami do dokumentów w repozytorium; w menu użytkownika i na banerze demo.
 - **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do
   agencji i XML SADUE (dotąd ustawiało status „wysłane” / pisało audyt); ukryte i zablokowane w API: dziennik
   zmian, eksporty i ZIP, wywołania DLT, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się
@@ -34,6 +67,13 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- Telefon: panel „Ile to oszczędza” chował podpisy kafelków (założenie minut, „a z b”) — teraz widoczne.
+- Demo: ostrzeżenia o karach za przestój w danych pokazowych (panel pokazywał 0 obok karty ryzyka); licznik
+  karty ryzyka pokazuje wszystkie ryzyka, lista — najpilniejsze 8.
+- **Demo: „Invalid host header”** — `ALLOWED_HOSTS` wpisany na stałe w `docker-compose.demo.yml`
+  (`container.queue.twapp.pl`, `127.0.0.1`, `localhost`); błędna wartość w panelu Coolify blokowała całe demo.
+- Obraz aplikacji nie miał `age` ani `curl`: szyfrowanie kopii (`BACKUP_AGE_RECIPIENT`) kończyło się błędem,
+  a heartbeat kopii (`BACKUP_PING_URL`) nie dochodził. Oba programy są teraz w `Dockerfile.coolify`.
 - **Zmiana statusu na nieaktualnym widoku nie nadpisuje cudzej zmiany** (US-003, R-02, P-13, ADR-0003). Status
   kontenera, odprawy i zlecenia transportowego: panel wysyła status, który widział; inny w bazie = 409
   `state_changed` z aktualną wartością. Niezwiązane zmiany (notatka, tracking) nie dają konfliktu. Pole
@@ -51,6 +91,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Wgrywane pliki sprawdzane po zawartości** (US-004, R-03): `faktura.pdf`, który nie jest PDF-em (albo
+  „Excel”, który nie jest Excelem), jest odrzucany z czytelnym powodem i nic nie zostaje zapisane. Dotyczy
+  załączników, faktur transportowych, archiwów ZIP i poczty przychodzącej. Bez weryfikacji zostają .doc, .xls,
+  .msg i .eml (brak pewnej sygnatury).
 - **Produkcja odmawia startu, gdy `DATABASE_URL` nie wskazuje PostgreSQL** (US-001, R-04, B-005). Dotąd brak
   zmiennej uruchamiał pustą bazę SQLite w kontenerze, bez kopii. **Przed wdrożeniem:** sprawdź `DATABASE_URL`
   w Coolify (`docker-compose.coolify.yml` i `docker-compose.demo.yml` ustawiają go poprawnie).

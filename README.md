@@ -1,6 +1,7 @@
 # Kolejka kontenerów — planowanie dostaw importowych
 
-[![ci-backend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml) [![ci-frontend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml)
+[![ci-backend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml) [![ci-frontend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml) [![security](https://github.com/TomaszWu14/container-queue-public/actions/workflows/security.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/security.yml) [![migracje](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-migrations.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-migrations.yml)
+![pokrycie](https://img.shields.io/badge/pokrycie_backendu-%E2%89%A592%25_wymuszone_w_CI-brightgreen) ![testy](https://img.shields.io/badge/testy-3000%2B-brightgreen) ![stack](https://img.shields.io/badge/FastAPI_%C2%B7_PostgreSQL_%C2%B7_React_%C2%B7_TypeScript-informational) ![jezyki](https://img.shields.io/badge/UI-PL_%C2%B7_EN_%C2%B7_PT-informational) [![demo](https://img.shields.io/badge/demo-online-blue)](https://container.queue.twapp.pl/demo)
 
 **Jeden wspólny obraz dostaw kontenerowych dla logistyki kilku spółek, magazynów, spedytorów i agencji
 celnej — w miejsce arkusza Excel rozsyłanego mailem.**
@@ -8,6 +9,7 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 ![Błędny numer kontenera zatrzymany walidacją ISO 6346, poprawka i wpis w historii zmian](docs/screenshots/demo.gif)
 
 📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
+🎬 [Ścieżka rekrutera — 17 s: historia jednego kontenera, pulpit, „Jak to zbudowano”](docs/video/sciezka-rekrutera.mp4) — nagranie testu przeglądarkowego (`sh scripts/record_demo_video.sh`); świeże wideo z każdego PR w artefaktach workflow „E2E — ścieżka rekrutera”.
 
 🌐 **Demo online bez logowania: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** —
 link od razu wpuszcza na konto demo. Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do

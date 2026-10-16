@@ -11,6 +11,7 @@ from email.message import EmailMessage
 from fastapi import HTTPException, status
 
 from ..config import settings
+from ..file_signatures import content_matches
 from .archive_upload import MAX_UNCOMPRESSED_MB, unpack
 from .forwarding_files import allowed_extensions, safe_filename
 
@@ -74,6 +75,8 @@ def _expand(files: list[tuple[str, bytes]], depth: int, budget: _Budget,
                 pdf = image_to_pdf(data)
                 budget.take(pdf)
                 entries.append((f"{pathlib.PurePath(name).stem}.pdf", pdf))
+            elif ext in allowed and not content_matches(ext, data):   # US-004
+                skipped.append(f"{name} (zawartość nie zgadza się z rozszerzeniem)")
             elif ext in allowed:
                 budget.take(data)
                 entries.append((name, data))

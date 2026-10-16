@@ -13,14 +13,14 @@ Status: otwarte · w realizacji · zaakceptowane (wyjątek E-xx) · zamknięte (
 |---|---|---|---|---|---|---|---|---|---|
 | R-01 | Izolacja spółek i partnerów wyłącznie w `deps.py`; baza nie wymusza spójności `company_id` — jedno pominięcie w nowej trasie = wyciek między firmami | niskie | krytyczny | W | otwarte | brak | SEC | US-011 | 2026-11-15 |
 | R-02 | Ciche nadpisanie przy równoczesnej edycji (brak wersjonowania rekordów) — utrata zmian bez śladu | wysokie | wysoki | W | zamknięte dla ścieżek interaktywnych (PR #18, ADR-0003); import Excela wg FR-026 | brak | DEV | US-003 | 2026-11-15 |
-| R-03 | Załączniki kontenerów weryfikowane tylko po rozszerzeniu; pliki krążą między firmami; brak AV | średnie | wysoki | Ś | otwarte | brak | SEC | US-004 | 2026-11-15 |
+| R-03 | Załączniki kontenerów weryfikowane tylko po rozszerzeniu; pliki krążą między firmami; brak AV | niskie | wysoki | Ś | w realizacji: zawartość sprawdzana (US-004) dla PDF, obrazów, DOCX/XLSX, ZIP, tekstu; bez weryfikacji .doc/.xls/.msg/.eml (eksporty „.xls” bywają HTML-em); brak AV | brak | SEC | US-004 | 2026-11-15 |
 | R-04 | Produkcja bez `DATABASE_URL` startuje na SQLite (pusta baza bez kopii) | niskie | wysoki | Ś | w realizacji (PR #18, merge po Z-007) | brak (Z-007) | SEC | US-001 | 2026-11-15 |
 | R-05 | `SECRET_KEY` podpisuje JWT i (domyślnie) szyfruje dane w bazie; rotacja jednego psuje drugie | niskie | wysoki | Ś | otwarte | brak (Z-007) | SEC | US-002 | 2026-11-15 |
 | R-06 | Publiczne trasy nierówno chronione (DLT bez limitu i kontroli Origin, zakres dat slotów); limiter API w pamięci | średnie | średni | Ś | otwarte | brak | SEC | US-005 | 2026-11-15 |
 | R-07 | Parsery plików od partnerów w procesie API (XML stdlib, ZIP z deklarowanego rozmiaru, PDF/OCR) — DoS | średnie | średni | Ś | otwarte | brak | SEC | US-006 | 2026-11-15 |
 | R-08 | Łańcuch dostaw: Trivy nie bramkuje, brak Semgrep, rozjazd wersji pre-commit/CI; `dependabot.yml` dopiero od PR #18 | niskie | średni | Ś | w realizacji | brak | SEC | US-007 | 2026-11-15 |
 | R-09 | RODO bez dokumentacji: brak rejestru czynności, podstaw prawnych, analizy powierzeń; scrubbing Sentry nie łapie imion | średnie | wysoki | Ś | otwarte | czeka (Z-009) | SEC/BA | US-012 | 2026-11-15 |
-| R-10 | Ciągłość: jedna instancja, kopia raz w tygodniu na tym samym serwerze, brak procedury incydentu/odtworzenia, brak stagingu | niskie | wysoki | Ś | otwarte (RPO zaakceptowane: E-02) | E-02 | OPS | US-013 | 2026-11-15 |
+| R-10 | Ciągłość: jedna instancja, kopia raz w tygodniu na tym samym serwerze, brak procedury incydentu/odtworzenia, brak stagingu | niskie | wysoki | Ś | w realizacji: kopia poza serwer gotowa w kodzie (US-013), czeka na włączenie w Coolify; RPO zaakceptowane: E-02 | E-02 | OPS | US-013 | 2026-11-15 |
 | R-11 | 2FA administratorów nieobowiązkowe | niskie | wysoki | Ś | zaakceptowane | E-01 | PO | US-019 | 2027-01-15 |
 | R-12 | Konta demo publiczne, współdzielone, jedno hasło w README (4 role od US-028) | średnie | niski | N | zaakceptowane | E-05 | PO | — | 2027-01-15 |
 | R-13 | `csv_safe` nie neutralizuje `\t` i `\r` (B-002) | niskie | niski | N | otwarte | brak | DEV | US-008 | 2026-11-15 |

@@ -45,6 +45,7 @@ ALLOWED = {  # świadome, dosłowne porównania z samym ZREALIZOWANY
     "routers/share.py",          # wygasanie linku udostępnienia po realizacji
     "importers/queue.py",        # N-20: numer tylko z zrealizowanych = nowy kontener (per rekord)
     "routers/containers_write.py",  # completed_at = moment realizacji
+    "routers/stats_overview.py",    # etapy przepływu na pulpicie = statusy kolejki (archiwum poza wykresem)
 }
 
 

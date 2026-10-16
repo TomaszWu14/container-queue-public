@@ -13,6 +13,12 @@ UPLOADS_DIR="${UPLOADS_DIR:-/data/uploads}"
 # BACKUP-007: klucz PUBLICZNY age (age1…) → kopie tylko zaszyfrowane (*.age); prywatny przechowuj offline, poza serwerem
 # IT/u właściciela, NIE na serwerze. Puste = jak dotąd, jawne .sql.gz / .tar.gz.
 AGE_RECIPIENT="${BACKUP_AGE_RECIPIENT:-}"
+# US-013 (R-10): kopia poza serwer — magazyn zgodny z S3 (Backblaze B2, Cloudflare R2, Hetzner, Wasabi, AWS).
+# URL z nazwą koszyka (path-style), np. https://s3.eu-central-003.backblazeb2.com/timporye-kopie.
+# Wysyłamy WYŁĄCZNIE pliki zaszyfrowane age; klucz dostępu najlepiej tylko do zapisu (bez kasowania).
+OFFSITE_URL="${BACKUP_OFFSITE_URL:-}"
+OFFSITE_REGION="${BACKUP_OFFSITE_REGION:-auto}"
+NEW_FILES=""   # pliki z tego uruchomienia — do wysyłki poza serwer
 EXT=""
 if [ -n "$AGE_RECIPIENT" ]; then EXT=".age"; fi
 mkdir -p "$BACKUP_DIR"
@@ -80,10 +86,7 @@ fi
 mv "$TMP" "$OUT"                   # atomowo: gotowa kopia pojawia się dopiero po sukcesie
 trap - EXIT
 echo "backup: gotowe ($(du -h "$OUT" | cut -f1))"
-# heartbeat do zewnętrznego monitora (Uptime Kuma „Push”, audyt OBS-001): brak pingu w oknie = alert
-if [ -n "${BACKUP_PING_URL:-}" ]; then
-  curl -fsS --max-time 10 "$BACKUP_PING_URL" >/dev/null 2>&1 || echo "backup: ping monitora nieudany" >&2
-fi
+NEW_FILES="$OUT"
 
 retencja
 
@@ -107,9 +110,36 @@ elif [ -d "$UPLOADS_DIR" ]; then
     tar -czf "$UP.part" -C "$(dirname "$UPLOADS_DIR")" "$(basename "$UPLOADS_DIR")"
   fi
   mv "$UP.part" "$UP"
+  NEW_FILES="$NEW_FILES $UP"
   ls -1t "$BACKUP_DIR"/uploads-*.tar.gz "$BACKUP_DIR"/uploads-*.tar.gz.age 2>/dev/null \
     | tail -n +$((KEEP_UPLOADS + 1)) | while read -r f; do
     echo "backup: usuwam stary $f"
     rm -f "$f"
   done
+fi
+
+# US-013: wysyłka poza serwer. Jawna kopia nigdy nie wychodzi z serwera — bez klucza age odmowa.
+# Klucze przez konfigurację curl na stdin (-K -), nie w argumentach (widoczne w `ps`).
+if [ -n "$OFFSITE_URL" ]; then
+  if [ -z "$AGE_RECIPIENT" ]; then
+    echo "backup: BŁĄD — BACKUP_OFFSITE_URL wymaga BACKUP_AGE_RECIPIENT (nie wysyłamy jawnych kopii)" >&2
+    exit 1
+  fi
+  : "${BACKUP_OFFSITE_ACCESS_KEY:?BACKUP_OFFSITE_ACCESS_KEY nie jest ustawione}"
+  : "${BACKUP_OFFSITE_SECRET_KEY:?BACKUP_OFFSITE_SECRET_KEY nie jest ustawione}"
+  for f in $NEW_FILES; do
+    echo "backup: poza serwer → $(basename "$f")"
+    if ! printf 'user = "%s:%s"\n' "$BACKUP_OFFSITE_ACCESS_KEY" "$BACKUP_OFFSITE_SECRET_KEY" \
+        | curl -fsS --retry 3 --max-time 1800 -K - --aws-sigv4 "aws:amz:$OFFSITE_REGION:s3" \
+               -T "$f" "${OFFSITE_URL%/}/$(basename "$f")" >/dev/null; then
+      echo "backup: BŁĄD wysyłki poza serwer: $(basename "$f") — kopia lokalna zostaje" >&2
+      exit 1
+    fi
+  done
+fi
+
+# heartbeat do zewnętrznego monitora (Uptime Kuma „Push”, audyt OBS-001): brak pingu w oknie = alert.
+# Na końcu: ping = baza, załączniki i (jeśli włączona) kopia poza serwerem — wszystko się udało.
+if [ -n "${BACKUP_PING_URL:-}" ]; then
+  curl -fsS --max-time 10 "$BACKUP_PING_URL" >/dev/null 2>&1 || echo "backup: ping monitora nieudany" >&2
 fi
