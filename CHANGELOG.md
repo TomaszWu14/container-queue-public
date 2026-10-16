@@ -8,6 +8,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **„Ścieżka rekrutera” w testach przeglądarkowych** (`npm run e2e:demo`, workflow „E2E — ścieżka rekrutera”):
+  demo przeklikane na komputerze i telefonie — wejście bez hasła, historia kontenera, pulpit, „Jak to zbudowano”,
+  tryb tylko-do-odczytu; strona bez przewijania w bok, przyciski z nazwą dla czytnika ekranu. Film do README:
+  `docs/video/sciezka-rekrutera.mp4` (`scripts/record_demo_video.sh`).
 - **Ryzyko kary za przestój z wyjaśnieniem** (pomysł 10 PO): karta na pulpicie mówi, dlaczego grozi kara i co
   zrobić — dostawa zaplanowana po końcu wolnych dni („3 dni kary, zaplanuj najpóźniej na …”) albo brak terminu
   tuż przed końcem wolnych dni. Jawne reguły (`backend/app/demurrage_risk.py`), bez kwot (stawek armatorów nie
@@ -55,6 +59,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- Telefon: panel „Ile to oszczędza” chował podpisy kafelków (założenie minut, „a z b”) — teraz widoczne.
+- Demo: ostrzeżenia o karach za przestój w danych pokazowych (panel pokazywał 0 obok karty ryzyka); licznik
+  karty ryzyka pokazuje wszystkie ryzyka, lista — najpilniejsze 8.
 - **Demo: „Invalid host header”** — `ALLOWED_HOSTS` wpisany na stałe w `docker-compose.demo.yml`
   (`container.queue.twapp.pl`, `127.0.0.1`, `localhost`); błędna wartość w panelu Coolify blokowała całe demo.
 - Obraz aplikacji nie miał `age` ani `curl`: szyfrowanie kopii (`BACKUP_AGE_RECIPIENT`) kończyło się błędem,

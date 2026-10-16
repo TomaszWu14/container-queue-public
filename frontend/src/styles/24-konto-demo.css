@@ -37,3 +37,7 @@ body.demo-readonly form button:not([type]) { opacity: .45; cursor: not-allowed; 
 .risk-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .risk-list li { display: grid; grid-template-columns: 130px 1fr; gap: 10px; font-size: 14px; line-height: 1.45; }
 @media (max-width: 600px) { .risk-list li { grid-template-columns: 1fr; gap: 2px; } }
+
+/* panel „Ile to oszczędza”: podpis kafelka niesie założenie i „a z b” — na telefonie zostaje
+   (pulpit chowa .ctl-kpi-sub < 640 px, 05-status-pages.css A6) */
+@media (max-width: 640px) { .value-card .ctl-kpi-sub { display: block; } }

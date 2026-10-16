@@ -8,7 +8,8 @@ import datetime as dt
 
 from app.app_settings import set_setting
 from app.document_tiles import required
-from app.models import Attachment, AuditLog, Container, CustomsStatus, DocumentStatus, PlanningStatus
+from app.models import (Attachment, AuditLog, Container, CustomsStatus, DocumentStatus, Notification,
+                        PlanningStatus)
 from app.models.enums import ContainerStatus as S
 from app.models.enums import customs_rank
 from scripts.seed_demo_process import _gaps
@@ -85,3 +86,17 @@ def showcase(db, containers: list[Container]) -> int | None:
             set_setting(db, STORY_SETTING, str(c.id))
             return c.id
     return None
+
+
+def warnings(db, containers: list[Container], author_id: int, today: dt.date) -> int:
+    """Ostrzeżenia o karze za przestój, jakie wysłałoby nocne zadanie (check_demurrage_alerts) — bez nich
+    panel „Ile to oszczędza” pokazywał 0 obok karty ryzyka z kilkoma kontenerami."""
+    from app.demurrage_risk import demurrage_risks
+    db.flush()
+    sent = dt.datetime.combine(today - dt.timedelta(days=1), dt.time(7, 30))
+    risks = demurrage_risks(db, [c for c in containers if c.status not in Container.FINISHED], today)
+    for r in risks:
+        db.add(Notification(user_id=author_id, kind="demurrage", container_id=r["container_id"],
+                            title=f"Demurrage: {r['container_no']} — wolne dni do {r['deadline']}",
+                            is_read=True, created_at=sent))
+    return len(risks)

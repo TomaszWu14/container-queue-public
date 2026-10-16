@@ -1,0 +1,52 @@
+name: E2E — ścieżka rekrutera
+
+# Demo przeklikane w prawdziwej przeglądarce (komputer + telefon): wejście bez hasła, „historia jednego
+# kontenera”, pulpit, „Jak to zbudowano”, tryb tylko-do-odczytu. Pilnuje, żeby pokaz dla rekrutera nigdy
+# się nie zepsuł; nagrania wideo trafiają do artefaktów. Drafty pomijane (jak ci-frontend.yml).
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - 'backend/app/**'
+      - 'backend/scripts/seed_demo*.py'
+      - '.github/workflows/e2e-demo.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-demo-${{ github.ref }}-${{ github.event.pull_request.draft }}
+  cancel-in-progress: true
+
+jobs:
+  recruiter-path:
+    name: ${{ github.event.pull_request.draft && 'E2E — ścieżka rekrutera (draft — pominięty)' || 'E2E — ścieżka rekrutera' }}
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: pip install --require-hashes -r requirements.txt
+        working-directory: backend
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: npm run e2e:demo
+        working-directory: frontend
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sciezka-rekrutera-wideo
+          path: frontend/test-results-demo/**/*.webm
+          retention-days: 14

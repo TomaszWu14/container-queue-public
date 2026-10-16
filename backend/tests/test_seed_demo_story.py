@@ -41,3 +41,10 @@ def test_showcase_container_tells_the_whole_process(seeded, client):  # noqa: F8
 def test_branding_has_no_story_outside_demo(client, monkeypatch):
     monkeypatch.setattr(settings, "demo_readonly_logins", "")
     assert client.get("/api/public/branding").json()["demo_story_container_id"] is None
+
+
+def test_demo_value_panel_shows_demurrage_warnings(seeded, client):  # noqa: F811
+    hdr = login(client, "demo", "Demo-Portfolio-2026")
+    risks = client.get("/api/stats/demurrage-risk?limit=100", headers=hdr).json()
+    value = client.get("/api/stats/value", headers=hdr).json()
+    assert risks and value["demurrage_warned"] == len(risks)

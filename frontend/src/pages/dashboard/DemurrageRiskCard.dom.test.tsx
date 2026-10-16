@@ -32,6 +32,14 @@ describe('pulpit — ryzyko kary za przestój', () => {
     expect(await screen.findByText(/kara już biegnie \(2 dni\)/)).toBeTruthy()
   })
 
+  it('licznik pokazuje wszystkie ryzyka, lista najpilniejsze 8', async () => {
+    get.mockResolvedValue(Array.from({ length: 11 }, (_, i) => row({ container_id: i + 1, container_no: `X${i}` })))
+    const { container } = card()
+    await screen.findByText('X0')
+    expect(container.querySelector('.count-chip')?.textContent).toBe('11')
+    expect(container.querySelectorAll('.risk-list li')).toHaveLength(8)
+  })
+
   it('brak ryzyk — karta się nie pokazuje', async () => {
     get.mockResolvedValue([])
     const { container } = card()
