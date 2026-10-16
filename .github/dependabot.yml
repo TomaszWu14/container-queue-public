@@ -37,6 +37,10 @@ updates:
 
   - package-ecosystem: npm
     directory: /frontend/tools/eslint
+    # typescript-eslint 8 obsługuje TypeScript < 6.1 (test_frontend_lint) — TS 7 tylko w samym panelu
+    ignore:
+      - dependency-name: "typescript"
+        versions: [">=6.1"]
     schedule:
       interval: weekly
       day: monday
