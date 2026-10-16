@@ -64,6 +64,7 @@ const OrderDetailPage = lazy(() => import('./pages/OrdersPage').then(m => ({ def
 const WarehouseQueuePage = lazy(() => import('./pages/WarehouseQueuePage'))
 const TrackingPage = lazy(() => import('./pages/TrackingPage'))
 const WiedzaPage = lazy(() => import('./pages/WiedzaPage'))
+const HowBuiltPage = lazy(() => import('./pages/HowBuiltPage'))
 const KoszykPage = lazy(() => import('./pages/KoszykPage'))
 const SadImportPage = lazy(() => import('./pages/SadImportPage'))
 const pageFallback = <main className="page"><Skeleton rows={6} /></main>
@@ -260,6 +261,7 @@ export default function App() {
                 <Guarded ok={canAccess(user.role, 'reklamacje')}><ComplaintsPage archive /></Guarded>} />
               <Route path="/reklamacje/:id" element={
                 <Guarded ok={canAccess(user.role, 'reklamacje')}><ComplaintDetailPage /></Guarded>} />
+              <Route path="/jak-zbudowano" element={<HowBuiltPage />} />
               <Route path="/wiedza" element={
                 <Guarded ok={seesKnowledge(user.role)}><WiedzaPage /></Guarded>} />
               <Route path="/administracja/:section?" element={

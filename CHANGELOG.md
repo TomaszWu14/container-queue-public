@@ -23,6 +23,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - **Panel „Ile to oszczędza” na pulpicie** (pomysł 2 PO, mierniki z `WIZJA.md`): z danych aplikacji za 30 dni —
   zaoszczędzony czas (zmiany × 3 min, założenie Z-020 pokazane wprost), dostawy na czas, komplet dokumentów
   u agencji, kontenery ostrzeżone o karze za przestój. Logistyka i admin; zakres jak cała aplikacja.
+- **Strona „Jak to zbudowano”** (pomysł 6 PO, `/jak-zbudowano`): architektura, jakość w liczbach i kluczowe decyzje
+  z linkami do dokumentów w repozytorium; w menu użytkownika i na banerze demo.
 - **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do
   agencji i XML SADUE (dotąd ustawiało status „wysłane” / pisało audyt); ukryte i zablokowane w API: dziennik
   zmian, eksporty i ZIP, wywołania DLT, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się

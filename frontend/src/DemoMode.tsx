@@ -46,6 +46,9 @@ export default function DemoMode() {
         <button type="button" className="btn small" onClick={() => setOpen(true)}>
           {t('demoBannerTour')}
         </button>
+        <button type="button" className="btn small secondary" onClick={() => navigate('/jak-zbudowano')}>
+          {t('hbNav')}
+        </button>
       </div>
       {/* portal: tło modala ma ten sam z-index co górny pasek, a pasek stoi w DOM dalej */}
       {open && createPortal(
