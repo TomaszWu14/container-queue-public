@@ -14,7 +14,7 @@ Status: otwarte · w realizacji · zaakceptowane (wyjątek E-xx) · zamknięte (
 | R-01 | Izolacja spółek i partnerów wyłącznie w `deps.py`; baza nie wymusza spójności `company_id` — jedno pominięcie w nowej trasie = wyciek między firmami | niskie | krytyczny | W | otwarte | brak | SEC | US-011 | 2026-11-15 |
 | R-02 | Ciche nadpisanie przy równoczesnej edycji (brak wersjonowania rekordów) — utrata zmian bez śladu | wysokie | wysoki | W | otwarte | brak | DEV | US-003 | 2026-11-15 |
 | R-03 | Załączniki kontenerów weryfikowane tylko po rozszerzeniu; pliki krążą między firmami; brak AV | średnie | wysoki | Ś | otwarte | brak | SEC | US-004 | 2026-11-15 |
-| R-04 | Produkcja bez `DATABASE_URL` startuje na SQLite (pusta baza bez kopii) | niskie | wysoki | Ś | otwarte | brak (Z-007) | SEC | US-001 | 2026-11-15 |
+| R-04 | Produkcja bez `DATABASE_URL` startuje na SQLite (pusta baza bez kopii) | niskie | wysoki | Ś | w realizacji (PR #18, merge po Z-007) | brak (Z-007) | SEC | US-001 | 2026-11-15 |
 | R-05 | `SECRET_KEY` podpisuje JWT i (domyślnie) szyfruje dane w bazie; rotacja jednego psuje drugie | niskie | wysoki | Ś | otwarte | brak (Z-007) | SEC | US-002 | 2026-11-15 |
 | R-06 | Publiczne trasy nierówno chronione (DLT bez limitu i kontroli Origin, zakres dat slotów); limiter API w pamięci | średnie | średni | Ś | otwarte | brak | SEC | US-005 | 2026-11-15 |
 | R-07 | Parsery plików od partnerów w procesie API (XML stdlib, ZIP z deklarowanego rozmiaru, PDF/OCR) — DoS | średnie | średni | Ś | otwarte | brak | SEC | US-006 | 2026-11-15 |

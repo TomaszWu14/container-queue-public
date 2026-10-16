@@ -25,7 +25,6 @@ from .print_button import CSP_HASH as PRINT_CSP_HASH
 from .db_bootstrap import bootstrap, ensure_new_columns  # noqa: F401 — re-eksport (testy, skrypty)
 from .jobs import build_jobs, job_loop, split_jobs
 from .leader import leader_loop
-from .rate_limit import assert_worker_config
 from .routers import (
     admin,
     agency_templates,
@@ -84,6 +83,9 @@ from .routers import (
     watchers,
 )
 from .security import api_limiter, client_ip
+from .settings_check import (  # noqa: F401 — re-eksport (testy, skrypty)
+    INSECURE_DEFAULTS, _is_postgres_url, _warn_ollama_url, validate_settings,
+)
 
 # bez tego root logger nie ma handlera i logi INFO aplikacji (np. ślad audytu
 # usunięć) giną na produkcji — uvicorn konfiguruje tylko loggery uvicorn.*
@@ -131,70 +133,6 @@ if settings.log_file:   # OBS-007: trwały plik (wolumen) — te same filtry co 
         logging.getLogger(__name__).exception("LOG_FILE niedostępny: %s", settings.log_file)
 
 _START_TIME = time.monotonic()  # do /api/health uptime_s — moment importu modułu (start procesu)
-
-# to NIE są sekrety, tylko lista niebezpiecznych wartości domyślnych, którą wykrywamy
-INSECURE_DEFAULTS = {"secret_key": "change-me-in-production",  # nosec B105
-                     "admin_password": "admin123"}  # nosec B105
-
-
-def _warn_ollama_url() -> None:
-    """AI-006: Ollama bez uwierzytelniania — odrzucony adres = AI wyłączone + ostrzeżenie."""
-    from urllib.parse import urlsplit
-
-    from .llm import is_internal_host, url_problem
-    url = settings.ollama_url.strip()
-    if not url:
-        return
-    problem = url_problem(url)
-    parts = urlsplit(url)
-    if problem:
-        logger.warning("OLLAMA_URL odrzucony (%s) — funkcje AI wyłączone.", problem)
-    elif parts.scheme == "http" and not is_internal_host(parts.hostname or ""):
-        logger.warning("OLLAMA_URL po HTTP z OLLAMA_ALLOW_REMOTE=true — skany faktur "
-                       "idą bez szyfrowania; użyj https albo sieci Dockera.")
-
-
-def validate_settings() -> None:
-    """Fail fast: produkcja nie może wystartować z domyślnymi sekretami ani bez
-    bezpiecznych cookies (uwierzytelnianie po HTTP = przejęcie sesji)."""
-    assert_worker_config()   # BUILD-003: >1 worker tylko na PG; każde środowisko
-    is_prod = settings.environment.lower() in ("production", "prod")
-    insecure = [name for name, default in INSECURE_DEFAULTS.items()
-                if getattr(settings, name) == default]
-    if is_prod and not settings.secure_cookies:
-        if settings.allow_insecure_http:
-            logger.warning("ALLOW_INSECURE_HTTP=true — produkcja po HTTP, sesje do przejęcia w sieci; "
-                           "włącz HTTPS i SECURE_COOKIES=true.")
-        else:
-            insecure.append("secure_cookies")
-    if is_prod and settings.bcrypt_rounds < 12:
-        # niższy koszt = hashe haseł łamalne offline szybciej; 4 jest tylko dla testów
-        insecure.append("bcrypt_rounds (min. 12)")
-    if is_prod and len(settings.secret_key) < 32:
-        # słaby (choć niedomyślny) sekret HS256 jest łamalny offline → wymuszamy min. 32 znaki
-        insecure.append("secret_key (min. 32 znaki)")
-    if is_prod and not settings.public_base_url:
-        # bez tego linki e-mail (reset hasła) budują się z nagłówka Host = host-header injection
-        insecure.append("public_base_url")
-    if is_prod and settings.automation_api_token and len(settings.automation_api_token) < 32:
-        # token serwisowy n8n jest sekretem długoterminowym bez wygaśnięcia — krótki
-        # da się zgadnąć, a otwiera API z uprawnieniami konta serwisowego
-        insecure.append("automation_api_token (min. 32 znaki)")
-    _warn_ollama_url()
-    if settings.automation_webhook_url and not settings.automation_webhook_secret:
-        logger.warning("AUTOMATION_WEBHOOK_URL bez AUTOMATION_WEBHOOK_SECRET — zdarzenia "
-                       "lecą bez podpisu HMAC; zabezpiecz webhook n8n inaczej (header auth).")
-    if not insecure:
-        return
-    message = ("Konfiguracja wymaga zmiany dla produkcji: "
-               + ", ".join(f"{n.upper()}" for n in insecure))
-    if is_prod:
-        raise RuntimeError(message)
-    logger.warning("%s (dozwolone tylko poza produkcją, ENVIRONMENT=%s)",
-                   message, settings.environment)
-
-
-
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):

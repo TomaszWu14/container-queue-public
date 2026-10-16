@@ -23,11 +23,16 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Changed
+- Walidacja konfiguracji przy starcie wydzielona z `backend/app/main.py` do `backend/app/settings_check.py`
+  (limit 500 linii); `main` re-eksportuje dotychczasowe nazwy, logi startu nadal pod nazwą `app.main`.
 - `SECURITY.md`: poprawione stwierdzenia niezgodne z repozytorium (runnery GitHub zamiast self-hosted,
   brak `automerge.yml`), rozszerzone zgłaszanie podatności, sekcja o polityce i rejestrze ryzyk.
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Produkcja odmawia startu, gdy `DATABASE_URL` nie wskazuje PostgreSQL** (US-001, R-04, B-005). Dotąd brak
+  zmiennej uruchamiał pustą bazę SQLite w kontenerze, bez kopii. **Przed wdrożeniem:** sprawdź `DATABASE_URL`
+  w Coolify (`docker-compose.coolify.yml` i `docker-compose.demo.yml` ustawiają go poprawnie).
 - Zidentyfikowane ryzyka bez zmian w kodzie: izolacja spółek tylko w aplikacji (R-01), ciche nadpisanie
   przy równoczesnej edycji (R-02), załączniki weryfikowane po rozszerzeniu (R-03), produkcja bez
   `DATABASE_URL` startuje na SQLite (R-04), jeden sekret do JWT i szyfrowania (R-05). Poprawki w backlogu

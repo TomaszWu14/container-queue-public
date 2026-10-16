@@ -19,6 +19,8 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-001 · [SEC] Produkcja odmawia startu bez PostgreSQL
 - **Rozmiar:** S · **Źródło:** R-04, B-005 · **Wymagania:** NFR-011, SR-009
+- **Stan (2026-10-16):** zrealizowane w PR #18 (draft); odbiór [BA] ✅, przegląd [SEC] ✅. **Czeka na PO:**
+  potwierdzenie, że produkcja ma `DATABASE_URL=postgresql…` (Z-007), i decyzję o scaleniu.
 - **Jako** administrator aplikacji **chcę**, aby instancja z `ENVIRONMENT=production` odmówiła startu, gdy
   `DATABASE_URL` nie wskazuje PostgreSQL, **aby** błąd konfiguracji nie uruchomił pustej bazy SQLite bez kopii.
 - **Kryteria akceptacji**

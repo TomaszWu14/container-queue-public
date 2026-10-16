@@ -44,7 +44,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 
 | Historyjka | Wymagania / ryzyka | Test (planowany) | PR | Stan |
 |---|---|---|---|---|
-| US-001 prod wymaga PostgreSQL | NFR-011, SR-009, R-04 | `test_config_failfast.py` | — | do akceptacji PO |
+| US-001 prod wymaga PostgreSQL | NFR-011, SR-009, R-04 | `test_config_failfast.py` (12 przypadków), `test_prod_without_https.py` | #18 | zrealizowane, czeka na merge (Z-007) |
 | US-002 osobny klucz szyfrowania | SR-009, R-05 | `test_config_failfast.py`, testy `crypto` | — | do akceptacji PO |
 | US-003 ochrona przed cichym nadpisaniem | FR-006, NFR-013, R-02 | `test_concurrency.py`, test RTL | — | do akceptacji PO |
 | US-004 załączniki po zawartości | SR-007, R-03 | `test_upload_limits.py` | — | do akceptacji PO |

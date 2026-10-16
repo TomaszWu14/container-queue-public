@@ -14,7 +14,8 @@ def prod(monkeypatch):
     for name, value in (("environment", "production"), ("secure_cookies", False),
                         ("secret_key", STRONG), ("admin_password", "Silne-Haslo-2026!"),
                         ("public_base_url", "http://192.0.2.10:81"), ("automation_api_token", ""),
-                        ("bcrypt_rounds", 12)):
+                        ("bcrypt_rounds", 12),
+                        ("database_url", "postgresql+psycopg2://u:p@db:5432/timporye")):
         monkeypatch.setattr(settings, name, value)
     return monkeypatch
 

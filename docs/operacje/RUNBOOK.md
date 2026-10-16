@@ -33,7 +33,8 @@ Redeploy poprzedniego commita w Coolify. Migracja z `downgrade()` istnieje dla k
 
 ## 3. Wymagane zmienne na produkcji (fail-fast)
 
-`ENVIRONMENT=production`, `SECRET_KEY` (≥ 32 znaki), `ADMIN_PASSWORD` (nie domyślne), `POSTGRES_PASSWORD`,
+`ENVIRONMENT=production`, `DATABASE_URL` wskazujący PostgreSQL (`postgresql…://`, od US-001 — inaczej odmowa
+startu), `SECRET_KEY` (≥ 32 znaki), `ADMIN_PASSWORD` (nie domyślne), `POSTGRES_PASSWORD`,
 `PUBLIC_BASE_URL`, `SECURE_COOKIES=true` (albo świadome `ALLOW_INSECURE_HTTP=true` — wyjątek E-06),
 `BCRYPT_ROUNDS ≥ 12`. Zalecane: `ALLOWED_HOSTS` (E-08), `DATA_ENCRYPTION_KEY` (do czasu US-002 opcjonalne),
 `AUTOMATION_ALLOWED_CIDRS` i `AUTOMATION_TOKEN_EXPIRES`, gdy n8n włączone (E-10), `SENTRY_DSN`, `LOG_FILE`.
