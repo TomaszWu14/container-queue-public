@@ -66,6 +66,24 @@ Odprawa celna — osobny status:
 
 Szczegóły techniczne (wdrożenie, integracje, moduły poboczne): [`docs/TECHNICZNE.md`](docs/TECHNICZNE.md).
 
+## Proces zespołowy i stan projektu
+
+Repozytorium jest prowadzone jak przez trzyosobowy zespół — analityk biznesowy **[BA]**, developer **[DEV]**,
+bezpieczeństwo **[SEC]** — z Product Ownerem, który decyduje o zakresie, priorytetach i ryzykach. Proces,
+Definition of Ready/Done i konwencje: [`CONTRIBUTING.md`](CONTRIBUTING.md). Zgłoszenia podatności: [`SECURITY.md`](SECURITY.md).
+
+| Obszar | Dokumenty |
+|---|---|
+| Analiza [BA] | [wizja](docs/analiza/WIZJA.md) · [interesariusze](docs/analiza/INTERESARIUSZE.md) · [wymagania 0.1](docs/analiza/WYMAGANIA.md) · [backlog](docs/analiza/HISTORYJKI.md) · [słownik](docs/analiza/SLOWNIK.md) · [założenia do potwierdzenia](docs/analiza/ZALOZENIA.md) · [macierz śledzenia](docs/analiza/SLEDZENIE.md) |
+| Architektura [DEV] | [indeks](docs/architektura/ARCHITEKTURA.md) · [model danych](docs/architektura/MODEL_DANYCH.md) · [API](docs/architektura/API.md) · [ADR](docs/architektura/adr/README.md) |
+| Bezpieczeństwo [SEC] | [klasyfikacja danych](docs/bezpieczenstwo/KLASYFIKACJA_DANYCH.md) · [model zagrożeń](docs/bezpieczenstwo/THREAT_MODEL.md) · [rejestr ryzyk](docs/bezpieczenstwo/RYZYKA.md) · [RODO](docs/bezpieczenstwo/RODO.md) · [ASVS](docs/bezpieczenstwo/CHECKLISTA_ASVS.md) |
+| Testy i operacje | [strategia testów](docs/testy/STRATEGIA_TESTOW.md) · [runbook](docs/operacje/RUNBOOK.md) |
+| Stan | [audyt 2026-10-15](docs/AUDYT.md) · [CHANGELOG](CHANGELOG.md) |
+
+**Status (2026-10-16):** aplikacja w fazie testów z użytkownikami; proces zespołowy uruchomiony (audyt,
+struktura dokumentów, backlog). Pilne poprawki bezpieczeństwa z audytu czekają na priorytety Product Ownera
+([backlog, sekcja Must](docs/analiza/HISTORYJKI.md)).
+
 ## Jak uruchomić
 
 Sprawdzone od zera na świeżym klonie (Windows, 2026-10-11).

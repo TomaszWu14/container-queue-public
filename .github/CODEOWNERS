@@ -1,0 +1,48 @@
+# CODEOWNERS — przypisanie obszarów do ról procesu zespołowego (opisowo).
+# Repozytorium ma jednego maintainera (PO: @TomaszWu14); role BA / DEV / SEC są perspektywami
+# w przeglądzie PR (CONTRIBUTING.md), więc właścicielem każdego wpisu jest to samo konto.
+# Komentarz przy ścieżce mówi, która rola MUSI przejrzeć zmianę, zanim PO scali.
+
+# Domyślnie: PO
+*                                   @TomaszWu14
+
+# [SEC] — kod krytyczny dla bezpieczeństwa: izolacja danych, uwierzytelnianie, CSRF, limity, sekrety,
+# polityki tokenów, szyfrowanie, maskowanie, retencje, uploady; każda zmiana = przegląd SEC
+/backend/app/deps.py                @TomaszWu14
+/backend/app/security.py            @TomaszWu14
+/backend/app/csrf.py                @TomaszWu14
+/backend/app/rate_limit.py          @TomaszWu14
+/backend/app/crypto.py              @TomaszWu14
+/backend/app/redaction.py           @TomaszWu14
+/backend/app/retention.py           @TomaszWu14
+/backend/app/data_subject.py        @TomaszWu14
+/backend/app/automation_policy.py   @TomaszWu14
+/backend/app/twofa_policy.py        @TomaszWu14
+/backend/app/public_links.py        @TomaszWu14
+/backend/app/routers/auth.py        @TomaszWu14
+/backend/app/routers/forwarding_files.py @TomaszWu14
+/backend/app/routers/archive_upload.py   @TomaszWu14
+/backend/app/main.py                @TomaszWu14
+/backend/app/config.py              @TomaszWu14
+/tests/permissions.yaml             @TomaszWu14
+/backend/tests/test_routes_require_auth.py @TomaszWu14
+/.github/                           @TomaszWu14
+/.pre-commit-config.yaml            @TomaszWu14
+/Dockerfile.coolify                 @TomaszWu14
+/docker-compose*.yml                @TomaszWu14
+/SECURITY.md                        @TomaszWu14
+/docs/bezpieczenstwo/               @TomaszWu14
+
+# [DEV] — architektura, model danych, migracje, API, testy, operacje
+/backend/app/models/                @TomaszWu14
+/backend/migrations/                @TomaszWu14
+/docs/architektura/                 @TomaszWu14
+/docs/testy/                        @TomaszWu14
+/docs/operacje/                     @TomaszWu14
+/CHANGELOG.md                       @TomaszWu14
+
+# [BA] — analiza, wymagania, backlog, reguły procesu, teksty UI
+/docs/analiza/                      @TomaszWu14
+/docs/REGULY-PROCESU.md             @TomaszWu14
+/docs/0*.md                         @TomaszWu14
+/frontend/src/i18n/                 @TomaszWu14

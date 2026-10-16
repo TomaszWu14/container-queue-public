@@ -1,0 +1,190 @@
+# Backlog — historyjki użytkownika
+
+Wersja 0.1 (2026-10-16), [BA]. Priorytety MoSCoW przyjęte na podstawie audytu (`docs/AUDYT.md`) i założeń
+Z-005…Z-007 — **do potwierdzenia przez PO**. Nic z tej listy nie jest zaplanowane do realizacji, dopóki PO nie
+zaakceptuje priorytetów; kolejność w ramach *Must* jest propozycją zespołu.
+
+Rozmiar: XS (< 2 h), S (≤ 1 dzień), M (2–3 dni), L (> 3 dni). Role: [BA] [DEV] [SEC] [OPS].
+Każda historyjka przechodzi proces z `CONTRIBUTING.md` (analiza → wymagania bezpieczeństwa → projekt →
+implementacja → przegląd SEC → odbiór BA → PR). Śledzenie: `SLEDZENIE.md`. Ryzyka: `../bezpieczenstwo/RYZYKA.md`.
+
+## Definition of Ready (skrót)
+
+Cel jasny · kryteria testowalne (Dane/Gdy/Wtedy) · zależności znane · dane i uprawnienia określone ·
+klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
+
+---
+
+## Must — pilne poprawki z audytu
+
+### US-001 · [SEC] Produkcja odmawia startu bez PostgreSQL
+- **Rozmiar:** S · **Źródło:** R-04, B-005 · **Wymagania:** NFR-011, SR-009
+- **Jako** administrator aplikacji **chcę**, aby instancja z `ENVIRONMENT=production` odmówiła startu, gdy
+  `DATABASE_URL` nie wskazuje PostgreSQL, **aby** błąd konfiguracji nie uruchomił pustej bazy SQLite bez kopii.
+- **Kryteria akceptacji**
+  - Dane: `ENVIRONMENT=production`, `DATABASE_URL` puste albo `sqlite://…` → Gdy aplikacja startuje → Wtedy
+    `RuntimeError` z nazwą zmiennej w komunikacie (jak dla `SECRET_KEY`), proces nie nasłuchuje.
+  - Dane: `ENVIRONMENT=production`, `DATABASE_URL=postgresql+psycopg2://…` → Gdy start → Wtedy start przechodzi.
+  - Dane: `ENVIRONMENT=dev`, SQLite → Gdy start → Wtedy start przechodzi (jak dziś).
+- **[SEC]:** bez nowych danych. Ryzyko operacyjne: zatrzymany start przy złej konfiguracji — **merge po
+  potwierdzeniu PO** (Z-007). Sprawdzone 2026-10-16: `docker-compose.coolify.yml` i `docker-compose.demo.yml`
+  ustawiają PostgreSQL.
+- **Test:** `backend/tests/test_config_failfast.py` (planowany w `ETAP-0-PLAN.md`, nie istnieje).
+- **DoR:** spełnione poza priorytetem PO.
+
+### US-002 · [SEC] Osobny klucz szyfrowania danych na produkcji
+- **Rozmiar:** S · **Źródło:** R-05, SEC-017 · **Wymagania:** SR-009
+- **Jako** administrator **chcę**, aby produkcja wymagała `DATA_ENCRYPTION_KEY` osobnego od `SECRET_KEY`,
+  **aby** rotacja klucza JWT po incydencie nie niszczyła zaszyfrowanych danych, a wyciek jednego sekretu nie
+  otwierał obu zastosowań.
+- **Kryteria akceptacji**
+  - Dane: production bez `DATA_ENCRYPTION_KEY` albo z wartością równą `SECRET_KEY` → Gdy start → Wtedy odmowa
+    startu z nazwą zmiennej.
+  - Dane: klucz ustawiony, w bazie wartości zaszyfrowane starym kluczem → Gdy odczyt → Wtedy odszyfrowanie
+    działa (MultiFernet), nowy zapis idzie nowym kluczem.
+  - `docs/operacje/RUNBOOK.md` opisuje rotację obu kluczy krok po kroku.
+- **[SEC]:** jak US-001 — **merge po ustawieniu zmiennej w Coolify przez PO** (Z-007).
+- **Test:** `test_config_failfast.py`, istniejące testy `crypto`.
+
+### US-003 · [DEV][SEC] Ochrona przed cichym nadpisaniem przy równoczesnej edycji
+- **Rozmiar:** M · **Źródło:** R-02, B-004, P-13 · **Wymagania:** FR-006 (historia), NFR-013
+- **Jako** logistyk **chcę**, aby zapis kontenera, statusu, odprawy albo zlecenia, którego ktoś zmienił
+  w międzyczasie, został odrzucony z czytelnym komunikatem, **aby** cudza zmiana nie znikała bez śladu.
+- **Kryteria akceptacji**
+  - Dane: dwa klienty mają rekord w wersji N → Gdy A zapisuje → Wtedy rekord ma wersję N+1 (odpowiedź zawiera wersję).
+  - Dane: B wysyła zapis z wersją N → Gdy zapis → Wtedy 409 z komunikatem „Ktoś zmienił ten rekord w międzyczasie”
+    i aktualnym stanem; nic nie jest zapisane.
+  - Dane: panel dostaje 409 → Gdy użytkownik widzi komunikat → Wtedy może odświeżyć i powtórzyć; brak napisu „zapisano”.
+  - Zakres: `PATCH /api/containers/{id}`, zmiana statusu, odprawa, zlecenia transportowe; import z Excela i n8n
+    poza zakresem tej historyjki (osobna decyzja).
+- **[DEV]:** ADR o mechanizmie (kolumna `version` vs `updated_at`/`If-Match`) przed kodem.
+- **Test:** `test_concurrency.py` (planowany, nie istnieje) + test RTL komunikatu.
+
+### US-004 · [SEC] Załączniki sprawdzane po zawartości, nie tylko po rozszerzeniu
+- **Rozmiar:** S/M · **Źródło:** R-03, T-05 · **Wymagania:** SR-007
+- **Jako** logistyk **chcę**, aby plik od spedytora z rozszerzeniem `.pdf`, który nie jest PDF-em, był
+  odrzucony przy wgrywaniu, **aby** złośliwy plik nie krążył między firmami pod fałszywą nazwą.
+- **Kryteria akceptacji**
+  - Dane: plik `x.pdf` o bajtach nie-PDF → Gdy upload załącznika → Wtedy 422 z powodem; nic nie zapisane.
+  - Dane: PDF, PNG/JPG/WEBP/GIF, DOCX/XLSX (ZIP z `[Content_Types].xml`), ZIP, XML/JSON/TXT/CSV (tekst bez bajtów NUL)
+    zgodne z rozszerzeniem → Gdy upload → Wtedy 201 jak dziś.
+  - Dane: rozszerzenie dozwolone, sygnatura nieznana (np. `.msg`, `.eml`, `.doc`, `.xls`) → Gdy upload → Wtedy
+    przyjęty, ale w rejestrze ryzyk wpis o braku weryfikacji dla tych typów.
+- **[SEC]:** wspólna funkcja z istniejącym sniffingiem zdjęć; pobieranie już idzie jako `attachment`.
+- **Test:** rozszerzenie `test_upload_limits.py` o przypadki sygnatur.
+
+### US-005 · [SEC] Jednolita ochrona wszystkich tras publicznych
+- **Rozmiar:** S · **Źródło:** R-06, T-01, T-03 · **Wymagania:** FR-021, SR-002
+- **Jako** administrator **chcę**, aby link wywołań palet (DLT) i wolne sloty awizacji miały ten sam limit
+  żądań, kontrolę pochodzenia i walidację parametrów co formularz awizacji, **aby** żadna publiczna trasa nie
+  była słabszym ogniwem.
+- **Kryteria akceptacji**
+  - Dane: > 30 żądań/min z jednego IP na `/api/dlt/{token}` → Gdy kolejne → Wtedy 429 z `Retry-After`.
+  - Dane: żądanie POST z obcym `Origin` → Gdy wysyłka → Wtedy 403.
+  - Dane: `GET /api/avizo/{token}/slots` z datą poza zakresem ważności linku ± 30 dni → Gdy żądanie → Wtedy 422.
+- **Test:** `test_avizo_public.py` (parametryzacja o DLT), nowy test zakresu dat.
+
+### US-006 · [SEC] Bezpieczne parsowanie XML i archiwów ZIP
+- **Rozmiar:** S · **Źródło:** R-07, T-06 · **Wymagania:** SR-006
+- **Jako** administrator **chcę**, aby XML (SAD) parsował `defusedxml`, a limit ZIP liczył się z faktycznie
+  rozpakowanych bajtów, **aby** spreparowany plik nie zatrzymał całej aplikacji.
+- **Kryteria akceptacji**
+  - Dane: XML z DTD/encjami zewnętrznymi albo „billion laughs” → Gdy import SAD → Wtedy 422, proces żyje.
+  - Dane: ZIP deklarujący 1 MB, rozpakowujący się do 2 GB → Gdy upload archiwum → Wtedy 413 po przekroczeniu
+    `MAX_UPLOAD_MB` w trakcie rozpakowywania; współczynnik kompresji > 100 odrzucony.
+- **Test:** `test_imports_malicious.py` (planowany, nie istnieje), `test_archive_upload.py`.
+
+### US-007 · [SEC][OPS] Bramki bezpieczeństwa w CI domknięte
+- **Rozmiar:** S · **Źródło:** R-08 · **Wymagania:** SR-013
+- **Jako** SEC **chcę**, aby Trivy (HIGH/CRITICAL z dostępną poprawką) i Semgrep (reguły OWASP) blokowały PR,
+  a wersje narzędzi pre-commit były równe CI, **aby** znane podatności nie wchodziły do `main`.
+- **Kryteria akceptacji**
+  - Dane: obraz z CVE HIGH z poprawką → Gdy `security.yml` → Wtedy job czerwony; wyjątki tylko w `.trivyignore`
+    z uzasadnieniem i datą przeglądu.
+  - Dane: kod z wzorcem z `p/owasp-top-ten` → Gdy PR → Wtedy job Semgrep czerwony; fałszywy alarm oznaczony
+    `# nosemgrep: <id>` z powodem.
+  - `.pre-commit-config.yaml`: Bandit 1.9.4, gitleaks 8.30.1 (jak CI).
+  - Zrobione w PR procesu: `.github/dependabot.yml` (Z-016).
+- **Uwaga:** CI nie biegnie na draftach — walidacja wymaga oznaczenia PR jako gotowy.
+
+### US-008 · [SEC] `csv_safe` neutralizuje tabulator i powrót karetki
+- **Rozmiar:** XS · **Źródło:** B-002 · **Wymagania:** SR-006
+- Dane: wartość `\t=1+1` albo `\r=cmd` w eksporcie CSV → Gdy pobranie → Wtedy pole poprzedzone apostrofem,
+  jak dla `= + - @`. **Test:** parametryzowany test `csv_safe` na wszystkie prefiksy OWASP.
+
+### US-009 · [BA][DEV] Odpowiedź na awizację w aplikacji nie udaje sukcesu
+- **Rozmiar:** S · **Źródło:** P-01 · **Wymagania:** FR-020, NFR-007
+- **Jako** spedytor z kontem **chcę** zobaczyć błąd, gdy mojej odpowiedzi nie da się zapisać (409: link
+  użyty, awizacja zamknięta), **aby** nie wyjść z aplikacji w przekonaniu, że termin potwierdziłem.
+- **Kryteria akceptacji**
+  - Dane: awizacja już odpowiedziana → Gdy spedytor wysyła odpowiedź → Wtedy komunikat błędu z powodem z API,
+    formularz zostaje, brak komunikatu „wysłano”.
+  - Dane: błąd sieci/5xx → Gdy wysyłka → Wtedy komunikat „nie udało się”, możliwość ponowienia.
+- **Test:** test RTL `AvizoFormPage` (409 i 5xx).
+
+### US-010 · [DEV] Dokumentacja po audycie zgodna ze stanem repozytorium
+- **Rozmiar:** XS · **Źródło:** `AUDYT.md` §4
+- `BUGS-FOUND.md`: B-001, B-003 → NAPRAWIONE; `CLAUDE.md` i `ONBOARDING-DEV.md` bez odwołań do
+  `graphify-out/`; `docs/testy/E2E.md` i `docs/CLAUDE-GITHUB.md` z notą, że workflowy istnieją tylko w repo
+  prywatnym; `README.md`: czas testów. `SECURITY.md` poprawiono w PR procesu.
+
+## Should
+
+### US-011 · [SEC] Strażnik izolacji danych dla nowych tras
+- **Rozmiar:** M · **Źródło:** R-01 · **Wymagania:** FR-022…FR-024, SR-005
+- Test statyczny: każda trasa `/api/...` z parametrem `{..._id}` używa `get_scoped`/`scope_*`/
+  `check_container_access` albo jest na jawnej liście wyjątków z uzasadnieniem. ADR: czy spójność spółki
+  wymuszać też w bazie (CHECK/FK/RLS).
+
+### US-012 · [SEC][BA] RODO: rejestr czynności, podstawy, powierzenia
+- **Rozmiar:** M · **Źródło:** R-09 · **Wymagania:** SR-011 · **Zależy od:** odpowiedzi PO (Z-009).
+- `RODO.md` z wersji 0.1 do 1.0: administrator, podstawy prawne potwierdzone, umowy powierzenia, ocena DPIA.
+
+### US-013 · [OPS] Kopia zapasowa poza serwer i ćwiczenie odtworzenia
+- **Rozmiar:** S · **Źródło:** R-10 · **Wymagania:** NFR-002, SR-014
+- Kopia `age` wysyłana na drugie miejsce (np. S3/B2) po każdym backupie; odtworzenie przećwiczone wg RUNBOOK
+  raz na kwartał z wpisem w rejestrze.
+
+### US-014 · [BA] Mierniki sukcesu liczone z danych aplikacji
+- **Rozmiar:** S · **Źródło:** `WIZJA.md` M-1…M-7 · **Zależy od:** Z-004.
+- Raport (skrypt albo ekran admina) z M-2…M-6 na podstawie `audit_log`, `users.last_seen`, tokenów awizacji.
+
+### US-015 · [DEV] Jedna wersja Pythona i Node w README, CI i obrazie
+- **Rozmiar:** S · **Źródło:** `AUDYT.md` §2.6 pkt 4 · **Wymagania:** NFR-011
+- Decyzja: Python 3.12 albo 3.14 wszędzie (lock kompilowany dla wybranej), Node jedna wersja LTS; test
+  w CI, że obraz i lock są zgodne.
+
+### US-016 · [BA][DEV] Dane dla Portugalii: prefiks telefonu i kraj magazynu
+- **Rozmiar:** S · **Źródło:** P-05, P-06 · **Wymagania:** FR-017
+- Numer kierowcy z wyborem kraju (PL/PT) zamiast stałego +48; kraj magazynu ustawiany przy tworzeniu
+  i w imporcie.
+
+### US-017 · [BA][DEV] „Wyślij plan do spedycji” wysyła wiadomość
+- **Rozmiar:** S · **Źródło:** P-09 · **Wymagania:** FR-015, FR-020
+- Zmiana statusu planu na WYSLANE wysyła mail etapu 1 (albo jawnie informuje, że mail nie jest skonfigurowany).
+
+### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
+- **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)
+- Testy RTL dla `ImportModal`, `ClearQueueModal`, resetu hasła w `AuthPages`.
+
+### US-019 · [SEC] 2FA obowiązkowe dla administratorów na produkcji
+- **Rozmiar:** XS (konfiguracja) · **Źródło:** E-01 · **Zależy od:** decyzji PO (Z-008).
+- `REQUIRE_2FA_ADMIN=true` w Coolify po tym, jak każdy admin włączy 2FA; procedura w RUNBOOK.
+
+## Could
+
+- **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).
+- **US-021** [DEV] Spłata długu modelu danych: UNIQUE w `AvizoItem`/`DeliveryConfirmation`, CHECK dla statusów
+  tekstowych, decyzja o dwóch statusach odprawy (`04-model-danych.md` §„Znane niespójności”).
+- **US-022** [DEV] Ponawianie maili SMTP i rejestrowanie błędów zdarzeń n8n (P-11, P-12).
+- **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
+- **US-024** [DEV] Archiwizacja `docs/pomysly-automatyzacje*.md` (340 KB) poza główną mapą dokumentacji.
+- **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna).
+- **US-026** [DEV] Obsługa nieoczekiwanych odpowiedzi integracji (T-08…T-12): 502/503 z komunikatem zamiast 500.
+
+## Won't (na teraz)
+
+- Skalowanie poziome (Redis dla limiterów) — kontrakt jednej instancji wystarcza dla skali 200 kontenerów/mies.
+- CodeQL — koszt minut Actions; Semgrep w US-007 pokrywa potrzebę SAST semantycznego.
+- Tracking kontenerów u armatora — decyzja D10 (powrót w kolejnym etapie).
+- „Pola obowiązkowe per spółka” z wywiadu — do decyzji PO (Z-018).

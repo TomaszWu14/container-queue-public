@@ -12,6 +12,12 @@ rozbieżności zebrano w §4.
 docelową procesu zespołowego. §6 to kandydaci do backlogu, §7 — pierwsza seria pytań do PO. Dalsze kroki
 (szkielet struktury, backlog) ruszają **po odpowiedziach PO**; do tego czasu nic z §6 nie jest zaplanowane.
 
+> **Aktualizacja 2026-10-16.** PO polecił kontynuować bez odpowiedzi na pytania z §7. Zgodnie z procesem
+> przyjęto bezpieczne minimum (`docs/analiza/ZALOZENIA.md`, Z-001…Z-018) i wykonano kroki 3–4: szkielet
+> struktury (`CONTRIBUTING.md`, szablony issues/PR, `CODEOWNERS`, `dependabot.yml`), `WIZJA`, `WYMAGANIA` 0.1,
+> `KLASYFIKACJA_DANYCH`, `THREAT_MODEL` 0.1, rejestr ryzyk, RODO 0.1, ASVS, strategia testów, runbook oraz
+> backlog (`docs/analiza/HISTORYJKI.md`). Pytania z §7 pozostają otwarte — odpowiedzi zmienią założenia, nie audyt.
+
 ---
 
 ## 0. Streszczenie dla PO

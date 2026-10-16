@@ -1,13 +1,35 @@
 # Bezpieczeństwo
 
 ## Zgłaszanie podatności
-Podatności zgłaszaj prywatnie do administratora projektu (nie przez publiczne Issue).
-Postaramy się odpowiedzieć w ciągu kilku dni roboczych.
+Podatności zgłaszaj **prywatnie** — nie przez publiczne issue ani PR (repozytorium jest publiczne):
+
+- e-mail: tomasz.wierzbowski@op.pl (adres kontaktowy z `README.md`),
+- albo GitHub *Security → Report a vulnerability*, jeśli opcja jest włączona w repozytorium
+  (TODO właściciel: włączyć *Private vulnerability reporting* w *Settings → Code security*).
+
+Podaj: wersję (`/api/health` → `version` albo SHA commita), kroki odtworzenia, skutek, klasę danych
+(`docs/bezpieczenstwo/KLASYFIKACJA_DANYCH.md`). Potwierdzenie przyjęcia w 5 dni roboczych, wstępna ocena
+wagi w 10; poprawki wysokie/krytyczne mają pierwszeństwo w backlogu (`docs/analiza/HISTORYJKI.md`).
+Po uzgodnieniu ujawnienia ustalenie trafia do issue z szablonu „Zgłoszenie bezpieczeństwa” **bez
+szczegółów exploita** i do rejestru ryzyk.
+
+Testy w dobrej wierze są mile widziane **wyłącznie na instancji demo** (dane syntetyczne), bez ataków
+odmowy usługi i bez prób dostępu do produkcji.
+
+## Polityka
+- Proces: rola **[SEC]** ma prawo weta w każdym PR (`CONTRIBUTING.md`); poziom docelowy OWASP ASVS **L2**
+  (`docs/bezpieczenstwo/CHECKLISTA_ASVS.md`).
+- Rejestr ryzyk i zaakceptowanych wyjątków z datami przeglądu: `docs/bezpieczenstwo/RYZYKA.md`;
+  model zagrożeń: `docs/bezpieczenstwo/THREAT_MODEL.md`; RODO: `docs/bezpieczenstwo/RODO.md`.
+- Wspierana wersja: `main` i aktualne wdrożenie (identyfikowane SHA commita); poprawki bezpieczeństwa
+  nie są backportowane do starszych commitów.
+- Incydent: procedura w `docs/operacje/RUNBOOK.md` §7 (zatrzymanie, dowody, rotacja sekretów, RODO 72 h).
 
 ## Automatyczne kontrole (CI)
-Stan z `.github/workflows/` (wszystkie te joby chodzą na self-hosted runnerze `[self-hosted, linux]`).
-„Blokuje merge” = job jest na liście `REQUIRED` w `automerge.yml`, więc czerwony wynik zatrzymuje
-bramkę „CI OK”, bez której auto-merge nie scala PR-a.
+Stan z `.github/workflows/` tego repozytorium (joby chodzą na runnerach GitHub `ubuntu-latest`; drafty PR
+są pomijane). „Blokuje merge” = czerwony wynik zatrzymuje scalenie — w tym repozytorium merge wykonuje
+Product Owner po akceptacji (`CONTRIBUTING.md`); bramka auto-merge „CI OK” (`automerge.yml`) istnieje
+tylko w repozytorium prywatnym (stan sprawdzony 2026-10-16, `docs/AUDYT.md` §4).
 
 | Narzędzie | Co robi | Kiedy | Blokuje merge? |
 |---|---|---|---|

@@ -1,0 +1,75 @@
+# Dependabot: cotygodniowe PR-y z aktualizacjami zależności (SECURITY.md, R-08 / US-007).
+# Grupy minor+patch ograniczają liczbę PR-ów; major osobno (może wymagać zmian w kodzie).
+# Backend: lock requirements*.txt ma hashe (uv pip compile --generate-hashes) — Dependabot przelicza je;
+# gdy test_dependency_lock.py zgłosi rozjazd z requirements*.in, odśwież lock komendą z nagłówka pliku .in.
+# Alerty CVE (Security → Dependabot alerts) zależą od ustawień repozytorium, nie od tego pliku.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /backend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Warsaw
+    open-pull-requests-limit: 5
+    labels: ["zależności", "backend"]
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      python-minor-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Warsaw
+    open-pull-requests-limit: 5
+    labels: ["zależności", "frontend"]
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: npm
+    directory: /frontend/tools/eslint
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Warsaw
+    open-pull-requests-limit: 2
+    labels: ["zależności", "frontend"]
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      eslint-all:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Warsaw
+    open-pull-requests-limit: 3
+    labels: ["zależności", "ci"]
+    commit-message:
+      prefix: "chore(ci)"
+
+  - package-ecosystem: docker
+    directories: ["/", "/backend", "/frontend"]
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Warsaw
+    open-pull-requests-limit: 3
+    labels: ["zależności", "docker"]
+    commit-message:
+      prefix: "chore(deps)"
