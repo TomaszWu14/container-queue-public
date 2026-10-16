@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Kopia zapasowa poza serwer** (US-013, R-10): po każdej kopii zaszyfrowane pliki trafiają do magazynu zgodnego
+  z S3 (`BACKUP_OFFSITE_*`, `docs/BACKUPY.md`). Jawna kopia nigdy nie wychodzi z serwera; błąd wysyłki = alert
+  (brak heartbeatu). Włączenie: magazyn + 4 zmienne w Coolify.
 - **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do
   agencji i XML SADUE (dotąd ustawiało status „wysłane” / pisało audyt); ukryte i zablokowane w API: dziennik
   zmian, eksporty i ZIP, wywołania DLT, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się
@@ -34,6 +37,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- Obraz aplikacji nie miał `age` ani `curl`: szyfrowanie kopii (`BACKUP_AGE_RECIPIENT`) kończyło się błędem,
+  a heartbeat kopii (`BACKUP_PING_URL`) nie dochodził. Oba programy są teraz w `Dockerfile.coolify`.
 - **Zmiana statusu na nieaktualnym widoku nie nadpisuje cudzej zmiany** (US-003, R-02, P-13, ADR-0003). Status
   kontenera, odprawy i zlecenia transportowego: panel wysyła status, który widział; inny w bazie = 409
   `state_changed` z aktualną wartością. Niezwiązane zmiany (notatka, tracking) nie dają konfliktu. Pole

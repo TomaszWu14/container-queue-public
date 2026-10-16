@@ -49,7 +49,8 @@ w menedżerze sekretów poza serwerem.
 - Weryfikacja: `verify_backup.py` co tydzień (`VERIFY_BACKUP_WEEKDAY`) odtwarza kopię do bazy tymczasowej
   i liczy wiersze; wynik w panelu Logi → Zadania i alert dla adminów.
 - Heartbeat: `BACKUP_PING_URL` (np. Uptime Kuma) — brak pingu = kopia nie powstała.
-- **Luka:** kopie leżą na tym samym serwerze (R-10, US-013).
+- Kopia poza serwer: `BACKUP_OFFSITE_*` (US-013) — zaszyfrowane pliki do magazynu S3 po każdej kopii; włączenie
+  i klucz tylko do zapisu: `BACKUPY.md` §„Kopia poza serwer”. Dopóki niewłączona — kopie tylko na tym samym serwerze (R-10).
 
 ## 5. Odtworzenie
 

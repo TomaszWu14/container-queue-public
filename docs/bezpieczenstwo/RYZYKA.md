@@ -20,7 +20,7 @@ Status: otwarte · w realizacji · zaakceptowane (wyjątek E-xx) · zamknięte (
 | R-07 | Parsery plików od partnerów w procesie API (XML stdlib, ZIP z deklarowanego rozmiaru, PDF/OCR) — DoS | średnie | średni | Ś | otwarte | brak | SEC | US-006 | 2026-11-15 |
 | R-08 | Łańcuch dostaw: Trivy nie bramkuje, brak Semgrep, rozjazd wersji pre-commit/CI; `dependabot.yml` dopiero od PR #18 | niskie | średni | Ś | w realizacji | brak | SEC | US-007 | 2026-11-15 |
 | R-09 | RODO bez dokumentacji: brak rejestru czynności, podstaw prawnych, analizy powierzeń; scrubbing Sentry nie łapie imion | średnie | wysoki | Ś | otwarte | czeka (Z-009) | SEC/BA | US-012 | 2026-11-15 |
-| R-10 | Ciągłość: jedna instancja, kopia raz w tygodniu na tym samym serwerze, brak procedury incydentu/odtworzenia, brak stagingu | niskie | wysoki | Ś | otwarte (RPO zaakceptowane: E-02) | E-02 | OPS | US-013 | 2026-11-15 |
+| R-10 | Ciągłość: jedna instancja, kopia raz w tygodniu na tym samym serwerze, brak procedury incydentu/odtworzenia, brak stagingu | niskie | wysoki | Ś | w realizacji: kopia poza serwer gotowa w kodzie (US-013), czeka na włączenie w Coolify; RPO zaakceptowane: E-02 | E-02 | OPS | US-013 | 2026-11-15 |
 | R-11 | 2FA administratorów nieobowiązkowe | niskie | wysoki | Ś | zaakceptowane | E-01 | PO | US-019 | 2027-01-15 |
 | R-12 | Konta demo publiczne, współdzielone, jedno hasło w README (4 role od US-028) | średnie | niski | N | zaakceptowane | E-05 | PO | — | 2027-01-15 |
 | R-13 | `csv_safe` nie neutralizuje `\t` i `\r` (B-002) | niskie | niski | N | otwarte | brak | DEV | US-008 | 2026-11-15 |

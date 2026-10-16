@@ -3,9 +3,9 @@
 Automatyczna kopia zapasowa całej bazy do lokalnego pliku `.sql.gz`, z retencją.
 Chroni przed przypadkowym skasowaniem danych i nieudaną migracją.
 
-> ⚠️ To backup **lokalny** — pliki leżą na tym samym serwerze co aplikacja.
-> Zabezpiecza przed pomyłkami i awarią aplikacji, ale **nie** przed utratą całego
-> serwera/dysku. Kopię poza serwer (druga maszyna) warto dołożyć osobno.
+> ⚠️ Domyślnie backup jest **lokalny** — pliki leżą na tym samym serwerze co aplikacja i nie chronią
+> przed utratą całego serwera/dysku. Włącz **kopię poza serwer** (niżej, US-013): zaszyfrowane pliki
+> po każdej kopii trafiają do zewnętrznego magazynu.
 
 ## Skrypty
 - `backend/scripts/backup.sh` — `pg_dump` → `BACKUP_DIR/timporye-<data>.sql.gz`, retencja GFS (niżej).
@@ -68,10 +68,42 @@ age-keygen -o timporye-backup.key        # NA KOMPUTERZE ADMINA; linia „# publ
 W zmiennych aplikacji ustaw `BACKUP_AGE_RECIPIENT=age1…` (klucz publiczny). Od tej pory w
 `BACKUP_DIR` powstają tylko pliki `.age` (retencja, `/api/health/deep` i cotygodniowa weryfikacja je
 rozumieją). Weryfikacja na serwerze sprawdza wtedy tylko świeżość kopii — **próbne odtworzenie rób
-poza serwerem** (z kluczem prywatnym), np. raz w miesiącu. Warunki: program `age` w obrazie aplikacji
-(obecny `Dockerfile.coolify` go nie instaluje — bez niego backup z ustawionym kluczem kończy się
-głośnym błędem, nigdy jawną kopią) i zmienna przekazana do kontenera (`docker-compose.coolify.yml`).
+poza serwerem** (z kluczem prywatnym), np. raz w miesiącu. Program `age` jest w obrazie
+(`Dockerfile.coolify`), a zmienna przekazywana do kontenera (`docker-compose.coolify.yml`); gdyby
+szyfrowanie nie działało, backup kończy się głośnym błędem, nigdy jawną kopią.
 Sprawdzenie: `gunzip -t plik.sql.gz.age` zwraca błąd (nieczytelny bez klucza).
+
+## Kopia poza serwer (US-013, R-10)
+Po każdej udanej kopii `backup.sh` wysyła **zaszyfrowane** pliki z tego uruchomienia (baza i, jeśli
+powstało, archiwum załączników) do magazynu zgodnego z S3: Backblaze B2, Cloudflare R2, Hetzner
+Object Storage, Wasabi, AWS S3. Bez nowych bibliotek — `curl` z podpisem AWS SigV4.
+
+Zasady bezpieczeństwa (wymuszone w skrypcie, testy `tests/test_backup_offsite.py`):
+- **jawna kopia nigdy nie wychodzi z serwera**: `BACKUP_OFFSITE_URL` bez `BACKUP_AGE_RECIPIENT` = błąd,
+- klucze dostępu idą do `curl` przez stdin, nie w argumentach (niewidoczne w liście procesów),
+- błąd wysyłki = kod błędu i **brak heartbeatu** (`BACKUP_PING_URL`), więc monitor zaalarmuje;
+  kopia lokalna zostaje.
+
+| Zmienna | Znaczenie |
+|---|---|
+| `BACKUP_OFFSITE_URL` | adres magazynu **z nazwą koszyka**, np. `https://s3.eu-central-003.backblazeb2.com/timporye-kopie`; puste = wyłączone |
+| `BACKUP_OFFSITE_REGION` | region podpisu (B2: np. `eu-central-003`, R2: `auto`, AWS: np. `eu-central-1`); domyślnie `auto` |
+| `BACKUP_OFFSITE_ACCESS_KEY` | identyfikator klucza aplikacji |
+| `BACKUP_OFFSITE_SECRET_KEY` | sekret klucza — tylko w Coolify (Environment Variables), nigdy w repo |
+
+### Jak włączyć (jednorazowo, ok. 15 min)
+1. **Klucz szyfrowania** (jeśli jeszcze nie ma): na swoim komputerze `age-keygen -o timporye-backup.key`.
+   Plik z kluczem prywatnym schowaj w menedżerze haseł / sejfie; **nie na serwerze**. Linię
+   `# public key: age1…` wpisz w Coolify jako `BACKUP_AGE_RECIPIENT`.
+2. **Magazyn:** załóż koszyk (bucket) u wybranego dostawcy, **prywatny**, najlepiej w UE (RODO).
+3. **Klucz dostępu tylko do zapisu** (bez prawa kasowania i odczytu, jeśli dostawca na to pozwala; B2:
+   „Application Key” z uprawnieniem `writeFiles` do tego jednego koszyka). Przejęty serwer nie skasuje
+   wtedy kopii poza nim.
+4. **Retencja po stronie magazynu:** reguła cyklu życia (lifecycle), np. usuwanie plików starszych niż
+   400 dni; skrypt niczego poza serwerem nie kasuje.
+5. W Coolify ustaw 4 zmienne z tabeli, **Redeploy**, potem Scheduled Task → **Execute Now** i sprawdź log:
+   `backup: poza serwer → timporye-….sql.gz.age`. W panelu dostawcy powinny być nowe pliki.
+6. **Próbne odtworzenie** z pliku pobranego z magazynu (RUNBOOK §5) — raz na kwartał, z wpisem w rejestrze.
 
 ## Odtworzenie (restore)
 > ⚠️ Nadpisuje obecne dane w bazie. Najlepiej najpierw zrób świeży backup.

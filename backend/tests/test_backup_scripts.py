@@ -38,15 +38,16 @@ def _posix(path) -> str:
     return "/" + p[0].lower() + p[2:].replace("\\", "/") if os.name == "nt" and p[1:2] == ":" else p
 
 
-def _run_backup(tmp_path, pg_dump_body: str, **extra_env):
+def _run_backup(tmp_path, pg_dump_body: str, bins: dict[str, str] | None = None, **extra_env):
     sh = shutil.which("sh")
     if not sh:
         pytest.skip("brak sh")
     bindir = tmp_path / "bin"
     bindir.mkdir()
-    fake = bindir / "pg_dump"
-    fake.write_text("#!/bin/sh\n" + pg_dump_body + "\n", newline="\n")
-    fake.chmod(0o755)
+    for name, body in {"pg_dump": pg_dump_body, **(bins or {})}.items():
+        fake = bindir / name
+        fake.write_text("#!/bin/sh\n" + body + "\n", newline="\n")
+        fake.chmod(0o755)
     script = tmp_path / "backup.sh"   # kopia z LF (checkout na Windows może mieć CRLF)
     script.write_bytes(SCRIPT.read_bytes().replace(b"\r\n", b"\n"))
     uploads = tmp_path / "uploads"

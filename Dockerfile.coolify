@@ -21,13 +21,14 @@ FROM python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # postgresql-client: pg_dump/psql do automatycznych backupów i odtwarzania bazy
+# age: szyfrowanie kopii (BACKUP_AGE_RECIPIENT); curl: kopia poza serwer (S3) i heartbeat monitora
 # tesseract-ocr (+pol/eng): OCR skanów w module Faktury → Excel (OCR_LANG=pol+eng)
 # docker-clean usunięty, żeby pobrane .deb zostawały w cache BuildKit (nie w obrazie)
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     rm -f /etc/apt/apt.conf.d/docker-clean \
     && apt-get update \
-    && apt-get install -y --no-install-recommends postgresql-client \
+    && apt-get install -y --no-install-recommends postgresql-client age curl \
         tesseract-ocr tesseract-ocr-pol tesseract-ocr-eng
 
 # użytkownik PRZED kopiowaniem kodu: COPY --chown zamiast `chown -R` po fakcie

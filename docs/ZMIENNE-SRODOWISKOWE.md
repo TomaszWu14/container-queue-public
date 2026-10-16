@@ -11,7 +11,7 @@ Katalog pól klasy `Settings` z `backend/app/config.py` (**bez wartości — ża
 
 Dodatkowo poza `Settings`: `LOG_LEVEL` (main.py, domyślnie INFO), `FORWARDED_ALLOW_IPS` (CMD w Dockerfile),
 `POSTGRES_PASSWORD` (compose → baza i `DATABASE_URL`), w stacku n8n: `N8N_ENCRYPTION_KEY` (SEKRET — utrata = utrata credentiali),
-`N8N_PUBLIC_BASE_URL`, `N8N_PROXY_HOPS`. Skrypt kopii `backend/scripts/backup.sh`: `BACKUP_KEEP` (kopie bazy, domyślnie 14), `BACKUP_KEEP_UPLOADS` (archiwa załączników, domyślnie 7), `BACKUP_AGE_RECIPIENT` (klucz publiczny age — kopie tylko zaszyfrowane, BACKUP-007) i `BACKUP_AGE_IDENTITY` (klucz prywatny, tylko `restore.sh`); patrz `docs/BACKUPY.md`. Frontend: `VITE_API_TARGET` (tylko dev proxy).
+`N8N_PUBLIC_BASE_URL`, `N8N_PROXY_HOPS`. Skrypt kopii `backend/scripts/backup.sh`: `BACKUP_KEEP` (kopie bazy, domyślnie 14), `BACKUP_KEEP_UPLOADS` (archiwa załączników, domyślnie 7), `BACKUP_AGE_RECIPIENT` (klucz publiczny age — kopie tylko zaszyfrowane, BACKUP-007) i `BACKUP_AGE_IDENTITY` (klucz prywatny, tylko `restore.sh`), kopia poza serwer (US-013): `BACKUP_OFFSITE_URL` (magazyn zgodny z S3 z nazwą koszyka; wymaga `BACKUP_AGE_RECIPIENT`), `BACKUP_OFFSITE_REGION` (domyślnie `auto`), `BACKUP_OFFSITE_ACCESS_KEY`, `BACKUP_OFFSITE_SECRET_KEY` (sekret — tylko w Coolify); patrz `docs/BACKUPY.md`. Frontend: `VITE_API_TARGET` (tylko dev proxy).
 
 Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `APP_CPUS` (1; nie więcej niż rdzeni hosta), `N8N_MEM_LIMIT` (1g), `N8N_CPUS` (1).
 
