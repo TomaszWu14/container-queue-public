@@ -275,7 +275,10 @@ def vessel_weather(db: Session = Depends(get_db), user: User = viewer_or_sales):
     widocznych dla usera (izolacja per-zasób jak w tracked_vessels)."""
     from ..deps import scope_containers
     from ..models import Container
+    from ..security import is_demo_login
     from ..tracking import weather
+    if is_demo_login(user.login):
+        return []   # publiczni goście demo nie odpytują serwisu pogody (open-meteo)
     from ..tracking.ais import group_by_vessel
 
     # statki widoczne dla usera — wyprowadzone WYŁĄCZNIE z jego kontenerów

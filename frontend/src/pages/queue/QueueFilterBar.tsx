@@ -7,6 +7,7 @@ import { useDismiss } from '../../ColumnFilter'
 import { todayISO } from '../../dates'
 import { useToast } from '../../feedback'
 import { useT } from '../../i18n'
+import { useUser } from '../../userContext'
 import { LockIcon } from './cells'
 import type { Module } from './config'
 import type { QueueFilters } from './useQueueFilters'
@@ -95,6 +96,7 @@ export default function QueueFilterBar(p: {
   const canClear = p.isAdmin && !archive && !!p.moduleCode
   const lockTitle = mv.moveUnlocked ? t('kqEditOnHint') : t('kqEditOffHint')
   const toggleEdit = () => mv.setMoveUnlocked(v => !v)
+  const demo = !!useUser()?.is_demo   // konto demo: bez eksportu do Excela (demo_limits)
   const exportItems = (close: () => void) => (
     <>
       <button type="button" disabled={ex.exporting} onClick={() => { ex.exportXlsx(); close() }}>
@@ -121,14 +123,14 @@ export default function QueueFilterBar(p: {
         </button>
       )}
       <span className="kq-wide"><ViewMenu p={p.prefs} /></span>
-      <span className="kq-cols kq-wide" onClick={e => e.stopPropagation()}>
+      {!demo && <span className="kq-cols kq-wide" onClick={e => e.stopPropagation()}>
         <button type="button" className={`kq-ico export-btn${ex.exportOpen ? ' on' : ''}`}
                 aria-label={t('exportXlsx')} title={t('exportXlsx')} aria-expanded={ex.exportOpen}
                 disabled={ex.exporting} onClick={() => ex.setExportOpen(v => !v)}>
           <Download size={16} aria-hidden="true" />
         </button>
         {ex.exportOpen && <div className="export-menu">{exportItems(() => ex.setExportOpen(false))}</div>}
-      </span>
+      </span>}
       {/* D3: ręczne dodanie kontenera — jedyne wejście z UI (import pliku jest w adminie) */}
       {editable && (
         <button type="button" className="btn small kq-add" title={t('addContainer')} onClick={p.onAdd}>
@@ -146,10 +148,10 @@ export default function QueueFilterBar(p: {
                 <LockIcon open={mv.moveUnlocked} /> {lockTitle}
               </button>
             )}
-            <div className="kq-narrow kq-more-sec">
+            {!demo && <div className="kq-narrow kq-more-sec">
               <div className="kq-ct">{t('exportXlsx')}</div>
               {exportItems(() => setMoreOpen(false))}
-            </div>
+            </div>}
             <div className="kq-narrow kq-more-sec"><ViewOptions p={p.prefs} /></div>
             {canFound && <button type="button" onClick={() => { setMoreOpen(false); p.onFound() }}><Package size={16} aria-hidden="true" /> {t('foundOrder')}</button>}
             {canClear && (

@@ -150,12 +150,15 @@ function SessionsSection() {
 
 export default function ProfilePage() {
   const t = useT()
+  const user = useUser()
   return (
     <main className="page">
       <PageHeader title={t('profileSecurity')} />
-      <AvatarSection />
-      <TwoFactorSection />
-      <SessionsSection />
+      {user?.is_demo ? <p className="muted">{t('demoProfileInfo')}</p> : <>
+        <AvatarSection />
+        <TwoFactorSection />
+        <SessionsSection />
+      </>}
     </main>
   )
 }

@@ -8,6 +8,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do
+  agencji i XML SADUE (dotąd ustawiało status „wysłane” / pisało audyt); ukryte i zablokowane w API: dziennik
+  zmian, eksporty i ZIP, wywołania DLT, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się
+  w pasku obecności; pogoda bez zapytań zewnętrznych; zapis odcinany w przeglądarce, przyciski wyszarzone.
 - **Demo pokazuje cały proces** (US-027): odprawa zgodna z etapem kontenera (z rewizjami), armatorzy i porty
   docelowe, alerty demurrage, 30 zamówień, dokumenty PDF z celowymi brakami, awizacje we wszystkich stanach.
   Moduł `backend/scripts/seed_demo_process.py`; demo odtwarza też typy dokumentów, które czyszczenie kasowało.

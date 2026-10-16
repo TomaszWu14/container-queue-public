@@ -4,6 +4,7 @@ import { api } from './api'
 import WorldClock from './clock'
 import ThemeToggle from './ThemeToggle'
 import NotificationsBell from './NotificationsBell'
+import { hiddenInDemo } from './demoLimits'
 import KnowledgePanel from './KnowledgePanel'
 import { LANGS, Lang, LangContext, useT } from './i18n'
 import { UserContext } from './userContext'
@@ -204,7 +205,7 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
           </NavLink>
         )}
 
-        {primary.filter(l => l.show).map(l => (
+        {primary.filter(l => l.show && !hiddenInDemo(user, l.to)).map(l => (
           <NavLink key={l.to} to={l.to} end={l.end} className="tn-link"
                    title={l.label} aria-label={l.label}
                    data-tour={l.to === '/sledzenie' ? 'sledzenie' : undefined}>
@@ -213,7 +214,7 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
         ))}
 
         {sections.map(sec => {
-          const links = sec.links.filter(l => l.show)
+          const links = sec.links.filter(l => l.show && !hiddenInDemo(user, l.to))
           if (!links.length) return null
           const open = openMenu === sec.label
           // B14: na stronie z grupy („Zamówienia” w Operacjach) grupa jest podświetlona jak aktywny link
@@ -257,14 +258,14 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
       <div className="tn-right">
         {/* pigułki firm usunięte — wybór spółki jest w wierszu „Wybór firmy" w kolejce
             (karty z licznikami), duplikat na pasku był zbędny */}
-        {user && PRESENCE_ROLES.includes(user.role) && <PresenceBar userId={user.id} />}
+        {user && !user.is_demo && PRESENCE_ROLES.includes(user.role) && <PresenceBar userId={user.id} />}
         <span className="tn-status" title={total != null ? `${total} ${t('sbInQueue')}` : t('sbStatus')}>
           <span className="sb-dot" /><span className="tn-online">online</span>
         </span>
         {kbScope && <KnowledgePanel variant="topbar" scopes={[{ scope_type: 'screen', scope_key: kbScope }]} />}
         <WorldClock />
         <FullscreenToggle />
-        <NotificationsBell />
+        {!user?.is_demo && <NotificationsBell />}
         {/* menu użytkownika: profil, preferencje i wylogowanie w jednym miejscu —
             wcześniej 5 kontrolek w pasku zawijało nagłówek do dwóch linii */}
         <div className={`tn-group tn-usermenu${userOpen ? ' open' : ''}`}>

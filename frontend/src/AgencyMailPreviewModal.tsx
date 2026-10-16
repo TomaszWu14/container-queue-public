@@ -5,6 +5,7 @@ import { CircleCheckIcon, TriangleAlertIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { api, downloadFile, errorMessage } from './api'
 import { useT } from './i18n'
+import { useUser } from './userContext'
 import { Modal } from './Modal'
 import type { InvoiceBatch } from './types'
 
@@ -25,6 +26,8 @@ export function AgencyMailPreviewModal({ batch, containerNo, onClose }: {
   onClose: () => void
 }) {
   const t = useT()
+  // demo: sam podgląd — pobranie .eml i XML SADUE zmienia dane (serwer i tak odmawia, demo_limits)
+  const demo = !!useUser()?.is_demo
   const [preview, setPreview] = useState<MailPreview | null>(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -76,7 +79,8 @@ export function AgencyMailPreviewModal({ batch, containerNo, onClose }: {
                 <td>{f.name}</td>
                 <td className="muted">{t(`mailPrevKind_${f.kind}`)}</td>
                 <td className="muted mono">{kb(f.size)}</td>
-                <td><button type="button" className="btn small secondary" onClick={() => open(f)}>{t('mailPrevOpen')}</button></td>
+                <td>{!(demo && f.kind === 'sadue') &&
+                  <button type="button" className="btn small secondary" onClick={() => open(f)}>{t('mailPrevOpen')}</button>}</td>
               </tr>
             ))}
           </tbody>
@@ -89,9 +93,9 @@ export function AgencyMailPreviewModal({ batch, containerNo, onClose }: {
       </>}
       <div className="actions">
         <button type="button" className="btn secondary" disabled={busy} onClick={onClose}>{t('cancel')}</button>
-        <button type="button" className="btn" data-autofocus disabled={busy || !preview} onClick={eml}>
+        {!demo && <button type="button" className="btn" data-autofocus disabled={busy || !preview} onClick={eml}>
           {busy ? t('loading') : t('mailPrevDownload')}
-        </button>
+        </button>}
       </div>
     </Modal>
   )

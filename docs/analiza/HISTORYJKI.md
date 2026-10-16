@@ -168,6 +168,28 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - Gdy którekolwiek konto próbuje zapisu → Wtedy 403 „Konto demo — tylko podgląd”.
 - **[SEC]:** rola przypisywana tylko kontom z listy `DEMO_READONLY_LOGINS` (seed tworzy konta wyłącznie z niej),
   więc każde jest tylko do odczytu po stronie API. Wyjątek E-05 rozszerzony o konta per rola.
+
+### US-029 · [BA][SEC] Ograniczenia widoków kont demo (top 10)
+- **Rozmiar:** M · **Źródło:** PO, 2026-10-16 („wdrażaj wszystkie”) · **Wymagania:** E-05, R-12 · **Priorytet:** Must
+- **Stan:** zrealizowane (PR po #18); czeka na merge.
+- **Jako** właściciel publicznego demo **chcę**, żeby goście widzieli proces, ale nie zmieniali danych,
+  nie podglądali siebie nawzajem i nie obciążali serwera, **aby** demo było bezpieczne i czytelne.
+- **Kryteria akceptacji** (testy: `backend/tests/test_demo_limits.py`, `frontend/src/demoLimits.dom.test.tsx`,
+  `frontend/src/pages/ProfilePage.demo.dom.test.tsx`)
+  1. Gdy demo pobiera szkic .eml lub XML SADUE → 403; obieg dokumentów kontenera bez zmian; podgląd maila działa.
+  2. Gdy demo otwiera mapę → pogoda bez zapytania do open-meteo.
+  3. Dziennik zmian i audyt: ukryte w menu, trasa niedostępna, API 403.
+  4. Obecność: demo nie widzi innych i nie jest widoczne.
+  5. ZIP dokumentów, eksport kolejki do Excela, CSV wycen, raport błędów importu: ukryte, API 403.
+  6. Profil: zamiast zdjęcia, 2FA i sesji — informacja o koncie wspólnym.
+  7. Import SAD i Master data: ukryte w menu i trasach.
+  8. Wywołania DLT (linki publiczne dla partnera): ukryte, API 403. Linki awizacji nie są odczytywalne
+     z bazy (tokeny jako SHA-256), więc demo ich nie zobaczy.
+  9. Dzwonek powiadomień i aktualności na pulpicie: ukryte, API powiadomień 403.
+  10. Baner „tylko podgląd” (był); przyciski zapisu w formularzach wyszarzone; każdy zapis odcinany
+      w przeglądarce bez żądania, z tym samym komunikatem co serwer.
+- **[SEC]:** egzekwowanie w API w jednym miejscu (`backend/app/demo_limits.py`, wołane z
+  `security._enforce_demo_readonly`); ekrany tylko chowają. Zwykłe konta bez zmian (test).
 - **Test:** `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` (4 role).
 
 ## Should

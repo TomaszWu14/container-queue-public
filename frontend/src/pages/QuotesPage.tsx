@@ -71,7 +71,7 @@ export default function QuotesPage() {
 
   // B15/C12: tytuł strony z akcjami eksportu po prawej (wcześniej upchnięte w wąskim panelu listy)
   const header = <PageHeader title={t('navQuotes')} actions={canManage ? <>
-    <button className="btn small secondary" onClick={exportCsv}>{t('quoteExport')}</button>
+    {!user?.is_demo && <button className="btn small secondary" onClick={exportCsv}>{t('quoteExport')}</button>}
     <button className={`btn small${cost ? '' : ' secondary'}`} onClick={toggleCost}>{t('quoteCostReport')}</button>
     <button className={`btn small${perf ? '' : ' secondary'}`} onClick={togglePerf}>{t('perfReport')}</button>
   </> : undefined} />
