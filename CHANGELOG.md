@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Projekty decyzji do akceptacji PO:** ADR-0004 (publiczne API tylko do odczytu z kluczami per firma) i ADR-0005
+  (własna kopia demo dla każdego odwiedzającego) — opcje, przegląd bezpieczeństwa STRIDE i pytania; bez kodu.
 - **Skaner kodu QR na bramie** (US-030, pomysł 4 PO): ochrona skanuje telefonem kod z karty rozładunku albo wpisuje
   numer kontenera i jednym przyciskiem wpuszcza auto. Kontener spoza dzisiejszej listy dostaje ostrzeżenie zamiast
   przycisku; obraz z aparatu nie opuszcza telefonu. Na iPhonie: zwykły aparat albo numer (Z-021).
