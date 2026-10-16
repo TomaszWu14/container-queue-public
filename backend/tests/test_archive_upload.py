@@ -6,6 +6,7 @@ import zipfile
 from app.models import Attachment, InvoiceBatch
 from tests.test_invoice_conformity import _container
 from tests.test_invoices_checks import _pdf, _setup
+from tests.conftest import xlsx_bytes
 
 
 def _zip(entries: dict[str, bytes]) -> bytes:
@@ -24,7 +25,7 @@ def _post(client, headers, cid, data, name="4500626277.zip"):
 def test_zip_unpacked_like_order_folder(client, admin_headers, db_session, monkeypatch, tmp_path):
     company, sup = _setup(db_session, monkeypatch, tmp_path)
     cid = _container(client, admin_headers, company, sup)
-    data = _zip({"4500626277/DOC CI+BL.pdf": _pdf(2), "4500626277/kalkulacja.xlsx": b"x",
+    data = _zip({"4500626277/DOC CI+BL.pdf": _pdf(2), "4500626277/kalkulacja.xlsx": xlsx_bytes("x"),
                  "4500626277/stare.zip": b"PK", "4500626277/skrypt.exe": b"MZ",
                  "__MACOSX/4500626277/._DOC.pdf": b"", "4500626277/Thumbs.db": b""})
     resp = _post(client, admin_headers, cid, data)
@@ -53,8 +54,8 @@ def test_zip_guards(client, admin_headers, db_session, monkeypatch, tmp_path):
 def test_zip_skips_files_already_in_container(client, admin_headers, db_session, monkeypatch, tmp_path):
     company, sup = _setup(db_session, monkeypatch, tmp_path)
     cid = _container(client, admin_headers, company, sup)
-    assert _post(client, admin_headers, cid, _zip({"kalkulacja.xlsx": b"x1"})).status_code == 201
-    body = _post(client, admin_headers, cid, _zip({"kopia.xlsx": b"x1", "nowy.xlsx": b"x2"})).json()
+    assert _post(client, admin_headers, cid, _zip({"kalkulacja.xlsx": xlsx_bytes("x1")})).status_code == 201
+    body = _post(client, admin_headers, cid, _zip({"kopia.xlsx": xlsx_bytes("x1"), "nowy.xlsx": xlsx_bytes("x2")})).json()
     assert body["attachments"] == 1 and len(body["skipped"]) == 1
     assert body["skipped"][0].startswith("kopia.xlsx (już jest w kontenerze jako „kalkulacja.xlsx”, wgrany ")
 
@@ -69,8 +70,8 @@ def test_zip_broken_entry_duplicates_and_bad_pdf_do_not_fail_whole_archive(clien
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_STORED) as archive:
         archive.writestr("uszkodzony.xlsx", b"AAAA-oryginal")
-        archive.writestr("a.xlsx", b"same")
-        archive.writestr("kopia.xlsx", b"same")
+        archive.writestr("a.xlsx", xlsx_bytes("same"))
+        archive.writestr("kopia.xlsx", xlsx_bytes("same"))
         archive.writestr("zly.pdf", b"%PDF-1.4 to nie jest pdf")
         archive.writestr("~$lock.xlsx", b"x")
     data = buf.getvalue().replace(b"AAAA-oryginal", b"BBBB-oryginal")   # treść ≠ CRC z nagłówka

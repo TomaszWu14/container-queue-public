@@ -9,7 +9,7 @@ from sqlalchemy import select
 
 from app.models import Attachment, DocumentType
 from app.routers.intake_unpack import expand
-from tests.conftest import pdf_bytes
+from tests.conftest import pdf_bytes, xlsx_bytes
 from tests.test_document_gate import OWN
 from tests.test_intake import _post, _start
 
@@ -28,7 +28,7 @@ def _eml(inner: EmailMessage | None = None) -> bytes:
     msg.get_payload()[1].add_related(_png((10, 10)), "image", "png", cid="logo", filename="logo.png",
                                      disposition="inline")
     msg.add_attachment(pdf_bytes("mail"), "application", "pdf", filename="faktura.pdf")
-    msg.add_attachment(b"PK-xlsx", "application", "octet-stream", filename="kalkulacja.xlsx")
+    msg.add_attachment(xlsx_bytes("PK"), "application", "octet-stream", filename="kalkulacja.xlsx")
     if inner is not None:
         msg.add_attachment(inner)
     return msg.as_bytes()
@@ -59,7 +59,7 @@ def test_nested_eml_and_depth_limit(client, admin_headers, db_session, monkeypat
     inner = EmailMessage()
     inner["Subject"] = "fwd"
     inner.set_content("x")
-    inner.add_attachment(b"inner-xlsx", "application", "octet-stream", filename="wewn.xlsx")
+    inner.add_attachment(xlsx_bytes("inner"), "application", "octet-stream", filename="wewn.xlsx")
     body = _post(client, admin_headers, cid, {"m.eml": _eml(inner)}).json()
     names = {i["original_name"]: i["doc_type"] for i in body["items"]}
     assert names["fwd.eml"] == "MAIL" and names["wewn.xlsx"] == "OTHER"
@@ -121,7 +121,7 @@ def test_msg_attachments_via_extract_msg(client, admin_headers, db_session, monk
     import extract_msg
 
     _, _, cid = _start(client, admin_headers, db_session, monkeypatch, tmp_path)
-    nested = _FakeMsg([_FakeAtt("z_fwd.xlsx", b"fwd")])
+    nested = _FakeMsg([_FakeAtt("z_fwd.xlsx", xlsx_bytes("fwd"))])
     fake = _FakeMsg([_FakeAtt("bl.pdf", pdf_bytes("msg")), _FakeAtt("logo.png", b"tiny", hidden=True),
                      _FakeAtt("fwd.msg", nested)])
     monkeypatch.setattr(extract_msg, "openMsg", lambda data: fake)

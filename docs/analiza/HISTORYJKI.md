@@ -77,7 +77,11 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - Dane: rozszerzenie dozwolone, sygnatura nieznana (np. `.msg`, `.eml`, `.doc`, `.xls`) → Gdy upload → Wtedy
     przyjęty, ale w rejestrze ryzyk wpis o braku weryfikacji dla tych typów.
 - **[SEC]:** wspólna funkcja z istniejącym sniffingiem zdjęć; pobieranie już idzie jako `attachment`.
-- **Test:** rozszerzenie `test_upload_limits.py` o przypadki sygnatur.
+- **Test:** `backend/tests/test_file_signatures.py` (31 przypadków: sygnatury, API, ZIP).
+- **Stan:** zrealizowane („rób A”, PO 2026-10-16). `backend/app/file_signatures.py` sprawdza zawartość w czterech
+  wejściach plików: załączniki kontenera, faktury transportowe, rozpakowywany ZIP i poczta przychodząca (ZIP
+  i poczta: plik niezgodny pominięty z powodem, reszta wgrana). Testy z „udawanymi” plikami .xlsx dostały
+  prawdziwe minimalne pliki (`tests/conftest.py::xlsx_bytes`).
 
 ### US-005 · [SEC] Jednolita ochrona wszystkich tras publicznych
 - **Rozmiar:** S · **Źródło:** R-06, T-01, T-03 · **Wymagania:** FR-021, SR-002

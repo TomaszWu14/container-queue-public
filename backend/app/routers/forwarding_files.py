@@ -21,6 +21,7 @@ from ..deps import NonWarehouseViewers as non_warehouse
 from ..deps import Viewer as viewer
 from ..deps import forwarder_may_see, get_scoped
 from .. import audit
+from ..file_signatures import content_matches, mismatch_message
 from ..models import (
     Attachment,
     AttachmentSuggestion,
@@ -148,6 +149,24 @@ def allowed_extensions() -> set[str]:
     return {e.strip().lower() for e in settings.allowed_upload_extensions.split(",") if e.strip()}
 
 
+def _read_checked(file: UploadFile) -> tuple[str, bytes]:
+    """(rozszerzenie, bajty) dozwolonego pliku; 422 przy ZIP-ie, typie spoza listy albo zawartości
+    niezgodnej z rozszerzeniem (US-004 — nie ufamy samej nazwie)."""
+    extension = pathlib.Path(file.filename or "").suffix.lstrip(".").lower()
+    if extension == "zip":   # rozpakowuje POST …/archive (front kieruje tam ZIP-y)
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
+                            "Archiwum ZIP jest rozpakowywane — wgraj je przez „Dokumenty”.")
+    if extension not in allowed_extensions():
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            f"Niedozwolony typ pliku „.{extension or '?'}”. "
+            f"Dozwolone: {', '.join(sorted(allowed_extensions()))}.")
+    content = read_upload_capped(file, settings.max_upload_mb)
+    if not content_matches(extension, content):
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, mismatch_message(extension))
+    return extension, content
+
+
 @router.post("/containers/{container_id}/attachments", response_model=AttachmentOut,
              status_code=201)
 def upload_attachment(container_id: int, file: UploadFile,
@@ -174,16 +193,7 @@ def upload_attachment(container_id: int, file: UploadFile,
         if not document_type or not document_type.is_active:
             raise HTTPException(status.HTTP_404_NOT_FOUND,
                                 "Nie znaleziono aktywnego typu dokumentu.")
-    extension = pathlib.Path(file.filename or "").suffix.lstrip(".").lower()
-    if extension == "zip":   # rozpakowuje POST …/archive (front kieruje tam ZIP-y)
-        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
-                            "Archiwum ZIP jest rozpakowywane — wgraj je przez „Dokumenty”.")
-    if extension not in allowed_extensions():
-        raise HTTPException(
-            status.HTTP_422_UNPROCESSABLE_ENTITY,
-            f"Niedozwolony typ pliku „.{extension or '?'}”. "
-            f"Dozwolone: {', '.join(sorted(allowed_extensions()))}.")
-    content = read_upload_capped(file, settings.max_upload_mb)
+    extension, content = _read_checked(file)
     if document_type is None and old is not None:
         document_type = old.document_type   # podmiana zachowuje typ (kafelek, checklista)
     gate = check_pdf(content, container.container_no) if extension == "pdf" else None
