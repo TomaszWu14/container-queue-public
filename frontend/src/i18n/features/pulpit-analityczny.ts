@@ -1,0 +1,47 @@
+import { defineFeature } from '../feature'
+
+// Pulpit analityczny (widok w stylu Power BI): przepływ przez etapy, koła podziału, rozładunki w tygodniach
+export default defineFeature({
+  pl: {
+    anaFlowTitle: 'Przepływ kontenerów przez proces',
+    anaFlowHint: 'Otwarte kontenery na każdym etapie. Najwięcej teraz: {stage} ({n}).',
+    anaPhaseBuy: 'Zakup i produkcja', anaPhaseSea: 'Transport', anaPhasePort: 'Port i odprawa', anaPhaseDelivery: 'Dostawa',
+    anaTransportTitle: 'Rodzaj transportu',
+    anaSea: 'Morski', anaRail: 'Kolej', anaAir: 'Lotniczy', anaOther: 'Inny / brak',
+    anaPortsTitle: 'Porty', anaPortOther: 'Inne / bez portu',
+    anaCustomsTitle: 'Stan odprawy celnej',
+    anaCustomsNone: 'Nierozpoczęta', anaCustomsProgress: 'W toku', anaCustomsCleared: 'Odprawione',
+    anaWeeksTitle: 'Rozładunki tydzień po tygodniu',
+    anaWeekDone: 'Minione', anaWeekPlanned: 'Zaplanowane', anaThisWeek: 'ten tydzień',
+    anaWeekTip: 'Tydzień od {date}: {n}',
+    anaTotal: 'razem', anaEmpty: 'Brak danych',
+  },
+  en: {
+    anaFlowTitle: 'Container flow through the process',
+    anaFlowHint: 'Open containers at each stage. Most right now: {stage} ({n}).',
+    anaPhaseBuy: 'Purchase & production', anaPhaseSea: 'Transport', anaPhasePort: 'Port & customs', anaPhaseDelivery: 'Delivery',
+    anaTransportTitle: 'Transport mode',
+    anaSea: 'Sea', anaRail: 'Rail', anaAir: 'Air', anaOther: 'Other / none',
+    anaPortsTitle: 'Ports', anaPortOther: 'Other / no port',
+    anaCustomsTitle: 'Customs clearance',
+    anaCustomsNone: 'Not started', anaCustomsProgress: 'In progress', anaCustomsCleared: 'Cleared',
+    anaWeeksTitle: 'Unloads week by week',
+    anaWeekDone: 'Past', anaWeekPlanned: 'Planned', anaThisWeek: 'this week',
+    anaWeekTip: 'Week of {date}: {n}',
+    anaTotal: 'total', anaEmpty: 'No data',
+  },
+  pt: {
+    anaFlowTitle: 'Fluxo de contentores pelo processo',
+    anaFlowHint: 'Contentores em aberto em cada etapa. Mais neste momento: {stage} ({n}).',
+    anaPhaseBuy: 'Compra e produção', anaPhaseSea: 'Transporte', anaPhasePort: 'Porto e desalfandegamento', anaPhaseDelivery: 'Entrega',
+    anaTransportTitle: 'Modo de transporte',
+    anaSea: 'Marítimo', anaRail: 'Ferroviário', anaAir: 'Aéreo', anaOther: 'Outro / nenhum',
+    anaPortsTitle: 'Portos', anaPortOther: 'Outros / sem porto',
+    anaCustomsTitle: 'Desalfandegamento',
+    anaCustomsNone: 'Não iniciado', anaCustomsProgress: 'Em curso', anaCustomsCleared: 'Desalfandegados',
+    anaWeeksTitle: 'Descargas semana a semana',
+    anaWeekDone: 'Passadas', anaWeekPlanned: 'Planeadas', anaThisWeek: 'esta semana',
+    anaWeekTip: 'Semana de {date}: {n}',
+    anaTotal: 'total', anaEmpty: 'Sem dados',
+  },
+})

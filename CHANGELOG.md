@@ -8,6 +8,11 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Pulpit analityczny** (prośba PO, widok w stylu Power BI): przepływ kontenerów przez 9 etapów procesu w 4 fazach
+  z nazwanym wąskim gardłem, trzy wykresy kołowe (rodzaj transportu, porty, stan odprawy — liczba i udział
+  w legendzie, podświetlanie po najechaniu) i rozładunki tydzień po tygodniu (minione / bieżący / zaplanowane).
+  Paleta sprawdzona pod kątem daltonizmu, osobne odcienie dla ciemnego motywu; `GET /api/stats/overview`
+  (zakres jak pulpit, odprawa ukryta dla spedytora). Demo dostało realny podział portów i transportu.
 - **„Ścieżka rekrutera” w testach przeglądarkowych** (`npm run e2e:demo`, workflow „E2E — ścieżka rekrutera”):
   demo przeklikane na komputerze i telefonie — wejście bez hasła, historia kontenera, pulpit, „Jak to zbudowano”,
   tryb tylko-do-odczytu; strona bez przewijania w bok, przyciski z nazwą dla czytnika ekranu. Film do README:

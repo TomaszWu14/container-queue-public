@@ -49,6 +49,7 @@ from . import (
     containers_purge,
     containers_stats,
     containers_write,
+    stats_overview,
     stats_value,
 )
 
@@ -95,7 +96,8 @@ logger = logging.getLogger(__name__)
 # muszą wygrać z GET /containers/{container_id} zdefiniowanym niżej.
 for _sub in (containers_bulk, containers_orders, containers_write, containers_planning,
              containers_contents,
-             containers_purge, containers_changes, containers_stats, stats_value):
+             containers_purge, containers_changes, containers_stats, stats_value,
+             stats_overview):
     router.include_router(_sub.router)
 
 # --- kontenery ---
