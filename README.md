@@ -11,7 +11,9 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 🌐 **Demo online bez logowania: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** —
 link od razu wpuszcza na konto demo. Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
-odczytu, 150 fikcyjnych kontenerów; ekran powitalny prowadzi przez 4 miejsca na 5 minut. Coś nie działa?
+odczytu, 150 fikcyjnych kontenerów z odprawą, dokumentami, zamówieniami i awizacjami w toku; ekran powitalny
+prowadzi przez 4 miejsca na 5 minut. Tym samym hasłem zobaczysz system oczami partnerów: `demo-spedytor`,
+`demo-agencja`, `demo-magazyn` — każdy widzi tylko swoje kontenery. Coś nie działa?
 Napisz: tomasz.wierzbowski@op.pl. Lokalnie uruchomisz to samo trzema komendami — sekcja
 [Jak uruchomić](#jak-uruchomić).
 
