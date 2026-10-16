@@ -116,6 +116,8 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-009 · [BA][DEV] Odpowiedź na awizację w aplikacji nie udaje sukcesu
 - **Rozmiar:** S · **Źródło:** P-01 · **Wymagania:** FR-020, NFR-007
+- **Stan (2026-10-16):** zrealizowane w PR #18; odbiór [BA] ✅, przegląd [SEC] ✅. Zakres szerszy niż P-01:
+  ten sam błąd był w formularzu danych kierowców (etap 2) i przy ponownym wejściu na wysłany link.
 - **Jako** spedytor z kontem **chcę** zobaczyć błąd, gdy mojej odpowiedzi nie da się zapisać (409: link
   użyty, awizacja zamknięta), **aby** nie wyjść z aplikacji w przekonaniu, że termin potwierdziłem.
 - **Kryteria akceptacji**

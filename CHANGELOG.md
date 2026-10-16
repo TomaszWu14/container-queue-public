@@ -27,6 +27,12 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
   rotacja kluczy, wniosek RODO).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
+### Fixed
+- **Formularz awizacji nie pokazuje sukcesu, gdy zapis się nie udał** (US-009, P-01). Dotąd każdy błąd 409
+  (poza zajętym slotem) w etapie 1, a każdy 409 w etapie 2 (dane kierowców) kończył się ekranem
+  „odpowiedź zapisana”. Teraz sukces tylko po 2xx; „już odpowiedziano” ma osobny ekran; każda inna odmowa
+  zostawia formularz z powodem z API. Przegrany wyścig dwóch wysyłek zwraca kod `already_submitted`.
+
 ### Changed
 - Walidacja konfiguracji przy starcie wydzielona z `backend/app/main.py` do `backend/app/settings_check.py`
   (limit 500 linii); `main` re-eksportuje dotychczasowe nazwy, logi startu nadal pod nazwą `app.main`.

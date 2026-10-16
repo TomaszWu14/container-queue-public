@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import { errorMessage } from '../api'
 import { useT } from '../i18n'
 import { formatDate } from '../dates'
-import { PublicShell, postPublic, usePublicForm, type AvizoHead } from './AvizoFormPage'
+import { PublicShell, postPublic, submitOutcome, usePublicForm, type AvizoHead } from './AvizoFormPage'
 
 interface Stage2Item {
   container_id: number
@@ -70,9 +70,9 @@ export default function AvizoDriverFormPage({ requestId }: { requestId?: number 
       const res = await postPublic(requestId ? `${base}/drivers` : base, {
         items: items.map(i => ({ container_id: i.container_id, ...drivers[i.container_id] })),
       })
-      if (res.ok || res.status === 409) setState({ kind: 'done' })
-      else if (res.status === 410) setState({ kind: 'gone' })
-      else setError(res.message)
+      const next = submitOutcome(res)   // US-009: odmowa 409 nie udaje sukcesu
+      if (next) setState(next)
+      else setError(res.ok ? '' : res.message)
     } catch (err) {
       setError(errorMessage(err))
     } finally {

@@ -155,8 +155,9 @@ def claim_token(db: Session, tok: AvizoFormToken) -> datetime.datetime:
                      .where(AvizoFormToken.id == tok.id, AvizoFormToken.used_at.is_(None))
                      .values(used_at=now)
                      .execution_options(synchronize_session=False))
-    if res.rowcount != 1:
-        raise HTTPException(status.HTTP_409_CONFLICT, "Formularz już wysłany.")
+    if res.rowcount != 1:   # ten sam kod co lookup_token — front pokaże „już odpowiedziano” (US-009)
+        raise HTTPException(status.HTTP_409_CONFLICT, {"code": "already_submitted",
+                                                      "message": "Formularz już wysłany."})
     tok.used_at = now
     return now
 

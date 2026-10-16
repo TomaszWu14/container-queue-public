@@ -52,7 +52,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-006 defusedxml, ZIP | SR-006, R-07 | `test_imports_malicious.py`, `test_archive_upload.py` | — | do akceptacji PO |
 | US-007 bramki CI | SR-013, R-08 | przebieg `security.yml` | #18 (`dependabot.yml`) | częściowo |
 | US-008 `csv_safe` | SR-006, B-002 | test parametryzowany `csv_safe` | — | do akceptacji PO |
-| US-009 awizacja bez fałszywego sukcesu | FR-020, NFR-007, P-01 | test RTL `AvizoFormPage` | — | do akceptacji PO |
+| US-009 awizacja bez fałszywego sukcesu | FR-020, NFR-007, P-01 | `AvizoFormPage.dom.test.tsx`, `AvizoDriverFormPage.dom.test.tsx`, `test_avizo_tokens.py` | #18 | zrealizowane, czeka na merge |
 | US-010 dokumentacja po audycie | — | — | #18 (`SECURITY.md`) | częściowo |
 | US-011 strażnik izolacji | FR-022…024, SR-005, R-01 | test statyczny tras | — | do akceptacji PO |
 | US-012 RODO 1.0 | SR-011, R-09 | — | — | czeka na Z-009 |

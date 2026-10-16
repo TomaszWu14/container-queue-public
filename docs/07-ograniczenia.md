@@ -22,7 +22,7 @@ dokumentów ani przy przekroczonym limicie magazynu, nie ma publicznego linku dl
 
 | # | Problem | Skutek | Kod |
 |---|---|---|---|
-| P-01 | Odpowiedź na awizację w aplikacji pokazuje sukces przy błędzie 409 | spedytor myśli, że odpowiedział, a nic nie zapisano | `FE/pages/AvizoFormPage.tsx:185`, `routers/avizo_forwarder.py:54-58` |
+| P-01 | **Naprawione w PR #18 (US-009, czeka na scalenie).** Odpowiedź na awizację w aplikacji pokazuje sukces przy błędzie 409 | spedytor myśli, że odpowiedział, a nic nie zapisano | `FE/pages/AvizoFormPage.tsx:185`, `routers/avizo_forwarder.py:54-58` |
 | P-02 | Dwie różne reguły „ETA + N”: 4 dni przy zakładaniu kontenera, 3 dni w podpowiedzi daty | dwie różne proponowane daty dla tej samej sytuacji | `planning.py:18`, `routers/containers_planning.py:119-121` |
 | P-03 | Zmiana ETA nie przelicza propozycji daty, choć opis w kodzie mówi, że powinna | propozycja daty starzeje się po zmianie ETA | `planning.py:1-7`, `routers/containers_write.py:63-64` |
 | P-04 | Import z Excela: tekst „nieodprawiony” daje status ODPRAWIONY | błędny status odprawy po imporcie | `importers/queue.py:215-216` |
