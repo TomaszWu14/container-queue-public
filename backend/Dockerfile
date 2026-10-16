@@ -1,5 +1,5 @@
 # Obraz API do lokalnego docker-compose.yml (prod: Dockerfile.coolify w katalogu głównym).
-FROM python:3.14-slim@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
+FROM python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
