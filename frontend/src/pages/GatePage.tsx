@@ -9,6 +9,7 @@ import { Field } from '../Field'
 import { useConfirm } from '../ConfirmDialog'
 import { PageHeader } from '../PageHeader'
 import { useVisibleInterval } from '../useVisibleInterval'
+import GateScanner from './gate/GateScanner'
 
 // #60: kolejka bramy — dzisiejsze spodziewane auta, duża czcionka (ochrona przy bramie),
 // auto-refresh co 60 s, przycisk „Przyjechał" (check-in, idempotentny per dzień).
@@ -94,9 +95,11 @@ export default function GatePage() {
       {error && !items && <LoadError message={error} onRetry={load} />}
       {error && items && <p className="error">{error}</p>}
       {!items && !error && <Skeleton rows={4} />}
+      {items && canCheckin && (
+        <GateScanner items={items} busy={busy} onCheckin={checkin} fmtTime={iso => fmtTime(iso, locale)} />)}
       {items && items.length === 0 && <p className="muted gate-big">{t('gateNoTrucks')}</p>}
       {items && items.map(item => (
-        <div key={item.id} className={`panel gate-row${item.checked_in_at ? ' gate-done' : ''}`}>
+        <div key={item.id} id={`gate-row-${item.id}`} className={`panel gate-row${item.checked_in_at ? ' gate-done' : ''}`}>
           <div className="gate-main">
             <b className="mono gate-no">{item.container_no}</b>
             {/* C29: bez numeru auta nie pokazujemy samotnego „—” */}

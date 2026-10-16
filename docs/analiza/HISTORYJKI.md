@@ -196,6 +196,23 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   `security._enforce_demo_readonly`); ekrany tylko chowają. Zwykłe konta bez zmian (test).
 - **Test:** `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` (4 role).
 
+### US-030 · [BA][DEV] Skaner kodu QR na bramie
+- **Rozmiar:** S · **Źródło:** PO, 2026-10-16 („wdrażaj wszystko”, pomysł 4) · **Wymagania:** brak spisanego (moduł bramy #60 sprzed procesu; Z-005) · **Priorytet:** Should
+- **Stan:** zrealizowane; czeka na merge. Założenie Z-021 do potwierdzenia.
+- **Jako** ochrona przy bramie **chcę** zeskanować telefonem kod QR z karty rozładunku (albo wpisać numer kontenera)
+  i jednym przyciskiem wpuścić auto, **aby** nie szukać go na liście przy kolejce aut.
+- **Kryteria akceptacji** (testy: `frontend/src/pages/gate/GateScanner.dom.test.tsx`, `gateScan.test.ts`)
+  1. Kod QR z karty rozładunku albo wpisany numer (spacje, myślniki, małe litery bez znaczenia) → karta auta
+     z numerem rejestracyjnym, kierowcą, magazynem i przyciskiem „Przyjechał — wpuść” (ten sam zapis co dotąd).
+  2. Kontener spoza dzisiejszej listy bramy → ostrzeżenie „nie wpuszczaj bez sprawdzenia z logistyką”, bez przycisku.
+  3. Auto już wpuszczone → godzina wpuszczenia zamiast przycisku.
+  4. Przeglądarka bez odczytu kodów (np. iPhone) albo brak zgody na aparat → jasna podpowiedź: zwykły aparat
+     albo wpisanie numeru.
+  5. Aparat gaśnie od razu po odczycie lub zamknięciu.
+- **[SEC]:** obraz z aparatu zostaje w telefonie (odczyt w przeglądarce, bez wysyłki); wyszukiwanie tylko na liście
+  z API bramy (zakres użytkownika, `scope_containers`); wpuszczenie przez istniejący `POST /api/gate/{id}/checkin`.
+  Aparat dozwolony już wcześniej tylko dla własnej domeny (`Permissions-Policy: camera=(self)`). Brak nowych zależności.
+
 ## Should
 
 ### US-011 · [SEC] Strażnik izolacji danych dla nowych tras

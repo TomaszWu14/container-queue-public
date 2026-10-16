@@ -64,3 +64,17 @@ test('demo jest tylko do odczytu: zapis odcięty, ukryte widoki niedostępne', a
   await page.goto('/dziennik-zmian')
   await expect(page.getByText(/Brak dostępu|Forbidden|403/i).first()).toBeVisible()
 })
+
+test('brama: numer z karty rozładunku → karta auta z przyciskiem wpuszczenia', async ({ page }) => {
+  await page.goto('/demo')
+  await expect(page.getByTestId('demo-banner')).toBeVisible({ timeout: 30_000 })
+  await page.keyboard.press('Escape')
+  await page.goto('/brama')
+  const first = page.locator('.gate-row .gate-no').first()
+  await expect(first).toBeVisible()
+  await page.getByLabel('Numer kontenera').fill((await first.textContent()) ?? '')
+  await page.getByRole('button', { name: 'Szukaj' }).click()
+  await expect(page.locator('.gate-scan-found')).toBeVisible()
+  await noSideScroll(page)
+  if (process.env.PW_SHOT) await page.screenshot({ path: `${process.env.PW_SHOT}-brama-${test.info().project.name}.png` })
+})

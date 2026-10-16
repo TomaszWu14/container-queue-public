@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Skaner kodu QR na bramie** (US-030, pomysł 4 PO): ochrona skanuje telefonem kod z karty rozładunku albo wpisuje
+  numer kontenera i jednym przyciskiem wpuszcza auto. Kontener spoza dzisiejszej listy dostaje ostrzeżenie zamiast
+  przycisku; obraz z aparatu nie opuszcza telefonu. Na iPhonie: zwykły aparat albo numer (Z-021).
 - **Pulpit analityczny** (prośba PO, widok w stylu Power BI): przepływ kontenerów przez 9 etapów procesu w 4 fazach
   z nazwanym wąskim gardłem, trzy wykresy kołowe (rodzaj transportu, porty, stan odprawy — liczba i udział
   w legendzie, podświetlanie po najechaniu) i rozładunki tydzień po tygodniu (minione / bieżący / zaplanowane).

@@ -28,6 +28,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-018 | Pole „pola obowiązkowe konfigurowane per spółka” z wywiadu (`SPECYFIKACJA.md` §2) nie jest realizowane, dopóki PO nie potwierdzi potrzeby. | — | do potwierdzenia | nowa historyjka | `WYMAGANIA.md` (otwarte) |
 | Z-020 | Panel „Ile to oszczędza”: jedna zmiana zapisana w aplikacji (status, dokument, odprawa, plan…) oszczędza **3 minuty** w porównaniu z wpisem w Excelu i mailem do zainteresowanych. Wartość pokazana na ekranie jako założenie. | — | do potwierdzenia | inna liczba minut (stała `MINUTES_PER_CHANGE`) | `backend/app/routers/stats_value.py` |
 | Z-019 | Specyfikacja wysyłki dokumentów do agencji opisuje stan obecny; luki L-1…L-8 nie są naprawiane, dopóki PO nie odpowie na pytania §11. | — | do potwierdzenia | historyjki z luk L-1…L-8 | `spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md` |
+| Z-021 | Skaner na bramie (US-030) wpuszcza tylko auta z **dzisiejszej** listy bramy; kontener spoza niej dostaje ostrzeżenie zamiast przycisku. Odczyt kodu w aplikacji działa w Chrome na Androidzie; na iPhonie ochrona skanuje zwykłym aparatem (otwiera kartę kontenera) albo wpisuje numer. | — | do potwierdzenia | wpuszczanie aut spoza listy / osobna biblioteka do odczytu kodów na iPhonie | `frontend/src/pages/gate/` |
 
 ## Jak potwierdzić
 
