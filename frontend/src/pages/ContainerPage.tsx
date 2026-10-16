@@ -25,6 +25,7 @@ import ContainerDetails from './container/ContainerDetails'
 import DocumentTiles from '../DocumentTiles'
 import { IntakePanel } from '../IntakeWaitingRoom'
 import './container/fullCard.css'
+import ContainerStory from './container/ContainerStory'
 
 type Tab = 'details' | 'docs' | 'messages' | 'costs' | 'history'
 
@@ -196,7 +197,9 @@ export default function ContainerPage() {
         )}
         {tab === 'history' && (
           <div className="panel">
-            <h3>{t('history')}</h3>
+            <h3>{t('storyTitle')}</h3>
+            <ContainerStory history={history} />
+            <h3>{t('storyAllChanges')}</h3>
             <div style={{ overflowX: 'auto' }}>
               <table className="grid">
                 <thead>

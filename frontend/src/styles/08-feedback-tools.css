@@ -431,3 +431,10 @@ h2.as-h3 { font-size: 1.17em; margin-block: 1em; }
   border-radius: 3px; background: var(--soft); color: var(--muted-strong); border: 1px solid var(--border); }
 .sap-src .help-tip-btn { font-style: italic; font-family: Georgia, serif; }
 .sap-src .help-pop { white-space: pre-line; }
+/* przebieg kontenera (ContainerStory): kolor kropki wg rodzaju kroku — tylko zmienne motywu */
+.cstory li.s-status .ct-dot { border-color: var(--tr-sea); background: var(--tr-sea); }
+.cstory li.s-customs .ct-dot { border-color: var(--accent-ink); background: var(--accent-ink); }
+.cstory li.s-docs .ct-dot { border-color: var(--tr-rail); background: var(--tr-rail); }
+.cstory li.s-plan .ct-dot { border-color: var(--good); background: var(--good); }
+.cstory li.s-warn .ct-dot { border-color: var(--danger); background: var(--danger-fill); }
+.cstory li.s-warn .ct-dot::after { content: none; }   /* bez znaku na tle błędu (kontrast) */
