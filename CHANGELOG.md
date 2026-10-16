@@ -11,6 +11,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - **Kopia zapasowa poza serwer** (US-013, R-10): po każdej kopii zaszyfrowane pliki trafiają do magazynu zgodnego
   z S3 (`BACKUP_OFFSITE_*`, `docs/BACKUPY.md`). Jawna kopia nigdy nie wychodzi z serwera; błąd wysyłki = alert
   (brak heartbeatu). Włączenie: magazyn + 4 zmienne w Coolify.
+- **„Wyślij plan” w kolejce** (US-017, P-09): zaznaczone kontenery → spedytor dostaje maila z proponowanymi datami
+  dostaw i linkiem do zakładki Spedycja, gdzie potwierdza albo zmienia datę. Jeden mail na spedytora i spółkę,
+  bez danych dostawcy; brak adresu e-mail lub działającej poczty jest pokazany wprost. Dotąd funkcja nie miała
+  przycisku i nie wysyłała maila.
 - **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do
   agencji i XML SADUE (dotąd ustawiało status „wysłane” / pisało audyt); ukryte i zablokowane w API: dziennik
   zmian, eksporty i ZIP, wywołania DLT, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się

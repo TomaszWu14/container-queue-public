@@ -2,7 +2,7 @@
 widok kolejki (grupowanie po dacie awizacji) i konfiguracja UI bufora ETA."""
 import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
@@ -17,6 +17,7 @@ from ..deps import ViewerOrSales as viewer_or_sales
 from ..deps import check_container_access, scope_containers
 from ..holidays import is_free_day
 from ..models import Container, PlanningStatus, User, Warehouse, today_pl
+from ..plan_mail import send_plan_mails
 from ..planning import confirm_plan, send_to_forwarder
 from ..schemas import ContainerOut, QueueDay
 from .containers_common import (
@@ -38,20 +39,23 @@ class PlanSendIn(BaseModel):
 
 
 @router.post("/containers/plan/send")
-def send_plan(body: PlanSendIn, db: Session = Depends(get_db), user: User = editors):
-    """Wysyła propozycje dat do spedycji — zamraża je i oznacza jako oczekujące.
+def send_plan(body: PlanSendIn, request: Request, db: Session = Depends(get_db),
+              user: User = editors):
+    """Wysyła propozycje dat do spedycji — zamraża je, oznacza jako oczekujące i wysyła
+    spedytorowi maila z datami i linkiem do aplikacji (US-017).
 
     Zadeklarowany PRZED /containers/{container_id}, by "plan" nie trafiło w {id}.
     """
     containers = db.scalars(select(Container)
-                            .options(selectinload(Container.forwarder))
+                            .options(selectinload(Container.forwarder), selectinload(Container.company),
+                                     selectinload(Container.warehouse))
                             .where(Container.id.in_(body.container_ids))).all()
     if not containers:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Nie znaleziono kontenerów.")
     for c in containers:
         check_container_access(user, c)
 
-    sent, no_forwarder, skipped = 0, [], []
+    sent, no_forwarder, skipped, planned = 0, [], [], []
     for c in containers:
         if not c.forwarder_id:
             # bez spedytora nie ma komu wysłać — zgłaszamy zamiast po cichu pomijać
@@ -61,9 +65,13 @@ def send_plan(body: PlanSendIn, db: Session = Depends(get_db), user: User = edit
             skipped.append(c.container_no)
             continue
         send_to_forwarder(db, c, user)
+        planned.append(c)
         sent += 1
+    db.commit()   # status planu zapisany niezależnie od poczty (spedytor z kontem widzi go w aplikacji)
+    base = (settings.public_base_url or str(request.base_url)).rstrip("/")
+    mails = send_plan_mails(db, planned, user, base)
     db.commit()
-    return {"sent": sent, "no_forwarder": no_forwarder, "skipped": skipped}
+    return {"sent": sent, "no_forwarder": no_forwarder, "skipped": skipped, **mails}
 
 
 class PlanConfirmIn(BaseModel):

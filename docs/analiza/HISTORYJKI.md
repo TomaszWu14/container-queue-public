@@ -237,6 +237,15 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 ### US-017 · [BA][DEV] „Wyślij plan do spedycji” wysyła wiadomość
 - **Rozmiar:** S · **Źródło:** P-09 · **Wymagania:** FR-015, FR-020
 - Zmiana statusu planu na WYSLANE wysyła mail etapu 1 (albo jawnie informuje, że mail nie jest skonfigurowany).
+- **Ustalenia PO (2026-10-16):** funkcja nie miała przycisku w aplikacji. Przycisk „Wyślij plan” w kolejce dla
+  zaznaczonych kontenerów; plan idzie **wcześniej niż awizacja i zawiera same daty**; spedytor odpowiada,
+  **logując się do aplikacji** (zakładka Spedycja), bez nowych linków publicznych.
+- **Kryteria akceptacji** (testy `backend/tests/test_plan_mail.py`, `BulkActionBar.plan.dom.test.tsx`)
+  - Gdy plan wysłany dla kilku kontenerów jednego spedytora i spółki → jeden mail z datami, numerami i linkiem
+    do zakładki Spedycja, bez danych dostawcy; wpis w historii kontenera.
+  - Gdy spedytor nie ma adresu albo poczta nie działa → wynik mówi to wprost; status planu i tak zapisany.
+  - Gdy plan już potwierdzony → bez maila („już potwierdzone”).
+- **Stan:** zrealizowane, czeka na PR.
 
 ### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
 - **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)
