@@ -248,8 +248,16 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-016 · [BA][DEV] Dane dla Portugalii: prefiks telefonu i kraj magazynu
 - **Rozmiar:** S · **Źródło:** P-05, P-06 · **Wymagania:** FR-017
-- Numer kierowcy z wyborem kraju (PL/PT) zamiast stałego +48; kraj magazynu ustawiany przy tworzeniu
-  i w imporcie.
+- **Stan:** zrealizowane (PR #29); czeka na merge. Założenie Z-022 do potwierdzenia.
+- **Jako** logistyk **chcę**, żeby SMS do kierowcy portugalskiego dochodził, a magazyn w Portugalii miał
+  portugalskie święta, **aby** dostawy do PT nie wymagały ręcznych poprawek.
+- **Kryteria akceptacji** (test: `backend/tests/test_phones_portugal.py`)
+  1. Numer kierowcy bez kierunkowego (9 cyfr) dostaje kierunkowy kraju magazynu: PL +48, PT +351 —
+     w formularzu kierowców z awizacji i przy SMS-ie z panelu kierowcy; brak magazynu = +48 jak dotąd.
+  2. Numer podany z „+” albo „00” zostaje bez zmian; numer nierozpoznany → 422 z przykładem PL i PT.
+  3. Magazyn tworzony w locie z kolejki dostaje kraj pozostałych magazynów spółki, gdy wszystkie są
+     w jednym kraju; inaczej PL. Formularz magazynu w Słownikach miał już wybór kraju (bez zmian).
+- **[SEC]:** bez nowych tras i danych; numer w audycie dalej maskowany (RODO).
 
 ### US-017 · [BA][DEV] „Wyślij plan do spedycji” wysyła wiadomość
 - **Rozmiar:** S · **Źródło:** P-09 · **Wymagania:** FR-015, FR-020

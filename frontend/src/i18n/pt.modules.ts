@@ -277,7 +277,7 @@ export const ptModules: Partial<Record<TKey, string>> = {
   av2Title: 'Dados dos motoristas', av2Intro: 'Indique os dados do motorista para cada contentor.',
   av2IdOptional: 'N.º do documento de identidade (opcional)',
   av2ErrName: 'Indique o nome do motorista.',
-  av2ErrPhone: 'Telefone: dígitos, espaços e + opcional no início (ex. +48 600 000 000).',
+  av2ErrPhone: 'Telefone: dígitos, espaços e + opcional no início (ex. +351 912 345 678 ou +48 600 000 000).',
   av2ErrPlate: 'Matrícula: 4–10 letras/dígitos.',
   av2RodoTitle: 'Informação sobre dados pessoais (RGPD)',
   av2Rodo: 'O responsável pelo tratamento dos dados dos motoristas é a empresa do grupo Acme indicada no pedido. Os dados (nome, telefone, matrículas, opcionalmente n.º de documento) são tratados apenas para organizar a entrada e a descarga (art. 6.º, n.º 1, al. f) RGPD). Os dados são eliminados 90 dias após o fecho do pedido. O titular tem direito de acesso, retificação, apagamento, limitação, oposição e reclamação junto da autoridade de controlo (UODO).',

@@ -278,7 +278,7 @@ export const plModules = {
   av2Title: 'Dane kierowców', av2Intro: 'Prosimy o dane kierowcy dla każdego kontenera.',
   av2IdOptional: 'Nr dokumentu tożsamości (opcjonalnie)',
   av2ErrName: 'Podaj imię i nazwisko kierowcy.',
-  av2ErrPhone: 'Telefon: cyfry, spacje i opcjonalnie + na początku (np. +48 600 000 000).',
+  av2ErrPhone: 'Telefon: cyfry, spacje i opcjonalnie + na początku (np. +48 600 000 000 albo +351 912 345 678).',
   av2ErrPlate: 'Nr rejestracyjny: 4–10 liter/cyfr.',
   av2RodoTitle: 'Klauzula informacyjna (RODO)',
   av2Rodo: 'Administratorem danych osobowych kierowców jest spółka z grupy Acme wskazana w zleceniu awizacji. Dane (imię i nazwisko, telefon, numery rejestracyjne, opcjonalnie nr dokumentu) przetwarzamy wyłącznie w celu organizacji wjazdu i rozładunku (art. 6 ust. 1 lit. f RODO). Dane są usuwane 90 dni po zamknięciu zlecenia. Osobie, której dane dotyczą, przysługuje prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, sprzeciwu oraz skargi do Prezesa UODO. Przekazując dane kierowcy, potwierdzają Państwo, że kierowca został o tym poinformowany.',

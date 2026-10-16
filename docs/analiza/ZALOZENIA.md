@@ -29,6 +29,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-020 | Panel „Ile to oszczędza”: jedna zmiana zapisana w aplikacji (status, dokument, odprawa, plan…) oszczędza **3 minuty** w porównaniu z wpisem w Excelu i mailem do zainteresowanych. Wartość pokazana na ekranie jako założenie. | — | do potwierdzenia | inna liczba minut (stała `MINUTES_PER_CHANGE`) | `backend/app/routers/stats_value.py` |
 | Z-019 | Specyfikacja wysyłki dokumentów do agencji opisuje stan obecny; luki L-1…L-8 nie są naprawiane, dopóki PO nie odpowie na pytania §11. | — | do potwierdzenia | historyjki z luk L-1…L-8 | `spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md` |
 | Z-021 | Skaner na bramie (US-030) wpuszcza tylko auta z **dzisiejszej** listy bramy; kontener spoza niej dostaje ostrzeżenie zamiast przycisku. Odczyt kodu w aplikacji działa w Chrome na Androidzie; na iPhonie ochrona skanuje zwykłym aparatem (otwiera kartę kontenera) albo wpisuje numer. | — | do potwierdzenia | wpuszczanie aut spoza listy / osobna biblioteka do odczytu kodów na iPhonie | `frontend/src/pages/gate/` |
+| Z-022 | Kraj numeru kierowcy bez kierunkowego = kraj magazynu rozładunku (PL +48, PT +351); magazyn tworzony z kolejki dziedziczy kraj, gdy wszystkie magazyny spółki są w jednym kraju, inaczej PL. | — | do potwierdzenia | wybór kraju przy numerze w formularzu kierowcy | `backend/app/phones.py` |
 
 ## Jak potwierdzić
 
