@@ -15,6 +15,11 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
   dostaw i linkiem do zakładki Spedycja, gdzie potwierdza albo zmienia datę. Jeden mail na spedytora i spółkę,
   bez danych dostawcy; brak adresu e-mail lub działającej poczty jest pokazany wprost. Dotąd funkcja nie miała
   przycisku i nie wysyłała maila.
+- **Demo: „historia jednego kontenera”** (pomysł 1 PO): ekran powitalny zaczyna od kontenera pokazowego, który
+  przeszedł cały proces — jeden klik otwiera jego „Przebieg”. Dane demo dostały kroki odprawy, dokumentów i planu
+  w kolejności zgodnej z etapami (`backend/scripts/seed_demo_story.py`).
+- **„Przebieg” kontenera** (pomysł 3 PO): w zakładce historii czytelna oś czasu najważniejszych kroków —
+  status, odprawa, dokumenty, plan, termin, slot, braki — z datą i osobą; pełna tabela zmian zostaje niżej.
 - **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do
   agencji i XML SADUE (dotąd ustawiało status „wysłane” / pisało audyt); ukryte i zablokowane w API: dziennik
   zmian, eksporty i ZIP, wywołania DLT, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się

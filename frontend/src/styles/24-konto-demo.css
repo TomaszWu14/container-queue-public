@@ -18,3 +18,5 @@
    zapis i tak jest odcinany (api.ts, serwer); klik nadal pokaże powód */
 body.demo-readonly form button[type="submit"],
 body.demo-readonly form button:not([type]) { opacity: .45; cursor: not-allowed; }
+/* „historia jednego kontenera” — pierwszy, wyróżniony krok ekranu powitalnego */
+.demo-steps li.demo-step-story { border-color: var(--accent); background: var(--soft); }
