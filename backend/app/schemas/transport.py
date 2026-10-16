@@ -22,6 +22,7 @@ class TransportOrderIn(BaseModel):
 class TransportOrderStatusIn(BaseModel):
     status: TransportOrderStatus
     reason: str = ""  # wymagany przy odrzuceniu
+    expected_status: TransportOrderStatus | None = None   # US-003 (ADR-0003)
 
 
 class TransportOrderOut(ORMModel):

@@ -23,6 +23,7 @@ from app.models import (AuditLog, Company, Container, CustomsAgency, Forwarder, 
                         Warehouse)
 from app.models.enums import ContainerStatus, Role, today_pl
 from app.security import hash_password, validate_password_policy
+from scripts import seed_demo_process as process
 
 FLAG = "--wyczysc-wszystko"
 SUPPLIERS = ["Ningbo Demo Trading Co.", "Qingdao Przykładowe Tekstylia", "Shenzhen Pokazowa Elektronika",
@@ -79,10 +80,12 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     fw = db.query(Forwarder).first() or Forwarder(name="Spedycja Demo")
     db.add_all([dlt, wz, agency, fw])
     db.flush()
-    for login in demo_logins:   # logistyka (nie admin: bez logów serwera i monitora hosta)
-        db.add(User(login=login, hashed_password=hash_password(password), role=Role.logistics,
-                    company_id=acme.id, view_all_companies=True, full_name="Konto demo",
-                    email=f"{login}@example.com"))
+    # US-028: rola wg słowa w loginie (demo-spedytor, demo-agencja, demo-magazyn), domyślnie
+    # logistyka (nie admin: bez logów serwera i monitora hosta). Każde konto jest w
+    # DEMO_READONLY_LOGINS, więc API odrzuca jego zapisy (security._enforce_demo_readonly).
+    for login in demo_logins:
+        db.add(User(login=login, hashed_password=hash_password(password), email=f"{login}@example.com",
+                    **process.account_fields(login, acme.id, fw.id, agency.id, dlt.id)))
     # autor historii zmian — fikcyjna, nieaktywna (nie zaloguje się), hasło losowe i nieznane
     author = User(login="m.przykladowa", full_name="Marta Przykładowa", role=Role.logistics,
                   company_id=acme.id, email="m.przykladowa@example.com", is_active=False,
@@ -90,6 +93,8 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     db.add(author)
     db.flush()
     statuses, today = list(ContainerStatus), today_pl()
+    ctx = process.dictionaries(db)
+    containers: list[Container] = []
     # ETA zagęszczone wokół dziś (domyślny widok kolejki = bieżący tydzień nie może świecić
     # pustką); status wg ETA w kolejności procesu: najpóźniejsze ZAPOWIEDZIANY, minione zrealizowane
     offsets = sorted((round(random.triangular(-45, 45, -10)) for _ in range(n)), reverse=True)
@@ -111,6 +116,7 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
         )
         db.add(container)
         db.flush()
+        containers.append(container)
         _history(db, container, statuses, author, today)
         if track:   # mapa śledzenia pokazuje kontenery z RF i ostatnim faktycznym zdarzeniem
             code, desc, ports = track
@@ -118,6 +124,11 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
                                  location=ports[i % len(ports)], vessel=container.vessel,
                                  occurred_at=dt.datetime.combine(today, dt.time(8)) - dt.timedelta(days=1 + i % 5),
                                  source="demo"))
+    # US-027: cały proces, nie tylko kolejka — odprawa, demurrage, zamówienia, dokumenty, awizacje
+    process.process(db, containers, agency.id, ctx, today)
+    process.orders(db, containers, acme.id, ctx)
+    process.documents(db, containers, ctx, author.id)
+    process.avizo(db, containers, acme.id, fw.id, author.id)
     db.commit()
     count = db.query(Container).count()
     db.close()

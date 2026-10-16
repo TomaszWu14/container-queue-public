@@ -3,7 +3,8 @@ import { CircleCheckIcon } from 'lucide-react'
 // tokenie z e-maila, bez logowania. Per kontener: potwierdzam / zmiana terminu (+slot) /
 // problem. Dane kierowców zbiera osobny formularz etapu 2 (AvizoDriverFormPage).
 // Kontrakt: backend/app/routers/avizo.py — 404 nieznany, 410 wygasły/unieważniony,
-// 409 już wysłany (bez danych), 422 walidacja, 429 limit.
+// 409 already_submitted = już odpowiedziano (bez danych), inny 409 = odmowa zapisu, 422 walidacja, 429 limit.
+// Ekran sukcesu („done”) tylko po odpowiedzi 2xx — US-009 (P-01).
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 import { detailMessage, errorMessage } from '../api'
@@ -46,7 +47,7 @@ interface Answer {
 }
 
 export type FormState<T> =
-  | { kind: 'loading' } | { kind: 'gone' } | { kind: 'done' }
+  | { kind: 'loading' } | { kind: 'gone' } | { kind: 'done' } | { kind: 'submitted' }
   | { kind: 'error'; message: string } | { kind: 'ready'; data: T }
 
 // wspólne dla etapu 1 i 2: GET po tokenie z rozróżnieniem 404/410 (link martwy),
@@ -59,7 +60,7 @@ export function usePublicForm<T>(url: string) {
       const response = await fetch(url)
       if (response.ok) setState({ kind: 'ready', data: await response.json() })
       else if (response.status === 404 || response.status === 410) setState({ kind: 'gone' })
-      else if (response.status === 409) setState({ kind: 'done' })
+      else if (response.status === 409) setState({ kind: 'submitted' })
       else setState({ kind: 'error', message: `Błąd ${response.status}` })
     } catch (err) {
       setState({ kind: 'error', message: errorMessage(err) })
@@ -80,6 +81,16 @@ export async function postPublic(url: string, body: unknown):
   const payload = await response.json().catch(() => ({}))
   return { ok: false, status: response.status, code: payload.detail?.code,
            message: detailMessage(payload.detail, `Błąd ${response.status}`) }
+}
+
+// wynik wysyłki → stan formularza; null = błąd do pokazania przy formularzu (dane zostają).
+// Wspólne dla etapu 1 i 2: sukces tylko 2xx, already_submitted = „już odpowiedziano” (US-009)
+export function submitOutcome(res: Awaited<ReturnType<typeof postPublic>>):
+    FormState<never> | null {
+  if (res.ok) return { kind: 'done' }
+  if (res.status === 410) return { kind: 'gone' }
+  if (res.status === 409 && res.code === 'already_submitted') return { kind: 'submitted' }
+  return null
 }
 
 // ramka strony publicznej — nagłówek + stany końcowe wspólne dla obu etapów
@@ -109,6 +120,12 @@ export function PublicShell<T extends AvizoHead>({ state, load, title, lang, don
       {state.kind === 'loading' && <Skeleton rows={4} />}
       {state.kind === 'error' && <LoadError message={state.message} onRetry={load} />}
       {state.kind === 'gone' && <div className="panel"><p>{t('avizoNotFound')}</p></div>}
+      {state.kind === 'submitted' && (
+        <div className="panel">
+          <h2>{t('avAlreadyTitle')}</h2>
+          <p>{t('avAlreadyInfo')}</p>
+        </div>
+      )}
       {state.kind === 'done' && (
         <div className="panel avizo-thanks">
           <h2><CircleCheckIcon size="1em" /> {t('av1Done')}</h2>
@@ -179,11 +196,10 @@ export default function AvizoFormPage({ requestId }: { requestId?: number } = {}
           }
         }),
       })
-      if (res.ok) setState({ kind: 'done' })
-      else if (res.status === 410) setState({ kind: 'gone' })
-      // 409 slot_taken to błąd do poprawy, nie koniec formularza (already_submitted = koniec)
-      else if (res.status === 409 && res.code !== 'slot_taken') setState({ kind: 'done' })
-      else setError(res.message)
+      // 409 slot_taken i każda inna odmowa = błąd do poprawy; already_submitted = koniec
+      const next = submitOutcome(res)
+      if (next) setState(next)
+      else setError(res.ok ? '' : res.message)
     } catch (err) {
       setError(errorMessage(err))
     } finally {

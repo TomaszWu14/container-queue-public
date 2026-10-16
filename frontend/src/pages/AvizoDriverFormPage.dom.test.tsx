@@ -64,10 +64,41 @@ describe('AvizoDriverFormPage', () => {
       trailer_no: '', driver_id_no: '' })
   })
 
-  it('409 przy GET → już wysłany; 410 → wygasł', async () => {
+  // US-009 (P-01): odmowa zapisu (409 bez already_submitted) zostawia formularz z powodem
+  it('409 przy POST bez kodu → błąd z API, dane kierowcy zostają, bez sukcesu', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (_url: string, init?: RequestInit) => init?.method === 'POST'
+      ? res(409, { detail: 'Ta awizacja nie czeka teraz na tę odpowiedź — odśwież listę.' })
+      : res(200, DATA)))
+    renderPage()
+    expect(await screen.findByText('MSCU1234571')).toBeTruthy()
+    fireEvent.change(screen.getByLabelText(/^driverName/), { target: { value: 'Jan Kowalski' } })
+    fireEvent.change(screen.getByLabelText('driverPhone'), { target: { value: '600 100 200' } })
+    fireEvent.change(screen.getByLabelText(/^truckNo/), { target: { value: 'WX1234A' } })
+    fireEvent.click(screen.getByText('av2Submit'))
+    expect(await screen.findByText(/nie czeka teraz/)).toBeTruthy()
+    expect(screen.queryByText(/av1Done$/)).toBeNull()
+    expect((screen.getByLabelText(/^driverName/) as HTMLInputElement).value).toBe('Jan Kowalski')
+  })
+
+  it('409 already_submitted przy POST → już odpowiedziano, nie sukces', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (_url: string, init?: RequestInit) => init?.method === 'POST'
+      ? res(409, { detail: { code: 'already_submitted', message: 'Formularz już wysłany.' } })
+      : res(200, DATA)))
+    renderPage()
+    expect(await screen.findByText('MSCU1234571')).toBeTruthy()
+    fireEvent.change(screen.getByLabelText(/^driverName/), { target: { value: 'Jan Kowalski' } })
+    fireEvent.change(screen.getByLabelText('driverPhone'), { target: { value: '600 100 200' } })
+    fireEvent.change(screen.getByLabelText(/^truckNo/), { target: { value: 'WX1234A' } })
+    fireEvent.click(screen.getByText('av2Submit'))
+    expect(await screen.findByText(/avAlreadyTitle$/)).toBeTruthy()
+    expect(screen.queryByText(/av1Done$/)).toBeNull()
+  })
+
+  it('409 przy GET → już odpowiedziano (nie sukces); 410 → wygasł', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(res(409)))
     renderPage()
-    expect(await screen.findByText(/av1Done$/)).toBeTruthy()
+    expect(await screen.findByText(/avAlreadyTitle$/)).toBeTruthy()
+    expect(screen.queryByText(/av1Done$/)).toBeNull()
     cleanup()
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(res(410)))
     renderPage()

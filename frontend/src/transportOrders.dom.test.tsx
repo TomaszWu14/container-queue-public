@@ -43,7 +43,7 @@ describe('akcje zleceń transportowych', () => {
     fireEvent.change(screen.getByLabelText('Powód odrzucenia'), { target: { value: 'brak auta' } })
     fireEvent.click(confirm)
     await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/transport-orders/5/status',
-      { status: 'ODRZUCONE', reason: 'brak auta' }))
+      { status: 'ODRZUCONE', reason: 'brak auta', expected_status: 'WYSTAWIONE' }))
     expect(onDone).toHaveBeenCalled()
   })
 
@@ -53,7 +53,7 @@ describe('akcje zleceń transportowych', () => {
     rerender(<Harness role="logistics" status="WYSTAWIONE" onBehalf />)
     fireEvent.click(screen.getByRole('button', { name: 'Zaakceptuj za spedytora' }))
     await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/transport-orders/5/status',
-      { status: 'ZAAKCEPTOWANE', reason: 'po telefonie' }))
+      { status: 'ZAAKCEPTOWANE', reason: 'po telefonie', expected_status: 'WYSTAWIONE' }))
     rerender(<Harness role="logistics" status="WYKONANE" />)
     expect(screen.getByRole('button', { name: 'Potwierdź' })).toBeTruthy()
   })
@@ -62,11 +62,11 @@ describe('akcje zleceń transportowych', () => {
     const { rerender } = render(<Harness role="logistics" status="WYKONANE" />)
     fireEvent.click(screen.getByRole('button', { name: 'Cofnij do realizacji' }))
     await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/transport-orders/5/status',
-      { status: 'W_REALIZACJI', reason: 'po telefonie' }))
+      { status: 'W_REALIZACJI', reason: 'po telefonie', expected_status: 'WYKONANE' }))
     rerender(<Harness role="logistics" status="ODRZUCONE" />)
     fireEvent.click(screen.getByRole('button', { name: 'Wystaw ponownie' }))
     await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/transport-orders/5/status',
-      { status: 'WYSTAWIONE', reason: 'po telefonie' }))
+      { status: 'WYSTAWIONE', reason: 'po telefonie', expected_status: 'ODRZUCONE' }))
     // spedytor nie ma korekt
     rerender(<Harness role="forwarder" status="ODRZUCONE" />)
     expect(screen.queryByRole('button')).toBeNull()

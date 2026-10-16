@@ -1,5 +1,18 @@
 # Mapa dokumentacji
 
+## 0. Proces zespołowy (BA / DEV / SEC) — od 2026-10-16
+
+Nowa struktura to **indeksy** do dokumentów niżej plus to, czego dotąd nie było (ADR-0001). Proces i konwencje:
+[`../CONTRIBUTING.md`](../CONTRIBUTING.md). Stan wyjściowy: [AUDYT.md](AUDYT.md).
+
+| Katalog | Pliki |
+|---|---|
+| [analiza/](analiza/) [BA] | [WIZJA](analiza/WIZJA.md), [INTERESARIUSZE](analiza/INTERESARIUSZE.md), [PROCESY](analiza/PROCESY.md), [WYMAGANIA](analiza/WYMAGANIA.md), [HISTORYJKI](analiza/HISTORYJKI.md), [SLOWNIK](analiza/SLOWNIK.md), [ZALOZENIA](analiza/ZALOZENIA.md), [SLEDZENIE](analiza/SLEDZENIE.md), specyfikacje funkcji: [wysyłka dokumentów do agencji](analiza/spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md) |
+| [architektura/](architektura/) [DEV] | [ARCHITEKTURA](architektura/ARCHITEKTURA.md), [MODEL_DANYCH](architektura/MODEL_DANYCH.md), [API](architektura/API.md), [adr/](architektura/adr/README.md) |
+| [bezpieczenstwo/](bezpieczenstwo/) [SEC] | [KLASYFIKACJA_DANYCH](bezpieczenstwo/KLASYFIKACJA_DANYCH.md), [THREAT_MODEL](bezpieczenstwo/THREAT_MODEL.md), [RYZYKA](bezpieczenstwo/RYZYKA.md), [RODO](bezpieczenstwo/RODO.md), [CHECKLISTA_ASVS](bezpieczenstwo/CHECKLISTA_ASVS.md) |
+| [testy/](testy/) | [STRATEGIA_TESTOW](testy/STRATEGIA_TESTOW.md), [E2E](testy/E2E.md), [ETAP-0-PLAN](testy/ETAP-0-PLAN.md) |
+| [operacje/](operacje/) | [RUNBOOK](operacje/RUNBOOK.md) |
+
 ## 1. Dokumentacja analityczna — zacznij tutaj
 
 Stan odtworzony z kodu; przy rozbieżności z innymi plikami ma pierwszeństwo.
@@ -53,6 +66,9 @@ Rozbieżności z kodem są wypisane w [07](07-ograniczenia.md#dokumentacja-niezg
 [testy/](testy/E2E.md).
 
 ## 5. Audyty i pomysły
+
+[AUDYT.md](AUDYT.md) — audyt repozytorium z trzech perspektyw (BA / DEV / SEC), stan na 2026-10-15,
+z listą ryzyk i pytaniami do Product Ownera.
 
 [audyt-nielsen-kolejka.md](audyt-nielsen-kolejka.md),
 [audyt-tracking-przeplywy-2026-09-15.md](audyt-tracking-przeplywy-2026-09-15.md),

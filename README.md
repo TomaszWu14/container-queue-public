@@ -11,7 +11,9 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 🌐 **Demo online bez logowania: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** —
 link od razu wpuszcza na konto demo. Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
-odczytu, 150 fikcyjnych kontenerów; ekran powitalny prowadzi przez 4 miejsca na 5 minut. Coś nie działa?
+odczytu, 150 fikcyjnych kontenerów z odprawą, dokumentami, zamówieniami i awizacjami w toku; ekran powitalny
+prowadzi przez 4 miejsca na 5 minut. Tym samym hasłem zobaczysz system oczami partnerów: `demo-spedytor`,
+`demo-agencja`, `demo-magazyn` — każdy widzi tylko swoje kontenery. Coś nie działa?
 Napisz: tomasz.wierzbowski@op.pl. Lokalnie uruchomisz to samo trzema komendami — sekcja
 [Jak uruchomić](#jak-uruchomić).
 
@@ -65,6 +67,24 @@ Odprawa celna — osobny status:
 | [07. Ograniczenia](docs/07-ograniczenia.md) | znane problemy, miejsca bez walidacji, rozjazdy dokumentacji z kodem, co dalej |
 
 Szczegóły techniczne (wdrożenie, integracje, moduły poboczne): [`docs/TECHNICZNE.md`](docs/TECHNICZNE.md).
+
+## Proces zespołowy i stan projektu
+
+Repozytorium jest prowadzone jak przez trzyosobowy zespół — analityk biznesowy **[BA]**, developer **[DEV]**,
+bezpieczeństwo **[SEC]** — z Product Ownerem, który decyduje o zakresie, priorytetach i ryzykach. Proces,
+Definition of Ready/Done i konwencje: [`CONTRIBUTING.md`](CONTRIBUTING.md). Zgłoszenia podatności: [`SECURITY.md`](SECURITY.md).
+
+| Obszar | Dokumenty |
+|---|---|
+| Analiza [BA] | [wizja](docs/analiza/WIZJA.md) · [interesariusze](docs/analiza/INTERESARIUSZE.md) · [wymagania 0.1](docs/analiza/WYMAGANIA.md) · [backlog](docs/analiza/HISTORYJKI.md) · [słownik](docs/analiza/SLOWNIK.md) · [założenia do potwierdzenia](docs/analiza/ZALOZENIA.md) · [macierz śledzenia](docs/analiza/SLEDZENIE.md) |
+| Architektura [DEV] | [indeks](docs/architektura/ARCHITEKTURA.md) · [model danych](docs/architektura/MODEL_DANYCH.md) · [API](docs/architektura/API.md) · [ADR](docs/architektura/adr/README.md) |
+| Bezpieczeństwo [SEC] | [klasyfikacja danych](docs/bezpieczenstwo/KLASYFIKACJA_DANYCH.md) · [model zagrożeń](docs/bezpieczenstwo/THREAT_MODEL.md) · [rejestr ryzyk](docs/bezpieczenstwo/RYZYKA.md) · [RODO](docs/bezpieczenstwo/RODO.md) · [ASVS](docs/bezpieczenstwo/CHECKLISTA_ASVS.md) |
+| Testy i operacje | [strategia testów](docs/testy/STRATEGIA_TESTOW.md) · [runbook](docs/operacje/RUNBOOK.md) |
+| Stan | [audyt 2026-10-15](docs/AUDYT.md) · [CHANGELOG](CHANGELOG.md) |
+
+**Status (2026-10-16):** aplikacja w fazie testów z użytkownikami; proces zespołowy uruchomiony (audyt,
+struktura dokumentów, backlog). Pilne poprawki bezpieczeństwa z audytu czekają na priorytety Product Ownera
+([backlog, sekcja Must](docs/analiza/HISTORYJKI.md)).
 
 ## Jak uruchomić
 

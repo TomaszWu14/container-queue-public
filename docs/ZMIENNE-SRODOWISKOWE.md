@@ -23,7 +23,7 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | `ENVIRONMENT` | str | wymagane świadomie na prod | tak | dev / production — production wymusza bezpieczne sekrety |
 | `APP_VERSION` | str | ma bezpieczny domyślny | **nie** | SHA commita — ustawiany w obrazie z build arg `SOURCE_COMMIT` (Coolify: „Include Source Commit in Build”); nie ustawiaj ręcznie |
 | `BUILD_TIME` | str | ma bezpieczny domyślny | **nie** | data/godzina builda obrazu (UTC) |
-| `DATABASE_URL` | str | SEKRET (ustaw w Coolify, nigdy w repo) | tak |  |
+| `DATABASE_URL` | str | SEKRET (ustaw w Coolify, nigdy w repo) | tak | adres bazy; przy `ENVIRONMENT=production` wymagany PostgreSQL (`postgresql…://`) — inaczej odmowa startu (US-001) |
 | `DB_POOL_SIZE` | int | ma bezpieczny domyślny | **nie** | Pula połączeń (tylko PostgreSQL). Domyślne 10+20=30 pokrywa threadpool Starlette (~40 wątków dla synchronicznych handlerów), zostając poniżej max_connections… |
 | `DB_MAX_OVERFLOW` | int | ma bezpieczny domyślny | **nie** |  |
 | `DB_POOL_TIMEOUT` | int | ma bezpieczny domyślny | **nie** | s czekania na wolne połączenie |

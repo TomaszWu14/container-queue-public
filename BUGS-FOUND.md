@@ -33,16 +33,18 @@ Status: `PODEJRZENIE` = wykryte analizą statyczną w Etapie 0, zweryfikowane w 
 - **Test potwierdzający:** Etap 2 — `test_imports_malicious.py::test_upload_over_limit_rejected[paz|analytics]` → oczekiwane 413.
 
 ## B-004 · Brak ochrony przed cichym nadpisaniem przy równoczesnej edycji
-- **Status:** PODEJRZENIE (kod zweryfikowany: brak `version_id_col` / `If-Match` / porównania `updated_at`) · **Waga:** wysoka
+- **Status:** NAPRAWIONE — formularz kontenera i panel kierowcy przez `expected_updated_at` (audyt DB-005, przed
+  2026-10-13); przejścia statusu kontenera, odprawy i zlecenia transportowego w PR #18 (US-003, ADR-0003) · **Waga:** wysoka
 - **Gdzie:** PATCH kontenera i pozostałe edycje encji.
 - **Kroki:** dwie karty otwierają ten sam kontener; A zapisuje datę, B zapisuje uwagi ze starym stanem →
   zmiana A może zostać nadpisana bez ostrzeżenia (zależnie od tego, czy front wysyła pełny obiekt).
 - **Test potwierdzający:** Etap 2 — `test_concurrency.py::test_concurrent_patch_no_silent_overwrite`; Etap 4 — E2E „dwie karty”.
 
 ## B-005 · Produkcja wystartuje na SQLite, gdy zabraknie `DATABASE_URL`
-- **Status:** PODEJRZENIE (kod zweryfikowany: `config.py:13` domyślnie `sqlite:///./timporye.db`, `validate_settings` go nie sprawdza) · **Waga:** średnia
+- **Status:** POTWIERDZONE testem i NAPRAWIONE w PR #18 (US-001; scalenie po decyzji PO) · **Waga:** średnia
 - **Kroki:** `ENVIRONMENT=production` bez `DATABASE_URL` → aplikacja startuje na pustej bazie plikowej zamiast odmówić startu.
-- **Test potwierdzający:** Etap 2 — `test_config_failfast.py::test_prod_requires_postgres_url`.
+- **Test:** `backend/tests/test_config_failfast.py` — produkcja z pustym, SQLite, MySQL albo błędnym adresem
+  dostaje `RuntimeError` z nazwą `DATABASE_URL`; z PostgreSQL startuje; dev na SQLite bez zmian.
 
 ## B-006 · Forwarder ma dostęp do `/zamowienia`, ale nie ma linku w menu
 - **Status:** POTWIERDZONE decyzją właściciela 2026-09-26 (forwarder MA mieć Zamówienia) · **Waga:** niska

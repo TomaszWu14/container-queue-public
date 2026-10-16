@@ -46,7 +46,9 @@ services:
       SECRET_KEY: ${SERVICE_PASSWORD_64_SECRETKEY}
       ADMIN_LOGIN: admin
       ADMIN_PASSWORD: ${SERVICE_PASSWORD_ADMIN}
-      DEMO_READONLY_LOGINS: demo
+      # US-028: konta per rola (spedytor, agencja celna, magazyn) — każde tylko do odczytu, to samo hasło;
+      # pierwsze (demo = logistyka) dostaje przycisk „Wejdź jako demo” na ekranie logowania
+      DEMO_READONLY_LOGINS: demo,demo-spedytor,demo-agencja,demo-magazyn
       DEMO_PASSWORD: demoportfolio2026   # celowo jawne: konto tylko do odczytu, podane w README
       SUPPORT_EMAIL: tomasz.wierzbowski@op.pl   # „Zgłoś problem” na ekranie logowania i w banerze demo
       PUBLIC_BASE_URL: https://container.queue.twapp.pl

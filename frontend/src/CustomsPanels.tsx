@@ -91,7 +91,7 @@ export function CustomsAgencyPanel({ container, onSaved }: {
     call(`/api/customs/containers/${container.id}/agent`, agent, 'saved')
   }
   const doChangeStatus = () => call(`/api/customs/containers/${container.id}/status`,
-    { customs_status: status, customs_note: note }, 'saved')
+    { customs_status: status, customs_note: note, expected_customs_status: container.customs_status }, 'saved')
 
   const changeStatus = (e: FormEvent) => {
     e.preventDefault()

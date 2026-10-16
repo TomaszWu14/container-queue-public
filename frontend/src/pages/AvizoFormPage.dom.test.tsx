@@ -44,11 +44,12 @@ describe('AvizoFormPage — stany ładowania', () => {
     expect(await screen.findByText('avizoNotFound')).toBeTruthy()
   })
 
-  it('409 → „formularz już wysłany" bez danych', async () => {
+  it('409 → „już odpowiedziano" bez danych (nie ekran sukcesu)', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
       res(409, { detail: { code: 'already_submitted', message: 'Formularz już wysłany.' } })))
     renderPage()
-    expect(await screen.findByText(/av1Done$/)).toBeTruthy()
+    expect(await screen.findByText(/avAlreadyTitle$/)).toBeTruthy()
+    expect(screen.queryByText(/av1Done$/)).toBeNull()
     expect(screen.queryByText('MSCU1234571')).toBeNull()
   })
 })
@@ -120,13 +121,39 @@ describe('AvizoFormPage — etap 1', () => {
     expect(screen.getByText('MSCU1234571')).toBeTruthy()
   })
 
-  it('409 already_submitted przy POST → stan wysłany (po kodzie, nie po treści)', async () => {
+  it('409 already_submitted przy POST → „już odpowiedziano", nie sukces (po kodzie, nie po treści)', async () => {
     vi.stubGlobal('fetch', vi.fn(async (_url: string, init?: RequestInit) => init?.method === 'POST'
       ? res(409, { detail: { code: 'already_submitted', message: 'Slot-owy tekst bez znaczenia' } })
       : res(200, DATA)))
     renderPage()
     fireEvent.click(await screen.findByText('en:av1Submit'))
-    expect(await screen.findByText(/av1Done$/)).toBeTruthy()
+    expect(await screen.findByText(/avAlreadyTitle$/)).toBeTruthy()
+    expect(screen.queryByText(/av1Done$/)).toBeNull()
+  })
+
+  // US-009 (P-01): każdy inny 409 to odmowa zapisu — formularz zostaje z powodem z API
+  it.each([
+    ['bez kodu', 'Ta awizacja nie czeka teraz na tę odpowiedź — odśwież listę.'],
+    ['inny kod', { code: 'all_problem', message: 'Wszystkie kontenery zgłoszone jako problem.' }],
+  ])('409 %s przy POST → błąd z API, formularz zostaje, bez sukcesu', async (_name, detail) => {
+    vi.stubGlobal('fetch', vi.fn(async (_url: string, init?: RequestInit) => init?.method === 'POST'
+      ? res(409, { detail }) : res(200, DATA)))
+    renderPage()
+    fireEvent.click(await screen.findByText('en:av1Submit'))
+    const text = typeof detail === 'string' ? detail : detail.message
+    expect(await screen.findByText(text)).toBeTruthy()
+    expect(screen.getByText('MSCU1234571')).toBeTruthy()
+    expect(screen.queryByText(/av1Done$/)).toBeNull()
+  })
+
+  it('5xx przy POST → błąd, formularz zostaje, bez sukcesu', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (_url: string, init?: RequestInit) => init?.method === 'POST'
+      ? res(503, { detail: 'Serwis chwilowo niedostępny' }) : res(200, DATA)))
+    renderPage()
+    fireEvent.click(await screen.findByText('en:av1Submit'))
+    expect(await screen.findByText('Serwis chwilowo niedostępny')).toBeTruthy()
+    expect(screen.getByText('MSCU1234571')).toBeTruthy()
+    expect(screen.queryByText(/av1Done$/)).toBeNull()
   })
 })
 

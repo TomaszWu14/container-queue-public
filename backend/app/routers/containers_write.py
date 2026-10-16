@@ -10,6 +10,7 @@ from .. import iso6346
 from ..audit import record, record_changes
 from ..database import get_db
 from ..document_tiles import WARN_CUSTOMS, WARN_STATUS, missing_docs_warning
+from ..optimistic import claim_expected_state
 from ..deps import AdminOnly as admins
 from ..deps import Editors as editors
 from ..deps import WarehouseOrEditors as warehouse_or_editors
@@ -244,6 +245,7 @@ def apply_status(db: Session, container: Container, body: StatusChange, user: Us
 def change_status(container_id: int, body: StatusChange,
                   db: Session = Depends(get_db), user: User = warehouse_or_editors):
     container = get_container_checked(db, container_id, user)
+    claim_expected_state(db, Container, container.id, Container.status, body.expected_status)
     warnings: list[str] = []
     if not apply_status(db, container, body, user, warnings):
         return to_out(container, user)

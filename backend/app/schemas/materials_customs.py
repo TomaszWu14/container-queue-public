@@ -111,6 +111,7 @@ class CustomsStatusIn(BaseModel):
     customs_note: str = ""
     customs_date: datetime.date | None = None
     customs_t1: bool | None = None
+    expected_customs_status: CustomsStatus | None = None   # US-003 (ADR-0003)
 
 
 class CustomsCaseStatusOut(ORMModel):

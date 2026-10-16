@@ -55,6 +55,10 @@ def test_claim_token_is_atomic_against_concurrent_submit(client):
             wf.claim_token(b, wf.lookup_token(b, raw, 1))
             b.commit()
         assert _code(lambda: wf.claim_token(a, tok)) == 409
+        # US-009: przegrany wyścig niesie ten sam kod co zużyty link — front pokaże „już odpowiedziano”
+        with pytest.raises(HTTPException) as lost:
+            wf.claim_token(a, tok)
+        assert lost.value.detail == {"code": "already_submitted", "message": "Formularz już wysłany."}
     with SessionLocal() as c:                      # zwycięzca zużył token raz
         assert _code(lambda: wf.lookup_token(c, raw, 1)) == 409
 

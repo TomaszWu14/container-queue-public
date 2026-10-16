@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Podatność bezpieczeństwa (prywatnie)"
+    url: https://github.com/TomaszWu14/container-queue-public/blob/main/SECURITY.md
+    about: "Szczegóły podatności zgłaszaj prywatnie wg SECURITY.md, nie przez publiczne issue."
+  - name: "Pytanie o proces pracy"
+    url: https://github.com/TomaszWu14/container-queue-public/blob/main/CONTRIBUTING.md
+    about: "Role BA / DEV / SEC, Definition of Ready/Done, konwencje."

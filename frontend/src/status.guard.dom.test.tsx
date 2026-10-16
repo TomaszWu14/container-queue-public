@@ -57,7 +57,7 @@ describe('StatusModal — guardrail cofania statusu', () => {
     fireEvent.change(screen.getByLabelText('Status'), { target: { value: 'ODPRAWA' } })
     fireEvent.click(screen.getByText('Zapisz'))
     expect(screen.queryByText('Cofasz status')).toBeNull()
-    expect(apiPost).toHaveBeenCalledWith('/api/containers/1/status', { status: 'ODPRAWA', note: '' })
+    expect(apiPost).toHaveBeenCalledWith('/api/containers/1/status', { status: 'ODPRAWA', note: '', expected_status: 'W_PORCIE' })   // US-003
   })
 
   it('ruch wstecz: pokazuje modal ostrzeżenia, anuluj = brak requestu', async () => {
@@ -82,7 +82,7 @@ describe('StatusModal — guardrail cofania statusu', () => {
     const noteInputs = screen.getAllByLabelText('backwardStatusNote')
     fireEvent.change(noteInputs[noteInputs.length - 1], { target: { value: 'pomyłka' } })
     fireEvent.click(screen.getByText('Potwierdź'))
-    expect(apiPost).toHaveBeenCalledWith('/api/containers/1/status', { status: 'ZAPOWIEDZIANY', note: 'pomyłka' })
+    expect(apiPost).toHaveBeenCalledWith('/api/containers/1/status', { status: 'ZAPOWIEDZIANY', note: 'pomyłka', expected_status: 'W_PORCIE' })
   })
 })
 

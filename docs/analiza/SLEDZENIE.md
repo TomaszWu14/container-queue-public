@@ -1,0 +1,73 @@
+# Macierz śledzenia: wymaganie → historyjka → test → PR
+
+Wersja 0.1 (2026-10-16), [BA]. Utrzymywana przy każdym odbiorze BA (krok 6 procesu). Testy backendu
+w `backend/tests/`, frontendu w `frontend/src/`. Kolumna PR: numer PR w tym repozytorium; wymagania rdzenia
+wdrożono przed uruchomieniem procesu w repozytorium prywatnym — tam numery PR nie są publicznie dostępne.
+
+## Wymagania rdzenia (wdrożone przed procesem)
+
+| Wymaganie | Odpowiednik w `05` | Historyjka | Test | PR |
+|---|---|---|---|---|
+| FR-001 numer ISO 6346 | W-01 | przed procesem | `test_api.py::test_iso6346_validation`, `test_iso6346_remainder10.py` | repo prywatne |
+| FR-002 unikalność numeru wśród aktywnych | W-02 | przed procesem | `test_import_repeat_number.py` | repo prywatne |
+| FR-003 10 statusów, cofanie z notatką | W-03 | przed procesem | `test_status_flow.py` | repo prywatne |
+| FR-004 magazyn tylko DOSTARCZONY | W-04 | przed procesem | `test_api.py::test_warehouse_role_limited_to_unload_confirmation` | repo prywatne |
+| FR-005 status z odprawy, tylko do przodu | W-05 | przed procesem | `test_status_from_customs.py` | repo prywatne |
+| FR-006 historia każdej zmiany | W-06 | przed procesem; US-003 (wersjonowanie) | `test_audit_history.py`, `test_audit_coverage.py` | repo prywatne |
+| FR-007 kto zmienia status odprawy | W-07 | przed procesem | `test_customs.py`, `test_document_tiles.py::test_sad_upload_by_forwarder_keeps_customs_status`; **brak testu 403 dla spedytora** | repo prywatne |
+| FR-008 cofnięcie odprawy wyjątkiem | W-08 | przed procesem | `test_customs.py` | repo prywatne |
+| FR-009 wysyłka do agencji ostrzega o brakach ([spec](spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md) AK-01…AK-20) | W-09 | przed procesem | `test_customs.py`, `test_w5_documents.py`, `test_invoice_agency_mail.py`, `sendDocsPreview.dom.test.tsx`; **brak testu AK-19, AK-20** | repo prywatne |
+| FR-010 braki dokumentów nie blokują statusu | W-10 | przed procesem | `test_required_docs.py` | repo prywatne |
+| FR-011 wymagane dokumenty wg etapu | W-11 | przed procesem | `test_document_tiles.py` | repo prywatne |
+| FR-012 bramka numeru w PDF | W-12 | przed procesem | `test_document_gate.py` | repo prywatne |
+| FR-013 SAD przesuwa odprawę | W-13 | przed procesem | `test_document_tiles.py` | repo prywatne |
+| FR-014 propozycja daty ETA + 4 | W-14 | przed procesem; US-020 | `test_planning.py` | repo prywatne |
+| FR-015 uzgodniona data nie zmienia się sama | W-15 | przed procesem; US-017 | `test_planning_confirm.py` | repo prywatne |
+| FR-016 limit dzienny ostrzega | W-16 | przed procesem | `test_api.py::test_queue_limits_and_free_days` | repo prywatne |
+| FR-017 dni wolne kraju magazynu | W-17 | przed procesem; US-016 | `test_holidays_snapshot.py` | repo prywatne |
+| FR-018 sloty z pojemnością | W-18 | przed procesem | `test_avizo_slots.py` | repo prywatne |
+| FR-019 jednorazowe linki awizacji | W-19 | przed procesem | `test_avizo_tokens.py` | repo prywatne |
+| FR-020 odpowiedź spedytora po decyzji logistyki | W-20 | przed procesem; US-009 | `test_avizo_workflow.py` | repo prywatne |
+| FR-021 publiczny formularz chroniony | W-21 | przed procesem; US-005 | `test_avizo_public.py` | repo prywatne |
+| FR-022 spółka widzi swoje | W-22 | przed procesem; US-011 | `test_isolation.py`, `test_idor_containers.py` | repo prywatne |
+| FR-023 partner widzi zlecone | W-23 | przed procesem; US-011 | `test_partner_company_scope.py`, `test_deps_container_access.py` | repo prywatne |
+| FR-024 role widzą tylko potrzebne pola | W-24 | przed procesem | `test_forwarder_no_customs.py` | repo prywatne |
+| FR-025 import nie cofa danych | W-25 | przed procesem | `test_sync_status_forward_only.py` | repo prywatne |
+| FR-026 konflikt Excel/aplikacja: nowsza zmiana | W-26 | przed procesem | `test_sync_keeps_app_changes.py` | repo prywatne |
+| FR-027 dane kierowców usuwane po 90 dniach | W-27 | przed procesem | `test_gdpr_driver_copies.py`, `test_gdpr_driver_no_avizo.py` | repo prywatne |
+| FR-028 alert demurrage | W-28 | przed procesem | `test_demurrage_batch.py` | repo prywatne |
+
+Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez historyjki niżej i przez
+`../bezpieczenstwo/RYZYKA.md` (kolumna „Historyjka”).
+
+## Backlog (proces zespołowy)
+
+| Historyjka | Wymagania / ryzyka | Test (planowany) | PR | Stan |
+|---|---|---|---|---|
+| US-001 prod wymaga PostgreSQL | NFR-011, SR-009, R-04 | `test_config_failfast.py` (12 przypadków), `test_prod_without_https.py` | #18 | zrealizowane, czeka na merge (Z-007) |
+| US-002 osobny klucz szyfrowania | SR-009, R-05 | `test_config_failfast.py`, testy `crypto` | — | do akceptacji PO |
+| US-003 ochrona przed cichym nadpisaniem | FR-006, NFR-013, R-02, ADR-0003 | `test_status_lost_update.py`, `test_container_lost_update.py`, `status.guard.dom.test.tsx`, `transportOrders.dom.test.tsx` | #18 | zrealizowane, czeka na merge |
+| US-004 załączniki po zawartości | SR-007, R-03 | `test_upload_limits.py` | — | do akceptacji PO |
+| US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_avizo_public.py` | — | do akceptacji PO |
+| US-006 defusedxml, ZIP | SR-006, R-07 | `test_imports_malicious.py`, `test_archive_upload.py` | — | do akceptacji PO |
+| US-007 bramki CI | SR-013, R-08 | przebieg `security.yml` | #18 (`dependabot.yml`) | częściowo |
+| US-008 `csv_safe` | SR-006, B-002 | test parametryzowany `csv_safe` | — | do akceptacji PO |
+| US-009 awizacja bez fałszywego sukcesu | FR-020, NFR-007, P-01 | `AvizoFormPage.dom.test.tsx`, `AvizoDriverFormPage.dom.test.tsx`, `test_avizo_tokens.py` | #18 | zrealizowane, czeka na merge |
+| US-010 dokumentacja po audycie | — | — | #18 (`SECURITY.md`) | częściowo |
+| US-011 strażnik izolacji | FR-022…024, SR-005, R-01 | test statyczny tras | — | do akceptacji PO |
+| US-012 RODO 1.0 | SR-011, R-09 | — | — | czeka na Z-009 |
+| US-013 kopia off-site | NFR-002, SR-014, R-10 | ćwiczenie odtworzenia | — | do akceptacji PO |
+| US-014 mierniki (+ panel, pomysł 6) | M-1…M-7 | — | — | czeka na Z-004 |
+| US-015 jedna wersja Python/Node | NFR-011 | test zgodności w CI | — | do akceptacji PO |
+| US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06 | testy walidacji | — | do akceptacji PO |
+| US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | test wysyłki | — | do akceptacji PO |
+| US-018 testy ekranów | TEST-007 | testy RTL | — | do akceptacji PO |
+| US-019 2FA adminów | SR-004, E-01 | — | — | czeka na Z-008 |
+| US-027 demo pokazuje cały proces | FR-005, FR-009…011, FR-019, FR-020, FR-028 | `test_seed_demo_process.py` (5 testów), `test_demo_mode.py` | #18 | zrealizowane, czeka na merge |
+| US-028 konta demo per rola | FR-022…FR-024, E-05 | `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` | #18 | zrealizowane, czeka na merge |
+
+## Zasady utrzymania
+
+1. Nowa historyjka = nowy wiersz tutaj **w tym samym PR**, co jej analiza.
+2. Scalony PR = numer w kolumnie PR i stan „wdrożone”; test w kolumnie Test musi istnieć i być zielony.
+3. Wymaganie bez testu jest oznaczane **wprost** („brak testu”), nie pomijane — jak FR-007 wyżej.

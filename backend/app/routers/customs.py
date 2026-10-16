@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from ..audit import record, record_changes, record_created
 from ..database import get_db
 from ..document_tiles import WARN_CUSTOMS, missing_docs_warning
+from ..optimistic import claim_expected_state
 from ..deps import AdminOnly as admin_only
 from ..deps import Editors as logistics_or_admin
 from ..deps import PurchasingReaders as docs_senders
@@ -435,6 +436,8 @@ def update_status(container_id: int, body: CustomsStatusIn,
                   db: Session = Depends(get_db), user: User = customs_side):
     """Zmiana statusu odprawy (obie strony). Powiadamiana jest druga strona."""
     container = get_container_checked(db, container_id, user)
+    claim_expected_state(db, Container, container.id, Container.customs_status,
+                         body.expected_customs_status)
     check_customs_status_change(container.customs_status, body.customs_status, user,
                                 body.customs_note)
     prev_customs = container.customs_status
