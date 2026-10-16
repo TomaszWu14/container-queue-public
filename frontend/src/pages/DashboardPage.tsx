@@ -4,6 +4,7 @@ import { api, downloadCsv, errorMessage, toCsv } from '../api'
 import { LoadError, Skeleton } from '../feedback'
 import { DocsGapsCard } from '../DocumentsW5'
 import NewsFeed from './news/NewsFeed'
+import ValueCard from './dashboard/ValueCard'
 import { useUser } from '../App'
 import { LangContext, localeFor, useT } from '../i18n'
 import { formatDate, formatDayLong, todayISO } from '../dates'
@@ -171,6 +172,8 @@ export default function DashboardPage() {
         <CtlKpi label={t('ctlQueueTotal')} value={data.at_port + data.in_transit}
                 sub={`${data.at_port} ${t('ctlInPort')} · ${data.in_transit} ${t('ctlInTransit')}`} />
       </div>
+
+      {(user?.role === 'admin' || user?.role === 'logistics') && <ValueCard />}
 
       <section className="panel ctl-actions">
         <div className="dash-card-head">

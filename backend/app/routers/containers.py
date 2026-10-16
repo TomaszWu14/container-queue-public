@@ -49,6 +49,7 @@ from . import (
     containers_purge,
     containers_stats,
     containers_write,
+    stats_value,
 )
 
 # re-eksport helperów — importowane przez inne routery, invoices/compare, main.py i testy
@@ -94,7 +95,7 @@ logger = logging.getLogger(__name__)
 # muszą wygrać z GET /containers/{container_id} zdefiniowanym niżej.
 for _sub in (containers_bulk, containers_orders, containers_write, containers_planning,
              containers_contents,
-             containers_purge, containers_changes, containers_stats):
+             containers_purge, containers_changes, containers_stats, stats_value):
     router.include_router(_sub.router)
 
 # --- kontenery ---

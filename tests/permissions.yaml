@@ -202,6 +202,7 @@ routes:
   "GET /api/stats/monthly": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 200, customs: 200, purchasing: 200, sales: 403}  # scoping: scope_containers
   "GET /api/stats/occupancy-forecast": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 200, customs: 200, purchasing: 200, sales: 403}  # scoping: scope_containers
   "GET /api/stats/transit-trend": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 200, customs: 200, purchasing: 200, sales: 403}  # scoping: scope_containers
+  "GET /api/stats/value": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (panel „Ile to oszczędza”)
 
   # --- containers_write ---
   "POST /api/containers": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
