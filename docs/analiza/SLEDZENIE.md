@@ -47,7 +47,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-001 prod wymaga PostgreSQL | NFR-011, SR-009, R-04 | `test_config_failfast.py` (12 przypadków), `test_prod_without_https.py` | #18 | zrealizowane, czeka na merge (Z-007) |
 | US-002 osobny klucz szyfrowania | SR-009, R-05 | `test_config_failfast.py`, testy `crypto` | — | do akceptacji PO |
 | US-003 ochrona przed cichym nadpisaniem | FR-006, NFR-013, R-02, ADR-0003 | `test_status_lost_update.py`, `test_container_lost_update.py`, `status.guard.dom.test.tsx`, `transportOrders.dom.test.tsx` | #18 | zrealizowane, czeka na merge |
-| US-004 załączniki po zawartości | SR-007, R-03 | `test_file_signatures.py` (31 przypadków) | — | zrealizowane, czeka na PR |
+| US-004 załączniki po zawartości | SR-007, R-03 | `test_file_signatures.py` (31 przypadków) | #28 | zrealizowane, czeka na merge |
 | US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_avizo_public.py` | — | do akceptacji PO |
 | US-006 defusedxml, ZIP | SR-006, R-07 | `test_imports_malicious.py`, `test_archive_upload.py` | — | do akceptacji PO |
 | US-007 bramki CI | SR-013, R-08 | przebieg `security.yml` | #18 (`dependabot.yml`) | częściowo |
@@ -60,7 +60,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-014 mierniki (+ panel, pomysł 6) | M-1…M-7 | — | — | czeka na Z-004 |
 | US-015 jedna wersja Python/Node | NFR-011 | test zgodności w CI | — | do akceptacji PO |
 | US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06 | testy walidacji | — | do akceptacji PO |
-| US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | `test_plan_mail.py` (4), `BulkActionBar.plan.dom.test.tsx` (3) | — | zrealizowane, czeka na PR |
+| US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | `test_plan_mail.py` (4), `BulkActionBar.plan.dom.test.tsx` (3) | #28 | zrealizowane, czeka na merge |
 | US-018 testy ekranów | TEST-007 | testy RTL | — | do akceptacji PO |
 | US-019 2FA adminów | SR-004, E-01 | — | — | czeka na Z-008 |
 | US-027 demo pokazuje cały proces | FR-005, FR-009…011, FR-019, FR-020, FR-028 | `test_seed_demo_process.py` (5 testów), `test_demo_mode.py` | #18 | zrealizowane, czeka na merge |

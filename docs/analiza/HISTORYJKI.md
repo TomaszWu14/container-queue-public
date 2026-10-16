@@ -245,7 +245,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
     do zakładki Spedycja, bez danych dostawcy; wpis w historii kontenera.
   - Gdy spedytor nie ma adresu albo poczta nie działa → wynik mówi to wprost; status planu i tak zapisany.
   - Gdy plan już potwierdzony → bez maila („już potwierdzone”).
-- **Stan:** zrealizowane, czeka na PR.
+- **Stan:** zrealizowane w PR #28, czeka na merge.
 
 ### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
 - **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)
