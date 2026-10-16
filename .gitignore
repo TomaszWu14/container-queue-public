@@ -42,3 +42,8 @@ node_modules/
 *.bak
 .DS_Store
 !backend/scripts/**/*.sql
+
+# artefakty pokrycia testów (pytest --cov)
+.coverage
+.coverage.*
+htmlcov/
