@@ -4,6 +4,7 @@ import { CSRF_HEADERS } from './csrf'
 import { rememberTotal } from './listTotal'
 import { SESSION_EXPIRED_EVENT } from './sessionEvents'
 import { assertUploadSize } from './uploadLimit'
+import { DEMO_READONLY_MESSAGE, demoBlocksWrite } from './demoLimits'
 
 // sygnał dla DeployWatch (ekran wdrożenia); poza przeglądarką (testy w Node) — nic
 const serverUnreachable = () => {
@@ -88,6 +89,7 @@ async function tryRefresh(): Promise<boolean> {
 }
 
 async function request<T>(path: string, options: RequestInit = {}, retried = false): Promise<T> {
+  if (demoBlocksWrite(path, options.method)) throw new ApiError(403, DEMO_READONLY_MESSAGE)
   const headers: Record<string, string> = {
     ...CSRF_HEADERS,
     ...(options.headers as Record<string, string> | undefined),

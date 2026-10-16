@@ -77,6 +77,7 @@ function CtlKpi({ label, value, sub, accent }: {
 
 export default function DashboardPage() {
   const t = useT()
+  const user = useUser()
   // summary_key + summary_params → tekst przetłumaczony (FIX 1: backend nie wysyła gotowej prozy PL)
   const sigText = (r: Signal) => Object.entries(r.summary_params).reduce(
     (s, [k, v]) => s.replace(`{${k}}`, String(v)), t(r.summary_key))
@@ -224,7 +225,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Aktualności: powiadomienia jak news — lista + panel czytania (spec 2026-10-01) */}
-      <NewsFeed />
+      {!user?.is_demo && <NewsFeed />}
 
       {/* #47: decyzje cross-module — faktury transportowe czekające na akceptację (admin) */}
       <FreightApprovalsCard />

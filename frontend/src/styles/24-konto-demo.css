@@ -13,3 +13,8 @@
   display: grid; place-items: center; }
 .demo-steps li > div { flex: 1; min-width: 0; }
 .demo-steps p { margin: 2px 0 0; font-size: 13px; line-height: 1.45; }
+
+/* konto demo (demoLimits.setDemoSession): przyciski zapisu w formularzach wyszarzone od razu —
+   zapis i tak jest odcinany (api.ts, serwer); klik nadal pokaże powód */
+body.demo-readonly form button[type="submit"],
+body.demo-readonly form button:not([type]) { opacity: .45; cursor: not-allowed; }

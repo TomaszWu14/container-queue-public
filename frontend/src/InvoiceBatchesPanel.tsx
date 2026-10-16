@@ -5,6 +5,7 @@ import { AgencySadSection } from './AgencySadSection'
 import { InvoiceReviewModal } from './InvoiceReviewModal'
 import { CompareModal } from './DocumentsW5'
 import { useT } from './i18n'
+import { useUser } from './userContext'
 import type { AttachmentSuggestion, Container, InvoiceBatch, InvoiceJob } from './types'
 import { formatDateTime, parseServerTs } from './dates'
 import { useConfirm } from './ConfirmDialog'
@@ -21,6 +22,7 @@ export function InvoiceBatchesPanel({ container, onChanged }: {
   onChanged?: () => void   // eksport / usunięcie paczki → kafelki CI/PI/PL (§4 pkt 29)
 }) {
   const t = useT()
+  const demo = !!useUser()?.is_demo   // demo: bez pobrania XML SADUE (zapis w audycie, demo_limits)
   const { confirm } = useConfirm()
   const [mailBatch, setMailBatch] = useState<InvoiceBatch | null>(null)
   const [batches, setBatches] = useState<InvoiceBatch[]>([])
@@ -154,7 +156,7 @@ export function InvoiceBatchesPanel({ container, onChanged }: {
                 {t('invAgencyMail')}
               </button>
             )}
-            {batch.attachment_id && (
+            {batch.attachment_id && !demo && (
               // XML SADUE do importu w WinSAD agencji (te same pozycje co Excel; 409 = co poprawić)
               <button className="btn small secondary" disabled={busy} title={t('invSadueXmlHint')}
                       onClick={() => downloadFile(`/api/invoice-batches/${batch.id}/sadue.xml`,

@@ -10,6 +10,7 @@ import { CSRF_HEADERS } from './csrf'
 import GlobalSearch from './GlobalSearch'
 import Onboarding from './Onboarding'
 import DemoMode from './DemoMode'
+import { hiddenInDemo, setDemoSession } from './demoLimits'
 import Sidebar from './Sidebar'
 import { Lang, LangContext, useT } from './i18n'
 import { AppSkeleton, Skeleton, ToastProvider } from './feedback'
@@ -142,6 +143,7 @@ export default function App() {
     return () => window.removeEventListener(SESSION_EXPIRED_EVENT, expired)
   }, [])
   useEffect(() => localStorage.setItem('timporye_lang', lang), [lang])
+  useEffect(() => setDemoSession(!!user?.is_demo), [user])
 
   const logout = async () => {
     await leavePresence()          // zniknij z paska obecności od razu
@@ -228,7 +230,8 @@ export default function App() {
                 <Guarded ok={user.role === 'admin' || user.role === 'logistics' || user.role === 'purchasing'}>
                   <KoszykPage /></Guarded>} />
               <Route path="/import-sad" element={
-                <Guarded ok={user.role === 'admin' || user.role === 'logistics' || user.role === 'purchasing'}>
+                <Guarded ok={(user.role === 'admin' || user.role === 'logistics' || user.role === 'purchasing')
+                  && !hiddenInDemo(user, '/import-sad')}>
                   <SadImportPage /></Guarded>} />
 
               <Route path="/odprawa" element={
@@ -236,16 +239,16 @@ export default function App() {
               <Route path="/wyceny" element={
                 <Guarded ok={canAccess(user.role, 'wyceny')}><QuotesPage /></Guarded>} />
               <Route path="/wywolania-dlt" element={
-                <Guarded ok={['admin', 'logistics', 'warehouse'].includes(user.role)}>
+                <Guarded ok={['admin', 'logistics', 'warehouse'].includes(user.role) && !hiddenInDemo(user, '/wywolania-dlt')}>
                   <PalletCallsPage /></Guarded>} />
               <Route path="/analityka" element={
                 <Guarded ok={user.role === 'admin' || user.role === 'logistics'}>
                   <AnalitykaPage /></Guarded>} />
               <Route path="/dziennik-zmian" element={
-                <Guarded ok={user.role === 'admin' || user.role === 'logistics'}>
+                <Guarded ok={(user.role === 'admin' || user.role === 'logistics') && !hiddenInDemo(user, '/dziennik-zmian')}>
                   <ChangesFeedPage /></Guarded>} />
               <Route path="/master-data/:section?" element={
-                <Guarded ok={user.role === 'admin' || user.role === 'logistics'}>
+                <Guarded ok={(user.role === 'admin' || user.role === 'logistics') && !hiddenInDemo(user, '/master-data')}>
                   <MasterDataPage /></Guarded>} />
               <Route path="/sledzenie" element={
                 <Guarded ok={canAccess(user.role, 'sledzenie')}><TrackingPage /></Guarded>} />

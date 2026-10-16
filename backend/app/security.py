@@ -416,10 +416,15 @@ def is_demo_login(login: str) -> bool:
 def _enforce_demo_readonly(request: Request, user: User) -> None:
     """Instancja portfolio: konta z DEMO_READONLY_LOGINS tylko czytają (egzekwowane w API,
     nie ukryciem przycisków)."""
-    if (is_demo_login(user.login) and request.method not in ("GET", "HEAD", "OPTIONS")
+    if not is_demo_login(user.login):
+        return
+    if (request.method not in ("GET", "HEAD", "OPTIONS")
             and request.url.path not in _DEMO_ALLOWED_WRITES):
         raise HTTPException(status.HTTP_403_FORBIDDEN,
                             "Konto demo — tylko podgląd, zmiany są wyłączone.")
+    from .demo_limits import DEMO_BLOCKED_MESSAGE, blocked_for_demo
+    if blocked_for_demo(request.url.path):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, DEMO_BLOCKED_MESSAGE)
 
 
 def require_roles(*roles: Role):

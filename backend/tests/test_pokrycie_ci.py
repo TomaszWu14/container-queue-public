@@ -27,5 +27,6 @@ def test_ci_mierzy_pokrycie_szybkim_rdzeniem():
 def test_pytest_cov_w_locku_dev_nie_w_runtime():
     dev = (BACKEND / "requirements-dev.txt").read_text(encoding="utf-8")
     runtime = (BACKEND / "requirements.txt").read_text(encoding="utf-8")
-    assert re.search(r"^pytest-cov==", dev, re.M) and re.search(r"^coverage==", dev, re.M)
-    assert not re.search(r"^(pytest-cov|coverage)==", runtime, re.M)
+    # pip-compile zapisuje pakiet z dodatkiem jako „coverage[toml]==” (ta sama paczka)
+    assert re.search(r"^pytest-cov==", dev, re.M) and re.search(r"^coverage(\[[^\]]*\])?==", dev, re.M)
+    assert not re.search(r"^(pytest-cov|coverage)(\[[^\]]*\])?==", runtime, re.M)

@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field
 
 from .deps import require_roles
 from .models import Role, User
-from .security import shares_company_scope
+from .security import is_demo_login, shares_company_scope
 
 ONLINE_S = 5 * 60
 GONE_S = 15 * 60
@@ -74,6 +74,8 @@ _viewers = Depends(require_roles(*PRESENCE_ROLES))
 @router.post("")
 def ping(body: Ping, user: User = _viewers) -> list[dict]:
     """Sygnał karty (co ~30 s i przy zmianie ekranu) → lista obecnych (z Tobą)."""
+    if is_demo_login(user.login):
+        return []   # konto demo współdzielone przez gości: ani nie widać innych, ani ich samych
     return record(user, body)
 
 

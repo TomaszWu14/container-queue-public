@@ -274,7 +274,7 @@ export function AttachmentsPanel({ container, onChanged }: {
       <div className="row" style={{ justifyContent: 'space-between' }}>
         <h3 style={{ margin: 0 }}>{t('files')}</h3>
         <div className="row" style={{ gap: 8 }}>
-          {attachments.length > 0 && user?.role !== 'warehouse' && (
+          {attachments.length > 0 && user?.role !== 'warehouse' && !user?.is_demo && (
             <button className="btn small secondary" disabled={busy}
                     onClick={() => downloadFile(`/api/containers/${container.id}/attachments/zip`,
                       `dokumenty_${container.container_no}.zip`).catch(err => setError(errorMessage(err)))}>
