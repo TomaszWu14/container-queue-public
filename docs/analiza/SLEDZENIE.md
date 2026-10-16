@@ -60,7 +60,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-014 mierniki (+ panel, pomysł 6) | M-1…M-7 | — | — | czeka na Z-004 |
 | US-015 jedna wersja Python/Node | NFR-011 | test zgodności w CI | — | do akceptacji PO |
 | US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06 | testy walidacji | — | do akceptacji PO |
-| US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | test wysyłki | — | do akceptacji PO |
+| US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | `test_plan_mail.py` (4), `BulkActionBar.plan.dom.test.tsx` (3) | — | zrealizowane, czeka na PR |
 | US-018 testy ekranów | TEST-007 | testy RTL | — | do akceptacji PO |
 | US-019 2FA adminów | SR-004, E-01 | — | — | czeka na Z-008 |
 | US-027 demo pokazuje cały proces | FR-005, FR-009…011, FR-019, FR-020, FR-028 | `test_seed_demo_process.py` (5 testów), `test_demo_mode.py` | #18 | zrealizowane, czeka na merge |
