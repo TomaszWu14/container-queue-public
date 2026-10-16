@@ -8,7 +8,7 @@ import { hiddenInDemo } from './demoLimits'
 import KnowledgePanel from './KnowledgePanel'
 import { LANGS, Lang, LangContext, useT } from './i18n'
 import { UserContext } from './userContext'
-import { Archive, Calendar, ChartColumn, ChevronDown, DollarSign, FileText, Languages, LayoutDashboard, LogOut, MapPin, Menu, Palette, Rows3, Settings, ShieldCheck, TriangleAlert, Truck, X, type LucideIcon } from 'lucide-react'
+import { Archive, Blocks, Calendar, ChartColumn, ChevronDown, DollarSign, FileText, Languages, LayoutDashboard, LogOut, MapPin, Menu, Palette, Rows3, Settings, ShieldCheck, TriangleAlert, Truck, type LucideIcon, X } from 'lucide-react'
 import { formatDate } from './dates'
 import { PRESENCE_ROLES, PresenceBar } from './PresenceBar'
 import FullscreenToggle from './FullscreenToggle'
@@ -294,6 +294,9 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
             </NavLink>
             <NavLink to="/moje-kolory" className="tn-drop-link" onClick={() => setOpenMenu(null)}>
               <Palette size={16} aria-hidden="true" /><span>{t('colMyTitle')}</span>
+            </NavLink>
+            <NavLink to="/jak-zbudowano" className="tn-drop-link" onClick={() => setOpenMenu(null)}>
+              <Blocks size={16} aria-hidden="true" /><span>{t('hbNav')}</span>
             </NavLink>
             <label className="tn-drop-link tn-watch-only" title={t('watchOnlyNotificationsHint')}>
               <input type="checkbox" checked={!!user?.watch_only_notifications}
