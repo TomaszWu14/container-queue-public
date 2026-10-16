@@ -48,7 +48,8 @@ export default function ContainerPage() {
   const [loadError, setLoadError] = useState('')
   // deep-link z pulpitu: ?akcja=documents otwiera od razu zakładkę Dokumenty
   const akcja = searchParams.get('akcja')
-  const [tab, setTab] = useState<Tab>(akcja === 'documents' ? 'docs' : 'details')
+  // ?akcja=history: „historia jednego kontenera” z ekranu powitalnego demo → zakładka Przebieg
+  const [tab, setTab] = useState<Tab>(akcja === 'documents' ? 'docs' : akcja === 'history' ? 'history' : 'details')
   const numericId = Number(id) || 0
   const d = useDrawerData(numericId)   // liczniki zakładek + koszty (jak w szufladzie kolejki)
   const watchReason = useWatchReason(numericId)

@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Demo: „historia jednego kontenera”** (pomysł 1 PO): ekran powitalny zaczyna od kontenera pokazowego, który
+  przeszedł cały proces — jeden klik otwiera jego „Przebieg”. Dane demo dostały kroki odprawy, dokumentów i planu
+  w kolejności zgodnej z etapami (`backend/scripts/seed_demo_story.py`).
 - **„Przebieg” kontenera** (pomysł 3 PO): w zakładce historii czytelna oś czasu najważniejszych kroków —
   status, odprawa, dokumenty, plan, termin, slot, braki — z datą i osobą; pełna tabela zmian zostaje niżej.
 - **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do

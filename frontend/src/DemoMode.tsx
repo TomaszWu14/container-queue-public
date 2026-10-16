@@ -25,9 +25,11 @@ export default function DemoMode() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(() => !seen())
   const [support, setSupport] = useState('')
+  const [storyId, setStoryId] = useState<number | null>(null)   // kontener pokazowy (seed_demo_story)
   useEffect(() => {
-    api.get<{ support_email?: string }>('/api/public/branding')
-      .then(b => setSupport(b?.support_email ?? '')).catch(() => {})
+    api.get<{ support_email?: string; demo_story_container_id?: number | null }>('/api/public/branding')
+      .then(b => { setSupport(b?.support_email ?? ''); setStoryId(b?.demo_story_container_id ?? null) })
+      .catch(() => {})
   }, [])
 
   const close = () => {
@@ -50,6 +52,17 @@ export default function DemoMode() {
         <Modal title={t('demoWelcomeTitle')} onClose={close} width={560}>
           <p className="muted" style={{ marginTop: 0 }}>{t('demoWelcomeIntro')}</p>
           <ol className="demo-steps">
+            {storyId !== null && (
+              <li className="demo-step-story">
+                <div>
+                  <b>{t('demoStoryTitle')}</b>
+                  <p className="muted">{t('demoStoryBody')}</p>
+                </div>
+                <button type="button" className="btn small" onClick={() => go(`/kontenery/${storyId}?akcja=history`)}>
+                  {t('demoWelcomeGo')}
+                </button>
+              </li>
+            )}
             {STEPS.map(s => (
               <li key={s.to}>
                 <div>
