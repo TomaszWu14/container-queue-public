@@ -26,6 +26,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-016 | Zmiany w workflowach CI (bramka Trivy, Semgrep, wyrównanie wersji) idą osobną historyjką (US-007), nie w PR dokumentacyjnym. Wyjątek: `.github/dependabot.yml` — konfiguracja bez wpływu na przebieg CI, deklarowana wcześniej w `SECURITY.md`. | — | do potwierdzenia | przeniesienie `dependabot.yml` do US-007 | `../../.github/dependabot.yml` |
 | Z-017 | Poziom OWASP ASVS: **L2** (aplikacja przetwarza dane osobowe osób trzecich i dane handlowe kilku firm). | — | do potwierdzenia | checklista do przeskalowania na L1/L3 | `../bezpieczenstwo/CHECKLISTA_ASVS.md` |
 | Z-018 | Pole „pola obowiązkowe konfigurowane per spółka” z wywiadu (`SPECYFIKACJA.md` §2) nie jest realizowane, dopóki PO nie potwierdzi potrzeby. | — | do potwierdzenia | nowa historyjka | `WYMAGANIA.md` (otwarte) |
+| Z-019 | Specyfikacja wysyłki dokumentów do agencji opisuje stan obecny; luki L-1…L-8 nie są naprawiane, dopóki PO nie odpowie na pytania §11. | — | do potwierdzenia | historyjki z luk L-1…L-8 | `spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md` |
 
 ## Jak potwierdzić
 

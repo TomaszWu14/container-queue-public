@@ -7,7 +7,7 @@ Nowa struktura to **indeksy** do dokumentów niżej plus to, czego dotąd nie by
 
 | Katalog | Pliki |
 |---|---|
-| [analiza/](analiza/) [BA] | [WIZJA](analiza/WIZJA.md), [INTERESARIUSZE](analiza/INTERESARIUSZE.md), [PROCESY](analiza/PROCESY.md), [WYMAGANIA](analiza/WYMAGANIA.md), [HISTORYJKI](analiza/HISTORYJKI.md), [SLOWNIK](analiza/SLOWNIK.md), [ZALOZENIA](analiza/ZALOZENIA.md), [SLEDZENIE](analiza/SLEDZENIE.md) |
+| [analiza/](analiza/) [BA] | [WIZJA](analiza/WIZJA.md), [INTERESARIUSZE](analiza/INTERESARIUSZE.md), [PROCESY](analiza/PROCESY.md), [WYMAGANIA](analiza/WYMAGANIA.md), [HISTORYJKI](analiza/HISTORYJKI.md), [SLOWNIK](analiza/SLOWNIK.md), [ZALOZENIA](analiza/ZALOZENIA.md), [SLEDZENIE](analiza/SLEDZENIE.md), specyfikacje funkcji: [wysyłka dokumentów do agencji](analiza/spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md) |
 | [architektura/](architektura/) [DEV] | [ARCHITEKTURA](architektura/ARCHITEKTURA.md), [MODEL_DANYCH](architektura/MODEL_DANYCH.md), [API](architektura/API.md), [adr/](architektura/adr/README.md) |
 | [bezpieczenstwo/](bezpieczenstwo/) [SEC] | [KLASYFIKACJA_DANYCH](bezpieczenstwo/KLASYFIKACJA_DANYCH.md), [THREAT_MODEL](bezpieczenstwo/THREAT_MODEL.md), [RYZYKA](bezpieczenstwo/RYZYKA.md), [RODO](bezpieczenstwo/RODO.md), [CHECKLISTA_ASVS](bezpieczenstwo/CHECKLISTA_ASVS.md) |
 | [testy/](testy/) | [STRATEGIA_TESTOW](testy/STRATEGIA_TESTOW.md), [E2E](testy/E2E.md), [ETAP-0-PLAN](testy/ETAP-0-PLAN.md) |

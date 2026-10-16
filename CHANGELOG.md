@@ -25,6 +25,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
   (R-01…R-20) i wyjątków (E-01…E-10), RODO 0.1, checklista ASVS L2 (ocena wstępna).
 - `docs/testy/STRATEGIA_TESTOW.md`, `docs/operacje/RUNBOOK.md` (wdrożenie, kopie, odtworzenie, incydent,
   rotacja kluczy, wniosek RODO).
+- `docs/analiza/spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md` — specyfikacja wysyłki dokumentów do agencji celnej
+  (dwa kanały: powiadomienie i szkic .eml, kryteria AK-01…AK-20 z testami, mini-STRIDE, luki L-1…L-8, pytania do PO).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed

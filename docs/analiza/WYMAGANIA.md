@@ -18,7 +18,7 @@ Priorytety MoSCoW: wszystko, co wdrożone, jest *Must* (utrzymujemy); nowe — w
 | FR-006 | W-06 | Każda zmiana pola w historii: kto, kiedy, było → jest, notatka; dane kierowcy maskowane | Must | wdrożone; wersjonowanie rekordu — US-003 |
 | FR-007 | W-07 | Status odprawy zmienia agencja; logistyka awaryjnie; spedytor nigdy; REWIZJA z notatką | Must | wdrożone; brak testu 403 dla spedytora |
 | FR-008 | W-08 | Cofnięcie odprawy z ODPRAWIONY/ZWOLNIONY/ROZLICZONY tylko logistyka, z notatką | Must | wdrożone |
-| FR-009 | W-09 | Wysyłka dokumentów do agencji ostrzega o brakach (409), „wyślij mimo to” z wpisem w audycie | Must | wdrożone |
+| FR-009 | W-09 | Wysyłka dokumentów do agencji ostrzega o brakach (409), „wyślij mimo to” z wpisem w audycie ([specyfikacja](spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md)) | Must | wdrożone |
 | FR-010 | W-10 | Braki dokumentów nie blokują statusu; ostrzeżenie i wpis w historii | Must | wdrożone |
 | FR-011 | W-11 | Wymagane dokumenty zależą od etapu; profil dostawcy zawęża zestaw | Must | wdrożone |
 | FR-012 | W-12 | PDF z numerem innego kontenera odrzucony (409); uszkodzony 422; skan przyjęty z ostrzeżeniem | Must | wdrożone |

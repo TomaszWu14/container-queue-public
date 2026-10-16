@@ -16,7 +16,7 @@ wdrożono przed uruchomieniem procesu w repozytorium prywatnym — tam numery PR
 | FR-006 historia każdej zmiany | W-06 | przed procesem; US-003 (wersjonowanie) | `test_audit_history.py`, `test_audit_coverage.py` | repo prywatne |
 | FR-007 kto zmienia status odprawy | W-07 | przed procesem | `test_customs.py`, `test_document_tiles.py::test_sad_upload_by_forwarder_keeps_customs_status`; **brak testu 403 dla spedytora** | repo prywatne |
 | FR-008 cofnięcie odprawy wyjątkiem | W-08 | przed procesem | `test_customs.py` | repo prywatne |
-| FR-009 wysyłka do agencji ostrzega o brakach | W-09 | przed procesem | `test_customs.py` | repo prywatne |
+| FR-009 wysyłka do agencji ostrzega o brakach ([spec](spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md) AK-01…AK-20) | W-09 | przed procesem | `test_customs.py`, `test_w5_documents.py`, `test_invoice_agency_mail.py`, `sendDocsPreview.dom.test.tsx`; **brak testu AK-19, AK-20** | repo prywatne |
 | FR-010 braki dokumentów nie blokują statusu | W-10 | przed procesem | `test_required_docs.py` | repo prywatne |
 | FR-011 wymagane dokumenty wg etapu | W-11 | przed procesem | `test_document_tiles.py` | repo prywatne |
 | FR-012 bramka numeru w PDF | W-12 | przed procesem | `test_document_gate.py` | repo prywatne |
