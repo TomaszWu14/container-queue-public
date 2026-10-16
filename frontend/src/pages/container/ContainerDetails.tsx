@@ -113,7 +113,8 @@ export default function ContainerDetails({ container, setContainer, load, vessel
             <AnchorIcon size={14} /> {t('suggestInPort')} <b>{vesselNearPort}</b>
             <button className="btn small" style={{ marginLeft: 10 }}
                     onClick={() => api.post<Container>(`/api/containers/${container.id}/status`,
-                      { status: 'W_PORCIE' }).then(c => setContainer(c)).catch(() => {})}>
+                      { status: 'W_PORCIE', expected_status: 'W_TRANSPORCIE' })   // US-003
+                      .then(c => setContainer(c)).catch(() => {})}>
               {t('suggestSetInPort')}
             </button>
           </div>

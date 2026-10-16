@@ -207,7 +207,8 @@ export default function CustomsPage() {
     setError('')
     try {
       const saved = await api.post<Container>(`/api/customs/containers/${container.id}/status`,
-        { customs_status, ...(note ? { customs_note: note } : {}) })
+        { customs_status, ...(note ? { customs_note: note } : {}),
+          expected_customs_status: container.customs_status })   // US-003
       showToast(saved?.docs_warning || t('toastStatusChanged'), saved?.docs_warning ? 'error' : undefined)
       load()
     } catch (err) {

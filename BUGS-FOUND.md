@@ -33,7 +33,8 @@ Status: `PODEJRZENIE` = wykryte analizą statyczną w Etapie 0, zweryfikowane w 
 - **Test potwierdzający:** Etap 2 — `test_imports_malicious.py::test_upload_over_limit_rejected[paz|analytics]` → oczekiwane 413.
 
 ## B-004 · Brak ochrony przed cichym nadpisaniem przy równoczesnej edycji
-- **Status:** PODEJRZENIE (kod zweryfikowany: brak `version_id_col` / `If-Match` / porównania `updated_at`) · **Waga:** wysoka
+- **Status:** NAPRAWIONE — formularz kontenera i panel kierowcy przez `expected_updated_at` (audyt DB-005, przed
+  2026-10-13); przejścia statusu kontenera, odprawy i zlecenia transportowego w PR #18 (US-003, ADR-0003) · **Waga:** wysoka
 - **Gdzie:** PATCH kontenera i pozostałe edycje encji.
 - **Kroki:** dwie karty otwierają ten sam kontener; A zapisuje datę, B zapisuje uwagi ze starym stanem →
   zmiana A może zostać nadpisana bez ostrzeżenia (zależnie od tego, czy front wysyła pełny obiekt).

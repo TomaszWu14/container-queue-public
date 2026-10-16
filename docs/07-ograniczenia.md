@@ -34,7 +34,7 @@ dokumentów ani przy przekroczonym limicie magazynu, nie ma publicznego linku dl
 | P-10 | Wybór zwycięskiej oferty nie przypisuje spedytora do kontenera | potrzebny osobny ręczny krok | `routers/quotes_offers.py:173-228` |
 | P-11 | Zdarzenia do n8n ignorują odpowiedzi 4xx/5xx | nieudane zdarzenie znika bez śladu | `notifications.py:263` |
 | P-12 | Maile powiadomień (SMTP) bez ponawiania; bez skonfigurowanego serwera pomijane po cichu | utracone powiadomienia | `notifications.py:121-144` |
-| P-13 | Edycje równoległe statusu, odprawy i zleceń transportowych bez kontroli wersji | ostatni zapis nadpisuje poprzedni bez ostrzeżenia | `routers/containers_write.py:243-253`, `routers/customs.py:434` |
+| P-13 | **Naprawione w PR #18 (US-003, czeka na scalenie); formularz kontenera był już chroniony (DB-005).** Edycje równoległe statusu, odprawy i zleceń transportowych bez kontroli wersji | ostatni zapis nadpisuje poprzedni bez ostrzeżenia | `routers/containers_write.py:243-253`, `routers/customs.py:434` |
 | P-14 | Dokumentacja projektu częściowo nieaktualna (sloty, ważność linków, liczba etapów) | czytelnik dostaje sprzeczne reguły | patrz niżej |
 
 Rejestr błędów zgłoszonych wcześniej: [`BUGS-FOUND.md`](../BUGS-FOUND.md); długi UX: [`UX_AUDIT.md`](../UX_AUDIT.md).

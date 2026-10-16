@@ -50,6 +50,10 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-003 · [DEV][SEC] Ochrona przed cichym nadpisaniem przy równoczesnej edycji
 - **Rozmiar:** M · **Źródło:** R-02, B-004, P-13 · **Wymagania:** FR-006 (historia), NFR-013
+- **Stan (2026-10-16):** zrealizowane w PR #18; odbiór [BA] ✅, przegląd [SEC] ✅. Rozpoznanie: formularz kontenera
+  i panel kierowcy były już chronione (`expected_updated_at`, audyt DB-005). Dołożono przejścia statusu kontenera,
+  odprawy i zlecenia transportowego — oczekiwany status zamiast `updated_at` (ADR-0003). Zmiany masowe
+  i import Excela świadomie bez kontroli (ADR-0003, konsekwencje).
 - **Jako** logistyk **chcę**, aby zapis kontenera, statusu, odprawy albo zlecenia, którego ktoś zmienił
   w międzyczasie, został odrzucony z czytelnym komunikatem, **aby** cudza zmiana nie znikała bez śladu.
 - **Kryteria akceptacji**

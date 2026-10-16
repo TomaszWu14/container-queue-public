@@ -406,8 +406,9 @@ export function StatusModal({ container, warehouseRole, onSaved, onClose }: {
 
   const doSubmit = (finalNote: string) => run(async () => {
     try {
+      // US-003: status widziany w oknie — inny w bazie = 409 „ktoś zmienił w międzyczasie”
       const saved = await api.post<Container>(`/api/containers/${container.id}/status`,
-        { status, note: finalNote })
+        { status, note: finalNote, expected_status: container.status })
       if (saved?.docs_warning) showToast(saved.docs_warning, 'error')   // braki dokumentów: nie blokada
       onSaved(saved)
       onClose()

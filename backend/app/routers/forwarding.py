@@ -15,6 +15,7 @@ from ..audit import record, record_changes
 from ..config import settings
 from ..database import get_db
 from ..date_pl import date_pl
+from ..optimistic import claim_expected_state
 from ..deps import (
     Editors as editors,
 )
@@ -208,6 +209,7 @@ def _check_order_flow(order: TransportOrder, target: TransportOrderStatus, user:
 def change_order_status(order_id: int, body: TransportOrderStatusIn,
                         db: Session = Depends(get_db), user: User = viewer):
     order = get_order_checked(db, order_id, user)
+    claim_expected_state(db, TransportOrder, order.id, TransportOrder.status, body.expected_status)
     if user.role in ORDER_CORRECTIONS.get((order.status, body.status), set()):
         if not body.reason.strip():
             raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,

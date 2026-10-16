@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { api, errorMessage } from './api'
 import { useConfirm } from './ConfirmDialog'
@@ -22,6 +22,8 @@ export function useTransportOrderActions({ role, onDone, onBehalf = false }: {
   const { prompt } = useConfirm()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  // US-003: status zlecenia widziany przy przycisku — inny w bazie = 409 „ktoś zmienił w międzyczasie”
+  const seen = useRef<Record<number, TransportOrderStatus>>({})
   const [rejectFor, setRejectFor] = useState<number | null>(null)
   const [reason, setReason] = useState('')
   const isForwarder = role === 'forwarder'
@@ -32,7 +34,8 @@ export function useTransportOrderActions({ role, onDone, onBehalf = false }: {
     setError('')
     setBusy(true)
     try {
-      await api.post(`/api/transport-orders/${orderId}/status`, { status, reason: statusReason })
+      await api.post(`/api/transport-orders/${orderId}/status`,
+        { status, reason: statusReason, expected_status: seen.current[orderId] })
       setRejectFor(null)
       setReason('')
       onDone()
@@ -60,6 +63,7 @@ export function useTransportOrderActions({ role, onDone, onBehalf = false }: {
   }
 
   const actions = (order: TransportOrder): ReactNode => {
+    seen.current[order.id] = order.status
     if (isForwarder) {
       if (order.status === 'WYSTAWIONE') {
         return (

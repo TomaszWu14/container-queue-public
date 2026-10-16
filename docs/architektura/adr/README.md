@@ -31,9 +31,9 @@ D1–D12 w [`../../06-decyzje.md`](../../06-decyzje.md) mają ten sam format (ko
 |---|---|---|
 | [ADR-0001](0001-indeksy-dokumentacji-zamiast-przenoszenia.md) | Nowa struktura `docs/` jako indeksy do istniejących dokumentów | przyjęta warunkowo (Z-012, do potwierdzenia PO) |
 | [ADR-0002](0002-proces-zespolowy-ba-dev-sec.md) | Proces zespołowy BA / DEV / SEC z Product Ownerem | przyjęta |
+| [ADR-0003](0003-oczekiwany-status-przy-zmianie-statusu.md) | Oczekiwany status przy przejściach statusu (ochrona przed cichym nadpisaniem) | przyjęta |
 
 ## Decyzje czekające na ADR (z backlogu)
 
-- US-003: mechanizm ochrony przed cichym nadpisaniem (kolumna `version` vs `updated_at`/`If-Match`).
 - US-011: czy spójność spółki wymuszać także w bazie (CHECK / FK złożone / RLS) — R-01.
 - US-015: jedna wersja Pythona (3.12 vs 3.14) i Node.

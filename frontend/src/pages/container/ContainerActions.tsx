@@ -53,7 +53,7 @@ export default function ContainerActions({ container, setContainer, onStatus, on
     setMarkingUnloaded(true)
     try {
       const saved = await api.post<Container>(`/api/containers/${container.id}/status`,
-        { status: 'DOSTARCZONY', note })
+        { status: 'DOSTARCZONY', note, expected_status: container.status })   // US-003
       setContainer(saved)
       showToast(saved?.docs_warning || t('toastStatusChanged'), saved?.docs_warning ? 'error' : undefined)
     } catch (err) {

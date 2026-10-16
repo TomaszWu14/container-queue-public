@@ -142,6 +142,8 @@ class ContainerUpdate(BaseModel):
 class StatusChange(BaseModel):
     status: ContainerStatus
     note: str = ""
+    # US-003 (ADR-0003): status widziany przez klienta; inny w bazie = 409 state_changed
+    expected_status: ContainerStatus | None = None
 
 
 # powody flagi „specjalny" (dropdown śledzenia) — wspólny kontrakt FE/BE; definicja w

@@ -28,6 +28,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- **Zmiana statusu na nieaktualnym widoku nie nadpisuje cudzej zmiany** (US-003, R-02, P-13, ADR-0003). Status
+  kontenera, odprawy i zlecenia transportowego: panel wysyła status, który widział; inny w bazie = 409
+  `state_changed` z aktualną wartością. Niezwiązane zmiany (notatka, tracking) nie dają konfliktu. Pole
+  opcjonalne — importy, n8n i zmiany masowe działają jak dotąd. Formularz kontenera był chroniony już wcześniej.
 - **Formularz awizacji nie pokazuje sukcesu, gdy zapis się nie udał** (US-009, P-01). Dotąd każdy błąd 409
   (poza zajętym slotem) w etapie 1, a każdy 409 w etapie 2 (dane kierowców) kończył się ekranem
   „odpowiedź zapisana”. Teraz sukces tylko po 2xx; „już odpowiedziano” ma osobny ekran; każda inna odmowa
