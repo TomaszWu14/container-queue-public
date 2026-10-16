@@ -37,6 +37,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- **Demo: „Invalid host header”** — `ALLOWED_HOSTS` wpisany na stałe w `docker-compose.demo.yml`
+  (`container.queue.twapp.pl`, `127.0.0.1`, `localhost`); błędna wartość w panelu Coolify blokowała całe demo.
 - Obraz aplikacji nie miał `age` ani `curl`: szyfrowanie kopii (`BACKUP_AGE_RECIPIENT`) kończyło się błędem,
   a heartbeat kopii (`BACKUP_PING_URL`) nie dochodził. Oba programy są teraz w `Dockerfile.coolify`.
 - **Zmiana statusu na nieaktualnym widoku nie nadpisuje cudzej zmiany** (US-003, R-02, P-13, ADR-0003). Status
