@@ -17,6 +17,7 @@ from tests.test_idor_scoping import _mk
 from tests.test_invoice_conformity import _container
 from tests.test_invoices_checks import CI, PL, _setup
 from tests.test_sad_parse import _pdf_with_text
+from tests.conftest import xlsx_bytes
 
 
 def _texts(path) -> list[str]:
@@ -66,7 +67,7 @@ def test_upload_splits_types_and_waits(client, admin_headers, db_session, monkey
     _, _, cid = _start(client, admin_headers, db_session, monkeypatch, tmp_path)
     bl = _text_pdf(tmp_path, f"BILL OF LADING SHIPPED ON BOARD\n{OWN} 40HQ")
     resp = _post(client, admin_headers, cid, {
-        "cipl.pdf": _cipl(tmp_path), "kalk.xlsx": b"x1",
+        "cipl.pdf": _cipl(tmp_path), "kalk.xlsx": xlsx_bytes("x1"),
         "folder.zip": _zip({"4500/bl.pdf": bl, "4500/skrypt.exe": b"MZ"})})
     assert resp.status_code == 201, resp.text
     body = resp.json()
@@ -90,9 +91,9 @@ def test_upload_splits_types_and_waits(client, admin_headers, db_session, monkey
 def test_duplicates_in_batch_and_in_container(client, admin_headers, db_session, monkeypatch, tmp_path):
     _, _, cid = _start(client, admin_headers, db_session, monkeypatch, tmp_path)
     assert client.post(f"/api/containers/{cid}/attachments", headers=admin_headers,
-                       files={"file": ("stary.xlsx", io.BytesIO(b"old"))}).status_code == 201
-    body = _post(client, admin_headers, cid, {"a.xlsx": b"same", "b.xlsx": b"same",
-                                              "kopia.xlsx": b"old"}).json()
+                       files={"file": ("stary.xlsx", io.BytesIO(xlsx_bytes("old")))}).status_code == 201
+    body = _post(client, admin_headers, cid, {"a.xlsx": xlsx_bytes("same"), "b.xlsx": xlsx_bytes("same"),
+                                              "kopia.xlsx": xlsx_bytes("old")}).json()
     gates = {i["original_name"]: (i["gate_status"], i["gate_message"]) for i in body["items"]}
     assert gates["a.xlsx"] == ("ok", "")
     assert gates["b.xlsx"] == ("duplicate", "powtórzony w tym wgraniu")
@@ -129,8 +130,8 @@ def test_conflict_needs_retarget(client, admin_headers, db_session, monkeypatch,
 
 def test_patch_and_confirm_writes_to_delivery(client, admin_headers, db_session, monkeypatch, tmp_path):
     _, _, cid = _start(client, admin_headers, db_session, monkeypatch, tmp_path)
-    body = _post(client, admin_headers, cid, {"cipl.pdf": _cipl(tmp_path), "note.xlsx": b"n1",
-                                              "zbedny.xlsx": b"n2"}).json()
+    body = _post(client, admin_headers, cid, {"cipl.pdf": _cipl(tmp_path), "note.xlsx": xlsx_bytes("n1"),
+                                              "zbedny.xlsx": xlsx_bytes("n2")}).json()
     items = {i["original_name"]: i for i in body["items"]}
     resp = client.patch(f"/api/intake/items/{items['note.xlsx']['id']}", headers=admin_headers,
                         json={"doc_type": "BL"})
@@ -158,8 +159,8 @@ def test_patch_and_confirm_writes_to_delivery(client, admin_headers, db_session,
 
 def test_discard_removes_files(client, admin_headers, db_session, monkeypatch, tmp_path):
     _, _, cid = _start(client, admin_headers, db_session, monkeypatch, tmp_path)
-    keep = _post(client, admin_headers, cid, {"a.xlsx": b"a"}).json()
-    drop = _post(client, admin_headers, cid, {"b.xlsx": b"b"}).json()
+    keep = _post(client, admin_headers, cid, {"a.xlsx": xlsx_bytes("a")}).json()
+    drop = _post(client, admin_headers, cid, {"b.xlsx": xlsx_bytes("b")}).json()
     assert client.post(f"/api/intake/{drop['id']}/discard", headers=admin_headers).status_code == 204
     assert db_session.get(IntakeBatch, drop["id"]).status == "discarded"
     assert len(_intake_files(tmp_path)) == 1
@@ -171,7 +172,7 @@ def test_discard_removes_files(client, admin_headers, db_session, monkeypatch, t
 
 def test_other_company_and_forwarder_scope(client, admin_headers, db_session, monkeypatch, tmp_path):
     _, _, cid = _start(client, admin_headers, db_session, monkeypatch, tmp_path)
-    body = _post(client, admin_headers, cid, {"a.xlsx": b"a"}).json()
+    body = _post(client, admin_headers, cid, {"a.xlsx": xlsx_bytes("a")}).json()
     item_id = body["items"][0]["id"]
     stranger = _mk(db_session, "companies", name="Obca", code="OBC")
     db_session.commit()

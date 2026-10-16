@@ -58,6 +58,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Wgrywane pliki sprawdzane po zawartości** (US-004, R-03): `faktura.pdf`, który nie jest PDF-em (albo
+  „Excel”, który nie jest Excelem), jest odrzucany z czytelnym powodem i nic nie zostaje zapisane. Dotyczy
+  załączników, faktur transportowych, archiwów ZIP i poczty przychodzącej. Bez weryfikacji zostają .doc, .xls,
+  .msg i .eml (brak pewnej sygnatury).
 - **Produkcja odmawia startu, gdy `DATABASE_URL` nie wskazuje PostgreSQL** (US-001, R-04, B-005). Dotąd brak
   zmiennej uruchamiał pustą bazę SQLite w kontenerze, bez kopii. **Przed wdrożeniem:** sprawdź `DATABASE_URL`
   w Coolify (`docker-compose.coolify.yml` i `docker-compose.demo.yml` ustawiają go poprawnie).

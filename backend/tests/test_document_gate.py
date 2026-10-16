@@ -6,7 +6,7 @@ import io
 from app.config import settings
 from app.document_gate import CONFLICT, OK, UNCERTAIN, UNREADABLE, check_pdf
 from app.models import Container
-from tests.conftest import pdf_bytes
+from tests.conftest import pdf_bytes, xlsx_bytes
 from tests.test_invoice_conformity import _container
 from tests.test_invoices_checks import _setup
 from tests.test_sad_parse import _pdf_with_text
@@ -60,10 +60,10 @@ def test_upload_gate_and_duplicates(client, admin_headers, db_session, monkeypat
     assert sorted(f["filename"] for f in files) == ["bl.pdf", "skan.pdf"]
     # inne pliki niż PDF: bez bramki treści, ale dubel nadal wykrywany
     xls = client.post(f"/api/containers/{cid}/attachments", headers=admin_headers,
-                      files={"file": ("k.xlsx", io.BytesIO(b"xlsx-1"), "application/octet-stream")})
+                      files={"file": ("k.xlsx", io.BytesIO(xlsx_bytes("1")), "application/octet-stream")})
     assert xls.status_code == 201
     assert client.post(f"/api/containers/{cid}/attachments", headers=admin_headers,
-                       files={"file": ("k2.xlsx", io.BytesIO(b"xlsx-1"), "application/octet-stream")}
+                       files={"file": ("k2.xlsx", io.BytesIO(xlsx_bytes("1")), "application/octet-stream")}
                        ).status_code == 409
 
 

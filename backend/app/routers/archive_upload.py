@@ -16,6 +16,7 @@ from ..deps import forwarder_may_see
 from ..document_gate import CONFLICT, UNREADABLE, check_pdf, digest, duplicate_reason
 from ..database import get_db
 from ..deps import NonWarehouseViewers as non_warehouse
+from ..file_signatures import content_matches
 from ..models import Attachment, Role, User
 from ..notifications import container_watchers, notify
 from .containers import get_container_checked
@@ -66,10 +67,15 @@ def unpack(content: bytes) -> tuple[str, list[tuple[str, bytes]], list[str]]:
             else:
                 try:
                     with archive.open(info) as fh:
-                        files.append((name, fh.read(max_bytes)))   # nie więcej niż limit
+                        data = fh.read(max_bytes)   # nie więcej niż limit
                 except (RuntimeError, NotImplementedError, zipfile.BadZipFile, EOFError, zlib.error):
                     # hasło, nieobsługiwana kompresja (deflate64), zła suma CRC — §4 pkt 5
                     skipped.append(f"{name} (zaszyfrowany albo uszkodzony w archiwum)")
+                    continue
+                if content_matches(ext, data):   # US-004: zawartość zgodna z rozszerzeniem
+                    files.append((name, data))
+                else:
+                    skipped.append(f"{name} (zawartość nie zgadza się z rozszerzeniem)")
     return folder, files, skipped
 
 

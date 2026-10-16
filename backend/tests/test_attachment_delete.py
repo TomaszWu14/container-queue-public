@@ -7,12 +7,13 @@ from app.config import settings
 from app.models import AuditLog, InvoiceBatch
 from tests.test_invoice_conformity import _container
 from tests.test_invoices_checks import _setup
-from tests.conftest import pdf_bytes
+from tests.conftest import pdf_bytes, xlsx_bytes
 
 
 def _attach(client, headers, cid, name="zly.pdf"):
     resp = client.post(f"/api/containers/{cid}/attachments", headers=headers,
-                       files={"file": (name, io.BytesIO(pdf_bytes(name)), "application/pdf")})
+                       files={"file": (name, io.BytesIO(xlsx_bytes(name) if name.endswith(".xlsx") else pdf_bytes(name)),
+                                         "application/pdf")})
     assert resp.status_code == 201, resp.text
     return resp.json()["id"]
 

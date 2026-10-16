@@ -47,7 +47,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-001 prod wymaga PostgreSQL | NFR-011, SR-009, R-04 | `test_config_failfast.py` (12 przypadków), `test_prod_without_https.py` | #18 | zrealizowane, czeka na merge (Z-007) |
 | US-002 osobny klucz szyfrowania | SR-009, R-05 | `test_config_failfast.py`, testy `crypto` | — | do akceptacji PO |
 | US-003 ochrona przed cichym nadpisaniem | FR-006, NFR-013, R-02, ADR-0003 | `test_status_lost_update.py`, `test_container_lost_update.py`, `status.guard.dom.test.tsx`, `transportOrders.dom.test.tsx` | #18 | zrealizowane, czeka na merge |
-| US-004 załączniki po zawartości | SR-007, R-03 | `test_upload_limits.py` | — | do akceptacji PO |
+| US-004 załączniki po zawartości | SR-007, R-03 | `test_file_signatures.py` (31 przypadków) | — | zrealizowane, czeka na PR |
 | US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_avizo_public.py` | — | do akceptacji PO |
 | US-006 defusedxml, ZIP | SR-006, R-07 | `test_imports_malicious.py`, `test_archive_upload.py` | — | do akceptacji PO |
 | US-007 bramki CI | SR-013, R-08 | przebieg `security.yml` | #18 (`dependabot.yml`) | częściowo |

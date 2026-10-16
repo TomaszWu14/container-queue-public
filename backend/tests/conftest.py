@@ -127,6 +127,18 @@ def pdf_bytes(tag: str = "") -> bytes:
     return buf.getvalue()
 
 
+def xlsx_bytes(tag: str = "") -> bytes:
+    """Minimalny prawdziwy .xlsx (ZIP z `[Content_Types].xml`) — wgranie sprawdza zawartość (US-004).
+    Ten sam `tag` = te same bajty (stała data w ZIP-ie), więc testy dubli działają jak dotąd."""
+    import io as _io
+    import zipfile as _zipfile
+    buf = _io.BytesIO()
+    with _zipfile.ZipFile(buf, "w") as archive:
+        for name, data in (("[Content_Types].xml", '<?xml version="1.0"?><Types/>'), ("xl/tag.txt", tag)):
+            archive.writestr(_zipfile.ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0)), data)
+    return buf.getvalue()
+
+
 def login(client, username="admin", password="admin123") -> dict:
     response = client.post("/api/auth/login",
                            data={"username": username, "password": password})
