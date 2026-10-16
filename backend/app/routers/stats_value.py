@@ -12,8 +12,9 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..deps import Editors as editors
+from ..deps import NonWarehouseViewers as non_warehouse
 from ..deps import scope_containers
-from ..models import AuditLog, Container, Notification, User, utcnow
+from ..models import AuditLog, Container, Notification, User, today_pl, utcnow
 
 # sub-router bez prefiksu — podpinany w routers/containers.py (prefiks /api)
 router = APIRouter()
@@ -58,3 +59,13 @@ def value_panel(days: int = Query(30, ge=7, le=365), db: Session = Depends(get_d
         "docs_in_flow": len(in_flow), "docs_complete": complete,
         "demurrage_warned": warned,
     }
+
+
+@router.get("/stats/demurrage-risk")
+def demurrage_risk(limit: int = Query(20, ge=1, le=100), db: Session = Depends(get_db),
+                   user: User = non_warehouse) -> list[dict]:
+    """Pomysł 10 PO: kontenery z ryzykiem kary za przestój i powodem (zakres jak pulpit)."""
+    from ..demurrage_risk import demurrage_risks
+    open_containers = db.scalars(scope_containers(select(Container).where(Container.open_in_queue()),
+                                                  user)).all()
+    return demurrage_risks(db, open_containers, today_pl())[:limit]

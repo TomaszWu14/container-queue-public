@@ -8,6 +8,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Ryzyko kary za przestój z wyjaśnieniem** (pomysł 10 PO): karta na pulpicie mówi, dlaczego grozi kara i co
+  zrobić — dostawa zaplanowana po końcu wolnych dni („3 dni kary, zaplanuj najpóźniej na …”) albo brak terminu
+  tuż przed końcem wolnych dni. Jawne reguły (`backend/app/demurrage_risk.py`), bez kwot (stawek armatorów nie
+  przechowujemy); `GET /api/stats/demurrage-risk`.
 - **Kopia zapasowa poza serwer** (US-013, R-10): po każdej kopii zaszyfrowane pliki trafiają do magazynu zgodnego
   z S3 (`BACKUP_OFFSITE_*`, `docs/BACKUPY.md`). Jawna kopia nigdy nie wychodzi z serwera; błąd wysyłki = alert
   (brak heartbeatu). Włączenie: magazyn + 4 zmienne w Coolify.

@@ -16,7 +16,8 @@ export default function ValueCard() {
   const t = useT()
   const [v, setV] = useState<ValueStats | null>(null)
   useEffect(() => {
-    api.get<ValueStats>('/api/stats/value').then(setV).catch(() => setV(null))
+    api.get<ValueStats>('/api/stats/value')
+      .then(r => setV(r && typeof r.changes === 'number' ? r : null)).catch(() => setV(null))
   }, [])
   if (!v) return null
   const onTime = pct(v.delivered_on_time, v.delivered)
