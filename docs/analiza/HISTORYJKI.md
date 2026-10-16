@@ -208,7 +208,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - **Rozmiar:** S · **Źródło:** R-10 · **Wymagania:** NFR-002, SR-014
 - Kopia `age` wysyłana na drugie miejsce (np. S3/B2) po każdym backupie; odtworzenie przećwiczone wg RUNBOOK
   raz na kwartał z wpisem w rejestrze.
-- **Stan:** kod gotowy (PR #27, „rób 3a” PO 2026-10-16). Kryteria: zaszyfrowane pliki z każdego uruchomienia idą
+- **Stan:** kod gotowy (PR #28, „rób 3a” PO 2026-10-16). Kryteria: zaszyfrowane pliki z każdego uruchomienia idą
   do magazynu S3 (`BACKUP_OFFSITE_*`); bez klucza age odmowa wysyłki; błąd wysyłki = błąd skryptu i brak
   heartbeatu; klucze poza argumentami procesu. Obraz dostał `age` i `curl` (wcześniej ich brakowało:
   szyfrowanie i heartbeat nie działały). **Do zrobienia przez PO:** magazyn, klucz tylko do zapisu, 4 zmienne

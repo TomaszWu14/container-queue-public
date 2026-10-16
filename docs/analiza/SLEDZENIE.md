@@ -56,7 +56,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-010 dokumentacja po audycie | — | — | #18 (`SECURITY.md`) | częściowo |
 | US-011 strażnik izolacji | FR-022…024, SR-005, R-01 | test statyczny tras | — | do akceptacji PO |
 | US-012 RODO 1.0 | SR-011, R-09 | — | — | czeka na Z-009 |
-| US-013 kopia off-site | NFR-002, SR-014, R-10 | `test_backup_offsite.py` (4 testy), `test_backup_scripts.py`; ćwiczenie odtworzenia po włączeniu | #27 | kod gotowy; włączenie w Coolify po stronie PO |
+| US-013 kopia off-site | NFR-002, SR-014, R-10 | `test_backup_offsite.py` (4 testy), `test_backup_scripts.py`; ćwiczenie odtworzenia po włączeniu | #28 | kod gotowy; włączenie w Coolify po stronie PO |
 | US-014 mierniki (+ panel, pomysł 6) | M-1…M-7 | — | — | czeka na Z-004 |
 | US-015 jedna wersja Python/Node | NFR-011 | test zgodności w CI | — | do akceptacji PO |
 | US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06 | testy walidacji | — | do akceptacji PO |
