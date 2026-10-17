@@ -39,7 +39,7 @@ export type SupplierRow = { id: number; name: string; country: string; address: 
 export type ContainerPortPos = { name: string; cc: string; lon: number; lat: number }
 
 // Kolory spółek i statusów na mapie = tokeny z 00-tokens.css (audyt S6: jedno źródło, bez kopii w TS).
-export const MAP_COMPANIES = ['ACME', 'BOREALIS', 'COBALT', 'PT', 'DLT', 'TRANZYT']
+export const MAP_COMPANIES = ['ACME', 'BETA', 'GAMMA', 'DELTA', 'MAG-1', 'TRANZYT']
 // karta statku to panel w motywie strony z białym tekstem → wypełnienie -fill (to samo w obu motywach)
 export const COMPANY_FILL: Record<string, string> = Object.fromEntries(
   MAP_COMPANIES.map(c => [c, `var(--co-${c.toLowerCase()}-fill)`]))

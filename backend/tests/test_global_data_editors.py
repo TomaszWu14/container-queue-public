@@ -1,4 +1,4 @@
-"""Audyt ACL-003: dane WSPÓLNE grupy (PAZ, cele zapasu, stany DLT, MARM, porty kontenerowe)
+"""Audyt ACL-003: dane WSPÓLNE grupy (PAZ, cele zapasu, stany MAG-1, MARM, porty kontenerowe)
 zmienia admin, logistyka grupowa (view_all) albo logistyka spółki-właściciela materiałów
 (SUPPLIER_COMPANY_CODES, np. Acme). Logistyk jednej spółki-klienta — tylko odczyt (403)."""
 import pytest
@@ -28,7 +28,7 @@ def paz_id(client, admin_headers):
 
 
 def test_single_company_logistics_cannot_change_global_data(client, admin_headers, paz_id):
-    h = _logistics(client, admin_headers, "log.borealis", "BOREALIS")
+    h = _logistics(client, admin_headers, "log.beta", "BETA")
     assert client.get("/api/paz", headers=h).status_code == 200             # odczyt zostaje
     assert client.delete(f"/api/paz/{paz_id}", headers=h).status_code == 403
     assert client.post("/api/paz", headers=h,
@@ -37,7 +37,7 @@ def test_single_company_logistics_cannot_change_global_data(client, admin_header
                        json={"material_no": "M1", "days": 5}).status_code == 403
     files = {"file": ("m.xlsx", MARM, XLSX)}
     assert client.post("/api/import/material-units", headers=h, files=files).status_code == 403
-    assert client.post("/api/import/dlt-stock", headers=h, files=files).status_code == 403
+    assert client.post("/api/import/mag1-stock", headers=h, files=files).status_code == 403
     assert client.post("/api/import/container-ports", headers=h,
                        files={"file": ("p.tsv", CPORTS, "text/plain")}).status_code == 403
     # wspólny dropzone rozpoznaje MARM/porty — ta sama reguła

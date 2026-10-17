@@ -8,7 +8,7 @@ from app.routers.imports import reconcile_queue
 
 
 def _company(db):
-    return db.scalar(select(Company).where(Company.code == "BOREALIS"))
+    return db.scalar(select(Company).where(Company.code == "BETA"))
 
 
 def _raw(no, eta_day, customs="", notify_day=None):

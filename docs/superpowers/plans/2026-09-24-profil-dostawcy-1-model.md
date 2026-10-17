@@ -72,14 +72,14 @@ def test_models_roundtrip(client, admin_headers):
         db.add(p)
         db.flush()
         db.add(SupplierDocSample(profile_id=p.id, filename="a.pdf", stored_path="x/a.pdf"))
-        db.add(CustomsAgency(name="Delta Brokers", export_format="symbols",
+        db.add(CustomsAgency(name="Omega Brokers", export_format="symbols",
                              export_params={"IDZestawu": 106}))
         db.add(Material(ref_code="145851", suppl_unit="pary", suppl_factor=0.5))
         db.commit()
         got = db.get(SupplierDocProfile, p.id)
         assert (got.status, got.currency, got.tol_amount_pct, got.tol_qty_pct) == ("draft", "", 0.5, 0.0)
         assert got.ci_map == {"qty": ["Quantity"]} and len(got.samples) == 1
-        assert db.query(CustomsAgency).filter_by(name="Delta Brokers").one().export_params == {"IDZestawu": 106}
+        assert db.query(CustomsAgency).filter_by(name="Omega Brokers").one().export_params == {"IDZestawu": 106}
         assert db.get(Supplier, sup["id"]).doc_profile.id == p.id
 ```
 
@@ -441,7 +441,7 @@ git commit -m "feat(dostawcy): API profilu dokumentów dostawcy (GET/PUT, walida
 ```python
 def test_agency_export_format_and_material_suppl_unit(client, admin_headers):
     r = client.post("/api/customs-agencies", headers=admin_headers,
-                    json={"name": "Delta Brokers", "export_format": "symbols", "export_params": {"IDZestawu": 106}})
+                    json={"name": "Omega Brokers", "export_format": "symbols", "export_params": {"IDZestawu": 106}})
     assert r.status_code == 201, r.text
     assert (r.json()["export_format"], r.json()["export_params"]) == ("symbols", {"IDZestawu": 106})
     assert client.post("/api/customs-agencies", headers=admin_headers,

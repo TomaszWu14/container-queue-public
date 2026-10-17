@@ -19,7 +19,7 @@ export function useQueryParam(key: string, fallback = ''): [string, (v: string) 
 }
 
 // Moduły (zakładki spółek) wybieralne przez URL. „main" to fallback wielospółkowy.
-export const SELECTABLE_MODULES = ['acme', 'dlt', 'borealis', 'cobalt', 'pt', 'analysis', 'main']
+export const SELECTABLE_MODULES = ['acme', 'mag1', 'beta', 'gamma', 'delta', 'analysis', 'main']
 
 // Wybór spółki z URL z egzekwowaniem uprawnień: tylko konta widzące wszystkie spółki
 // (seesAll) mogą przełączać spółkę adresem; pozostałe są zablokowane na własnej.

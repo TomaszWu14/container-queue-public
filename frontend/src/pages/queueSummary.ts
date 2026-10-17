@@ -10,15 +10,16 @@ import type { DayRow } from './queueRows'
 // z sumy i kafle nie zgadzałyby się z licznikiem dnia.
 export const NO_WAREHOUSE = '—'
 
-// Nazwa magazynu bywa zapisana jako „DLT Centralny" czy „ACME DLT", więc dopasowujemy
-// po słowie (jak kolor magazynu w kolejce). DLT sprawdzamy pierwszy: „ACME DLT" to DLT.
-const KNOWN_WAREHOUSES = ['DLT', 'ACME', 'BOREALIS', 'COBALTSPORT', 'IBERIA']
+// Nazwa magazynu bywa zapisana jako „MAG-1 Centralny" czy „ACME MAG-1", więc dopasowujemy
+// po słowie (jak kolor magazynu w kolejce). MAG-1 sprawdzamy pierwszy: „ACME MAG-1" to MAG-1.
+const KNOWN_WAREHOUSES = ['MAG-1', 'ACME', 'BETA', 'GAMMA', 'DELTA']
 
 export function warehouseKey(name: string | null): string {
   const raw = (name ?? '').trim()
   if (raw === '') return NO_WAREHOUSE
   const upper = raw.toUpperCase()
-  const words = upper.split(/[^A-Z0-9]+/).filter(Boolean)
+  // myślnik należy do słowa — inaczej „MAG-1” rozpadłoby się na „MAG” i „1”
+  const words = upper.split(/[^A-Z0-9-]+/).filter(Boolean)
   for (const known of KNOWN_WAREHOUSES) {
     if (words.includes(known)) return known
   }
@@ -29,7 +30,7 @@ export function warehouseKey(name: string | null): string {
 
 // klasa CSS kafla/pigułki magazynu — kolor tylko dla znanych magazynów, reszta neutralna
 export function warehouseClass(key: string): string {
-  return KNOWN_WAREHOUSES.includes(key) ? `wh-${key.toLowerCase()}` : 'wh-other'
+  return KNOWN_WAREHOUSES.includes(key) ? `wh-${key.toLowerCase().replace('-', '')}` : 'wh-other'
 }
 
 export function countByWarehouse(items: Container[]): Map<string, number> {

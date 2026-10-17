@@ -37,7 +37,7 @@ NOTIFY_KINDS = [
     "avizo", "carrier", "complaint", "complaint_deadline", "complaint_draft",
     "complaint_reminder", "customs", "customs-delay", "daily_digest", "demurrage",
     "dest_port", "docs-missing", "driver", "eta", "eta_drift", "eta_overdue",
-    "excel-sync", "file", "forecast-overload", "freight_approval", "freight_decision", "gate", "dlt", "mention", "message",
+    "excel-sync", "file", "forecast-overload", "freight_approval", "freight_decision", "gate", "mag1", "mention", "message",
     "order", "pallet_urgent", "planned", "port_congestion", "status", "system",
     # "system-error" (applog.py, dziennik serwera): admini, TYLKO dzwonek — pisany
     # bezpośrednio jako wiersz Notification (bez notify()), więc reguły e-mail/Teams
@@ -464,7 +464,7 @@ from .notification_alerts import (  # noqa: E402,F401
     demurrage_window,
 )
 from .notification_digests import (  # noqa: E402,F401
-    _dlt_low_stock_lines,
+    _mag1_low_stock_lines,
     check_daily_digest_alerts,
     check_forecast_alerts,
     check_pallet_urgent_alerts,

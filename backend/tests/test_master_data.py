@@ -30,14 +30,14 @@ def _seed_two_companies(client):
     db = SessionLocal()
     try:
         acme = db.scalar(select(Company).where(Company.code == "ACME"))
-        borealis = db.scalar(select(Company).where(Company.code == "BOREALIS"))
+        beta = db.scalar(select(Company).where(Company.code == "BETA"))
         _seed_po(db, acme, order_no="Z-100", supplier="Fushide",
                  etd=datetime.date(2026, 8, 1))
         _seed_po(db, acme, order_no="Z-200", supplier="Ningbo Tools",
                  etd=datetime.date(2026, 8, 5))
-        _seed_po(db, borealis, order_no="T-100", supplier="Fushide")
+        _seed_po(db, beta, order_no="T-100", supplier="Fushide")
         db.commit()
-        return acme.id, borealis.id
+        return acme.id, beta.id
     finally:
         db.close()
 

@@ -1,6 +1,6 @@
 import { ShuffleIcon } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
-// Zakładki spółek jako pigułki ≤32px z licznikiem-badge (Acme/DLT/Borealis/Cobalt/PT) + Tranzyt.
+// Zakładki spółek jako pigułki ≤32px z licznikiem-badge (Acme/MAG-1/Beta/Gamma/Delta) + Tranzyt.
 // Aktywna pigułka ma zawsze kolor akcentu (jeden akcent); spółkę pokazuje kropka --co-* (w dark jaśniejsza).
 // „Analiza rozładunków" przeszła do menu Analiza w topbarze (moduł ?spolka=analysis zostaje).
 import { HelpTip } from '../../HelpTip'
@@ -10,10 +10,10 @@ import type { Module } from './config'
 // zakładki spółek: moduł → [klucz etykiety | stała etykieta, klucz licznika]
 const COMPANY_TABS: [Module, string | null, string][] = [
   ['acme', 'moduleAcme', 'ACME'],
-  ['dlt', null, 'DLT'],
-  ['borealis', 'moduleBorealis', 'BOREALIS'],
-  ['cobalt', 'moduleYellow', 'COBALT'],
-  ['pt', 'modulePt', 'PT'],
+  ['mag1', null, 'MAG-1'],
+  ['beta', 'moduleBeta', 'BETA'],
+  ['gamma', 'moduleYellow', 'GAMMA'],
+  ['delta', 'moduleDelta', 'DELTA'],
 ]
 
 export default function CompanyTabs({ module, setModule, counts, transitCount }: {

@@ -31,7 +31,7 @@ describe('przyklejone kolumny kolejki', () => {
     expect(ent).toMatch(/\.kq-row\.active td \{ background: var\(--kq-row-active\); \}/)
     expect(ent).toMatch(/\.kq-row\.flash td \{ background: var\(--kq-row-active\);/)
     // każdy token tła: pełny hex (bez kanału alfa) albo token — pod przyklejonymi przewija się treść
-    for (const tok of ['kq-row-dlt', 'kq-row-acme', 'kq-row-dlt-hover', 'kq-row-acme-hover',
+    for (const tok of ['kq-row-mag1', 'kq-row-acme', 'kq-row-mag1-hover', 'kq-row-acme-hover',
       'kq-row-none-hover', 'kq-row-sel', 'kq-row-active']) {
       const vals = [...ent.matchAll(new RegExp(`--${tok}:\\s*([^;]+);`, 'g'))].map(m => m[1].trim())
       expect(vals, tok).toHaveLength(2)   // jasny + ciemny motyw

@@ -4,30 +4,30 @@ import type { Country } from '../../holidays'
 
 export const ACME = 'ACME'
 
-// osobne kolejki per spółka + DLT (magazyn) + wspólny fallback „main" i analiza
-export type Module = 'acme' | 'dlt' | 'borealis' | 'cobalt' | 'pt' | 'tranzyt' | 'main' | 'analysis'
+// osobne kolejki per spółka + MAG-1 (magazyn) + wspólny fallback „main" i analiza
+export type Module = 'acme' | 'mag1' | 'beta' | 'gamma' | 'delta' | 'tranzyt' | 'main' | 'analysis'
 
-// klucz modułu → kod spółki (filtr backendu). DLT to spółka Acme + filtr magazynu.
+// klucz modułu → kod spółki (filtr backendu). MAG-1 to spółka Acme + filtr magazynu.
 export const MODULE_CODE: Partial<Record<Module, string>> = {
-  acme: 'ACME', dlt: 'ACME', borealis: 'BOREALIS', cobalt: 'COBALT', pt: 'PT',
+  acme: 'ACME', mag1: 'ACME', beta: 'BETA', gamma: 'GAMMA', delta: 'DELTA',
 }
 
-// moduł DLT = kontenery spółki Acme kierowane do magazynu DLT (Acme agreguje ACME + DLT)
+// moduł MAG-1 = kontenery spółki Acme kierowane do magazynu MAG-1 (Acme agreguje ACME + MAG-1)
 // kraj kalendarza świąt w kolejce (backend: warehouse.country, domyślnie PL)
-export const moduleCountry = (m: Module): Country => m === 'pt' ? 'PT' : 'PL'
+export const moduleCountry = (m: Module): Country => m === 'delta' ? 'PT' : 'PL'
 
-export const MODULE_WAREHOUSE: Partial<Record<Module, string>> = { dlt: 'DLT' }
+export const MODULE_WAREHOUSE: Partial<Record<Module, string>> = { mag1: 'MAG-1' }
 
 // tranzyt nie jest spółką ani magazynem — to flaga na kontenerze. Pozostałe zakładki
 // wysyłają jawne transit=false, żeby tranzyty nie wpadały do zwykłych kolejek.
 export const MODULE_TRANSIT: Partial<Record<Module, boolean>> = { tranzyt: true }
 
-// magazyny rozładunku dostępne z menu kontekstowego per zakładka (Iberia — nie zmieniamy)
+// magazyny rozładunku dostępne z menu kontekstowego per zakładka (Delta — nie zmieniamy)
 export const WAREHOUSE_OPTIONS: Partial<Record<Module, string[]>> = {
-  acme: ['DLT', 'ACME'],
-  dlt: ['DLT', 'ACME'],
-  borealis: ['ACME', 'BOREALIS'],
-  cobalt: ['ACME', 'COBALTSPORT'],
+  acme: ['MAG-1', 'ACME'],
+  mag1: ['MAG-1', 'ACME'],
+  beta: ['ACME', 'BETA'],
+  gamma: ['ACME', 'GAMMA'],
 }
 
 export type RangeMode = 'all' | 'fromToday' | 'month' | 'week' | 'custom'

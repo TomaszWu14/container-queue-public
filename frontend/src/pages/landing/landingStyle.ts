@@ -68,7 +68,7 @@ export const STYLE = `
 .kolejka-landing .stage .si{stroke:var(--faint);transition:.3s;}
 .kolejka-landing .stage.active .si{stroke:var(--cyan);}
 .kolejka-landing .flowline{fill:none;stroke:var(--line2);stroke-width:2.2;}
-.kolejka-landing .flowline-dlt{fill:none;stroke:url(#kl-fg);stroke-width:2.4;stroke-linecap:round;transition:stroke-dashoffset .1s linear;}
+.kolejka-landing .flowline-mag1{fill:none;stroke:url(#kl-fg);stroke-width:2.4;stroke-linecap:round;transition:stroke-dashoffset .1s linear;}
 .kolejka-landing .gps{fill:var(--cyan);}
 .kolejka-landing .gps-ring{fill:none;stroke:var(--cyan);animation:kl-gpspulse 1.6s ease-out infinite;}
 @keyframes kl-gpspulse{0%{r:4;opacity:.8;}70%{r:16;opacity:0;}100%{opacity:0;}}

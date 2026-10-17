@@ -49,7 +49,7 @@ const DASH: {
       port_name: 'Ningbo', eta: '2026-09-14', notify_date: '2026-09-18', delay_days: 8, status: 'W_PORCIE' },
     { id: 2, container_no: 'BBB2', company_name: 'Acme', supplier_name: 'EMY',
       port_name: 'Shanghai', eta: '2026-09-16', notify_date: null, delay_days: 4, status: 'W_PORCIE' },
-    { id: 3, container_no: 'CCC3', company_name: 'Borealis', supplier_name: 'BLUESAIL',
+    { id: 3, container_no: 'CCC3', company_name: 'Beta', supplier_name: 'BLUESAIL',
       port_name: 'Qingdao', eta: '2026-09-19', notify_date: '2026-09-20', delay_days: 1, status: 'ODPRAWA' },
   ],
   action_feed: [
@@ -61,7 +61,7 @@ const DASH: {
       port_name: 'Shanghai', eta: '2026-09-16', notify_date: null, status: 'W_PORCIE',
       type: 'delayed', score: 40, urgency_days: 4, cost_eur: null, action_kind: 'container',
       summary_key: 'sigSum_delayed', summary_params: { days: 4 } },
-    { container_id: 3, container_no: 'CCC3', company_name: 'Borealis', supplier_name: 'BLUESAIL',
+    { container_id: 3, container_no: 'CCC3', company_name: 'Beta', supplier_name: 'BLUESAIL',
       port_name: 'Qingdao', eta: '2026-09-19', notify_date: '2026-09-20', status: 'ODPRAWA',
       type: 'delayed', score: 10, urgency_days: 1, cost_eur: null, action_kind: 'container',
       summary_key: 'sigSum_delayed', summary_params: { days: 1 } },
@@ -102,10 +102,10 @@ describe('Wieża kontrolna — dashboard 1a', () => {
     mount()
     await screen.findByText('CCC3')
     const select = screen.getByLabelText('company') as HTMLSelectElement
-    fireEvent.change(select, { target: { value: 'Borealis' } })
+    fireEvent.change(select, { target: { value: 'Beta' } })
     await waitFor(() => {
       expect(screen.queryByText('AAA1')).toBeNull()      // Acme zniknął
-      expect(screen.getByText('CCC3')).toBeTruthy()       // Borealis został
+      expect(screen.getByText('CCC3')).toBeTruthy()       // Beta został
     })
   })
 

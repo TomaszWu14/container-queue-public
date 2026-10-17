@@ -185,7 +185,7 @@ def _arkusz(wb: Workbook, tytul: str, kolumny: list[Kol], rekordy: Iterable[tupl
     wiersz = 1
     for rekord in rekordy:
         wiersz += 1
-        adresy = {k.klucz: f"{dlt}{wiersz}" for k, dlt in zip(kolumny, litery, strict=True) if k.klucz}
+        adresy = {k.klucz: f"{mag1}{wiersz}" for k, mag1 in zip(kolumny, litery, strict=True) if k.klucz}
         wartosci = [k.wartosc(*rekord) for k in kolumny]
         append_row(ws, [None if v == "" or isinstance(v, _Formula) else v for v in wartosci])
         for nr, (kol, value) in enumerate(zip(kolumny, wartosci, strict=True), 1):

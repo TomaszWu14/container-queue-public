@@ -18,7 +18,7 @@ const contrast = (a: string, b: string) => {
   const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p)
   return (x + 0.05) / (y + 0.05)
 }
-const BG = ['--kq-row-dlt', '--kq-row-dlt-hover', '--kq-row-acme', '--kq-row-acme-hover']
+const BG = ['--kq-row-mag1', '--kq-row-mag1-hover', '--kq-row-acme', '--kq-row-acme-hover']
 
 describe('tło wiersza kolejki wg magazynu', () => {
   it.each([['jasny', (s: string) => s], ['ciemny', dark]])('motyw %s: tekst ≥4.5:1', (_, pick) => {
@@ -33,7 +33,7 @@ describe('tło wiersza kolejki wg magazynu', () => {
     // przyklejone kolumny nie prześwitują)
     expect(rows).toMatch(/tr\.kq-row > td \{ background: var\(--kq-wh-bg, var\(--kq-row-none, var\(--panel\)\)\)/)
     expect(rows).toMatch(/\.kq-row:hover td \{ background: var\(--kq-wh-hover,/)
-    expect(lum(token(rows, '--kq-row-dlt-hover'))).toBeLessThan(lum(token(rows, '--kq-row-dlt')))
+    expect(lum(token(rows, '--kq-row-mag1-hover'))).toBeLessThan(lum(token(rows, '--kq-row-mag1')))
     expect(lum(token(rows, '--kq-row-acme-hover'))).toBeLessThan(lum(token(rows, '--kq-row-acme')))
   })
 })

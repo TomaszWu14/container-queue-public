@@ -3,9 +3,9 @@
 
 def test_on_carriage_patch_read_history(client, admin_headers):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    cobalt = next(c["id"] for c in companies if c["code"] == "COBALT")
+    gamma = next(c["id"] for c in companies if c["code"] == "GAMMA")
     created = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "ZL-DOWOZ", "company_id": cobalt, "container_count": 1, "main_mode": "SEA"})
+        "number": "ZL-DOWOZ", "company_id": gamma, "container_count": 1, "main_mode": "SEA"})
     container = created.json()["containers"][0]
     assert container["on_carriage"] is None
 

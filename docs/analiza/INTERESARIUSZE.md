@@ -11,7 +11,7 @@ Wpływ / zainteresowanie: **W** wysokie, **Ś** średnie, **N** niskie.
 | Logistyka spółki | `logistics` | mniej pracy ręcznej, jeden stan kontenera, pewne terminy | W | W | do potwierdzenia | PO |
 | Logistyka grupy („wszystkie spółki”) | `logistics` + `view_all_companies` | jeden obraz kolejki wszystkich spółek, importy SAP | W | W | do potwierdzenia | PO |
 | Magazyn własny | `warehouse` | wiedzieć, co i kiedy przyjedzie; potwierdzić rozładunek z tabletu na hali | Ś | W | do potwierdzenia | PO |
-| Magazyn zewnętrzny (DLT) | `warehouse` zawężony do magazynu; link wywołań palet | widzieć tylko swoje dostawy; wywołania palet bez logowania | Ś | Ś | do potwierdzenia | PO |
+| Magazyn zewnętrzny (MAG-1) | `warehouse` zawężony do magazynu; link wywołań palet | widzieć tylko swoje dostawy; wywołania palet bez logowania | Ś | Ś | do potwierdzenia | PO |
 | Spedytor (3 firmy) | `forwarder` albo jednorazowy link | dostać zlecenie, potwierdzić termin, podać kierowcę bez zakładania konta | Ś | Ś | do potwierdzenia | PO; e-mail z aplikacji |
 | Agencja celna | `customs` | zlecone odprawy, komplet dokumentów, raportowanie statusu | Ś | Ś | do potwierdzenia | PO |
 | Zakupy | `purchasing` | zamówienia i dokumenty handlowe | N | Ś | do potwierdzenia | PO |

@@ -13,8 +13,8 @@ Elementy nowe/w budowie oznaczone `🆕`.
 | `admin` | administrator | wszystko + panel admina |
 | `logistics` | logistyka spółki | kontenery swojej spółki (`view_all_companies` = wszystkie) |
 | `purchasing` 🆕 | zakupy | odczyt kontenerów spółki + edycja pilności (audyt) + komentarze + moduł zapotrzebowania |
-| `warehouse` | magazyn (np. DLT) | kontenery swojego magazynu; dane handlowe ukryte |
-| `forwarder` | spedycja (SPEDALFA, SPEDBETA, Delta Brokers) | tylko kontenery jej zlecone (w tym tranzyty 🆕) |
+| `warehouse` | magazyn (np. MAG-1) | kontenery swojego magazynu; dane handlowe ukryte |
+| `forwarder` | spedycja (SPEDALFA, SPEDBETA, Omega Brokers) | tylko kontenery jej zlecone (w tym tranzyty 🆕) |
 | `customs` | agencja celna | tylko zlecone odprawy; dane handlowe/PII ukryte |
 
 Egzekwowanie centralne, fail-closed: `deps.py` (`scope_containers` / `check_container_access` — cut-vertex).

@@ -219,7 +219,7 @@ identyfikatorów rewizji dająca `CycleDetected`.
 ## Poza zakresem
 
 Idzie do C i dalej: grupowe przypisywanie jednej daty wielu kontenerom, estymacja czasu rozładunku
-(ML), godziny slotów 7:15 / DLT 7:00, SMS-y i kod awizacyjny kierowcy, statusy rampowe, faktury
+(ML), godziny slotów 7:15 / MAG-1 7:00, SMS-y i kod awizacyjny kierowcy, statusy rampowe, faktury
 transportowe, ranking pilności.
 
 ## Ryzyko do obserwacji po wdrożeniu

@@ -1,11 +1,11 @@
-"""Potwierdzenia DLT: tokenowy link z maila wywołania palet.
+"""Potwierdzenia MAG-1: tokenowy link z maila wywołania palet.
 
 Flow:
   1. Wysyłka wywołania (pallets.send) generuje świeży token (stare wygaszane)
-     i dokleja link /dlt/{token} do maila do DLT.
-  2. DLT otwiera stronę: wywołanie tylko-do-odczytu (auta → pozycje → HU/ilości)
+     i dokleja link /mag1/{token} do maila do MAG-1.
+  2. MAG-1 otwiera stronę: wywołanie tylko-do-odczytu (auta → pozycje → HU/ilości)
      + przyciski „Przygotowane" i „Wysłane" (sekwencyjnie).
-  3. Przejścia statusu: sent/confirmed → przygotowane → wyslane_z_dlt; każde
+  3. Przejścia statusu: sent/confirmed → przygotowane → wyslane_z_mag1; każde
      zapisuje audyt + dzwonek (notify) dla logistyki spółki i autora wywołania.
      „Wysłane" dezaktywuje token. Bez logowania; token = SHA-256 w bazie
      (wzorzec driver_links), jednolite 404 bez rozróżniania przyczyny.
@@ -25,14 +25,14 @@ from ..notifications import company_watchers, notify
 from ..public_guards import PUBLIC, PUBLIC_POST
 from ..public_links import capped, past_hard_limit
 
-router = APIRouter(prefix="/api/dlt", tags=["dlt"])
+router = APIRouter(prefix="/api/mag1", tags=["mag1"])
 
 
 def _hash_token(raw: str) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-def create_dlt_link(db: Session, call: PalletCall) -> str:
+def create_mag1_link(db: Session, call: PalletCall) -> str:
     """Świeży token dla wywołania; stare linki wygaszane. Commit u wołającego."""
     raw = secrets.token_hex(24)
     for old in db.scalars(select(PalletCallLink).where(
@@ -70,7 +70,7 @@ def _line_out(ln) -> dict:
 
 
 @router.get("/{token}", dependencies=PUBLIC)
-def dlt_info(token: str, db: Session = Depends(get_db)):
+def mag1_info(token: str, db: Session = Depends(get_db)):
     link = _get_link(db, token)
     call = link.call
     return {
@@ -103,9 +103,9 @@ def _transition(db: Session, call: PalletCall, target: PalletCallStatus,
         author = db.get(User, call.created_by)
         if author:
             recipients = recipients + [author]
-    notify(db, recipients, kind="dlt", title=f"{title}: {call.number}",
+    notify(db, recipients, kind="mag1", title=f"{title}: {call.number}",
            exclude_user_id=user.id if user else None)
-    if target == PalletCallStatus.wyslane_z_dlt:
+    if target == PalletCallStatus.wyslane_z_mag1:
         # wywołanie zrealizowane — dezaktywuj wszystkie aktywne linki
         for lnk in db.scalars(select(PalletCallLink).where(
                 PalletCallLink.pallet_call_id == call.id,
@@ -117,21 +117,21 @@ def _transition(db: Session, call: PalletCall, target: PalletCallStatus,
 def mark_prepared(db: Session, call: PalletCall, user: User | None, note: str) -> None:
     _transition(db, call, PalletCallStatus.przygotowane,
                 (PalletCallStatus.sent, PalletCallStatus.confirmed),
-                "DLT: wywołanie przygotowane", user, note)
+                "MAG-1: wywołanie przygotowane", user, note)
 
 
 def mark_shipped(db: Session, call: PalletCall, user: User | None, note: str) -> None:
-    _transition(db, call, PalletCallStatus.wyslane_z_dlt, (PalletCallStatus.przygotowane,),
-                "DLT: wywołanie wysłane", user, note)
+    _transition(db, call, PalletCallStatus.wyslane_z_mag1, (PalletCallStatus.przygotowane,),
+                "MAG-1: wywołanie wysłane", user, note)
 
 
 @router.post("/{token}/prepared", dependencies=PUBLIC_POST)
-def dlt_prepared(token: str, db: Session = Depends(get_db)):
-    mark_prepared(db, _get_link(db, token).call, None, "strona DLT")
+def mag1_prepared(token: str, db: Session = Depends(get_db)):
+    mark_prepared(db, _get_link(db, token).call, None, "strona MAG-1")
     return {"status": "ok"}
 
 
 @router.post("/{token}/shipped", dependencies=PUBLIC_POST)
-def dlt_shipped(token: str, db: Session = Depends(get_db)):
-    mark_shipped(db, _get_link(db, token).call, None, "strona DLT")
+def mag1_shipped(token: str, db: Session = Depends(get_db)):
+    mark_shipped(db, _get_link(db, token).call, None, "strona MAG-1")
     return {"status": "ok"}

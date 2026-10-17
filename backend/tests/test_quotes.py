@@ -24,9 +24,9 @@ def _forwarder_account(client, headers, login_name, forwarder_id):
 
 
 def test_quote_full_flow(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
-    c2 = _container(client, admin_headers, "CSQU3054383", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
+    c2 = _container(client, admin_headers, "CSQU3054383", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     gamma = forwarder(client, admin_headers, "Spedgamma")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
@@ -35,7 +35,7 @@ def test_quote_full_flow(client, admin_headers):
     # zlecenie z 2 kontenerów, zaproszone 2 spedycje
     job = client.post("/api/transport-jobs", headers=admin_headers, json={
         "container_ids": [c1, c2], "forwarder_ids": [spedalfa, gamma],
-        "pickup_location": "DCT Gdańsk", "delivery_location": "DLT"}).json()
+        "pickup_location": "DCT Gdańsk", "delivery_location": "MAG-1"}).json()
     assert job["status"] == "SZKIC"
     assert job["container_count"] == 2 and len(job["quotes"]) == 2
 
@@ -78,8 +78,8 @@ def test_quote_full_flow(client, admin_headers):
 
 
 def test_forwarder_cannot_see_others_job(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "TGBU6784203", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "TGBU6784203", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     toll = forwarder(client, admin_headers, "Speddelta")["id"]
     toll_h = _forwarder_account(client, admin_headers, "sped.toll", toll)
@@ -96,8 +96,8 @@ def test_forwarder_cannot_see_others_job(client, admin_headers):
 
 
 def test_quote_deadline_kpi_and_carrier(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     gamma = forwarder(client, admin_headers, "Spedgamma")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
@@ -132,8 +132,8 @@ def test_quote_deadline_kpi_and_carrier(client, admin_headers):
 def test_quote_after_deadline_still_accepted(client, admin_headers):
     """Q36: oferty przyjmowane także po terminie (do wyboru zwycięzcy); termin
     pozostaje informacyjny w KPI, a oferta bez ceny widnieje jako WYGASLA."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "CSQU3054383", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "CSQU3054383", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     gamma = forwarder(client, admin_headers, "Spedgamma")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
@@ -156,8 +156,8 @@ def test_quote_after_deadline_still_accepted(client, admin_headers):
 
 
 def test_agent_and_shipment_number_flow(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     gamma = forwarder(client, admin_headers, "Spedgamma")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
@@ -204,8 +204,8 @@ def test_agent_and_shipment_number_flow(client, admin_headers):
 
 
 def test_change_alert_price_revision_and_cancel(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     gamma = forwarder(client, admin_headers, "Spedgamma")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
@@ -279,8 +279,8 @@ def test_change_alert_price_revision_and_cancel(client, admin_headers):
 
 def test_weighted_ranking_and_choice_reason(client, admin_headers):
     """Q39: ranking ważony (rekomendacja); Q40: wybór spoza rekomendacji wymaga powodu."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     gamma = forwarder(client, admin_headers, "Spedgamma")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
@@ -311,8 +311,8 @@ def test_weighted_ranking_and_choice_reason(client, admin_headers):
 
 def test_equal_score_needs_no_reason(client, admin_headers):
     """Ranking: dwie równorzędne oferty — wybór dowolnej nie wymaga powodu (współrekomendacja)."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     gamma = forwarder(client, admin_headers, "Spedgamma")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
@@ -337,8 +337,8 @@ def test_equal_score_needs_no_reason(client, admin_headers):
 
 def test_cost_report_and_export(client, admin_headers):
     """Q98/Q86: raport kosztów z wygranych ofert, eksport CSV."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
     job = client.post("/api/transport-jobs", headers=admin_headers, json={
@@ -367,8 +367,8 @@ def test_cost_report_and_export(client, admin_headers):
 
 def test_quote_history(client, admin_headers):
     """Q47: historia wersji oferty — wycena, korekta, zgłoszenie zmiany, akceptacja."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
     job = client.post("/api/transport-jobs", headers=admin_headers, json={
@@ -396,8 +396,8 @@ def test_quote_history(client, admin_headers):
 
 def test_winner_forwarder_sets_shipment_number(client, admin_headers):
     """Q49: numer przesyłki podaje zwycięska spedycja (przez formularz agenta)."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    c1 = _container(client, admin_headers, "MSDU0806613", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    c1 = _container(client, admin_headers, "MSDU0806613", beta)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     dsv_h = _forwarder_account(client, admin_headers, "sped.spedalfa", spedalfa)
     job = client.post("/api/transport-jobs", headers=admin_headers, json={
@@ -430,9 +430,9 @@ def test_winner_forwarder_sets_shipment_number(client, admin_headers):
 def test_company_scoped_logistics_cannot_see_other_company_jobs(client, admin_headers):
     """#2 audytu: logistyk przypisany do jednej spółki (view_all=False) nie może
     widzieć zleceń wyceny innych firm — ani na liście, ani po id."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     acme = _company_id(client, admin_headers, "ACME")
-    ct = _container(client, admin_headers, "MSDU0806613", borealis)
+    ct = _container(client, admin_headers, "MSDU0806613", beta)
     cz = _container(client, admin_headers, "CSQU3054383", acme)
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     job_t = client.post("/api/transport-jobs", headers=admin_headers, json={
@@ -443,10 +443,10 @@ def test_company_scoped_logistics_cannot_see_other_company_jobs(client, admin_he
         "pickup_location": "A", "delivery_location": "B"}).json()
 
     client.post("/api/users", headers=admin_headers, json={
-        "login": "log.borealis", "password": "haslo123", "role": "logistics",
-        "company_id": borealis, "view_all_companies": False,
-        "email": "log.borealis@example.com"})
-    log_h = login(client, "log.borealis", "haslo123")
+        "login": "log.beta", "password": "haslo123", "role": "logistics",
+        "company_id": beta, "view_all_companies": False,
+        "email": "log.beta@example.com"})
+    log_h = login(client, "log.beta", "haslo123")
 
     ids = [j["id"] for j in client.get("/api/transport-jobs", headers=log_h).json()]
     assert job_t["id"] in ids

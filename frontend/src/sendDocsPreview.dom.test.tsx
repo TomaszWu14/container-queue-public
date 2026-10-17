@@ -10,7 +10,7 @@ vi.mock('./api', () => ({ api: { get: (p: string) => get(p) }, downloadFile: vi.
 
 import { SendDocsPreviewModal } from './DocumentsW5'
 
-const base = { subject: 'Dokumenty do odprawy', body: 'treść', attachments: 2, agency: 'Delta',
+const base = { subject: 'Dokumenty do odprawy', body: 'treść', attachments: 2, agency: 'Omega',
   files: [{ name: 'BL.pdf', type: 'Konosament' }, { name: 'CI.pdf', type: null }] }
 
 afterEach(() => { cleanup(); vi.clearAllMocks() })
@@ -20,7 +20,7 @@ describe('SendDocsPreviewModal', () => {
     get.mockResolvedValue({ ...base, missing: ['SAD'], recipients: ['Anna Celna'] })
     const onConfirm = vi.fn()
     render(<SendDocsPreviewModal containerId={5} busy={false} onConfirm={onConfirm} onClose={() => {}} />)
-    expect(await screen.findByText(/Delta — Anna Celna/)).toBeTruthy()
+    expect(await screen.findByText(/Omega — Anna Celna/)).toBeTruthy()
     expect(screen.getByText('BL.pdf')).toBeTruthy()
     expect(screen.getByText('sendDocsInAppHint')).toBeTruthy()
     fireEvent.click(screen.getByText('sendAnyway'))
@@ -31,7 +31,7 @@ describe('SendDocsPreviewModal', () => {
     const batches = [{ id: 3, attachment_id: 30, excel_current: true }, { id: 4, attachment_id: 40, excel_current: false },
                      { id: 2, attachment_id: 20, excel_current: true }]
     get.mockImplementation((p: string) => Promise.resolve(p.endsWith('/invoice-batches') ? batches
-      : p.includes('agency-mail') ? { to: [], cc: [], subject: 's', body: '', agency: 'Delta', warnings: [], attachments: [] }
+      : p.includes('agency-mail') ? { to: [], cc: [], subject: 's', body: '', agency: 'Omega', warnings: [], attachments: [] }
       : { ...base, missing: [], recipients: [] }))
     render(<SendDocsPreviewModal containerId={5} containerNo="MSKU1" busy={false} onConfirm={() => {}} onClose={() => {}} />)
     expect(await screen.findByText('sendDocsNoRecipients')).toBeTruthy()

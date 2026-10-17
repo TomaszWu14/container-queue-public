@@ -1,4 +1,4 @@
-def _company(client, headers, code="BOREALIS"):
+def _company(client, headers, code="BETA"):
     companies = client.get("/api/companies", headers=headers).json()
     return next(c["id"] for c in companies if c["code"] == code)
 

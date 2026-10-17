@@ -14,7 +14,7 @@ vi.mock('../../i18n', () => ({ useT: () => (key: string) => key }))
 import SearchSuggest, { type Suggestion } from './SearchSuggest'
 
 const S: Suggestion = { type: 'po', label: '4500617421', container_id: 7, container_no: 'MSDU0806613',
-  notify_date: '2026-10-14', warehouse: 'DLT', vessel: null, supplier_id: null }
+  notify_date: '2026-10-14', warehouse: 'MAG-1', vessel: null, supplier_id: null }
 const V: Suggestion = { ...S, type: 'vessel', label: 'EVER 1742 GIVEN', container_id: 8 }
 
 function Harness({ onPick, initial = '' }: { onPick: (s: Suggestion) => void; initial?: string }) {

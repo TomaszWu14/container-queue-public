@@ -188,7 +188,7 @@ def _resolve_supplier(db: Session, company_id: int, supplier_id: int | None,
 
 @router.post("/zlecenia", response_model=OrderDetailOut, status_code=201)
 def found_order(body: FoundOrderIn, db: Session = Depends(get_db), user: User = editors):
-    """Zakłada zlecenie (Borealis/Cobalt): jedno zamówienie → N rekordów kontenerów w kolejce.
+    """Zakłada zlecenie (Beta/Gamma): jedno zamówienie → N rekordów kontenerów w kolejce.
 
     Kontenery powstają bez numeru (dojdą później); dziedziczą dostawcę, port wypłynięcia,
     typ (rozmiar) kontenera i tryb transportu ze zlecenia. Zespół dostaje powiadomienie.

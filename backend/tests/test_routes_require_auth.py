@@ -19,9 +19,9 @@ PUBLIC: set[tuple[str, str]] = {
     ("GET", "/api/avizo/{token}/slots"), ("POST", "/api/avizo/{token}/propose"),
     ("GET", "/api/avizo/driver/{token}"), ("POST", "/api/avizo/driver/{token}"),
     # link kierowcy
-    # link DLT
-    ("GET", "/api/dlt/{token}"), ("POST", "/api/dlt/{token}/prepared"),
-    ("POST", "/api/dlt/{token}/shipped"),
+    # link MAG-1
+    ("GET", "/api/mag1/{token}"), ("POST", "/api/mag1/{token}/prepared"),
+    ("POST", "/api/mag1/{token}/shipped"),
 }
 
 

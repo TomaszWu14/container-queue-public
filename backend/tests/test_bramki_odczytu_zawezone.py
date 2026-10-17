@@ -14,13 +14,13 @@ NOTE = "cena 12 USD/szt"
 
 
 def _setup(client, admin_headers, db_session):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "DLT", "company_id": borealis, "country": "PL"}).json()
+        "name": "MAG-1", "company_id": beta, "country": "PL"}).json()
     supplier = client.post("/api/suppliers", headers=admin_headers, json={
-        "name": SUPPLIER, "company_id": borealis}).json()
+        "name": SUPPLIER, "company_id": beta}).json()
     r = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "warehouse_id": wh["id"],
+        "container_no": VALID_NO, "company_id": beta, "warehouse_id": wh["id"],
         "supplier_id": supplier["id"], "purchase_note": NOTE})
     assert r.status_code == 201, r.text
     cid = r.json()["id"]
@@ -36,7 +36,7 @@ def _setup(client, admin_headers, db_session):
                          files={"file": (name, io.BytesIO(pdf_bytes(name)), "application/pdf")})
         assert up.status_code == 201, up.text
         ids[code] = up.json()["id"]
-    _make_user(client, admin_headers, "mag.b", "warehouse", borealis, warehouse_id=wh["id"])
+    _make_user(client, admin_headers, "mag.b", "warehouse", beta, warehouse_id=wh["id"])
     return cid, ids
 
 

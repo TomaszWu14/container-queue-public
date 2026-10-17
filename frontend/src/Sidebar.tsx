@@ -37,10 +37,10 @@ function formatBuildTime(raw: string): string {
 
 
 // Suma aktywnych kontenerów w zakresie roli (/api/containers/counts jest już zawężone).
-// „DLT” w odpowiedzi to magazyn — podzbiór kontenerów Acme, nie spółka: bez pomijania
-// liczył się dwa razy (admin: 288 Acme + 96 DLT = 384 zamiast 288).
+// „MAG-1” w odpowiedzi to magazyn — podzbiór kontenerów Acme, nie spółka: bez pomijania
+// liczył się dwa razy (admin: 288 Acme + 96 MAG-1 = 384 zamiast 288).
 export function activeTotal(counts: Record<string, number>): number {
-  return Object.entries(counts).reduce((sum, [key, n]) => (key === 'DLT' ? sum : sum + n), 0)
+  return Object.entries(counts).reduce((sum, [key, n]) => (key === 'MAG-1' ? sum : sum + n), 0)
 }
 
 export default function Sidebar({ onLogout }: { onLogout: () => void }) {
@@ -56,7 +56,7 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
   // Ekrany o stałym scope; karta kontenera ma własny, dynamiczny panel (zostaje inline).
   const kbScope = ([
     ['/kolejka', 'kolejka'], ['/odprawa', 'odprawa'],
-    ['/spedycja', 'spedycja'], ['/wywolania-dlt', 'wywolania'],
+    ['/spedycja', 'spedycja'], ['/wywolania-mag1', 'wywolania'],
   ] as const).find(([p]) => pathname === p || pathname.startsWith(`${p}/`))?.[1]
   const [total, setTotal] = useState<number | null>(null)
   const navRef = useRef<HTMLElement>(null)
@@ -158,7 +158,7 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
       { to: '/odprawa', icon: 'customs', label: t('customsModule'), show: some('admin', 'logistics') },
       { to: '/import-sad', icon: 'customs', label: t('sadImpNav'), show: some('admin', 'logistics', 'purchasing') },
       { to: '/specjalna-troska', icon: 'complaints', label: t('careModule'), show: some('admin', 'logistics', 'sales') },
-      { to: '/wywolania-dlt', icon: 'orders', label: 'Wywołania-DLT', show: some('admin', 'logistics', 'warehouse') },
+      { to: '/wywolania-mag1', icon: 'orders', label: 'Wywołania-MAG-1', show: some('admin', 'logistics', 'warehouse') },
       { to: '/reklamacje', icon: 'complaints', label: t('complaints'), show: not('customs', 'purchasing', 'sales') },
     ] },
     { label: 'Analiza', links: [

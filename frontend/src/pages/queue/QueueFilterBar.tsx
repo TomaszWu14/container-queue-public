@@ -92,7 +92,7 @@ export default function QueueFilterBar(p: {
   useDismiss(moreOpen, () => setMoreOpen(false))
 
   const editable = canEdit && !archive
-  const canFound = editable && (p.module === 'borealis' || p.module === 'cobalt')
+  const canFound = editable && (p.module === 'beta' || p.module === 'gamma')
   const canClear = p.isAdmin && !archive && !!p.moduleCode
   const lockTitle = mv.moveUnlocked ? t('kqEditOnHint') : t('kqEditOffHint')
   const toggleEdit = () => mv.setMoveUnlocked(v => !v)

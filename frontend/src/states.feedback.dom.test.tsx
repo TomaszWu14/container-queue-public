@@ -15,7 +15,7 @@ const { apiGet } = vi.hoisted(() => ({
     if (url === '/api/analytics/operational') return Promise.resolve({
       total: 4, by_status: { W_PORCIE: 4 }, avg_lead_time_days: null, avg_unload_minutes: null,
       throughput: ['2026-04', '2026-05', '2026-06'].map(month => ({ month, count: 0 })),
-      top_suppliers: [], top_warehouses: [{ name: 'DLT', count: 4 }],
+      top_suppliers: [], top_warehouses: [{ name: 'MAG-1', count: 4 }],
     })
     return Promise.resolve([])
   }),
@@ -53,7 +53,7 @@ describe('stany i komunikaty', () => {
     expect(await screen.findByText('Brak dostarczonych kontenerów w tym okresie.')).toBeTruthy()
     expect(screen.getByText('Brak danych o dostawcach.')).toBeTruthy()
     // lista z danymi bez zmian
-    expect(screen.getByText((_, el) => el?.tagName === 'LI' && el.textContent === 'DLT: 4')).toBeTruthy()
+    expect(screen.getByText((_, el) => el?.tagName === 'LI' && el.textContent === 'MAG-1: 4')).toBeTruthy()
   })
 
   it('Śledzenie: błąd warstwy AIS jako baner nad mapą z ponowieniem', async () => {

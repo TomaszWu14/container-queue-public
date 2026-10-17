@@ -1,4 +1,4 @@
-# Wywołania-DLT — spec (Wersja 1, model per-produkt)
+# Wywołania-MAG-1 — spec (Wersja 1, model per-produkt)
 
 **Data:** 2026-08-05 (rev. 2 — po analizie realnego arkusza roboczego)
 **Repo:** timporye (FastAPI + SQLAlchemy 2.0 + Alembic + PostgreSQL, frontend React/Vite/TS)
@@ -6,12 +6,12 @@
 
 ## Cel
 
-Moduł **Wywołania-DLT** odtwarza obecny arkusz decyzyjny „wywołanie z DLT": **per
-produkt** zestawia stan w magazynie (ACME) i w DLT — w **paletach** — z
+Moduł **Wywołania-MAG-1** odtwarza obecny arkusz decyzyjny „wywołanie z MAG-1": **per
+produkt** zestawia stan w magazynie (ACME) i w MAG-1 — w **paletach** — z
 zapotrzebowaniem (dostawy wychodzące + zlecenia sprzedaży) i zużyciem, wylicza
 sygnały (projekcja stanu, dni zapasu, flaga „do wywołania pilnie") oraz **sugerowaną
 liczbę palet do wywołania**, którą użytkownik może nadpisać. Zatwierdzone pozycje
-tworzą wywołanie do firmy DLT, eksportowane do xlsx i wysyłane mailem.
+tworzą wywołanie do firmy MAG-1, eksportowane do xlsx i wysyłane mailem.
 
 > Zmiana względem rev. 1: wywołanie jest **per produkt (ilość palet)**, nie per
 > pojedyncza paleta/HU. Rev. 1 (ręczny wybór HU) była błędnym modelem — realny
@@ -25,7 +25,7 @@ Wszystkie cztery przez Power BI `executeQueries` (DAX). Nazwy kolumn normalizowa
 1. **Stan** (`stock`, ~32 tys. wierszy, poziom palety/HU) — z lokalizacją. Kolumny m.in.:
    `miejsce_skladowania`, `produkt`, `krotki_opis_produktu`, `ilosc`,
    `podst_jedn_miary`, `partia`, `glowna_hu`, `rodzaj_zapasow`. **Lokalizacja
-   rozróżnia magazyn ACME vs DLT** (mapowanie konfigurowalne — patrz niżej).
+   rozróżnia magazyn ACME vs MAG-1** (mapowanie konfigurowalne — patrz niżej).
 2. **Dostawy wychodzące** (`vbba`/ZL) — `dokument`, `produkt`, `ilosc`,
    `status_pobrania`. Otwarte statusy konfigurowalne (`Nie rozpoczęte,Częściowo
    zakończone`).
@@ -45,15 +45,15 @@ Dla każdego produktu (klucz = `produkt`, konfigurowalny `POWERBI_MERGE_KEY`):
 
 | Sygnał | Wyliczenie |
 |---|---|
-| `stan_mag_szt` / `stan_dlt_szt` | suma `ilosc` ze `stock` wg lokalizacji (magazyn vs DLT) |
-| `stan_mag_pal` / `stan_dlt_pal` | `stan_*_szt / PAZ[produkt]` (gdy brak PAZ → `null`, oznaczone „Brak_PAZ") |
+| `stan_mag_szt` / `stan_mag1_szt` | suma `ilosc` ze `stock` wg lokalizacji (magazyn vs MAG-1) |
+| `stan_mag_pal` / `stan_mag1_pal` | `stan_*_szt / PAZ[produkt]` (gdy brak PAZ → `null`, oznaczone „Brak_PAZ") |
 | `dostawy_pal` | suma otwartych dostaw (`ZL`) / PAZ |
 | `zlec_niepotw_pal`, `zlec_potw_pal` | suma z `vbbe+likp` (niepotw./potw.) / PAZ |
 | `wywolane_pal` | suma palet z naszych wywołań (sent/confirmed) danego produktu, jeszcze nie „przywiezionych” |
 | `projekcja_mag_pal` | `stan_mag_pal − (dostawy_pal + zlec_niepotw_pal)` |
 | `dni_zapasu` | `stan_mag_pal / zuzycie_dzienne_pal` |
 | `pilne` (flaga) | `projekcja_mag_pal < próg_pilny` (domyślnie 2) lub projekcja < 0 |
-| `sugestia_pal` (IL do wywołania) | `clamp(ceil(zuzycie_dzienne_pal*target_days + dostawy_pal + zlec_niepotw_pal − stan_mag_pal − wywolane_pal), 0, stan_dlt_pal)` |
+| `sugestia_pal` (IL do wywołania) | `clamp(ceil(zuzycie_dzienne_pal*target_days + dostawy_pal + zlec_niepotw_pal − stan_mag_pal − wywolane_pal), 0, stan_mag1_pal)` |
 
 `target_days` i `próg_pilny` — konfigurowalne (**pokrętła kalibracyjne**; realny
 proces dostroi wartości). `sugestia_pal` jest tylko propozycją — użytkownik podaje
@@ -63,9 +63,9 @@ własną `ilosc_pal` przy tworzeniu wywołania.
 > **przed** złączeniem (żaden row-join → brak kartezjanu). Agregacja to szew
 > rozszerzalności — kolejne źródła zapotrzebowania dokładamy do tych dictów.
 
-### Mapowanie lokalizacji magazyn vs DLT
-Konfigurowalne: `POWERBI_DLT_LOCATIONS` (lista wartości/prefiksów `miejsce_skladowania`
-traktowanych jako DLT); reszta = magazyn ACME. Pole lokalizacji też konfigurowalne
+### Mapowanie lokalizacji magazyn vs MAG-1
+Konfigurowalne: `POWERBI_MAG1_LOCATIONS` (lista wartości/prefiksów `miejsce_skladowania`
+traktowanych jako MAG-1); reszta = magazyn ACME. Pole lokalizacji też konfigurowalne
 (`POWERBI_LOCATION_FIELD`, domyślnie `miejsce_skladowania`). Dostosujemy po podaniu
 realnych kodów.
 
@@ -87,7 +87,7 @@ realnych kodów.
   - `POST ""` — utwórz wywołanie z listy `{produkt, ilosc_pal, data_dostawy}`.
   - `GET ""` / `GET /{id}` — lista i historia (scoping per firma).
   - `PATCH /{id}` — edycja szkicu.
-  - `POST /{id}/send|confirm|cancel` — statusy; `send` = xlsx + mail do DLT.
+  - `POST /{id}/send|confirm|cancel` — statusy; `send` = xlsx + mail do MAG-1.
 - **`routers/paz.py`** — CRUD słownika PAZ: `GET/POST/PUT/DELETE /api/paz`
   + `POST /api/paz/import` (xlsx/csv, kolumny `produkt`,`sztuk_na_palete`).
 - **`scripts/powerbi_connect.py`** — jednorazowe device-code logowanie (delegated).
@@ -113,19 +113,19 @@ Enum `PalletCallStatus(str, enum.Enum)`.
 `powerbi_provider` (off/mock/real), `powerbi_workspace_id`, `powerbi_dataset_stock/table`,
 `powerbi_dataset_vbba/table`, `powerbi_dataset_orders/table`, `powerbi_dataset_usage/table`,
 `powerbi_merge_key` (`produkt`), `vbba_open_statuses`, `powerbi_location_field`,
-`powerbi_dlt_locations`, `pallet_target_days` (kalibracja), `pallet_urgent_threshold`
+`powerbi_mag1_locations`, `pallet_target_days` (kalibracja), `pallet_urgent_threshold`
 (domyślnie 2), auth (`powerbi_tenant_id/client_id/client_secret/access_token`),
 TLS (`powerbi_ca_bundle`, `powerbi_ssl_verify`), `powerbi_cache_ttl_min` (15),
-`dlt_email`. Zero sekretów w repo; `.env.example` uzupełniony.
+`mag1_email`. Zero sekretów w repo; `.env.example` uzupełniony.
 
 ## Frontend (`frontend/src/`)
 
-- **`PalletCalls.tsx`** — widok analizy per produkt (tabela z sygnałami: stan MAG/DLT
+- **`PalletCalls.tsx`** — widok analizy per produkt (tabela z sygnałami: stan MAG/MAG-1
   w paletach, dostawy, zlecenia, projekcja, dni zapasu, flaga pilne, sugestia),
   filtry/paginacja, edytowalna kolumna „ilość do wywołania" (prefill = sugestia),
-  „Utwórz wywołanie" z zaznaczonych, historia wywołań ze statusami i „Wyślij do DLT".
+  „Utwórz wywołanie" z zaznaczonych, historia wywołań ze statusami i „Wyślij do MAG-1".
 - **`Paz.tsx`** — prosty CRUD słownika PAZ + import pliku.
-- Wpięcie w routing/menu (zakładki „Wywołania-DLT”, „PAZ”), styl spójny z repo.
+- Wpięcie w routing/menu (zakładki „Wywołania-MAG-1”, „PAZ”), styl spójny z repo.
 
 ## Obsługa błędów
 - Power BI niedostępny/niekonfigurowany → 503 z czytelnym komunikatem; przy dostępnym
@@ -136,7 +136,7 @@ TLS (`powerbi_ca_bundle`, `powerbi_ssl_verify`), `powerbi_cache_ttl_min` (15),
 
 ## Testy (`backend/tests/`)
 - `pallets_analysis`: agregacja per źródło, przeliczenie PAZ (w tym brak PAZ),
-  projekcja, dni zapasu, flaga pilne, `sugestia_pal` (w tym clamp do stanu DLT),
+  projekcja, dni zapasu, flaga pilne, `sugestia_pal` (w tym clamp do stanu MAG-1),
   brak kartezjanu.
 - `powerbi`: mock provider, defensywne parsowanie.
 - `pallets_cache`: TTL, re-compute.

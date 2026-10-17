@@ -1,13 +1,13 @@
 """Scalanie dubli dostawców po przejściu na globalną kartotekę (spec 2026-09-25 §3, PR1).
 
 Import LFA1 szedł dotąd do KAŻDEJ spółki, więc ten sam dostawca SAP istnieje w kartotece
-kilka razy (dawne kopie Acme i Iberia). `proposal` = dry-run: grupy tego samego kodu
+kilka razy (dawne kopie Acme i Delta). `proposal` = dry-run: grupy tego samego kodu
 SAP („pewne") + aktywni w kartotece bez kodu SAP („do rozstrzygnięcia", z podpowiedzią po
 nazwie). `apply_groups` scala grupy tą samą funkcją co ręczne „Scal z…" (merge_into), więc
 przepina wszystkie FK. Wołają: ekran Master data → Dostawcy i scripts/consolidate_suppliers.py.
 
 `orphans_preview`/`delete_orphans` (decyzje usera #2 i #8, ten sam dokument): masowe kasowanie
-kopii nadawców spółek-klientów BEZ żadnych powiązań (tysiące kopii LFA1 w Borealis/Cobalt) — te same sprawdzenia
+kopii nadawców spółek-klientów BEZ żadnych powiązań (tysiące kopii LFA1 w Beta/Gamma) — te same sprawdzenia
 co pojedyncze DELETE dostawcy (dictionaries_merge.SUPPLIERS.refs), plus profil dokumentów
 („owned", nie w refs, ale realny rekord skonfigurowany ręcznie — nie kopia z importu).
 """

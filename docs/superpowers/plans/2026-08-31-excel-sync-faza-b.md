@@ -180,9 +180,9 @@ def _rawB(no, vessel="MAERSK", eta_day=1):
 def test_bootstrap_baseline_none_excel_wins(client):
     db = SessionLocal()
     try:
-        company = db.scalar(_sel(Container.company_id))  # dowolna spółka z kontenera? użyj BOREALIS
+        company = db.scalar(_sel(Container.company_id))  # dowolna spółka z kontenera? użyj BETA
         from app.models import Company
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -197,7 +197,7 @@ def test_app_change_goes_to_pending_not_excel(client):
     db = SessionLocal()
     try:
         from app.models import Company
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -216,7 +216,7 @@ def test_excel_change_adopted_and_baseline_advances(client):
     db = SessionLocal()
     try:
         from app.models import Company
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -410,7 +410,7 @@ def test_pending_lists_app_changes_then_applied_advances_baseline(client, monkey
         b = _io.BytesIO(); wb.save(b); return b.getvalue()
 
     no = "MSKU7026492"
-    client.post("/api/import/sync?company_code=BOREALIS", headers=hdr,
+    client.post("/api/import/sync?company_code=BETA", headers=hdr,
                 files={"file": ("q.xlsx", xlsx([["", "AAA", dt2.datetime(2026, 9, 1), "kolej", no, "", ""]]))})
     # zmiana po stronie apki
     from app.database import SessionLocal
@@ -421,12 +421,12 @@ def test_pending_lists_app_changes_then_applied_advances_baseline(client, monkey
         c = db.scalar(sel3(Container).where(Container.container_no == no)); c.vessel = "APP"; db.commit()
     finally:
         db.close()
-    pend = client.get("/api/import/sync/pending?company_code=BOREALIS", headers=hdr).json()
+    pend = client.get("/api/import/sync/pending?company_code=BETA", headers=hdr).json()
     assert no in pend and pend[no].get("vessel") == "APP"     # pending pokazuje zmianę apki
     # potwierdzenie zapisu -> baseline podniesiony
-    client.post("/api/import/sync/applied?company_code=BOREALIS", headers=hdr,
+    client.post("/api/import/sync/applied?company_code=BETA", headers=hdr,
                 json={no: ["vessel"]})
-    pend2 = client.get("/api/import/sync/pending?company_code=BOREALIS", headers=hdr).json()
+    pend2 = client.get("/api/import/sync/pending?company_code=BETA", headers=hdr).json()
     assert no not in pend2 or "vessel" not in pend2.get(no, {})  # już nie pending (echo cięte)
 
 

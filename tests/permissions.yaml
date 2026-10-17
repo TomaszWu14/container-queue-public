@@ -16,7 +16,7 @@
 #     view_all_companies widzą wszystkie spółki (warehouse NIGDY — can_view_all)
 #   * partnerzy (forwarder, customs) NIE mają osi spółki: company_id/view_all na ich koncie są
 #     ignorowane (deps.own_company_id) — konta matrycy partnerów są bez spółki, jak na produkcji
-#   * magazyn: konto warehouse zawężone do swojego magazynu (DLT/ACME)
+#   * magazyn: konto warehouse zawężone do swojego magazynu (MAG-1/ACME)
 #   * konto nieaktywne → 401; tryb podglądu admina („jako rola”) → mutacje 403
 #   * 2xx zakłada poprawne dane wejściowe; walidacja (422) testowana osobno
 roles: [admin, logistics, warehouse, forwarder, customs, purchasing, sales]
@@ -359,7 +359,7 @@ routes:
 
   # --- imports_master ---
   "POST /api/import/container-ports": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # ACL-003: dane wspólne grupy — logistyka tylko grupowa (view_all) albo spółki-właściciela materiałów (np. ACME); konto matrycy (jedna spółka) 403
-  "POST /api/import/dlt-stock": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # ACL-003: dane wspólne grupy — logistyka tylko grupowa (view_all) albo spółki-właściciela materiałów (np. ACME); konto matrycy (jedna spółka) 403
+  "POST /api/import/mag1-stock": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # ACL-003: dane wspólne grupy — logistyka tylko grupowa (view_all) albo spółki-właściciela materiałów (np. ACME); konto matrycy (jedna spółka) 403
   "POST /api/import/master-data": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
   "POST /api/import/material-units": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # ACL-003: dane wspólne grupy — logistyka tylko grupowa (view_all) albo spółki-właściciela materiałów (np. ACME); konto matrycy (jedna spółka) 403
   "GET /api/import/sap-imports/{import_id}/errors.xlsx": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
@@ -423,10 +423,10 @@ routes:
   "PATCH /api/knowledge/topics/{topic_id}/status": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
   "POST /api/knowledge/topics/{topic_id}/vote": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: 403, customs: 403, purchasing: '2xx', sales: 403}  # ACL-001: bez partnerów zewnętrznych
 
-  # --- dlt ---
-  "GET /api/dlt/{token}": {anon: public}
-  "POST /api/dlt/{token}/prepared": {anon: public}
-  "POST /api/dlt/{token}/shipped": {anon: public}
+  # --- mag1 ---
+  "GET /api/mag1/{token}": {anon: public}
+  "POST /api/mag1/{token}/prepared": {anon: public}
+  "POST /api/mag1/{token}/shipped": {anon: public}
 
   # --- logs ---
   "GET /api/admin/logs/client-errors": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
@@ -472,9 +472,9 @@ routes:
   "POST /api/pallet-calls/{call_id}/cancel": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
   "POST /api/pallet-calls/{call_id}/confirm": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
   "POST /api/pallet-calls/{call_id}/deliver": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
-  "POST /api/pallet-calls/{call_id}/prepared": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # DLT w aplikacji (2026-10-07) — zamiast linku z maila
+  "POST /api/pallet-calls/{call_id}/prepared": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # MAG-1 w aplikacji (2026-10-07) — zamiast linku z maila
   "POST /api/pallet-calls/{call_id}/send": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
-  "POST /api/pallet-calls/{call_id}/shipped": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # DLT w aplikacji (2026-10-07) — zamiast linku z maila
+  "POST /api/pallet-calls/{call_id}/shipped": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # MAG-1 w aplikacji (2026-10-07) — zamiast linku z maila
   "GET /api/pallet-calls/{call_id}/xlsx": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 403, customs: 403, purchasing: 200, sales: 403}
   "GET /api/stock-targets": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 403, customs: 403, purchasing: 200, sales: 403}
   "POST /api/stock-targets": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # ACL-003: dane wspólne grupy — logistyka tylko grupowa (view_all) albo spółki-właściciela materiałów (np. ACME); konto matrycy (jedna spółka) 403

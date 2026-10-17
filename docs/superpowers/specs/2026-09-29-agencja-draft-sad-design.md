@@ -94,17 +94,17 @@ automatyzacji (konto serwisowe), z izolacją spółki jak reszta API.
 - obieg wersji v1 → do poprawy → v2 → akceptacja, blokada decyzji o starej wersji;
 - wejście automatu: token, duplikat pliku, nieznany kontener, izolacja spółki;
 - szkic `.eml` odpowiedzi: adresaci, temat, rozbieżności w treści;
-- odczyt PDF: próbka syntetyczna, potem przykładowy draft Deltaa.
+- odczyt PDF: próbka syntetyczna, potem przykładowy draft Omegi.
 
 ## Kolejność wdrożenia (osobne PR)
 1. Model + migracja, obieg wersji, ręczne potwierdzenie i wgranie draftu, decyzja (B).
 2. Odczyt draftu SAD + porównanie ↔ faktury + okno porównania.
 3. Szkic `.eml` odpowiedzi „Akceptuję” / „Do poprawy”.
 4. Wejście automatu (endpoint z tokenem) — pod n8n / hybrydę z SharePointem.
-5. Dostrojenie odczytu do przykładowego draftu SAD od Deltaa.
+5. Dostrojenie odczytu do przykładowego draftu SAD od Omegi.
 
 ## Sprawy otwarte
-- Przykładowy draft SAD od Deltaa (PDF, może być zanonimizowany) — do kroku 5.
+- Przykładowy draft SAD od Omegi (PDF, może być zanonimizowany) — do kroku 5.
 - Format: czy agencja może dać XML z systemu celnego albo Excel (dokładniejsze porównanie).
 - Wybór automatu (n8n vs Power Automate + SharePoint) — po odpowiedzi IT; n8n na Coolify
   wymaga sprawdzenia (ostatni znany stan: kontener zatrzymany).

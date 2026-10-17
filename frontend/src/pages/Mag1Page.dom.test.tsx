@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Publiczna strona DLT (/dlt/:token): render aut i pozycji (HU/ilości),
+// Publiczna strona MAG-1 (/mag1/:token): render aut i pozycji (HU/ilości),
 // sekwencja przycisków Przygotowane -> Wysłane, stan po realizacji i 404.
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
@@ -15,7 +15,7 @@ vi.mock('../api', () => ({
   errorMessage: (e: unknown) => String(e),
 }))
 
-import DltPage from './DltPage'
+import Mag1Page from './Mag1Page'
 
 afterEach(() => { cleanup(); apiGet.mockReset(); apiPost.mockReset() })
 
@@ -30,12 +30,12 @@ const info = (status = 'sent') => ({
 
 function renderPage() {
   return render(
-    <MemoryRouter initialEntries={['/dlt/tok123']}>
-      <Routes><Route path="/dlt/:token" element={<DltPage />} /></Routes>
+    <MemoryRouter initialEntries={['/mag1/tok123']}>
+      <Routes><Route path="/mag1/:token" element={<Mag1Page />} /></Routes>
     </MemoryRouter>)
 }
 
-describe('DltPage', () => {
+describe('Mag1Page', () => {
   it('renderuje wywołanie: numer, auto, pozycje z HU i paletami', async () => {
     apiGet.mockResolvedValue(info())
     renderPage()
@@ -54,11 +54,11 @@ describe('DltPage', () => {
     apiPost.mockResolvedValue({ status: 'ok' })
     renderPage()
     fireEvent.click(await screen.findByRole('button', { name: /Przygotowane/ }))
-    await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/dlt/tok123/prepared', {}))
+    await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/mag1/tok123/prepared', {}))
     const shippedBtn = screen.getByRole('button', { name: /Wysłane/ })
     await waitFor(() => expect((shippedBtn as HTMLButtonElement).disabled).toBe(false))
     fireEvent.click(shippedBtn)
-    await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/dlt/tok123/shipped', {}))
+    await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/mag1/tok123/shipped', {}))
     await screen.findByText(/Potwierdzono wysyłkę/)
     expect(screen.queryByRole('button', { name: /Wysłane/ })).toBeNull()
   })

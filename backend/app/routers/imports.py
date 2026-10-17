@@ -33,12 +33,12 @@ from ..importers.excel import (  # noqa: F401 — re-eksport (scripts/import_lfa
 )
 from ..importers.master_data import (  # noqa: F401 — re-eksport publicznych ścieżek
     CPORT_HEADERS,
-    DLT_HEADERS,
+    MAG1_HEADERS,
     MARM_HEADERS,
     MASTER_TYPES,
     _parse_cport_rows,
     _parse_cport_text,
-    _parse_dlt_stock_rows,
+    _parse_mag1_stock_rows,
     _parse_marm_rows,
     detect_master_type,
 )
@@ -84,7 +84,7 @@ from .containers import next_transport_id
 from .forwarding import read_upload_capped
 from .imports_master import (  # noqa: F401 — re-eksport endpointów
     import_container_ports,
-    import_dlt_stock,
+    import_mag1_stock,
     import_master_data,
     import_material_units,
     import_sap_orders,
@@ -371,6 +371,6 @@ def queue_sync(
                             file_mtime=mtime, dry_run=dry_run)
 
 
-# endpointy master data (EKKO/MARM/DLT/porty/LFA1/auto-rozpoznanie) żyją w sub-routerze —
+# endpointy master data (EKKO/MARM/MAG-1/porty/LFA1/auto-rozpoznanie) żyją w sub-routerze —
 # podpinamy go tutaj, żeby main.py nadal rejestrował jeden router importów
 router.include_router(_master_router)

@@ -36,9 +36,9 @@ describe('widoki kolejki', () => {
 
 describe('groupContainers', () => {
   const items = [
-    make(1, { notify_date: '2026-09-26', status: 'AWIZOWANY', warehouse_name: 'DLT' }),
+    make(1, { notify_date: '2026-09-26', status: 'AWIZOWANY', warehouse_name: 'MAG-1' }),
     make(2, { notify_date: null, status: 'W_PORCIE', warehouse_name: 'ACME' }),
-    make(3, { notify_date: '2026-09-24', status: 'W_PORCIE', warehouse_name: 'DLT' }),
+    make(3, { notify_date: '2026-09-24', status: 'W_PORCIE', warehouse_name: 'MAG-1' }),
   ]
   it('Dzień: rosnąco, bez daty na końcu', () => {
     expect(groupContainers(items, 'weekday').map(g => g.key)).toEqual(['2026-09-24', '2026-09-26', ''])
@@ -48,7 +48,7 @@ describe('groupContainers', () => {
   })
   it('Magazyn: malejąco wg liczby', () => {
     expect(groupContainers(items, 'warehouse').map(g => [g.key, g.items.length]))
-      .toEqual([['DLT', 2], ['ACME', 1]])
+      .toEqual([['MAG-1', 2], ['ACME', 1]])
   })
 })
 

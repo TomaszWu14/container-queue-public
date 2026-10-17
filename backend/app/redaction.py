@@ -10,11 +10,11 @@ logger = logging.getLogger("app.main")
 
 
 # Tokeny publicznych linków (bearer w ŚCIEŻCE: awizacja, portal kliencki, udostępnione
-# kontenery, łącznik kierowcy, DLT, SPA /dostawa/ i /portal/; w QUERY: reset hasła
+# kontenery, łącznik kierowcy, MAG-1, SPA /dostawa/ i /portal/; w QUERY: reset hasła
 # ?token=) — bez maskowania lądują w logach dostępu uvicorn, logach aplikacji i Sentry
 # (= działający link w logach).
 _PUBLIC_TOKEN_PATH_RE = re.compile(
-    r"(/(?:api/)?(?:avizo/(?:driver/)?|public/portal/|public/containers/|driver/|dlt/"
+    r"(/(?:api/)?(?:avizo/(?:driver/)?|public/portal/|public/containers/|driver/|mag1/"
     r"|dostawa/|portal/))[A-Za-z0-9_-]{16,}")
 _QUERY_TOKEN_RE = re.compile(r"([?&]token=)[^&\s\"'#]+")
 

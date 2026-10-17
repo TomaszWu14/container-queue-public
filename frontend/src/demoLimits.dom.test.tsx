@@ -10,7 +10,7 @@ afterEach(() => { setDemoSession(false); vi.unstubAllGlobals() })
 const demo = { is_demo: true }
 
 describe('konto demo — ograniczenia widoków', () => {
-  it('chowa dziennik zmian, importy, master data i wywołania DLT tylko dla demo', () => {
+  it('chowa dziennik zmian, importy, master data i wywołania MAG-1 tylko dla demo', () => {
     for (const p of DEMO_HIDDEN_PATHS) {
       expect(hiddenInDemo(demo, p)).toBe(true)
       expect(hiddenInDemo({ is_demo: false }, p)).toBe(false)

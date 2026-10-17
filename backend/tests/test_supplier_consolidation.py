@@ -20,7 +20,7 @@ from tests.conftest import login
 
 def _seed():
     with SessionLocal() as db:
-        pt = db.scalar(select(Company).where(Company.code == "PT"))
+        pt = db.scalar(select(Company).where(Company.code == "DELTA"))
         rows = {
             "z": Supplier(name="Ningbo Tools", sap_code="200"),     # kopia z importu do Acme
             "p": Supplier(name="Ningbo Tools", sap_code="200"),     # kopia z importu do PT
@@ -95,7 +95,7 @@ def test_resolve_endpoints_admin_only_and_single_decisions(client, admin_headers
 def _seed_orphans():
     with SessionLocal() as db:
         pt, tim, yel = (db.scalar(select(Company).where(Company.code == c))
-                        for c in ("PT", "BOREALIS", "COBALT"))
+                        for c in ("DELTA", "BETA", "GAMMA"))
         rows = {
             "with_container": Supplier(name="Ma kontener", client_company_id=tim.id),
             "with_order": Supplier(name="Ma zamowienie", client_company_id=tim.id),
@@ -104,8 +104,8 @@ def _seed_orphans():
             # kartoteka Acme nigdy masowo (decyzja #8) — z kodem SAP i bez
             "catalog_sap": Supplier(name="Kartoteka z SAP", sap_code="777"),
             "catalog_nosap": Supplier(name="Kartoteka bez SAP", sap_code=""),
-            "orphan_tim": Supplier(name="Kopia Borealis", sap_code="901", client_company_id=tim.id),
-            "orphan_yel": Supplier(name="Kopia Cobalt", client_company_id=yel.id),
+            "orphan_tim": Supplier(name="Kopia Beta", sap_code="901", client_company_id=tim.id),
+            "orphan_yel": Supplier(name="Kopia Gamma", client_company_id=yel.id),
         }
         db.add_all(rows.values())
         db.flush()
@@ -124,7 +124,7 @@ def test_orphans_preview_counts_per_company_without_changing_anything(db_session
     preview = orphans_preview(db_session)
     assert {s["id"] for s in preview["sample"]} == {ids["orphan_tim"], ids["orphan_yel"]}
     assert preview["count"] == 2
-    assert preview["by_company"] == {"BOREALIS": 1, "COBALT": 1}
+    assert preview["by_company"] == {"BETA": 1, "GAMMA": 1}
     assert db_session.get(Supplier, ids["orphan_tim"]) is not None  # dry-run
 
 
@@ -139,8 +139,8 @@ def test_delete_orphans_only_client_copies_without_relations(db_session):
         assert db_session.get(Supplier, ids[keep]) is not None, keep
     note = db_session.scalar(select(AuditLog.note).where(
         AuditLog.field == "__orphans_deleted__"))
-    assert "Kopia Borealis" in note and "SAP=901" in note and "BOREALIS" in note
-    assert "Kopia Cobalt" in note and "COBALT" in note
+    assert "Kopia Beta" in note and "SAP=901" in note and "BETA" in note
+    assert "Kopia Gamma" in note and "GAMMA" in note
     assert delete_orphans(db_session, None) == 0
 
 

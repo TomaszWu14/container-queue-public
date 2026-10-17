@@ -15,7 +15,7 @@ import { ColorsEditor } from './ColorsEditor'
 afterEach(() => { cleanup(); get.mockReset(); put.mockReset(); setPref.mockReset(); localStorage.clear() })
 
 const openFirst = async () => {
-  fireEvent.click((await screen.findAllByRole('button', { name: /colTokRow/ }))[0])   // tło wiersza DLT
+  fireEvent.click((await screen.findAllByRole('button', { name: /colTokRow/ }))[0])   // tło wiersza MAG-1
   fireEvent.change(screen.getByLabelText('colHex'), { target: { value: '#4d3a12' } })
 }
 
@@ -25,11 +25,11 @@ describe('ColorsEditor', () => {
     put.mockImplementation((_p: string, b: unknown) => Promise.resolve(b))
     render(<ColorsEditor scope="company" />)
     await openFirst()
-    expect((screen.getByRole('img') as HTMLElement).style.getPropertyValue('--kq-row-dlt')).toBe('#4d3a12')
+    expect((screen.getByRole('img') as HTMLElement).style.getPropertyValue('--kq-row-mag1')).toBe('#4d3a12')
     expect(screen.getByText('colChanged')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'colSave' }))
     await waitFor(() => expect(put).toHaveBeenCalledWith('/api/admin/theme-colors',
-      { light: { '--kq-row-dlt': '#4d3a12' }, dark: {} }))
+      { light: { '--kq-row-mag1': '#4d3a12' }, dark: {} }))
     expect(await screen.findByRole('status')).toBeTruthy()
   })
 
@@ -40,7 +40,7 @@ describe('ColorsEditor', () => {
     await openFirst()
     fireEvent.click(screen.getByRole('button', { name: 'colSave' }))
     await waitFor(() => expect(setPref).toHaveBeenCalledWith('userThemeColors',
-      JSON.stringify({ light: { '--kq-row-dlt': '#4d3a12' }, dark: {} })))
+      JSON.stringify({ light: { '--kq-row-mag1': '#4d3a12' }, dark: {} })))
     expect(put).not.toHaveBeenCalled()
   })
 })

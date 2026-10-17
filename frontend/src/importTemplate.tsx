@@ -6,11 +6,11 @@ import { useToast } from './feedback'
 import { useT } from './i18n'
 
 export type TemplateKind = 'materials' | 'marm' | 'lfa1' | 'ekko' | 'ref' | 'etd' | 'queue'
-  | 'dlt' | 'ports' | 'po' | 'paz' | 'issues'
+  | 'mag1' | 'ports' | 'po' | 'paz' | 'issues'
 
 const LABEL: Record<TemplateKind, string> = {
   materials: 'tplMaterials', marm: 'tplMarm', lfa1: 'tplLfa1', ekko: 'tplEkko', ref: 'tplRef',
-  etd: 'tplEtd', queue: 'tplQueue', dlt: 'tplDlt', ports: 'tplPorts', po: 'tplPo', paz: 'tplPaz',
+  etd: 'tplEtd', queue: 'tplQueue', mag1: 'tplMag1', ports: 'tplPorts', po: 'tplPo', paz: 'tplPaz',
   issues: 'tplIssues',
 }
 

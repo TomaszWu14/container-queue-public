@@ -267,8 +267,8 @@ def test_external_role_sees_only_self(client):
 def test_vessel_watch_toggle_and_scope(client, db_session):
     admin = login(client)
     acme = _company_id(client, admin)
-    borealis = _company_id(client, admin, "BOREALIS")
-    _container(client, admin, "TGBU6784203", borealis, vessel="MV OBSERWOWANA")
+    beta = _company_id(client, admin, "BETA")
+    _container(client, admin, "TGBU6784203", beta, vessel="MV OBSERWOWANA")
     vessel = TrackedVessel(name="MV OBSERWOWANA")
     db_session.add(vessel)
     db_session.commit()

@@ -1,12 +1,12 @@
-// Podgląd na żywo: wycinek kolejki (pasek górny, pasek dnia, wiersze DLT / ACME / bez magazynu)
+// Podgląd na żywo: wycinek kolejki (pasek górny, pasek dnia, wiersze MAG-1 / ACME / bez magazynu)
 // w barwach edytowanego motywu — zmienne ustawione na kontenerze, niezależnie od motywu admina.
 import type { CSSProperties } from 'react'
 import { useT } from '../../../i18n'
 
 const ROWS: [string, string, string, string][] = [
-  ['dlt', 'FFAU6240568', 'NORTHBRIDGE', 'DLT'],
+  ['mag1', 'FFAU6240568', 'NORTHBRIDGE', 'MAG-1'],
   ['acme', 'TGBU8339125', 'PULIN', 'ACME'],
-  ['dlt', 'ECMU8850883', 'NORTHBRIDGE', 'DLT'],
+  ['mag1', 'ECMU8850883', 'NORTHBRIDGE', 'MAG-1'],
   ['none', 'OOCU9648783', 'FLYWORLD', '—'],
   ['acme', 'CSNU9264513', 'FORMED + EASYWAY', 'ACME'],
 ]

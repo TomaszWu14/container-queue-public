@@ -17,9 +17,9 @@ export const GROUPS: Group[] = [
   { key: 'accent', label: 'colGrpAccent', tokens: [
     { token: '--accent', label: 'colTokAccent' }, { token: '--accent-ink', label: 'colTokAccentInk' },
     { token: '--chrome', label: 'colTokChrome' }, { token: '--chrome-text', label: 'colTokChromeText' }] },
-  { key: 'dlt', label: 'colGrpDlt', tokens: [
-    { token: '--kq-row-dlt', label: 'colTokRow' }, { token: '--kq-row-dlt-hover', label: 'colTokRowHover' },
-    { token: '--wh-dlt-bar', label: 'colTokBar' }, { token: '--wh-dlt-ink', label: 'colTokInk' }] },
+  { key: 'mag1', label: 'colGrpMag1', tokens: [
+    { token: '--kq-row-mag1', label: 'colTokRow' }, { token: '--kq-row-mag1-hover', label: 'colTokRowHover' },
+    { token: '--wh-mag1-bar', label: 'colTokBar' }, { token: '--wh-mag1-ink', label: 'colTokInk' }] },
   { key: 'acme', label: 'colGrpAcme', tokens: [
     { token: '--kq-row-acme', label: 'colTokRow' }, { token: '--kq-row-acme-hover', label: 'colTokRowHover' },
     { token: '--wh-acme-bar', label: 'colTokBar' }, { token: '--wh-acme-ink', label: 'colTokInk' }] },
@@ -84,10 +84,10 @@ export function contrast(a: string, b: string): number {
 export const CHECKS: { fg: string; bg: string; label: string; min: number }[] = [
   { fg: '--text', bg: '--panel', label: 'colChkTextPanel', min: 4.5 },
   { fg: '--text-muted', bg: '--panel', label: 'colChkMutedPanel', min: 4.5 },
-  { fg: '--text', bg: '--kq-row-dlt', label: 'colChkTextDlt', min: 4.5 },
+  { fg: '--text', bg: '--kq-row-mag1', label: 'colChkTextMag1', min: 4.5 },
   { fg: '--text', bg: '--kq-row-acme', label: 'colChkTextAcme', min: 4.5 },
   { fg: '--text', bg: '--kq-row-none', label: 'colChkTextNone', min: 4.5 },
   { fg: '--chrome-text', bg: '--chrome', label: 'colChkChrome', min: 4.5 },
-  { fg: '--wh-dlt-bar', bg: '--kq-row-dlt', label: 'colChkBarDlt', min: 3 },
+  { fg: '--wh-mag1-bar', bg: '--kq-row-mag1', label: 'colChkBarMag1', min: 3 },
   { fg: '--wh-acme-bar', bg: '--kq-row-acme', label: 'colChkBarAcme', min: 3 },
 ]

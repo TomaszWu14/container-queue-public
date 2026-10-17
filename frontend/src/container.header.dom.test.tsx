@@ -36,7 +36,7 @@ function mount() {
   apiGet.mockImplementation((url: string) => url === '/api/containers/1'
     ? Promise.resolve({ id: 1, container_no: 'CONT1', status: 'W_PORCIE', is_delayed: false,
         customs_status: 'BRAK', eta: '2026-08-14', notify_date: '2026-08-19', warehouse_name: 'ACME',
-        supplier_name: 'Dostawca', company_name: 'Iberia', vessel: 'MAERSK', documents_ok: false })
+        supplier_name: 'Dostawca', company_name: 'Delta', vessel: 'MAERSK', documents_ok: false })
     : Promise.resolve([]))
   render(
     <MemoryRouter initialEntries={['/kontenery/1']}>

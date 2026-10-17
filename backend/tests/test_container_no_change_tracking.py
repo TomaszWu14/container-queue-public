@@ -12,9 +12,9 @@ OLD_NO, NEW_NO = "MSDU0806613", "MSKU7026492"
 
 def _tracked_container(client, headers, status="ZAPOWIEDZIANY") -> int:
     companies = client.get("/api/companies", headers=headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     resp = client.post("/api/containers", headers=headers,
-                       json={"container_no": OLD_NO, "company_id": borealis, "status": status})
+                       json={"container_no": OLD_NO, "company_id": beta, "status": status})
     assert resp.status_code == 201, resp.text
     cid = resp.json()["id"]
     when = datetime.datetime(2026, 7, 1, 8, 0)

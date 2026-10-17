@@ -112,9 +112,9 @@ def test_disappeared_deactivated_only_with_full_export(db_session):
 
 
 def test_fills_sap_code_on_catalog_record_not_on_client_sender(db_session):
-    borealis = db_session.scalar(select(Company).where(Company.code == "BOREALIS"))
+    beta = db_session.scalar(select(Company).where(Company.code == "BETA"))
     db_session.add_all([Supplier(name="DEMOLOG GMBH"),
-                        Supplier(name="DEMOLOG GMBH", client_company_id=borealis.id)])
+                        Supplier(name="DEMOLOG GMBH", client_company_id=beta.id)])
     db_session.commit()
     plan = _plan(db_session)
     assert preview(plan)["counts"]["new"] == 1          # tylko MEDDEMO; DEMOLOG dopasowany po nazwie
@@ -123,7 +123,7 @@ def test_fills_sap_code_on_catalog_record_not_on_client_sender(db_session):
     catalog = db_session.scalars(select(Supplier).where(
         Supplier.name == "DEMOLOG GMBH", Supplier.client_company_id.is_(None))).one()
     assert catalog.sap_code == "90000001"
-    sender = db_session.scalars(select(Supplier).where(Supplier.client_company_id == borealis.id)).one()
+    sender = db_session.scalars(select(Supplier).where(Supplier.client_company_id == beta.id)).one()
     assert (sender.sap_code, sender.sap_status) == ("", "active")   # nadawca klienta nietknięty
 
 

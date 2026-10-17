@@ -71,13 +71,13 @@ def test_analysis_limits_batched_one_query(client, admin_headers):
 
 
 def test_queue_calendar_and_limits_batched(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "T", "company_id": borealis, "country": "PL", "default_daily_limit": 1}).json()
+        "name": "T", "company_id": beta, "country": "PL", "default_daily_limit": 1}).json()
     monday = datetime.date(2026, 7, 6)
     for number in ["MSDU0806613", "CSQU3054383"]:
         client.post("/api/containers", headers=admin_headers, json={
-            "container_no": number, "company_id": borealis,
+            "container_no": number, "company_id": beta,
             "warehouse_id": wh["id"], "notify_date": monday.isoformat()})
     client.put("/api/limits", headers=admin_headers, json={
         "warehouse_id": wh["id"], "day": monday.isoformat(), "limit": 10})

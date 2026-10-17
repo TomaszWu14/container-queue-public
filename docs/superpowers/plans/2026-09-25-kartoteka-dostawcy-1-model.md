@@ -5,7 +5,7 @@
 **Goal:** Przebudować `suppliers` z tabeli per spółka na jedną globalną kartotekę dostawców Acme (z nowymi tabelami pod indeksy SAP, warianty dokumentów i dziennik importów), dać adminowi bezpieczne scalanie dotychczasowych kopii per spółka (podgląd → scal) na ekranie „Do rozstrzygnięcia" i nie złamać żadnej istniejącej funkcji.
 
 **Architecture:**
-- **`Supplier.company_id` → `client_company_id` (nullable).** `NULL` = globalna kartoteka Acme (dla spółek z listy `settings.supplier_company_codes`, domyślnie `ACME,PT`). Ustawione = *nadawca kontenerów spółki-klienta* (Borealis, Cobalt) — tak jak dziś, widoczny tylko dla tej spółki. To przejściowe, świadome odstępstwo od spec §1 („nadawcy klientów tylko tekstem"): zlecenia Borealis/Cobalt (`FoundOrderModal`) zakładają dziś dostawcę i jego kontakt, więc ich przepięcie na sam tekst to osobny temat (pytanie otwarte nr 1). Rename kolumny (zamiast zostawienia `company_id` z nową semantyką) jest celowy: każde zapomniane miejsce wywali się w testach `AttributeError`, zamiast po cichu filtrować po złej kolumnie.
+- **`Supplier.company_id` → `client_company_id` (nullable).** `NULL` = globalna kartoteka Acme (dla spółek z listy `settings.supplier_company_codes`, domyślnie `ACME,PT`). Ustawione = *nadawca kontenerów spółki-klienta* (Beta, Gamma) — tak jak dziś, widoczny tylko dla tej spółki. To przejściowe, świadome odstępstwo od spec §1 („nadawcy klientów tylko tekstem"): zlecenia Beta/Gamma (`FoundOrderModal`) zakładają dziś dostawcę i jego kontakt, więc ich przepięcie na sam tekst to osobny temat (pytanie otwarte nr 1). Rename kolumny (zamiast zostawienia `company_id` z nową semantyką) jest celowy: każde zapomniane miejsce wywali się w testach `AttributeError`, zamiast po cichu filtrować po złej kolumnie.
 - **Migracja na prod bez automatycznego scalania.** `kartoteka001` (alembic) zmienia tylko schemat + kopiuje `supplier_material_maps` → `supplier_materials` (nieniszcząco, idempotentnie). Scalanie dubli (ACME i PT mają dziś te same rekordy z LFA1 — import szedł do każdej spółki) robi **serwis `supplier_consolidation`** wołany z ekranu admina i z komendy `scripts/consolidate_suppliers.py` (podgląd bez `--apply`). Uzasadnienie: (1) `Dockerfile` robi `alembic upgrade head && uvicorn` — każdy błąd migracji danych = aplikacja nie wstaje (2 awarie prod z 2026-09-18); (2) scalanie przepina ~7 tabel i profile — tę logikę mamy przetestowaną w `dictionaries_merge`, nie da się jej sensownie powielić w SQL migracji (migracje nie importują kodu aplikacji); (3) spec wymaga „listy scaleń do przejrzenia" przed zmianą danych — dry-run to daje. Scalanie w serwisie używa **tej samej funkcji** `merge_into` co ręczne „Scal z…".
 - **Unikalności zależne od czystych danych — etap B (osobny, mały PR, draft do czasu scalenia na prod).** `UNIQUE(sap_code)` w kartotece i `UNIQUE(supplier_id, lower(email))` kontaktów nie da się założyć przed scaleniem (dziś ten sam `sap_code` jest w ACME i PT). `kartoteka002` zakłada je indeksami częściowymi dopiero po scaleniu; ma twardy precheck z czytelnym komunikatem. PR etapu B jest **draftem** (automerge pomija drafty), oznaczany jako gotowy dopiero gdy `python -m scripts.consolidate_suppliers` na prod pokazuje `Grup do scalenia: 0`. Do tego czasu duble blokuje kod: import LFA1 kluczuje po `sap_code` globalnie. `sap_code` zostaje `NOT NULL DEFAULT ''` (jak dziś); `''` = nadawca klienta albo rekord „do rozstrzygnięcia".
 - **Widoczność w jednym miejscu (`deps.py`)**, jak `scope_*`: `scope_suppliers` (listy wyboru), `supplier_catalog_access` (szczegóły kartoteki: admin/logistyka/zakupy z kontem grupowym albo spółki z materiałami), `supplier_clause_for_company` (którego dostawcy wolno użyć w rekordzie danej spółki), gałąź `Supplier` w `_enforce_scope`. Lista kodów spółek „z materiałami" jest w ustawieniach (`SUPPLIER_COMPANY_CODES`), nie w kodzie.
@@ -20,7 +20,7 @@
 - Alembic: **jedna głowa**. Aktualna głowa na `origin/main` w chwili pisania: `kontrole001`. Przed Task 1 sprawdź `python -m pytest tests/test_migration_chain.py -q`; jeśli głowa się zmieniła — ustaw `down_revision` i asercję w teście na nową głowę (nie rób merge-migracji).
 - Każda kolumna dodana `op.add_column("tabela", ...)` musi być w `ensure_new_columns()` (`tests/test_dev_schema_shim.py`); migracje tu używają `batch_alter_table`, ale i tak dopisujemy shim (spójność dev).
 - Izolacja danych tylko przez `deps.py` (CLAUDE.md repo) — routery nie powielają reguł widoczności.
-- Spec: „**SAP = jedyne źródło** danych dostawcy", „**Kod SAP (LIFNR) obowiązkowy i unikalny**" (egzekwowane w etapie B), „Dostawca z powiązaniami — tylko nieaktywny; bez powiązań — admin może usunąć", widoczność: „admin, logistyka, zakupy Acme i Iberia; Borealis, Cobalt Sport, DLT, magazyn, spedytor, agencja — brak dostępu do kartoteki".
+- Spec: „**SAP = jedyne źródło** danych dostawcy", „**Kod SAP (LIFNR) obowiązkowy i unikalny**" (egzekwowane w etapie B), „Dostawca z powiązaniami — tylko nieaktywny; bez powiązań — admin może usunąć", widoczność: „admin, logistyka, zakupy Acme i Delta; Beta, Gamma, MAG-1, magazyn, spedytor, agencja — brak dostępu do kartoteki".
 - **1 PR = 1 temat**: PR1 = Taski 1–9 (gałąź `claude/kartoteka-dostawcy-1-model` od świeżego `main`); etap B = Task 10 (gałąź `claude/kartoteka-dostawcy-1b-unikalnosci`, PR jako **draft**).
 - Przed pushem: `git fetch origin main && git merge origin/main` (merge, nie rebase), testy, `npm run build` (main nie ma ochrony — czerwony build przechodzi przez automerge).
 - Jeden `pytest` naraz na worktree (wspólny `test_timporye.db` per cwd).
@@ -178,8 +178,8 @@ PRE_001 = [
     "REFERENCES supplier_doc_profiles(id) ON DELETE CASCADE, filename VARCHAR(255) NOT NULL, "
     "stored_path TEXT NOT NULL, created_at DATETIME, last_test JSON NOT NULL DEFAULT '{}', "
     "last_test_at DATETIME)",
-    "INSERT INTO companies VALUES (1,'Borealis','BOREALIS'),(2,'Acme','ACME'),(3,'Iberia','PT')",
-    # ACME z LFA1 w trzech spółkach (import szedł do każdej) + ręczny nadawca Borealis
+    "INSERT INTO companies VALUES (1,'Beta','BETA'),(2,'Acme','ACME'),(3,'Delta','PT')",
+    # ACME z LFA1 w trzech spółkach (import szedł do każdej) + ręczny nadawca Beta
     "INSERT INTO suppliers (id, name, company_id, sap_code) VALUES "
     "(1,'ACME',2,'100'),(2,'ACME',3,'100'),(3,'Nadawca T',1,''),(4,'ACME',1,'100')",
     "INSERT INTO materials VALUES (1,'REF1'),(2,'REF2')",
@@ -228,7 +228,7 @@ def test_kartoteka001_upgrade_and_downgrade(tmp_path, monkeypatch):
     assert {"supplier_materials", "supplier_doc_variants", "sap_imports"} <= set(
         inspect(eng).get_table_names())
     with eng.connect() as c:
-        # Acme i PT → kartoteka (NULL); Borealis → nadawca Borealis (także jego kopia z LFA1)
+        # Acme i PT → kartoteka (NULL); Beta → nadawca Beta (także jego kopia z LFA1)
         assert c.exec_driver_sql(
             "SELECT id, client_company_id FROM suppliers ORDER BY id").all() == [
             (1, None), (2, None), (3, 1), (4, 1)]
@@ -303,7 +303,7 @@ def upgrade() -> None:
         b.add_column(sa.Column("lng", sa.Float, nullable=True))
         b.add_column(sa.Column("geo_source", sa.String(10), nullable=False, server_default="none"))
         b.add_column(sa.Column("shipping_port_id", sa.Integer, nullable=True))
-    # nadawcy spółek-klientów (Borealis, Cobalt…) zostają przy swojej spółce; reszta = kartoteka
+    # nadawcy spółek-klientów (Beta, Gamma…) zostają przy swojej spółce; reszta = kartoteka
     op.execute(sa.text(
         "UPDATE suppliers SET client_company_id = company_id WHERE company_id IN "
         "(SELECT id FROM companies WHERE code NOT IN :codes)"
@@ -438,7 +438,7 @@ W `backend/app/models/dictionaries.py` dodaj `Float,` do importu z `sqlalchemy` 
 class Supplier(Base):
     """Dostawca. `client_company_id` NULL = globalna kartoteka dostawców Acme (spółki na jego
     materiałach, settings.supplier_company_codes); ustawione = nadawca kontenerów spółki-klienta
-    (Borealis, Cobalt…), widoczny tylko dla tej spółki. Spec 2026-09-25-kartoteka-dostawcy."""
+    (Beta, Gamma…), widoczny tylko dla tej spółki. Spec 2026-09-25-kartoteka-dostawcy."""
     __tablename__ = "suppliers"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(160))
@@ -731,15 +731,15 @@ def _co(db, code):
 
 def _seed():
     with SessionLocal() as db:
-        acme, pt, borealis = (_co(db, c) for c in ("ACME", "PT", "BOREALIS"))
+        acme, pt, beta = (_co(db, c) for c in ("ACME", "PT", "BETA"))
         cat = Supplier(name="Kartoteka Co", sap_code="500100", address="Ningbo, CN")
-        tim = Supplier(name="Nadawca Borealis", client_company_id=borealis.id, address="Adres T")
+        tim = Supplier(name="Nadawca Beta", client_company_id=beta.id, address="Adres T")
         wh = Warehouse(name="WH-Z", company_id=acme.id)
         db.add_all([cat, tim, wh])
         db.flush()
         db.add(SupplierContact(supplier_id=cat.id, full_name="Li", email="li@k.example"))
         for login_, role, cid, whid in (("vis-pt-zak", Role.purchasing, pt.id, None),
-                                        ("vis-t-log", Role.logistics, borealis.id, None),
+                                        ("vis-t-log", Role.logistics, beta.id, None),
                                         ("vis-z-wh", Role.warehouse, acme.id, wh.id)):
             db.add(User(login=login_, hashed_password=hash_password("pass12345"), role=role,
                         company_id=cid, warehouse_id=whid))
@@ -755,7 +755,7 @@ def test_material_company_purchasing_sees_catalog_with_details(client):
     cat, _ = _seed()
     hdr = login(client, "vis-pt-zak", "pass12345")
     rows = _rows(client, hdr)
-    assert "Kartoteka Co" in rows and "Nadawca Borealis" not in rows
+    assert "Kartoteka Co" in rows and "Nadawca Beta" not in rows
     assert rows["Kartoteka Co"]["sap_code"] == "500100"
     assert rows["Kartoteka Co"]["client_company_id"] is None
     assert client.get(f"/api/suppliers/{cat}/stats", headers=hdr).status_code == 200
@@ -766,7 +766,7 @@ def test_material_company_purchasing_sees_catalog_with_details(client):
 def test_client_company_sees_only_own_senders(client):
     cat, tim = _seed()
     hdr = login(client, "vis-t-log", "pass12345")
-    assert set(_rows(client, hdr)) == {"Nadawca Borealis"}
+    assert set(_rows(client, hdr)) == {"Nadawca Beta"}
     assert client.get(f"/api/suppliers/{cat}/stats", headers=hdr).status_code == 404
     assert client.get(f"/api/suppliers/{tim}/stats", headers=hdr).status_code == 200
     assert client.get("/api/supplier-contacts", headers=hdr).json() == []
@@ -787,7 +787,7 @@ def test_forwarder_gets_names_without_details(client, admin_headers):
         "login": "vis.fwd", "password": "haslo123", "role": "forwarder",
         "forwarder_id": spedalfa, "email": "vis.fwd@example.com"})
     rows = _rows(client, login(client, "vis.fwd", "haslo123"))
-    assert rows["Kartoteka Co"]["sap_code"] == "" and rows["Nadawca Borealis"]["address"] == ""
+    assert rows["Kartoteka Co"]["sap_code"] == "" and rows["Nadawca Beta"]["address"] == ""
 
 
 def test_material_company_codes_come_from_settings(client, monkeypatch):
@@ -798,14 +798,14 @@ def test_material_company_codes_come_from_settings(client, monkeypatch):
 
 def test_create_maps_company_to_catalog_or_client_sender(client, admin_headers):
     with SessionLocal() as db:
-        acme, borealis = _co(db, "ACME").id, _co(db, "BOREALIS").id
+        acme, beta = _co(db, "ACME").id, _co(db, "BETA").id
     a = client.post("/api/suppliers", headers=admin_headers,
                     json={"name": "Nowy K", "company_id": acme}).json()
     b = client.post("/api/suppliers", headers=admin_headers,
-                    json={"name": "Nowy K", "company_id": borealis}).json()
+                    json={"name": "Nowy K", "company_id": beta}).json()
     c = client.post("/api/suppliers", headers=admin_headers, json={"name": "Bez spółki"}).json()
     assert (a["client_company_id"], b["client_company_id"], c["client_company_id"]) == (
-        None, borealis, None)
+        None, beta, None)
     # ta sama nazwa w kartotece → 409 (spółka z materiałami i brak spółki = ta sama kartoteka)
     assert client.post("/api/suppliers", headers=admin_headers,
                        json={"name": "Nowy K"}).status_code == 409
@@ -822,7 +822,7 @@ W `backend/app/config.py` po linii `invoice_tolerance_pct: float = Field(default
 
 ```python
     # kartoteka dostawców (spec 2026-09-25): kody spółek (Company.code, CSV) pracujących na
-    # materiałach Acme — widzą i używają globalnej kartoteki. Pozostałe (Borealis, Cobalt…)
+    # materiałach Acme — widzą i używają globalnej kartoteki. Pozostałe (Beta, Gamma…)
     # mają tylko własnych nadawców kontenerów (Supplier.client_company_id). Env: SUPPLIER_COMPANY_CODES
     supplier_company_codes: str = "ACME,PT"
 ```
@@ -1107,7 +1107,7 @@ def _co(db, code):
 def _seed():
     with SessionLocal() as db:
         cat = Supplier(name="Kartoteka Co", sap_code="500100")
-        tim = Supplier(name="Nadawca Borealis", client_company_id=_co(db, "BOREALIS").id)
+        tim = Supplier(name="Nadawca Beta", client_company_id=_co(db, "BETA").id)
         db.add_all([cat, tim])
         db.commit()
         return cat.id, tim.id
@@ -1120,7 +1120,7 @@ def _ids(*codes):
 
 def test_container_accepts_catalog_only_in_material_company(client, admin_headers):
     cat, tim = _seed()
-    acme, pt, borealis = _ids("ACME", "PT", "BOREALIS")
+    acme, pt, beta = _ids("ACME", "PT", "BETA")
 
     def post(no, company, supplier):
         return client.post("/api/containers", headers=admin_headers, json={
@@ -1128,22 +1128,22 @@ def test_container_accepts_catalog_only_in_material_company(client, admin_header
 
     assert post(NOS[0], acme, cat) == 201
     assert post(NOS[1], pt, cat) == 201
-    assert post(NOS[2], borealis, cat) == 404
-    assert post(NOS[3], borealis, tim) == 201
+    assert post(NOS[2], beta, cat) == 404
+    assert post(NOS[3], beta, tim) == 201
     assert post(NOS[4], acme, tim) == 404
 
 
 def test_queue_import_resolves_catalog_name_only_for_material_company(client):
     cat, tim = _seed()
     with SessionLocal() as db:
-        acme, borealis = _co(db, "ACME").id, _co(db, "BOREALIS").id
+        acme, beta = _co(db, "ACME").id, _co(db, "BETA").id
         assert resolve_supplier_id(db, acme, "KARTOTEKA CO") == cat
-        assert resolve_supplier_id(db, borealis, "Kartoteka Co") is None
-        assert resolve_supplier_id(db, borealis, "nadawca borealis") == tim
+        assert resolve_supplier_id(db, beta, "Kartoteka Co") is None
+        assert resolve_supplier_id(db, beta, "nadawca beta") == tim
 
 
 def test_found_order_by_name_creates_catalog_or_client_sender(client, admin_headers):
-    for code, number in (("ACME", "ZL-K1"), ("BOREALIS", "ZL-K2")):
+    for code, number in (("ACME", "ZL-K1"), ("BETA", "ZL-K2")):
         r = client.post("/api/zlecenia", headers=admin_headers, json={
             "number": number, "company_code": code, "supplier_name": "Nowy Nadawca",
             "container_count": 1})
@@ -1151,7 +1151,7 @@ def test_found_order_by_name_creates_catalog_or_client_sender(client, admin_head
     with SessionLocal() as db:
         owners = sorted(str(s.client_company_id) for s in db.scalars(
             select(Supplier).where(Supplier.name == "Nowy Nadawca")))
-        assert owners == sorted(["None", str(_co(db, "BOREALIS").id)])
+        assert owners == sorted(["None", str(_co(db, "BETA").id)])
 
 
 def test_detect_supplier_sees_catalog_only_for_material_company(client):
@@ -1162,16 +1162,16 @@ def test_detect_supplier_sees_catalog_only_for_material_company(client):
         db.commit()
         text = "COMMERCIAL INVOICE — KARTOTEKA CO LTD"
         assert profiles.detect_supplier(db, text, _co(db, "ACME").id).id == cat
-        assert profiles.detect_supplier(db, text, _co(db, "BOREALIS").id) is None
+        assert profiles.detect_supplier(db, text, _co(db, "BETA").id) is None
 
 
 def test_alias_for_catalog_supplier_needs_file_company(client, admin_headers):
     cat, _ = _seed()
-    acme, borealis = _ids("ACME", "BOREALIS")
+    acme, beta = _ids("ACME", "BETA")
     url = f"/api/suppliers/{cat}/aliases"
     assert client.post(url, headers=admin_headers, json={"alias": "KART CO"}).status_code == 422
     assert client.post(url, headers=admin_headers,
-                       json={"alias": "KART CO", "company_id": borealis}).status_code == 404
+                       json={"alias": "KART CO", "company_id": beta}).status_code == 404
     r = client.post(url, headers=admin_headers, json={"alias": "KART CO", "company_id": acme})
     assert r.status_code == 201, r.text
     with SessionLocal() as db:
@@ -1182,7 +1182,7 @@ def test_unmapped_rows_flag_catalog_companies(client, admin_headers):
     with SessionLocal() as db:
         db.add_all([Container(container_no=NOS[0], company_id=_co(db, "ACME").id,
                               supplier_raw="Plik Z"),
-                    Container(container_no=NOS[1], company_id=_co(db, "BOREALIS").id,
+                    Container(container_no=NOS[1], company_id=_co(db, "BETA").id,
                               supplier_raw="Plik T")])
         db.commit()
     rows = {r["name"]: r["catalog"]
@@ -1191,8 +1191,8 @@ def test_unmapped_rows_flag_catalog_companies(client, admin_headers):
 
 
 def test_purge_endpoint_is_gone(client, admin_headers):
-    r = client.post("/api/suppliers/purge?company_code=BOREALIS", headers=admin_headers,
-                    json={"confirm": "BOREALIS"})
+    r = client.post("/api/suppliers/purge?company_code=BETA", headers=admin_headers,
+                    json={"confirm": "BETA"})
     assert r.status_code in (404, 405)
 ```
 
@@ -1792,9 +1792,9 @@ def test_import_is_idempotent_and_skips_repeated_sap_code(db_session):
 
 
 def test_import_fills_sap_code_on_catalog_record_not_on_client_sender(db_session):
-    borealis = db_session.scalar(select(Company).where(Company.code == "BOREALIS"))
+    beta = db_session.scalar(select(Company).where(Company.code == "BETA"))
     db_session.add_all([Supplier(name="DEMOLOG GMBH"),
-                        Supplier(name="DEMOLOG GMBH", client_company_id=borealis.id)])
+                        Supplier(name="DEMOLOG GMBH", client_company_id=beta.id)])
     db_session.commit()
 
     counts = _lfa1_upsert(db_session, _parse_lfa1_rows(_xlsx()))
@@ -1805,7 +1805,7 @@ def test_import_fills_sap_code_on_catalog_record_not_on_client_sender(db_session
         Supplier.name == "DEMOLOG GMBH", Supplier.client_company_id.is_(None))).one()
     assert catalog.sap_code == "90000001"
     sender = db_session.scalars(select(Supplier).where(
-        Supplier.client_company_id == borealis.id)).one()
+        Supplier.client_company_id == beta.id)).one()
     assert sender.sap_code == ""
 ```
 
@@ -1975,7 +1975,7 @@ git rm backend/scripts/import_lfa1.py
 
 `backend/scripts/purge_company.py`: `_count(db, Supplier, company_id=cid)` → `_count(db, Supplier, client_company_id=cid)`; `Supplier.company_id == cid` → `Supplier.client_company_id == cid` (usuwa tylko nadawców tej spółki-klienta; kartoteka jest wspólna).
 
-`backend/scripts/import_excel.py:82`: `get_or_create(db, Supplier, company_id=borealis.id, name=rec["supplier"])` → `get_or_create(db, Supplier, client_company_id=borealis.id, name=rec["supplier"])`.
+`backend/scripts/import_excel.py:82`: `get_or_create(db, Supplier, company_id=beta.id, name=rec["supplier"])` → `get_or_create(db, Supplier, client_company_id=beta.id, name=rec["supplier"])`.
 
 - [ ] **Step 7: Sprawdź, że nic już nie czyta `Supplier.company_id`**
 
@@ -1986,7 +1986,7 @@ Expected: brak trafień.
 
 Run: `cd backend && python -m pytest tests/ -q` (jeden pytest naraz w tym worktree)
 Expected: wszystko PASS. Typowe czerwone i co z nimi zrobić:
-- test tworzy dwóch dostawców o tej samej nazwie w ACME i PT (obie → kartoteka) i dostaje 409 → zmień drugą spółkę na BOREALIS/COBALT albo nazwę; zapisz w commicie, który test i dlaczego.
+- test tworzy dwóch dostawców o tej samej nazwie w ACME i PT (obie → kartoteka) i dostaje 409 → zmień drugą spółkę na BETA/GAMMA albo nazwę; zapisz w commicie, który test i dlaczego.
 - test oczekuje szczegółów dostawcy dla konta magazynu/spedytora → to zamierzona zmiana spec (§2 widoczność) — zaktualizuj asercję na pusty `sap_code`/`address`.
 
 - [ ] **Step 9: Commit**
@@ -2112,7 +2112,7 @@ Expected: FAIL (`ModuleNotFoundError: No module named 'app.supplier_consolidatio
 """Scalanie dubli dostawców po przejściu na globalną kartotekę (spec 2026-09-25 §3, PR1).
 
 Import LFA1 szedł dotąd do KAŻDEJ spółki, więc ten sam dostawca SAP istnieje w kartotece
-kilka razy (dawne kopie Acme i Iberia). `proposal` = dry-run: grupy tego samego kodu
+kilka razy (dawne kopie Acme i Delta). `proposal` = dry-run: grupy tego samego kodu
 SAP („pewne") + aktywni w kartotece bez kodu SAP („do rozstrzygnięcia", z podpowiedzią po
 nazwie). `apply_groups` scala grupy tą samą funkcją co ręczne „Scal z…" (merge_into), więc
 przepina wszystkie FK. Wołają: ekran Master data → Dostawcy i scripts/consolidate_suppliers.py.
@@ -3042,14 +3042,14 @@ Treść PR (stdin) — zawiera procedurę prod:
 Spec: docs/superpowers/specs/2026-09-25-kartoteka-dostawcy-design.md (§9 pkt 1). Plan: docs/superpowers/plans/2026-09-25-kartoteka-dostawcy-1-model.md
 
 ## Co
-- `suppliers` globalne: `company_id` → `client_company_id` (NULL = kartoteka Acme; ustawione = nadawca spółki-klienta Borealis/Cobalt), pola SAP/mapy, kontakty z rolą/komunikatorem, `supplier_materials` (kopia map jako unconfirmed), `supplier_doc_variants`, próbki z sha256/statusem, `sap_imports` — migracja `kartoteka001`.
+- `suppliers` globalne: `company_id` → `client_company_id` (NULL = kartoteka Acme; ustawione = nadawca spółki-klienta Beta/Gamma), pola SAP/mapy, kontakty z rolą/komunikatorem, `supplier_materials` (kopia map jako unconfirmed), `supplier_doc_variants`, próbki z sha256/statusem, `sap_imports` — migracja `kartoteka001`.
 - Widoczność w `deps.py`, lista spółek „z materiałami" w `SUPPLIER_COMPANY_CODES` (domyślnie `ACME,PT`).
 - Scalanie dubli: podgląd + wykonanie (`scripts/consolidate_suppliers.py`, ekran Master data → Dostawcy → „Do rozstrzygnięcia"); ta sama funkcja co „Scal z…".
 - Import LFA1 do jednej kartoteki (klucz kod SAP). Usunięte: „Wyczyść słownik dostawców", `scripts/import_lfa1.py`.
 
 ## Zmiany zachowania
 - Magazyn, agencja, spedytor: na listach dostawców same nazwy (bez adresu/kodu SAP); karta dostawcy z kartoteki → 404. Warstwa „fabryki" na mapie trackingu znika dla tych ról.
-- Borealis/Cobalt: widzą tylko swoich nadawców (jak dziś).
+- Beta/Gamma: widzą tylko swoich nadawców (jak dziś).
 
 ## Wdrożenie na prod (kolejność!)
 1. Kopia bazy (`sh scripts/backup.sh` w kontenerze backendu) i próba na kopii lokalnie: `alembic upgrade head` + `python -m scripts.consolidate_suppliers` (podgląd).
@@ -3323,12 +3323,12 @@ Oznaczenie jako gotowy (`gh pr ready`) — dopiero po potwierdzeniu użytkownika
 
 ## Decyzje usera (2026-09-25, po planie) — WIĄŻĄCE dla tasków
 
-1. Nadawcy Borealis/Cobalt zostają rekordami z `client_company_id` w PR1 (przepięcie na tekst = osobny PR).
-2. **Masowe usuwanie kopii bez powiązań** (tysiące kopii LFA1 w słownikach Borealis/Cobalt i inne rekordy bez żadnych powiązań): Task 6 dodaje do serwisu `supplier_consolidation` funkcje `orphans_preview(db) -> {"count": int, "by_company": {code: int}, "sample": [{"id","name","company_code"}] (max 50)}` i `delete_orphans(db, user) -> int` (usuwa tylko rekordy bez ŻADNYCH powiązań — te same sprawdzenia co istniejący DELETE dostawcy — w jednej transakcji, audyt zbiorczy `entity_type="suppliers", field="__orphans_deleted__"` z licznikami i listą id), endpointy `GET /api/suppliers/resolve/orphans` i `POST /api/suppliers/resolve/orphans/delete` (tylko admin), flaga `--delete-orphans` w `scripts/consolidate_suppliers.py` (bez `--apply` = tylko podgląd). Task 8 dodaje w `SupplierResolvePanel` sekcję „Kopie bez powiązań (N)” z podglądem (liczniki per spółka, próbka nazw) i przyciskiem „Usuń N kopii bez powiązań” z potwierdzeniem (wpisanie liczby N). Testy: backend (rekord z kontenerem/zamówieniem/aliasem/profilem NIE jest usuwany; bez powiązań — usuwany; tylko admin), frontend (podgląd, potwierdzenie, wywołanie).
+1. Nadawcy Beta/Gamma zostają rekordami z `client_company_id` w PR1 (przepięcie na tekst = osobny PR).
+2. **Masowe usuwanie kopii bez powiązań** (tysiące kopii LFA1 w słownikach Beta/Gamma i inne rekordy bez żadnych powiązań): Task 6 dodaje do serwisu `supplier_consolidation` funkcje `orphans_preview(db) -> {"count": int, "by_company": {code: int}, "sample": [{"id","name","company_code"}] (max 50)}` i `delete_orphans(db, user) -> int` (usuwa tylko rekordy bez ŻADNYCH powiązań — te same sprawdzenia co istniejący DELETE dostawcy — w jednej transakcji, audyt zbiorczy `entity_type="suppliers", field="__orphans_deleted__"` z licznikami i listą id), endpointy `GET /api/suppliers/resolve/orphans` i `POST /api/suppliers/resolve/orphans/delete` (tylko admin), flaga `--delete-orphans` w `scripts/consolidate_suppliers.py` (bez `--apply` = tylko podgląd). Task 8 dodaje w `SupplierResolvePanel` sekcję „Kopie bez powiązań (N)” z podglądem (liczniki per spółka, próbka nazw) i przyciskiem „Usuń N kopii bez powiązań” z potwierdzeniem (wpisanie liczby N). Testy: backend (rekord z kontenerem/zamówieniem/aliasem/profilem NIE jest usuwany; bez powiązań — usuwany; tylko admin), frontend (podgląd, potwierdzenie, wywołanie).
 3. Zawężenie dla magazyn/agencja/spedytor (tylko nazwy, bez karty i warstwy fabryk na mapie) — zaakceptowane.
 4. PR2: przed usunięciem `supplier_material_maps` eksport do xlsx (kopia) — poza PR1.
 5. `column_map` zostaje do PR5.
-6. Kod spółki Iberia = `PT` (potwierdzone w `db_bootstrap.py`) — domyślne `SUPPLIER_COMPANY_CODES=ACME,PT` poprawne.
+6. Kod spółki Delta = `PT` (potwierdzone w `db_bootstrap.py`) — domyślne `SUPPLIER_COMPANY_CODES=ACME,PT` poprawne.
 7. (2026-09-25, po review Task 6) Masowe usuwanie kopii bez powiązań CHRONI dostawców z profilem dokumentów (profil = blokada), choć pojedyncze DELETE kasuje profil kaskadowo — świadoma różnica, decyzja usera.
 8. (2026-09-25, po final review) Masowe usuwanie kopii bez powiązań obejmuje WYŁĄCZNIE rekordy nadawców spółek-klientów (`client_company_id IS NOT NULL`) bez powiązań. Kartoteka Acme (z kodem SAP i bez) nigdy masowo; rekordy kartoteki bez kodu SAP tylko ręcznie. Audyt zbiorczy zawiera nazwę + kod SAP + spółkę każdego usuniętego.
 9. (2026-09-25, po final review) „Scal wszystkie” pomija grupy, w których ≥2 rekordy mają profil dokumentów; w podglądzie oznaczone „2 profile — scal ręcznie”.

@@ -18,11 +18,11 @@ describe('themeColors', () => {
 
   it('firmowe per motyw, osobiste na wierzchu; przełączenie motywu zdejmuje poprzedni zestaw', () => {
     localStorage.setItem(USER_KEY, JSON.stringify({ light: { '--bg': '#111111' }, dark: {} }))
-    setThemeColors({ light: { '--bg': '#eeeeee', '--panel': '#ffffff' }, dark: { '--kq-row-dlt': '#4d3a12' } })
+    setThemeColors({ light: { '--bg': '#eeeeee', '--panel': '#ffffff' }, dark: { '--kq-row-mag1': '#4d3a12' } })
     expect(prop('--bg')).toBe('#111111')              // osobisty wygrywa
     expect(prop('--panel')).toBe('#ffffff')           // firmowy
     applyTheme('dark')
     expect(prop('--bg')).toBe('')                     // jasny zestaw zdjęty
-    expect(prop('--kq-row-dlt')).toBe('#4d3a12')
+    expect(prop('--kq-row-mag1')).toBe('#4d3a12')
   })
 })

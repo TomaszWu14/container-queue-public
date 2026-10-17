@@ -7,8 +7,8 @@ VALID_NO = "MSDU0806613"
 
 def _make_container(client, admin_headers, no=VALID_NO, forwarder_id=None):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
-    body = {"container_no": no, "company_id": borealis}
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
+    body = {"container_no": no, "company_id": beta}
     if forwarder_id:
         body["forwarder_id"] = forwarder_id
     return client.post("/api/containers", headers=admin_headers, json=body).json()

@@ -4,7 +4,7 @@
   background: #fff; border-radius: 2px; padding: 3px 4px;
   border: 1px solid #dde3ec;
 }
-.logo-mark.cobalt { background: #2b0f2e; border-radius: 3px; align-items: center;
+.logo-mark.gamma { background: #2b0f2e; border-radius: 3px; align-items: center;
   justify-content: center; display: inline-flex; flex-direction: row; }
 .logo-caption { font-size: 8px; font-weight: 800; letter-spacing: 0.08em; color: inherit; }
 .logo-full { display: inline-flex; flex-direction: column; align-items: center; }

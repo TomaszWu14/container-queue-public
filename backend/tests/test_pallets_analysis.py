@@ -8,7 +8,7 @@ def _rows(paz_map):
     return build_rows(
         m.STOCK_ROWS, m.VBBA_ROWS, m.ORDERS_ROWS, m.USAGE_ROWS,
         paz_map, called_map={}, key="produkt",
-        location_field="miejsce_skladowania", dlt_values={"3DLT"},
+        location_field="miejsce_skladowania", mag1_values={"3MAG1"},
         open_statuses=OPEN, target_days=14, urgent_threshold=2.0)
 
 
@@ -16,7 +16,7 @@ def test_signals_with_paz():
     rows, disc, _ = _rows({"DEMO-SKU-020": 100})
     r = next(x for x in rows if x["produkt"] == "DEMO-SKU-020")
     assert r["stan_mag_pal"] == 10           # 1000/100 (magazyn)
-    assert r["stan_dlt_pal"] == 20           # 2000/100 (DLT)
+    assert r["stan_mag1_pal"] == 20           # 2000/100 (MAG-1)
     assert r["dostawy_pal"] == 4             # tylko 'Nie rozpoczęte' 400/100
     assert r["zlec_niepotw_pal"] == 2        # 200/100
     assert r["projekcja_mag_pal"] == 4       # 10 - (4+2)
@@ -25,11 +25,11 @@ def test_signals_with_paz():
     assert r["sugestia_pal"] == 10           # 1*14 + 4 + 2 - 10 = 10, clamp<=20
 
 
-def test_suggestion_capped_by_dlt_stock():
-    # duże zapotrzebowanie, mały stan DLT -> sugestia ograniczona stanem DLT
+def test_suggestion_capped_by_mag1_stock():
+    # duże zapotrzebowanie, mały stan MAG-1 -> sugestia ograniczona stanem MAG-1
     rows, _, _ = _rows({"DEMO-SKU-020": 100})
     r = next(x for x in rows if x["produkt"] == "DEMO-SKU-020")
-    assert r["sugestia_pal"] <= r["stan_dlt_pal"]
+    assert r["sugestia_pal"] <= r["stan_mag1_pal"]
 
 
 def test_missing_paz_flags_discrepancy():

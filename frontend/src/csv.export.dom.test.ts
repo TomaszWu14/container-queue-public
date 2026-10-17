@@ -26,7 +26,7 @@ describe('csvCell / toCsv (wspólny eksport CSV)', () => {
     expect(toCsv([['a;b', 'x"y', 'l1\nl2'], [1, 2, 3]])).toBe('"a;b";"x""y";"l1\nl2"\n1;2;3')
   })
   it('eksporty stron idą przez ochronę przed formułami', () => {
-    const hu = huInventoryCsv([{ produkt: '=cmd', hu: 'H1', ilosc: 1, in_dlt: true, called: false,
+    const hu = huInventoryCsv([{ produkt: '=cmd', hu: 'H1', ilosc: 1, in_mag1: true, called: false,
       call_number: '', call_status: '', mismatch: false }])
     expect(hu.split('\n')[1]).toBe("'=cmd;H1;1;tak;nie;;;nie")
     const st = statsToCsv({ months: 12, suppliers: [{ name: '@evil', containers: 1, with_complaint: 0, pct: 0 }],

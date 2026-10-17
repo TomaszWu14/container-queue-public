@@ -3,7 +3,7 @@ import datetime
 
 from app.database import SessionLocal
 from app.models import Container, ContainerStatus
-from tests.test_tracking import _borealis_id
+from tests.test_tracking import _beta_id
 
 
 def test_map_reports_counts(client, admin_headers):
@@ -16,7 +16,7 @@ def test_map_only_lists_containers_with_rf(client, admin_headers):
     # „możliwy do śledzenia" = ma numer RF (id śledzenia armatora) i nie jest
     # zrealizowany. Kontroluje regresję „setki śledzonych znikąd zamiast ~10".
     with SessionLocal() as db:
-        company_id = _borealis_id(db)
+        company_id = _beta_id(db)
         db.add(Container(container_no="MSDU1111111", company_id=company_id,
                          status=ContainerStatus.W_PORCIE, rf_number="6200000001"))  # RF → śledzony
         db.add(Container(container_no="MSDU2222222", company_id=company_id,
@@ -38,7 +38,7 @@ def test_map_ignores_estimated_and_future_events(client, admin_headers):
     from app.models import TrackingEvent, utcnow
     now = utcnow()
     with SessionLocal() as db:
-        c = Container(container_no="MSDU5555555", company_id=_borealis_id(db),
+        c = Container(container_no="MSDU5555555", company_id=_beta_id(db),
                       status=ContainerStatus.W_TRANSPORCIE, rf_number="6200000005")
         db.add(c)
         db.flush()

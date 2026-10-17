@@ -12,7 +12,7 @@ from ..schemas import PazIn, PazOut
 from ..tabular import XLSX_EXT, normalize_header, read_rows, to_float
 from .forwarding_files import read_upload_capped
 
-router = APIRouter(prefix="/api/paz", tags=["wywolania-dlt"])
+router = APIRouter(prefix="/api/paz", tags=["wywolania-mag1"])
 
 
 @router.get("", response_model=list[PazOut])

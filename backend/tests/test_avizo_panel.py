@@ -12,9 +12,9 @@ def _company(code):
 
 
 def test_scoping_other_company_cannot_list_or_act(client, admin_headers, outbox):
-    req_a, raw_a, ids_a = make_request("BOREALIS")
-    req_b, _, _ = make_request("COBALT")
-    headers_a = _make_scoped_user(client, admin_headers, "log.a", _company("BOREALIS"))
+    req_a, raw_a, ids_a = make_request("BETA")
+    req_b, _, _ = make_request("GAMMA")
+    headers_a = _make_scoped_user(client, admin_headers, "log.a", _company("BETA"))
     listed = {r["id"] for r in client.get("/api/avizo-requests", headers=headers_a).json()}
     assert req_a in listed and req_b not in listed
     assert client.get(f"/api/avizo-requests/{req_b}", headers=headers_a).status_code in (403, 404)

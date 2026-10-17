@@ -18,7 +18,7 @@ definicja z tego pliku. Nazwy w kodzie i tłumaczeniach UI (`frontend/src/i18n/`
 | **Spedytor (forwarder)** | organizuje transport i awizację; może działać bez konta przez link | rola `forwarder` |
 | **Agencja celna (customs)** | prowadzi odprawę; jedyna rola, która zmienia status odprawy (logistyka awaryjnie) | rola `customs` |
 | **Magazyn** | miejsce rozładunku; konto magazynu widzi tylko swój magazyn; potwierdza wyłącznie DOSTARCZONY | rola `warehouse`, `Warehouse` |
-| **DLT** | magazyn zewnętrzny (firma logistyczna) obsługujący wywołania palet | `routers/dlt.py`, `pallets.py` |
+| **MAG-1** | magazyn zewnętrzny (firma logistyczna) obsługujący wywołania palet | `routers/mag1.py`, `pallets.py` |
 | **ETA / ETD** | szacowany czas przybycia / wypłynięcia statku | `Container.eta`, `etd` |
 | **Data awizacji (notify_date)** | planowana data dostawy do magazynu; jedno pole ze statusem planu (D1) | `Container.notify_date` |
 | **Status planu** | PROPOZYCJA (system) → WYSLANE (do spedytora) → POTWIERDZONE (po uzgodnieniu); ręczna zmiana daty cofa do PROPOZYCJA | `PlanningStatus`, FR-014, FR-015 |
