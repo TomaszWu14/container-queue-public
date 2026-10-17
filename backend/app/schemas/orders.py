@@ -124,7 +124,7 @@ class OrderOut(ORMModel):
     container_count: int = 0            # faktyczna liczba rekordów kontenerów
     planned_container_count: int = 0    # liczba kontenerów zaplanowana przy zakładaniu zlecenia
     progress: OrderProgress = OrderProgress()
-    # --- pola zlecenia (Borealis/Cobalt) ---
+    # --- pola zlecenia (Beta/Gamma) ---
     supplier_contact_id: int | None = None
     supplier_contact_name: str | None = None
     departure_port_id: int | None = None

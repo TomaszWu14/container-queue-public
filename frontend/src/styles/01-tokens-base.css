@@ -18,17 +18,17 @@
   /* aliasy zmiennych używanych w CSS/TSX, których nigdy nie zdefiniowano (działały tylko fallbacki) */
   --mono: var(--font-mono); --fg: var(--text); --ok: var(--success-ink); --radius: var(--r-md);
   --panel-2: var(--surface-2); --navy-800: var(--chrome);
-  /* tło wiersza kolejki wg magazynu rozładunku (DLT = róż, ACME = zieleń); tekst --text
+  /* tło wiersza kolejki wg magazynu rozładunku (MAG-1 = róż, ACME = zieleń); tekst --text
      na tych tłach zachowuje kontrast WCAG AA (ciemny tekst na jasnym pastelu).
      Nasycenie pogłębione 2x względem bieli — poprzednie odcienie (#fceef8/#f4fcf6)
      dzieliło od bieli tylko 3-17 punktów na 255 i na wielu monitorach były nieczytelne. */
   /* magazyny (2026-09-24): lekki tint tła + pasek akcentu + ramka 1px w tym samym odcieniu */
-  --wh-dlt: #F4A1B8;          /* Pantone 14-2216 TCX Pink Drink – akcent */
-  /* tła magazynów (wh-dlt-bg, wh-acme-bg) w 00-tokens.css — bez zmian; ramka/pasek z tokenu -bar (≥ 3:1 do tła) */
-  --wh-dlt-border: var(--wh-dlt-bar);
+  --wh-mag1: #F4A1B8;          /* Pantone 14-2216 TCX Pink Drink – akcent */
+  /* tła magazynów (wh-mag1-bg, wh-acme-bg) w 00-tokens.css — bez zmian; ramka/pasek z tokenu -bar (≥ 3:1 do tła) */
+  --wh-mag1-border: var(--wh-mag1-bar);
   --wh-acme: #98FB98;        /* miętowy – akcent */
   --wh-acme-border: var(--wh-acme-bar);
-  --row-dlt: var(--wh-dlt-bg); --row-dlt-border: var(--wh-dlt-bar);
+  --row-mag1: var(--wh-mag1-bg); --row-mag1-border: var(--wh-mag1-bar);
   --row-acme: var(--wh-acme-bg); --row-acme-border: var(--wh-acme-bar);
   --row-none: var(--wh-none-bg);  --row-none-border: var(--wh-none-bar); --row-none-glow: rgba(96, 106, 120, 0.28);
   /* znacznik głównego transportu w kolejce (morski / lotniczy / kolej / koła / inne) — tło półprzezroczyste, bo leży na tle magazynu */
@@ -50,7 +50,7 @@
 }
 
 /* Jeden akcent w całej aplikacji (decyzja 2026-09-28): zakładki spółek NIE przemalowują
-   --accent (dawniej .mod-acme/-dlt/-cobalt) — spółkę pokazuje kropka --co-* na zakładce. */
+   --accent (dawniej .mod-acme/-mag1/-gamma) — spółkę pokazuje kropka --co-* na zakładce. */
 /* #62 — dark mode: nadpisanie tokenów :root na ciemną konsolę. --chrome zostaje
    ciemny (bez zmian — topnav już jest ciemny w obu motywach). --accent bez zmian
    (bursztyn jako wypełnienie działa tak samo na ciemnym). --accent-ink JAŚNIEJSZY,

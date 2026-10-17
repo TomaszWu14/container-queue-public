@@ -4,7 +4,7 @@ Regresja: edycja w słownikach (DictionariesTab) nie wysyła avizo_cc spółki a
 magazynu — backend nadpisywał je wartościami domyślnymi schematu (pełny model_dump)."""
 
 
-def _company(client, headers, code="BOREALIS"):
+def _company(client, headers, code="BETA"):
     return next(c for c in client.get("/api/companies", headers=headers).json()
                 if c["code"] == code)
 

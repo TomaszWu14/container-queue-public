@@ -31,7 +31,7 @@ def test_listing_unknown_entity_404(client, admin_headers):
 def test_listing_company_isolation(client, admin_headers):
     """Logistyk spółki B nie widzi historii dostawców spółki A."""
     companies, _ = _make_history(client, admin_headers)
-    other = next(c for c in companies if c["code"] == "BOREALIS")
+    other = next(c for c in companies if c["code"] == "BETA")
     client.post("/api/users", headers=admin_headers, json={
         "login": "log-b", "password": "haslo-logistyka-123", "role": "logistics",
         "company_id": other["id"]})
@@ -45,7 +45,7 @@ def test_company_history_isolation(client, admin_headers):
     historii spółki A (ani per id, ani w listingu), a swoją widzi."""
     companies = client.get("/api/companies", headers=admin_headers).json()
     acme = next(c for c in companies if c["code"] == "ACME")
-    other = next(c for c in companies if c["code"] == "BOREALIS")
+    other = next(c for c in companies if c["code"] == "BETA")
     for c in (acme, other):
         body = {"name": c["name"] + " X", "code": c["code"]}
         assert client.patch(f"/api/companies/{c['id']}", headers=admin_headers,

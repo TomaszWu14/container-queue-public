@@ -21,7 +21,7 @@ flowchart LR
     subgraph ZEWN[Zewnętrzni]
         SPED[Spedycja<br/>zlecenia, wyceny, kierowcy, potwierdzanie dat]
         AGC[Agencja celna<br/>odprawa, agent, statusy]
-        MAG[Magazyn np. DLT<br/>przyjęcie: DOSTARCZONY/ZREALIZOWANY]
+        MAG[Magazyn np. MAG-1<br/>przyjęcie: DOSTARCZONY/ZREALIZOWANY]
         KIER[Kierowca<br/>strona z tokenu SMS - bez konta]
     end
     LOG -->|zleca transport / odprawę / wysyła plan| SPED & AGC

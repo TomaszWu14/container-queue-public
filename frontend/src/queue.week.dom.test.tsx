@@ -23,7 +23,7 @@ const CONTAINERS = [
     warehouse_name: 'ACME', is_delayed: true, sent_number: '180022585',
     order_numbers: '4500617421\n4500617412\n4500617989' },
   { ...base, id: 2, container_no: 'TIIU9152821', notify_date: '2026-08-11',
-    warehouse_name: 'DLT', sent_number: '180023076', order_numbers: '4500618818' },
+    warehouse_name: 'MAG-1', sent_number: '180023076', order_numbers: '4500618818' },
 ]
 
 vi.mock('./api', () => ({

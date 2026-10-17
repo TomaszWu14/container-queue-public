@@ -12,7 +12,7 @@ CATEGORIES: dict[str, tuple[str, ...]] = {
     "customs": ("customs", "customs-delay", "docs-missing"),
     "orders": ("order", "freight_approval", "freight_decision", "invoice-mismatch", "supplier",
                "quote", "marm", "forecast-overload", "crd_escalation"),
-    "deliveries": ("avizo", "planned", "driver", "gate", "dlt", "pallet_urgent", "status",
+    "deliveries": ("avizo", "planned", "driver", "gate", "mag1", "pallet_urgent", "status",
                    "demurrage"),
     "messages": ("message", "mention", "file", "complaint", "complaint_deadline",
                  "complaint_draft", "complaint_reminder", "bulletin"),

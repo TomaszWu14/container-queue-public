@@ -25,7 +25,7 @@ import { useViewPrefs } from './useViewPrefs'
 import type { Container } from '../../types'
 
 const row = (id: number) => ({
-  id, container_no: `MSCU000000${id}`, status: 'W_PORCIE', warehouse_name: 'DLT',
+  id, container_no: `MSCU000000${id}`, status: 'W_PORCIE', warehouse_name: 'MAG-1',
   supplier_name: `Dostawca ${id}`, vessel: `STATEK ${id}`, customs_status: 'BRAK', eta: '2026-10-01',
 }) as unknown as Container
 

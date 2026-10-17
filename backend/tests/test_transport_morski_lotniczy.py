@@ -8,9 +8,9 @@ from app.models import TransportType
 @pytest.mark.parametrize("mode,expected", [("SEA", "morski"), ("AIR", "lotniczy"), ("RAIL", "kolej")])
 def test_found_order_mode_sets_container_transport(client, admin_headers, mode, expected):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    cobalt = next(c["id"] for c in companies if c["code"] == "COBALT")
+    gamma = next(c["id"] for c in companies if c["code"] == "GAMMA")
     resp = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": f"ZL-{mode}", "company_id": cobalt, "container_count": 1, "main_mode": mode})
+        "number": f"ZL-{mode}", "company_id": gamma, "container_count": 1, "main_mode": mode})
     assert resp.status_code == 201
     assert [c["transport_type"] for c in resp.json()["containers"]] == [expected]
 

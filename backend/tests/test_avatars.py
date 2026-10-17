@@ -67,9 +67,9 @@ def test_heic_upload_rejected(client):
 def test_avatar_visibility_follows_watcher_rule(client):
     admin = login(client)
     acme = _company_id(client, admin)
-    borealis = _company_id(client, admin, "BOREALIS")
+    beta = _company_id(client, admin, "BETA")
     _user("logz", Role.logistics, acme)
-    _user("logt", Role.logistics, borealis)
+    _user("logt", Role.logistics, beta)
     _user("magz", Role.warehouse, acme)
     lz = login(client, "logz", "pass12345")
     lt_id = client.get("/api/auth/me", headers=login(client, "logt", "pass12345")).json()["id"]

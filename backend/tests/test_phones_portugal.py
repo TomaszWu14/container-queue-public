@@ -73,7 +73,7 @@ def test_avizo_driver_form_saves_351_for_portuguese_warehouse(client, outbox, ad
 
 def test_new_warehouse_from_queue_inherits_company_country(client, admin_headers):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    company = next(c for c in companies if c["code"] == "BOREALIS")
+    company = next(c for c in companies if c["code"] == "BETA")
     with SessionLocal() as db:
         for wh in db.scalars(select(Warehouse).where(Warehouse.company_id == company["id"])):
             wh.country = "PT"

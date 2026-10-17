@@ -213,7 +213,7 @@ export default function QueuePage({ archive = false }: { archive?: boolean }) {
   const groups = useMemo(() => groupContainers(visibleContainers, groupBy), [visibleContainers, groupBy])
   // każda zakładka to jedna spółka — kolumnę „spółka" pokazujemy tylko we wspólnym fallbacku
   const showCompany = module === 'main'
-  // limity dzienne magazynów w nagłówku grupy dnia (ACME n/limit, DLT n/limit)
+  // limity dzienne magazynów w nagłówku grupy dnia (ACME n/limit, MAG-1 n/limit)
   const dayRows = useMemo(() => groupBy === 'weekday'
     ? groups.filter(g => g.key).map(g => ({ day: g.key, items: g.items })) : [], [groups, groupBy])
   const warehouseKeys = useMemo(() =>
@@ -273,7 +273,7 @@ export default function QueuePage({ archive = false }: { archive?: boolean }) {
     return params
   })
 
-  const importCompanyCode = moduleCode ?? (user?.company_code ?? 'BOREALIS')
+  const importCompanyCode = moduleCode ?? (user?.company_code ?? 'BETA')
 
   // jeden wspólny wiersz nagłówków kolumn dla wszystkich dni (z filtrami w kolumnach)
   const opts = {

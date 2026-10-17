@@ -287,7 +287,7 @@ def staffing_forecast(db: Session = Depends(get_db), user: User = staff):
                                     Container.status.not_in(Container.FINISHED)),
             user)).all()
         container_pallets = sum(c.pallet_count or 0 for c in rows)
-        # palety z wywołań DLT (linie z datą dostawy tego dnia, wywołania w drodze)
+        # palety z wywołań MAG-1 (linie z datą dostawy tego dnia, wywołania w drodze)
         call_q = (select(func.coalesce(func.sum(PalletCallLine.ilosc_pal), 0))
                   .join(PalletCall, PalletCall.id == PalletCallLine.pallet_call_id)
                   .where(PalletCallLine.data_dostawy == day,

@@ -128,14 +128,14 @@ def test_lfa1_import_403_without_catalog_access(client, admin_headers):
     from app.models import Company
     from app.database import SessionLocal
 
-    # Prepare: get non-material company (BOREALIS jest w default bez dostępu do katalogiem)
+    # Prepare: get non-material company (BETA jest w default bez dostępu do katalogiem)
     with SessionLocal() as db:
-        borealis = db.scalar(select(Company).where(Company.code == "BOREALIS"))
+        beta = db.scalar(select(Company).where(Company.code == "BETA"))
 
     # Create a logistics user from non-material company (no catalog access)
     resp = client.post("/api/users", headers=admin_headers, json={
         "login": "no_catalog_user", "password": "haslo12345", "role": "logistics",
-        "company_id": borealis.id})
+        "company_id": beta.id})
     assert resp.status_code == 201, resp.text
 
     user_headers = login(client, "no_catalog_user", "haslo12345")

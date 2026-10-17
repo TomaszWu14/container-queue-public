@@ -26,7 +26,7 @@ const CONTAINERS_ONE_WH = [
     warehouse_name: 'ACME', sent_number: '180023076', order_numbers: '4500618818' },
 ]
 
-const COMPANIES = [{ id: 1, code: 'ACME', name: 'Acme' }, { id: 4, code: 'COBALT', name: 'Cobalt' }]
+const COMPANIES = [{ id: 1, code: 'ACME', name: 'Acme' }, { id: 4, code: 'GAMMA', name: 'Gamma' }]
 const { apiPost } = vi.hoisted(() => ({ apiPost: vi.fn() }))
 
 vi.mock('./api', () => ({
@@ -114,7 +114,7 @@ describe('kolejka — porządki toolbara', () => {
   })
 
   it('kontener dodany w kolejce modułu trafia do spółki tego modułu (review D3)', async () => {
-    mount('cobalt')
+    mount('gamma')
     await ready()
     fireEvent.click(screen.getByRole('button', { name: /Dodaj/ }))
     const form = await waitFor(() => document.querySelector('.modal form') as HTMLFormElement)

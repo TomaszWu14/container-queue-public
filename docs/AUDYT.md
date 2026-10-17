@@ -68,7 +68,7 @@ tylko do odczytu (konto `demo`).
 | Interesariusz | Rola w systemie | Zakres widoczności (z `deps.py`) |
 |---|---|---|
 | Logistyka spółki / grupy | `logistics` (+ flaga „wszystkie spółki”) | własna spółka; opcjonalnie lista magazynów |
-| Magazyn (własny, zewnętrzny DLT) | `warehouse` | tylko swój magazyn; potwierdza wyłącznie rozładunek |
+| Magazyn (własny, zewnętrzny MAG-1) | `warehouse` | tylko swój magazyn; potwierdza wyłącznie rozładunek |
 | Spedytor | `forwarder` albo jednorazowy link | tylko kontenery mu zlecone; bez danych odprawy |
 | Agencja celna | `customs` | tylko kontenery z zleconą odprawą |
 | Zakupy | `purchasing` | własna spółka |
@@ -83,7 +83,7 @@ tylko do odczytu (konto `demo`).
   dostawy, plan i awizacja (dwuetapowe linki), rozładunek, separacja danych, historia zmian, import z Excela.
 - **Moduły poboczne (zaimplementowane, opisane tylko technicznie w `TECHNICZNE.md`):** wyceny transportu (RFQ)
   i zlecenia, śledzenie statków (AIS), powiadomienia (e-mail/Teams/SMS), faktury i import SAD, reklamacje,
-  wywołania palet (DLT, Power BI), kartoteka dostawców, analityka, baza wiedzy, asystent (lokalny LLM),
+  wywołania palet (MAG-1, Power BI), kartoteka dostawców, analityka, baza wiedzy, asystent (lokalny LLM),
   poczekalnia dokumentów.
 - **Świadomie poza zakresem:** zapis do SAP, tracking u armatora (planowany powrót), twarde blokady statusów,
   publiczne linki dla klienta/kierowcy (usunięte 2026-10-07).
@@ -109,7 +109,7 @@ tylko do odczytu (konto `demo`).
    baza wiedzy, asystent). Ich reguły żyją w komentarzach kodu i specyfikacjach `superpowers/`.
 3. **Backlog**: brak historyjek z priorytetami (MoSCoW). W repozytorium publicznym 0 issues; `07-ograniczenia.md`
    §„Co dalej” wymienia 3 punkty bez priorytetu.
-4. **Słownik pojęć**: terminy (awizacja, demurrage, tranzyt, DLT, draft SAD, PAZ, REF, kafelek dokumentu) nie mają
+4. **Słownik pojęć**: terminy (awizacja, demurrage, tranzyt, MAG-1, draft SAD, PAZ, REF, kafelek dokumentu) nie mają
    jednego miejsca; część ma po 2 nazwy (np. „otwarty w kolejce” vs „fizycznie zakończony” — BIZ-004).
 5. **Macierz śledzenia** jest tylko dla rdzenia i tylko do poziomu testu (wymaganie → kod → test); brak kolumn
    historyjka i PR. Odwołania do PR-ów w dokumentach wskazują prywatne repozytorium.
@@ -297,10 +297,10 @@ brak CHANGELOG/CONTRIBUTING, brak statycznego opisu API (OpenAPI tylko poza prod
 | Klasa | Dane | Gdzie |
 |---|---|---|
 | **Dane osobowe** | użytkownicy (login, e-mail, imię, IP logowań, sekret TOTP), **kierowcy** (imię, telefon, nr dokumentu, nr auta/naczepy — bez konta, przekazywane przez spedytora), kontakty w słownikach (spedytorzy, agencje, dostawcy) | `users`, `containers.driver_*`, `sms_messages`, `audit_log`, słowniki |
-| **Poufne (handlowe)** | ceny i wyceny transportu, faktury (CIPL) i ich pozycje, draft SAD, zamówienia SAP (EKKO), dane klientów i wartości towaru, stany magazynowe DLT | `quotes`, `invoices`, `sad_drafts`, `sap_orders`, `pallet_*` |
+| **Poufne (handlowe)** | ceny i wyceny transportu, faktury (CIPL) i ich pozycje, draft SAD, zamówienia SAP (EKKO), dane klientów i wartości towaru, stany magazynowe MAG-1 | `quotes`, `invoices`, `sad_drafts`, `sap_orders`, `pallet_*` |
 | **Wewnętrzne** | kolejka kontenerów, statusy, dokumenty transportowe (CMR, PL, BL), reguły planowania, historia zmian | `containers`, `attachments`, `audit_log` |
 | **Sekrety** | `SECRET_KEY`, `DATA_ENCRYPTION_KEY`, hasła DB/SMTP, tokeny M365/SMSAPI/AIS/n8n, klucz `age` | wyłącznie env Coolify; cache MSAL w bazie szyfrowany Fernet |
-| **Publiczne** | formularz awizacji i wywołania palet (po tokenie), instancja demo z danymi syntetycznymi | `/avizo/*`, `/dlt/*`, demo |
+| **Publiczne** | formularz awizacji i wywołania palet (po tokenie), instancja demo z danymi syntetycznymi | `/avizo/*`, `/mag1/*`, demo |
 
 ### 3.4 TOP 10 ryzyk
 
@@ -313,7 +313,7 @@ Waga: **W** wysoka / **Ś** średnia / **N** niska (jak w `BUGS-FOUND.md`). P = 
 | R-03 | **Załączniki kontenerów sprawdzane tylko po rozszerzeniu** (16 typów, w tym `zip`, `xml`, `msg`, `eml`, `doc`); pliki krążą między firmami (spedytor → logistyka → agencja). Złośliwy plik z poprawnym rozszerzeniem przechodzi; brak skanu AV. | Ś | średnie / wysoki | T-05; `SECURITY.md` „znane ograniczenia”; zdjęcia mają sniffing, załączniki nie | sygnatury bajtów dla PDF/obrazów/Office/ZIP (jak dla zdjęć), opcjonalnie ClamAV; wpis w rejestrze ryzyk, jeśli AV odłożone (pobieranie już idzie jako `attachment` — `FileResponse(filename=…)`) |
 | R-04 | **Produkcja bez `DATABASE_URL` startuje na SQLite** (`config.py` domyślnie `sqlite:///./timporye.db`, `validate_settings` tego nie sprawdza). Błąd konfiguracji w Coolify = pusta baza plikowa w kontenerze, bez backupu; użytkownicy widzą „pustą kolejkę”, a nowe wpisy giną przy redeployu. | Ś | niskie / wysoki | B-005 (zweryfikowane 2026-10-15: nadal otwarte) | fail-fast: na prod wymagany `postgresql://`; 1 test |
 | R-05 | **Jeden sekret do dwóch celów:** `SECRET_KEY` podpisuje JWT i (bez `DATA_ENCRYPTION_KEY`) szyfruje dane w bazie (cache MSAL z refresh tokenem M365). Rotacja klucza JWT po incydencie unieważnia dane, a prod nie wymaga osobnego klucza. | Ś | niskie / wysoki | SEC-017; `crypto.py`; `validate_settings` nie wymaga `DATA_ENCRYPTION_KEY` | na prod wymagać `DATA_ENCRYPTION_KEY`; procedura rotacji obu kluczy w RUNBOOK |
-| R-06 | **Publiczne formularze nierówno chronione:** link wywołań palet (DLT) bez własnego limitu żądań i kontroli pochodzenia (awizacja je ma), parametr daty wolnych slotów bez zakresu, globalny limiter API w pamięci procesu (znika po restarcie, per instancja). Skutek: enumeracja/zalew, koszty SMS/maili. | Ś | średnie / średni | T-01, T-02, T-03; `rate_limit.ApiRateLimiter` | wspólny limiter dla wszystkich tras publicznych (ten sam co `routers/avizo.py`), walidacja zakresu dat; limiter w bazie lub Redis przy >1 instancji |
+| R-06 | **Publiczne formularze nierówno chronione:** link wywołań palet (MAG-1) bez własnego limitu żądań i kontroli pochodzenia (awizacja je ma), parametr daty wolnych slotów bez zakresu, globalny limiter API w pamięci procesu (znika po restarcie, per instancja). Skutek: enumeracja/zalew, koszty SMS/maili. | Ś | średnie / średni | T-01, T-02, T-03; `rate_limit.ApiRateLimiter` | wspólny limiter dla wszystkich tras publicznych (ten sam co `routers/avizo.py`), walidacja zakresu dat; limiter w bazie lub Redis przy >1 instancji |
 | R-07 | **Powierzchnia parserów plików od partnerów w procesie API:** PDF (pdfminer, pdfplumber, pypdf), XLSX (openpyxl), XML (stdlib `ElementTree` z własnym odrzucaniem DTD zamiast `defusedxml`), ZIP (limit z deklarowanego rozmiaru — T-06), `.msg`/`.eml` (extract-msg), HEIC, OCR. Spreparowany plik = DoS (CPU/RAM całej aplikacji) lub błąd parsera. | Ś | średnie / średni | T-06; `invoices/sad_xml.py` (`nosec B405`); OCR częściowo w tle, limit stron PDF | `defusedxml`; ZIP: limit liczony z faktycznie rozpakowanych bajtów i współczynnika kompresji; timeouty/limity pamięci dla parsowania (osobny proces lub worker); testy plików złośliwych (planowany w `ETAP-0-PLAN.md` `test_imports_malicious.py` nie powstał) |
 | R-08 | **Łańcuch dostaw i CI — luki w bramkach:** Trivy tylko raportuje (`--exit-code 0`), brak SAST semantycznego (Semgrep/CodeQL), brak `dependabot.yml` w tym repo mimo deklaracji w `SECURITY.md`, wersje narzędzi pre-commit ≠ CI (Bandit 1.8.0 vs 1.9.4, gitleaks 8.21.2 vs 8.30.1), obraz nieskanowany przy PR, brak podpisu obrazu. | Ś | niskie / średni | `.github/workflows/`, `.pre-commit-config.yaml` | Trivy HIGH/CRITICAL jako bramka (z listą wyjątków), Semgrep OWASP w `security.yml`, `dependabot.yml`, wyrównanie wersji; decyzja co do CodeQL (koszt minut) |
 | R-09 | **RODO — mechanizmy bez dokumentacji i podstaw:** przetwarzane są dane kierowców (osób trzecich, bez konta), IP i loginy, treści SMS z linkami; brak rejestru czynności przetwarzania, podstaw prawnych, analizy powierzeń (SMSAPI, Sentry, M365, hosting), DPIA; scrubbing Sentry regexowy (imiona w wolnym tekście nie są wyłapywane). Skutek: niezgodność formalna, trudność obsługi żądania osoby. | Ś | średnie / wysoki | `REGULY-PROCESU.md` (wiersze RODO), `data_subject.py`, `redaction.py` | `RODO.md`: administrator, podstawy, retencje (już są), powierzenia, procedura żądań; klasyfikacja danych (§3.3); zasada „bez imion w komunikatach błędów” jako test |
@@ -408,7 +408,7 @@ Pilne poprawki bezpieczeństwa i integralności z audytu (proponowane jako pierw
    ustawionej zmiennej zatrzyma start aplikacji (wymaga koordynacji z PO przed redeployem).
 3. **SEC/DEV** R-02: kontrola wersji przy edycji kontenera/statusu/odprawy/zleceń (409 przy konflikcie) — średni.
 4. **SEC** R-03: sygnatury bajtów dla załączników — mały/średni.
-5. **SEC** R-06: wspólny limiter i walidacja dla tras publicznych (DLT jak awizacja) — mały.
+5. **SEC** R-06: wspólny limiter i walidacja dla tras publicznych (MAG-1 jak awizacja) — mały.
 6. **SEC** R-07: `defusedxml`, limit ZIP z faktycznych bajtów — mały.
 7. **SEC** R-08: Trivy jako bramka, Semgrep OWASP, `dependabot.yml`, wyrównanie wersji pre-commit — mały (CI).
 8. **SEC** B-002: `csv_safe` dla `\t`/`\r` — trywialny.

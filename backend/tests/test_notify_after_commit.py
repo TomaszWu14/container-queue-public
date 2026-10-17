@@ -1,5 +1,5 @@
 """Powiadomienia: kanały zewnętrzne dopiero po commicie, dedup alertu palet po redeployu,
-doby PL w digestach, poranny digest spółki nie wychodzi tylko z powodu wspólnej sekcji DLT."""
+doby PL w digestach, poranny digest spółki nie wychodzi tylko z powodu wspólnej sekcji MAG-1."""
 import datetime
 
 from sqlalchemy import select
@@ -11,7 +11,7 @@ from app.models import (Company, Container, Notification, Role, User, WatchedCon
                         pl_midnight_utc)
 
 
-def _user(db, login, role=Role.logistics, company_code="BOREALIS"):
+def _user(db, login, role=Role.logistics, company_code="BETA"):
     company = db.scalar(select(Company).where(Company.code == company_code))
     user = User(login=login, hashed_password="x", role=role, company_id=company.id,
                 email=f"{login}@example.com")
@@ -39,7 +39,7 @@ def test_pallet_urgent_dedup_after_restart(client, db_session, monkeypatch):
     _user(db_session, "acme.pal", company_code="ACME")
     monkeypatch.setattr(powerbi, "is_configured", lambda: True)
     monkeypatch.setattr(pallets_cache, "get_analysis",
-                        lambda db: ([{"produkt": "DLT-1", "pilne": True}], None, None, None))
+                        lambda db: ([{"produkt": "MAG-1-1", "pilne": True}], None, None, None))
     assert jobs._run(n.check_pallet_urgent_alerts) >= 1
     assert jobs._run(n.check_pallet_urgent_alerts) == 0     # „redeploy” w oknie interwału
     with SessionLocal() as db:
@@ -50,7 +50,7 @@ def test_pallet_urgent_dedup_after_restart(client, db_session, monkeypatch):
 def test_daily_digest_uses_pl_day(client, db_session, monkeypatch):
     """Digest o 00:30 czasu PL (22:30 UTC poprzedniego dnia): „dziś” to data PL."""
     monkeypatch.setattr(n.settings, "digest_hour", 0)
-    monkeypatch.setattr(notification_digests, "_dlt_low_stock_lines", lambda db: [])
+    monkeypatch.setattr(notification_digests, "_mag1_low_stock_lines", lambda db: [])
     pl_day = datetime.date(2026, 11, 3)
     now = pl_midnight_utc(pl_day) + datetime.timedelta(minutes=30)
     assert now.date() != pl_day
@@ -64,12 +64,12 @@ def test_daily_digest_uses_pl_day(client, db_session, monkeypatch):
     assert "Dzisiejsze dostawy (1)" in body and "PLDU0000001" in body
 
 
-def test_daily_digest_not_sent_for_dlt_only(client, db_session, monkeypatch):
-    """Sekcja DLT jest wspólna — spółka bez własnych pozycji nie dostaje codziennego maila."""
+def test_daily_digest_not_sent_for_mag1_only(client, db_session, monkeypatch):
+    """Sekcja MAG-1 jest wspólna — spółka bez własnych pozycji nie dostaje codziennego maila."""
     monkeypatch.setattr(n.settings, "digest_hour", 7)
-    monkeypatch.setattr(notification_digests, "_dlt_low_stock_lines",
-                        lambda db: ["DLT-1 — zapas 2 dni"])
-    user = _user(db_session, "dig.dlt", company_code="COBALT")
+    monkeypatch.setattr(notification_digests, "_mag1_low_stock_lines",
+                        lambda db: ["MAG-1-1 — zapas 2 dni"])
+    user = _user(db_session, "dig.mag1", company_code="GAMMA")
     db_session.query(Container).filter(Container.company_id == user.company_id).delete()
     db_session.commit()
     now = pl_midnight_utc(datetime.date(2026, 11, 3)) + datetime.timedelta(hours=7, minutes=5)

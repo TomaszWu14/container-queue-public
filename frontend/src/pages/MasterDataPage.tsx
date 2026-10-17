@@ -33,7 +33,7 @@ import PoImportTab from './admin/PoImportTab'
 import MarmImportTab from './admin/MarmImportTab'
 import SpMaterialsTab from './masterdata/SpMaterialsTab'
 import ContainerPortsImportTab from './admin/ContainerPortsImportTab'
-import DltStockImportTab from './admin/DltStockImportTab'
+import Mag1StockImportTab from './admin/Mag1StockImportTab'
 import SectionShell, { SectionMore } from './SectionShell'
 import { findSection, pathOf } from './sections'
 import { useToast } from '../feedback'
@@ -241,7 +241,7 @@ interface StockTargetRow {
   updated_at: string
 }
 
-// Cele pokrycia zapasu (dni) per materiał — nadpisania globalnego celu wywołań-DLT (#373),
+// Cele pokrycia zapasu (dni) per materiał — nadpisania globalnego celu wywołań-MAG-1 (#373),
 // w układzie 1a: edycja inline dni (POST to upsert po material_no), dodawanie wierszem
 // na górze, 🗑 usuwanie. Bez ⟲ — endpoint celów nie pisze do AuditLog.
 function StockTargetsTab() {
@@ -333,7 +333,7 @@ export default function MasterDataPage() {
       case 'import-po': return <PoImportTab />
       case 'import-marm': return <MarmImportTab />
       case 'import-portow': return <ContainerPortsImportTab />
-      case 'import-dlt': return <DltStockImportTab />
+      case 'import-mag1': return <Mag1StockImportTab />
       case 'jakosc-danych': return <QualityTab companies={companies} onGoTab={key => {
         const target = findSection(key)
         if (target) navigate(pathOf(target))

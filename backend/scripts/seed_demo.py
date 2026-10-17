@@ -29,7 +29,7 @@ from scripts import seed_demo_story as story
 FLAG = "--wyczysc-wszystko"
 SUPPLIERS = ["Ningbo Demo Trading Co.", "Qingdao Przykładowe Tekstylia", "Shenzhen Pokazowa Elektronika",
              "Xiamen Wzorcowe Meble", "Dostawca Portugalski Demo Lda", "Foshan Testowe Oświetlenie"]
-VESSELS = ["DEMO EXPRESS", "SAMPLE STAR", "PRZYKŁAD MAERSK", "TEST HORIZON"]
+VESSELS = ["DEMO EXPRESS", "SAMPLE STAR", "PRZYKŁAD OCEAN", "TEST HORIZON"]
 # ostatnie zdarzenie trackingu wg etapu — porty z tracking/geo.py, żeby punkt trafił na mapę
 TRACK = {ContainerStatus.TRANSPORT_WSTEPNY: ("LOAD", "Załadunek na statek", ["NINGBO", "QINGDAO", "SHENZHEN", "XIAMEN"]),
          ContainerStatus.W_TRANSPORCIE: ("TRANSSHIP", "Przeładunek", ["SINGAPORE", "COLOMBO", "PORT SAID", "PIRAEUS"]),
@@ -75,18 +75,18 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     bootstrap()   # domyślne spółki, słowniki, admin z ADMIN_PASSWORD
     db = SessionLocal()
     acme = db.query(Company).filter_by(code="ACME").one()
-    dlt = Warehouse(name="DLT", company_id=acme.id)
+    mag1 = Warehouse(name="MAG-1", company_id=acme.id)
     wz = Warehouse(name="ACME", company_id=acme.id)
     agency = CustomsAgency(name="Agencja Celna Demo Sp. z o.o.")
     fw = db.query(Forwarder).first() or Forwarder(name="Spedycja Demo")
-    db.add_all([dlt, wz, agency, fw])
+    db.add_all([mag1, wz, agency, fw])
     db.flush()
     # US-028: rola wg słowa w loginie (demo-spedytor, demo-agencja, demo-magazyn), domyślnie
     # logistyka (nie admin: bez logów serwera i monitora hosta). Każde konto jest w
     # DEMO_READONLY_LOGINS, więc API odrzuca jego zapisy (security._enforce_demo_readonly).
     for login in demo_logins:
         db.add(User(login=login, hashed_password=hash_password(password), email=f"{login}@example.com",
-                    **process.account_fields(login, acme.id, fw.id, agency.id, dlt.id)))
+                    **process.account_fields(login, acme.id, fw.id, agency.id, mag1.id)))
     # autor historii zmian — fikcyjna, nieaktywna (nie zaloguje się), hasło losowe i nieznane
     author = User(login="m.przykladowa", full_name="Marta Przykładowa", role=Role.logistics,
                   company_id=acme.id, email="m.przykladowa@example.com", is_active=False,
@@ -107,7 +107,7 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
         container = Container(
             container_no=container_no(i), company_id=acme.id, status=status,
             rf_number=f"RF-DEMO-{i:04d}" if track else "",
-            warehouse_id=[dlt.id, wz.id, None][i % 3], supplier_raw=SUPPLIERS[i % len(SUPPLIERS)],
+            warehouse_id=[mag1.id, wz.id, None][i % 3], supplier_raw=SUPPLIERS[i % len(SUPPLIERS)],
             vessel=VESSELS[i % len(VESSELS)], eta=eta, notify_date=eta + dt.timedelta(days=5) if i % 3 else None,
             forwarder_id=fw.id if i % 2 == 0 else None, customs_agency_id=agency.id if i % 5 == 0 else None,
             # zmyślone dane kierowcy: numer 000 nie istnieje w polskiej numeracji

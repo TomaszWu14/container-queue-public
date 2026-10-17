@@ -1,4 +1,4 @@
-"""„Kartoteka symboli” dla agencji celnej (wzór Delta Brokers `SymboleAcme_EXCEL.xlsx`, 44 kolumny):
+"""„Kartoteka symboli” dla agencji celnej (wzór Omega Brokers `SymboleAcme_EXCEL.xlsx`, 44 kolumny):
 jeden wiersz na nasz REF z zatwierdzonych pozycji faktur — co to za towar (CN, nazwy, kraj),
 bez ilości i kwot (te idą w Excelu pozycji). Układ kolumn i źródła danych = wzór z Master data
 (agency_templates, „Wzory plików dla agencji”); COLUMNS = układ domyślny wzoru."""

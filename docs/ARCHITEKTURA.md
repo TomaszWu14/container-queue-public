@@ -10,8 +10,8 @@ przez model danych i role, po przepływy procesowe, bezpieczeństwo i wdrożenie
 ## 1. Czym jest aplikacja
 
 „Kolejka" to system zarządzania **kolejką kontenerów** dla firmy logistycznej i jej spółek
-(Acme, Borealis, Cobalt Sport, Iberia) oraz partnerów zewnętrznych (spedycje, agencje celne,
-magazyn zewnętrzny DLT). Prowadzi kontener od zapowiedzi, przez transport morski, port, odprawę
+(Acme, Beta, Gamma, Delta) oraz partnerów zewnętrznych (spedycje, agencje celne,
+magazyn zewnętrzny MAG-1). Prowadzi kontener od zapowiedzi, przez transport morski, port, odprawę
 celną, awizację, aż po rozładunek w magazynie — z powiadomieniami, wiadomościami i pełną historią.
 
 ## 2. Widok wysokopoziomowy
@@ -20,7 +20,7 @@ celną, awizację, aż po rozładunek w magazynie — z powiadomieniami, wiadomo
 flowchart TB
     subgraph Klient["Przeglądarka"]
         UI["SPA React 19 + Vite + Tailwind<br/>react-router, i18n PL/EN/PT"]
-        PUB["Linki publiczne z tokenem<br/>(awizacja, kierowca, DLT, portal)"]
+        PUB["Linki publiczne z tokenem<br/>(awizacja, kierowca, MAG-1, portal)"]
     end
     subgraph HOST["Serwer — Coolify, Docker"]
         GW["Brama nginx (opcjonalna, profil gateway)<br/>deploy/gateway"]
@@ -138,7 +138,7 @@ docker-compose.coolify.yml  # db (postgres 16) + app + opcjonalna brama
 **Routery backendu** — główne obszary: `auth`, `admin`, `containers*` (kolejka), `imports*`,
 `dictionaries*`, `forwarding*` (spedycja), `customs` (agencja celna), `quotes*` (wyceny/RFQ),
 `avizo*` (awizacja), `complaints*` (reklamacje), `tracking`, `invoices*` (faktury, OCR),
-`purchasing`/`purchase_orders` (zakupy), `customer_orders` (Specjalna troska), `dlt`, `pallets`,
+`purchasing`/`purchase_orders` (zakupy), `customer_orders` (Specjalna troska), `mag1`, `pallets`,
 `driver`, `portal`, `share`, `assistant`, `knowledge`, `notifications`, `system`, `logs`.
 
 ## 5. Model danych — główne encje
@@ -163,7 +163,7 @@ erDiagram
 
 - **Container (kontener)** — centralna encja: numer ISO 6346, status, odprawa celna, dane kierowcy,
   ETA, awizacja, tracking. Do niej podpięte są wiadomości, pliki, historia i zdarzenia.
-- **Order (zlecenie)** — grupuje kontenery jednego zamówienia (Borealis/Cobalt).
+- **Order (zlecenie)** — grupuje kontenery jednego zamówienia (Beta/Gamma).
 - **Forwarder / CustomsAgency / Warehouse** — partnerzy: spedycja, agencja celna, magazyn.
 - **TransportJob + Quote + QuoteRevision** — zapytania ofertowe (RFQ) do spedycji i historia wycen.
 - **Complaint** — reklamacje (RTV/formalne) z problemami i zdjęciami.
@@ -177,7 +177,7 @@ Aplikacja jest **wielospółkowa (multi-tenant)** i rozróżnia partnerów wewn�
 |---|---|---|
 | `admin` | administrator systemu | wszystko + panel administracyjny |
 | `logistics` | logistyka spółki | kontenery swojej spółki (lub wszystkich, gdy „view all") |
-| `warehouse` | magazyn (np. zewn. DLT) | tylko kontenery swojego magazynu; dane handlowe ukryte |
+| `warehouse` | magazyn (np. zewn. MAG-1) | tylko kontenery swojego magazynu; dane handlowe ukryte |
 | `forwarder` | spedycja (zewn.) | tylko kontenery jej zlecone; brak danych konkurencji |
 | `customs` | agencja celna (zewn.) | tylko kontenery, których odprawę jej zlecono; dane handlowe/PII ukryte |
 | `purchasing` | dział zakupów (wewn.) | kontenery swojej spółki; bez dostępu do Wycen (koszty) |

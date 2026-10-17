@@ -77,8 +77,8 @@ def test_warehouse_sees_other_watchers(client):
 def test_vessel_watch_toggle_and_scope(client, db_session):
     admin = login(client)
     acme = _company_id(client, admin)
-    borealis = _company_id(client, admin, "BOREALIS")
-    _container(client, admin, "TGBU6784203", borealis, vessel="MV OBSERWOWANA")
+    beta = _company_id(client, admin, "BETA")
+    _container(client, admin, "TGBU6784203", beta, vessel="MV OBSERWOWANA")
     vessel = TrackedVessel(name="MV OBSERWOWANA")
     db_session.add(vessel)
     db_session.commit()
@@ -108,31 +108,31 @@ def test_vessel_watchers_scoped_to_own_company(client, db_session):
     tylko obserwujących własnej spółki (plus siebie), nie nazwisk/powodów obcej spółki."""
     admin = login(client)
     acme = _company_id(client, admin)
-    borealis = _company_id(client, admin, "BOREALIS")
+    beta = _company_id(client, admin, "BETA")
     _container(client, admin, "TGBU6784203", acme, vessel="MV WSPOLNY")
-    _container(client, admin, "MSDU0806613", borealis, vessel="MV WSPOLNY")
+    _container(client, admin, "MSDU0806613", beta, vessel="MV WSPOLNY")
     vessel = TrackedVessel(name="MV WSPOLNY")
     db_session.add(vessel)
     db_session.commit()
 
     _user("logi-z", Role.logistics, acme, full_name="Acme Logi")
-    _user("logi-t", Role.logistics, borealis, full_name="Borealis Logi")
+    _user("logi-t", Role.logistics, beta, full_name="Beta Logi")
     logi_z = login(client, "logi-z", "pass12345")
     logi_t = login(client, "logi-t", "pass12345")
 
     client.post(f"/api/tracking/vessels/{vessel.id}/watch", headers=logi_z,
                json={"reason": "Acme"})
     client.post(f"/api/tracking/vessels/{vessel.id}/watch", headers=logi_t,
-               json={"reason": "Borealis"})
+               json={"reason": "Beta"})
 
     data_z = client.get(f"/api/tracking/vessels/{vessel.id}/watchers", headers=logi_z).json()
     assert [w["reason"] for w in data_z["watchers"]] == ["Acme"]
 
     data_t = client.get(f"/api/tracking/vessels/{vessel.id}/watchers", headers=logi_t).json()
-    assert [w["reason"] for w in data_t["watchers"]] == ["Borealis"]
+    assert [w["reason"] for w in data_t["watchers"]] == ["Beta"]
 
     data_admin = client.get(f"/api/tracking/vessels/{vessel.id}/watchers", headers=admin).json()
-    assert sorted(w["reason"] for w in data_admin["watchers"]) == ["Acme", "Borealis"]
+    assert sorted(w["reason"] for w in data_admin["watchers"]) == ["Acme", "Beta"]
 
 
 def test_can_see_watcher_false_when_both_company_id_none():

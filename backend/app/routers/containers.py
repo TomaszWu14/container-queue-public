@@ -158,7 +158,7 @@ def list_containers(
         query = _fk_filter(query, Container.forwarder_id, forwarder_id)
     query = _fk_filter(query, Container.warehouse_id, warehouse_id)
     if warehouse_name:
-        # kolejka DLT = kontenery spółki (Acme) kierowane do magazynu o tej nazwie
+        # kolejka MAG-1 = kontenery spółki (Acme) kierowane do magazynu o tej nazwie
         query = query.join(Warehouse, Container.warehouse_id == Warehouse.id).where(
             func.upper(Warehouse.name) == warehouse_name.upper())
     if date_from is not None:
@@ -272,13 +272,13 @@ def container_counts(db: Session = Depends(get_db), user: User = viewer_or_sales
         company_q = company_q.where(Company.id.in_(visible))
     companies = db.scalars(company_q).all()
     counts = {c.code: by_id.get(c.id, 0) for c in companies}
-    # DLT to nie spółka, lecz magazyn (kontenery Acme kierowane do DLT)
-    dlt_q = select(func.count(Container.id)).join(
+    # MAG-1 to nie spółka, lecz magazyn (kontenery Acme kierowane do MAG-1)
+    mag1_q = select(func.count(Container.id)).join(
         Warehouse, Container.warehouse_id == Warehouse.id)
-    dlt_q = scope_containers(dlt_q, user)
-    dlt_q = dlt_q.where(Container.open_in_queue(),
-                        func.upper(Warehouse.name) == "DLT")
-    counts["DLT"] = db.scalar(dlt_q) or 0
+    mag1_q = scope_containers(mag1_q, user)
+    mag1_q = mag1_q.where(Container.open_in_queue(),
+                        func.upper(Warehouse.name) == "MAG-1")
+    counts["MAG-1"] = db.scalar(mag1_q) or 0
     return counts
 
 

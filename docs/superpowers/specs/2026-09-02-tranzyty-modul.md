@@ -22,7 +22,7 @@ migracji, nic do sklasyfikowania wstecz.**
 
 ### Dlaczego flaga, a nie magazyn „TRANZYT"
 
-Magazyn-atrapa byłby mniejszym diffem (wzorzec DLT = `MODULE_WAREHOUSE`), ale
+Magazyn-atrapa byłby mniejszym diffem (wzorzec MAG-1 = `MODULE_WAREHOUSE`), ale
 **zatruwa limity dzienne**: `containers.py:814` liczy `used` z wszystkich kontenerów
 danego `notify_date`, a `over_limit` porównuje to z limitem magazynu. Tranzyt, który
 się u nas nie rozładowuje, zawyżałby kalendarz i analizę rozładunków — ekrany używane

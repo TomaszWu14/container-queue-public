@@ -7,7 +7,7 @@ from app.models import AuditLog
 from tests.test_sync import _xlsx
 
 NUMBERS = ["MSKU7026487", "MSKU7026492", "MSKU7026506", "MSKU7026511", "MSKU7026532"]
-URL = "/api/import/queue-sync?company_code=BOREALIS&dry_run=false"
+URL = "/api/import/queue-sync?company_code=BETA&dry_run=false"
 
 
 def _file(day):
@@ -44,11 +44,11 @@ def test_watch_only_user_gets_only_watched_containers(client, admin_headers):
     dostawał zmiany WSZYSTKICH kontenerów. Teraz: tylko jego obserwowane (albo nic)."""
     from app.models import Container, Notification, User
     from tests.conftest import login
-    borealis = next(c["id"] for c in client.get("/api/companies", headers=admin_headers).json()
-                  if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in client.get("/api/companies", headers=admin_headers).json()
+                  if c["code"] == "BETA")
     client.post("/api/users", headers=admin_headers, json={
         "login": "log.gwiazdka", "password": "haslo123", "role": "logistics",
-        "company_id": borealis})
+        "company_id": beta})
     headers = login(client, "log.gwiazdka", "haslo123")
     client.patch("/api/auth/me/settings", headers=headers, json={"watch_only_notifications": True})
 

@@ -1,14 +1,14 @@
 /* Kalendarz awizacji (makieta Claude Design, 2026-09-24): karty dni z pierścieniem obłożenia,
    kropki slotów per magazyn, kolumna tygodni, panel dnia, widok roku w tym samym stylu. */
 .cal2 { --c-low: #7cc8c0; --c-high: #f0a93b; --c-over: #d92d20; --c-trk: var(--soft);
-  --dot-acme: var(--co-acme); --dot-dlt: var(--co-dlt); --dot-free: var(--border); }
+  --dot-acme: var(--co-acme); --dot-mag1: var(--co-mag1); --dot-free: var(--border); }
 .cal2-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
 .cal2-lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
 .cal2-legend { display: flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; font-size: 12px; margin-bottom: 10px; }
 .cal2-legend span { display: inline-flex; align-items: center; gap: 5px; }
 .lg-ring { width: 11px; height: 11px; border-radius: 50%; border: 3px solid var(--c-high); }
 .lg-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot-free); display: inline-block; }
-.lg-dot.wh-acme { background: var(--dot-acme); } .lg-dot.wh-dlt { background: var(--dot-dlt); }
+.lg-dot.wh-acme { background: var(--dot-acme); } .lg-dot.wh-mag1 { background: var(--dot-mag1); }
 .lg-dot.over { background: var(--c-over); }
 
 /* A22: auto-fit (nie auto-fill) — puste ścieżki się zwijają, kafle wypełniają szerokość */
@@ -52,7 +52,7 @@
 .cal2-wh-name b { color: var(--text); }
 .cal2-dots { display: flex; flex-wrap: wrap; gap: 3px; max-width: 80px; }
 .cal2-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--dot-free); }
-.cal2-dots i.on { background: var(--dot-acme); } .cal2-dots i.on.wh-dlt { background: var(--dot-dlt); }
+.cal2-dots i.on { background: var(--dot-acme); } .cal2-dots i.on.wh-mag1 { background: var(--dot-mag1); }
 .cal2-dots i.over { background: var(--c-over); }
 .cal2-chip { align-self: flex-start; border-radius: 999px; padding: 1px 8px; font-weight: 700; font-size: 11px; background: var(--soft); }
 .cal2-chip.free { background: var(--success-bg); color: var(--success-ink); } .cal2-chip.over { background: var(--danger-bg); color: var(--danger-ink); }
@@ -79,7 +79,7 @@
 .cal2-p-wh { display: flex; align-items: center; gap: 8px; margin: 10px 4px 6px; }
 .cal2-p-bar { flex: 1; height: 4px; border-radius: 3px; background: var(--c-trk); overflow: hidden; }
 .cal2-p-bar i { display: block; height: 100%; background: var(--dot-acme); }
-.cal2-p-bar.wh-dlt i { background: var(--dot-dlt); }
+.cal2-p-bar.wh-mag1 i { background: var(--dot-mag1); }
 .cal2-p-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 10px;
   border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; cursor: pointer; }
 .cal2-p-row:hover { border-color: var(--border-strong); }

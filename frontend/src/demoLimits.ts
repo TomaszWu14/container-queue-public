@@ -4,8 +4,8 @@
 import type { User } from './types'
 
 // ekrany bez sensu na wspólnym, publicznym koncie: dziennik zmian (ruch innych gości), importy,
-// wywołania DLT (linki publiczne dla partnera)
-export const DEMO_HIDDEN_PATHS = ['/dziennik-zmian', '/import-sad', '/master-data', '/wywolania-dlt']
+// wywołania MAG-1 (linki publiczne dla partnera)
+export const DEMO_HIDDEN_PATHS = ['/dziennik-zmian', '/import-sad', '/master-data', '/wywolania-mag1']
 
 export function hiddenInDemo(user: Pick<User, 'is_demo'> | null | undefined, path: string): boolean {
   if (!user?.is_demo) return false

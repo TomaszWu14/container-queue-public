@@ -122,7 +122,7 @@ describe('sekcje — uprawnienia', () => {
 describe('sections.ts', () => {
   it('sekcje z dawnej Administracji zostają tylko dla admina', () => {
     const fromAdmin = ['users', 'companies', 'customers', 'import', 'poImport', 'marmImport',
-      'cportImport', 'dltImport', 'materials', 'forwarders', 'customsAgencies',
+      'cportImport', 'mag1Import', 'materials', 'forwarders', 'customsAgencies',
       'docTemplates', 'carriers', 'problems', 'checklist', 'notifRules', 'settings',
       'system', 'authLog']
     for (const key of fromAdmin) {

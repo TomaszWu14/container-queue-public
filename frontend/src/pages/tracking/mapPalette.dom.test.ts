@@ -21,7 +21,7 @@ describe('readMapPalette', () => {
   })
 
   it('karta statku: wypełnienie spółki z tokenu -fill (ten sam w obu motywach)', () => {
-    expect(COMPANY_FILL.COBALT).toBe('var(--co-cobalt-fill)')
+    expect(COMPANY_FILL.GAMMA).toBe('var(--co-gamma-fill)')
     expect(COMPANY_FILL.TRANZYT).toBe('var(--co-tranzyt-fill)')
   })
 })

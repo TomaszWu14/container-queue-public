@@ -1,4 +1,4 @@
-"""Alerty zbiorcze i digesty: prognoza przeładowania magazynu, pilne palety DLT,
+"""Alerty zbiorcze i digesty: prognoza przeładowania magazynu, pilne palety MAG-1,
 poranny digest logistyki, tygodniowy digest zakupów, stęchłe importy master data.
 
 Importuj przez app.notifications (re-eksport) — moduł sam importuje rdzeń z
@@ -109,8 +109,8 @@ def check_pallet_urgent_alerts(db: "Session") -> int:
                   title=f"Palety do pilnego wywołania: {len(urgent)}", body=produkty)
 
 
-def _dlt_low_stock_lines(db: Session) -> list[str]:
-    """Produkty DLT z zapasem poniżej celu (dni_zapasu < cel) — do porannego digestu.
+def _mag1_low_stock_lines(db: Session) -> list[str]:
+    """Produkty MAG-1 z zapasem poniżej celu (dni_zapasu < cel) — do porannego digestu.
     Puste, gdy Power BI nieskonfigurowane albo analiza padła (best-effort)."""
     from .pallets_cache import get_analysis
     from .powerbi import is_configured
@@ -119,7 +119,7 @@ def _dlt_low_stock_lines(db: Session) -> list[str]:
     try:
         items, _, _, _ = get_analysis(db)
     except Exception:  # noqa: BLE001
-        logger.exception("Digest: nie udało się pobrać analizy DLT")
+        logger.exception("Digest: nie udało się pobrać analizy MAG-1")
         return []
     low = [i for i in items
            if i.get("dni_zapasu") is not None and i.get("cel_dni") is not None
@@ -133,7 +133,7 @@ def _dlt_low_stock_lines(db: Session) -> list[str]:
 
 def check_daily_digest_alerts(db: Session, now: datetime.datetime | None = None) -> int:
     """Poranny digest (#24): jeden mail per spółka do logistyki — dzisiejsze dostawy,
-    opóźnienia, braki dokumentów przed ETA, niskie zapasy DLT, nieprzeczytane noty.
+    opóźnienia, braki dokumentów przed ETA, niskie zapasy MAG-1, nieprzeczytane noty.
 
     Okno wysyłki: godzina DIGEST_HOUR czasu polskiego. Dedup per user po
     Notification(kind='daily_digest') z dzisiejszą datą. Wyłączalny w matrycy reguł."""
@@ -150,7 +150,7 @@ def check_daily_digest_alerts(db: Session, now: datetime.datetime | None = None)
     already = set(db.scalars(select(Notification.user_id).where(
         Notification.kind == "daily_digest",
         Notification.created_at >= midnight)))
-    dlt_lines = _dlt_low_stock_lines(db)
+    mag1_lines = _mag1_low_stock_lines(db)
     sent = 0
     for company in db.scalars(select(Company).where(Company.is_active)):
         users = [u for u in db.scalars(select(User).where(
@@ -184,8 +184,8 @@ def check_daily_digest_alerts(db: Session, now: datetime.datetime | None = None)
                 [f"{c.container_no} — ETA {c.eta}" for c in delayed])
         section(f"Braki dokumentów przed ETA ({len(docs_missing)}):", docs_missing)
         if not sections:
-            continue  # pusty dzień spółki = bez maila (wspólna sekcja DLT sama nie wystarcza)
-        section(f"Zapasy DLT poniżej celu ({len(dlt_lines)}):", dlt_lines)
+            continue  # pusty dzień spółki = bez maila (wspólna sekcja MAG-1 sama nie wystarcza)
+        section(f"Zapasy MAG-1 poniżej celu ({len(mag1_lines)}):", mag1_lines)
         title = f"Poranny przegląd {company.name} — {today}"
         for user in users:
             unread = db.scalar(select(func.count(Notification.id)).where(

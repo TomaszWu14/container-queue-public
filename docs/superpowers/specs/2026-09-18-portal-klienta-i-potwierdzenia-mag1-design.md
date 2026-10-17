@@ -1,4 +1,4 @@
-# Portal kliencki + potwierdzenia DLT
+# Portal kliencki + potwierdzenia MAG-1
 
 Data: 2026-09-18 · Status: zatwierdzony w brainstormingu (sesja) · Dostawa: 2 osobne PR-y
 
@@ -26,16 +26,16 @@ portal wielu kontenerów — wszystko w zakresie.
 6. Bezpieczeństwo: rate-limit publicznych endpointów, 404 jednolite, żadnych
    danych poza zakresem tokenu. Testy izolacji obowiązkowe.
 
-## B. Potwierdzenia DLT (Przygotowane + Wysłane)
+## B. Potwierdzenia MAG-1 (Przygotowane + Wysłane)
 
-Zależność: buduje NA PR „wywołania DLT auta/HU/analityka" (PalletCallTruck).
+Zależność: buduje NA PR „wywołania MAG-1 auta/HU/analityka" (PalletCallTruck).
 
 1. Mail wywołania zawiera tokenowy link (wzorzec driver-links: hash w DB,
    jednolite 404, dezaktywacja po realizacji/wygaszeniu).
 2. Strona publiczna: wywołanie tylko-do-odczytu (auta → miejsca → HU/ilości)
    + przyciski **„Przygotowane"** i **„Wysłane"** (sekwencyjnie; idempotencja
    z oknem dedup jak „Przyjechałem" u kierowców).
-3. Statusy PalletCall rozszerzone: PRZYGOTOWANE, WYSLANE_Z_DLT; przejścia
+3. Statusy PalletCall rozszerzone: PRZYGOTOWANE, WYSLANE_Z_MAG1; przejścia
    zapisują audyt + dzwonek (notify) dla logistyki i autora wywołania.
 
 ## Testy

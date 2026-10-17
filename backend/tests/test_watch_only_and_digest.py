@@ -10,13 +10,13 @@ VALID_NO = "MSDU0806613"
 
 def _setup(client, admin_headers):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     client.post("/api/users", headers=admin_headers, json={
         "login": "log.watch", "password": "haslo123", "role": "logistics",
-        "company_id": borealis, "email": "watch@borealis.example"})
+        "company_id": beta, "email": "watch@beta.example"})
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis}).json()
-    return {"borealis": borealis, "container": container}
+        "container_no": VALID_NO, "company_id": beta}).json()
+    return {"beta": beta, "container": container}
 
 
 def test_watch_only_notifications_filters_non_watchers(client, admin_headers):
@@ -50,7 +50,7 @@ def test_weekly_digest_sends_and_dedupes(client, admin_headers):
     cid = ctx["container"]["id"]
     client.post("/api/users", headers=admin_headers, json={
         "login": "zak.purch", "password": "haslo123", "role": "purchasing",
-        "company_id": ctx["borealis"], "email": "zak@borealis.example"})
+        "company_id": ctx["beta"], "email": "zak@beta.example"})
     purch_headers = login(client, "zak.purch", "haslo123")
     client.post(f"/api/containers/{cid}/watch", headers=purch_headers)
 

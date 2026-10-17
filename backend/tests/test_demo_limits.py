@@ -1,5 +1,5 @@
 """Ograniczenia widoków kont demo (app/demo_limits.py): odczyty ze skutkiem ubocznym, dziennik
-zmian, eksporty, DLT i powiadomienia są dla demo wyłączone; obecność i pogoda bez efektu."""
+zmian, eksporty, MAG-1 i powiadomienia są dla demo wyłączone; obecność i pogoda bez efektu."""
 import pytest
 
 from app.config import settings

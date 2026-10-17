@@ -1,6 +1,6 @@
 # Draft SAD z poczty → TIMPORYE (Outlook + n8n na komputerze 24/7)
 
-Agencja celna (Delta Brokers) przysyła draft SAD mailem: najpierw **PDF**, później **XML** z WinSAD.
+Agencja celna (Omega Brokers) przysyła draft SAD mailem: najpierw **PDF**, później **XML** z WinSAD.
 Ten obieg sam zapisuje załączniki na dysk i wgrywa je do TIMPORYE — PDF zakłada wersję draftu przy
 paczce faktur kontenera i od razu porównuje ją z fakturami, XML dołącza do tej wersji i zastępuje
 odczyt z PDF. **Bez IT**: poczta czytana z Twojego zalogowanego Outlooka, n8n stoi na Twoim komputerze.

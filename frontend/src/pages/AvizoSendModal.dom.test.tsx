@@ -23,7 +23,7 @@ describe('wysyłka do awizacji', () => {
   it('podgląd po spedytorze, wysyłka zaznaczonych, wynik z brakami', async () => {
     post.mockResolvedValue({
       sent: [{ forwarder: 'Spedex', email: 'awizo@spedex.pl', containers: 2 }],
-      warehouse_info: [{ warehouse: 'DLT', email: 'dlt@magazyn.pl', containers: 2 }],
+      warehouse_info: [{ warehouse: 'MAG-1', email: 'mag1@magazyn.pl', containers: 2 }],
       missing_email: ['Trans-B'],
       no_forwarder: 1,
     })
@@ -39,7 +39,7 @@ describe('wysyłka do awizacji', () => {
     expect(post).toHaveBeenCalledWith('/api/avizo/send',
       { container_ids: [1, 2, 3], note: 'pilne', send_warehouse_info: true })
     expect(onDone).toHaveBeenCalledOnce()
-    expect(screen.getByText(/dlt@magazyn\.pl/)).toBeTruthy()
+    expect(screen.getByText(/mag1@magazyn\.pl/)).toBeTruthy()
     expect(screen.getByText('Brak adresu e-mail: Trans-B')).toBeTruthy()
     expect(screen.getByText('1 kont. bez przypisanego spedytora')).toBeTruthy()
     expect(screen.queryByRole('button', { name: /^Wyślij/ })).toBeNull()

@@ -14,16 +14,16 @@ VESSEL = "MV DEMO ATLAS"
 
 
 def _setup(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    cobalt = _company_id(client, admin_headers, "COBALT")
+    beta = _company_id(client, admin_headers, "BETA")
+    gamma = _company_id(client, admin_headers, "GAMMA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "DLT", "company_id": borealis, "country": "PL"}).json()
+        "name": "MAG-1", "company_id": beta, "country": "PL"}).json()
     agency = client.post("/api/customs-agencies", headers=admin_headers,
                          json={"name": "CELNA-Q"}).json()
     supplier = client.post("/api/suppliers", headers=admin_headers, json={
-        "name": SUPPLIER, "company_id": borealis}).json()
+        "name": SUPPLIER, "company_id": beta}).json()
     cont = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "warehouse_id": wh["id"],
+        "container_no": VALID_NO, "company_id": beta, "warehouse_id": wh["id"],
         "supplier_id": supplier["id"],
         "order_numbers": PO, "vessel": VESSEL, "notes": "uwaga wewnętrzna"})
     assert cont.status_code == 201, cont.text
@@ -31,9 +31,9 @@ def _setup(client, admin_headers):
     r = client.post(f"/api/customs/containers/{cid}/assign", headers=admin_headers,
                     json={"customs_agency_id": agency["id"]})
     assert r.status_code == 200, r.text
-    _make_user(client, admin_headers, "mag.q", "warehouse", borealis, warehouse_id=wh["id"])
-    _make_user(client, admin_headers, "log.q", "logistics", borealis)
-    _make_user(client, admin_headers, "log.y", "logistics", cobalt)
+    _make_user(client, admin_headers, "mag.q", "warehouse", beta, warehouse_id=wh["id"])
+    _make_user(client, admin_headers, "log.q", "logistics", beta)
+    _make_user(client, admin_headers, "log.y", "logistics", gamma)
     r = client.post("/api/users", headers=admin_headers, json={
         "login": "celna.q", "password": "haslo123", "role": "customs",
         "customs_agency_id": agency["id"]})

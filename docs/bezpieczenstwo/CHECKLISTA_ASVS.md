@@ -21,7 +21,7 @@ w zakresie L2 · ⚠️ częściowo · ❌ brak · n/d nie dotyczy.
 | V10 Złośliwy kod | ✅ | zależności z hashami, akcje po SHA, obrazy po digest, gitleaks, Bandit, pip-audit, npm audit; brak `eval`/`pickle`/`shell=True` | Trivy nie bramkuje, brak Semgrep (US-007) |
 | V11 Logika biznesowa | ✅ | maszyna stanów statusów, reguły cofania z notatką, limity jako ostrzeżenia z audytem, jednorazowe linki, dedup wysyłek | brak wersjonowania rekordów (R-02, US-003); limit API w pamięci (E-04) |
 | V12 Pliki i zasoby | ⚠️ | `MAX_UPLOAD_MB` na każdej trasie, sygnatury dla zdjęć, lista rozszerzeń, nazwa z losowym składnikiem, pliki poza katalogiem publicznym, pobieranie jako `attachment`, limit stron PDF i plików w ZIP | załączniki po rozszerzeniu (R-03, US-004); ZIP z deklarowanego rozmiaru (US-006); brak AV |
-| V13 API i usługi sieciowe | ✅ | JSON przez Pydantic, CSRF dla cookie, `/docs` wyłączone na prod, limity, HMAC dla webhooków wychodzących, token n8n w stałym czasie | CIDR/termin tokenu n8n opcjonalne (E-10); publiczne trasy DLT bez limitu (US-005) |
+| V13 API i usługi sieciowe | ✅ | JSON przez Pydantic, CSRF dla cookie, `/docs` wyłączone na prod, limity, HMAC dla webhooków wychodzących, token n8n w stałym czasie | CIDR/termin tokenu n8n opcjonalne (E-10); publiczne trasy MAG-1 bez limitu (US-005) |
 | V14 Konfiguracja | ✅ | fail-fast na prod (sekrety, `PUBLIC_BASE_URL`, `SECURE_COOKIES`), nagłówki bezpieczeństwa, kontenery bez roota, limity RAM/CPU, `.env.example` bez wartości (test), katalog zmiennych z testem kompletności | `DATABASE_URL` bez fail-fast (US-001); `ALLOWED_HOSTS` puste (E-08); rozjazd wersji Python/Node (US-015) |
 
 ## Podsumowanie

@@ -1,4 +1,4 @@
-// Edytor kolorów motywu jasnego i ciemnego (tło, tekst, akcent, pasek górny, wiersze DLT / ACME /
+// Edytor kolorów motywu jasnego i ciemnego (tło, tekst, akcent, pasek górny, wiersze MAG-1 / ACME /
 // bez magazynu). Dwie warstwy, ten sam ekran:
 //  - company (Administracja → Kolory): admin, dla wszystkich, zapis przez API,
 //  - personal (menu → Moje kolory): każdy dla siebie, na wierzchu firmowych, profil konta (prefs.ts).

@@ -1,4 +1,4 @@
-"""Analiza per produkt: stan MAG/DLT (palety) vs zapotrzebowanie i zużycie.
+"""Analiza per produkt: stan MAG/MAG-1 (palety) vs zapotrzebowanie i zużycie.
 
 Każde źródło agregowane do dict[produkt -> wartość] PRZED złożeniem (brak
 kartezjanu). Agregacja to szew rozszerzalności — kolejne źródła zapotrzebowania
@@ -15,11 +15,11 @@ def _num(v) -> float:
     return to_float(v) or 0.0   # brak/nie-liczba liczy się jako 0 w sumach
 
 
-def _is_dlt(row: dict, field: str, dlt_values: set[str]) -> bool:
-    if not dlt_values:
+def _is_mag1(row: dict, field: str, mag1_values: set[str]) -> bool:
+    if not mag1_values:
         return False
     val = str(row.get(field, ""))
-    return any(val == v or val.startswith(v) for v in dlt_values)
+    return any(val == v or val.startswith(v) for v in mag1_values)
 
 
 def sum_by_product(rows: list[dict], key: str, qty_field: str,
@@ -57,14 +57,14 @@ def daily_usage_map(usage, key, window_days=30):
     return {p: v / window_days for p, v in totals.items()}, True
 
 
-def dlt_hu_map(stock, key, location_field, dlt_values, hu_field="glowna_hu"):
-    """Stany DLT per HU: dict[produkt -> list[{hu, ilosc}]] + flaga dostępności kolumny."""
+def mag1_hu_map(stock, key, location_field, mag1_values, hu_field="glowna_hu"):
+    """Stany MAG-1 per HU: dict[produkt -> list[{hu, ilosc}]] + flaga dostępności kolumny."""
     has_hu = any(hu_field in r for r in stock)
     if not has_hu:
         return {}, False
     out: dict[str, list[dict]] = {}
     for r in stock:
-        if not _is_dlt(r, location_field, dlt_values):
+        if not _is_mag1(r, location_field, mag1_values):
             continue
         p, hu = r.get(key), r.get(hu_field)
         if p is None or not hu:
@@ -74,7 +74,7 @@ def dlt_hu_map(stock, key, location_field, dlt_values, hu_field="glowna_hu"):
 
 
 def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
-               key, location_field, dlt_values, open_statuses,
+               key, location_field, mag1_values, open_statuses,
                target_days, urgent_threshold,
                orders_confirmed_field="potw", orders_unconfirmed_field="niestandardowe",
                demand_forecast=None, horizon_days=14,
@@ -82,22 +82,22 @@ def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
     """Zwraca (rows, discrepancies, features). rows: list[dict] sygnałów per produkt."""
     target_days_map = target_days_map or {}
     mag_szt = sum_by_product(stock, key, "ilosc",
-                             lambda r: not _is_dlt(r, location_field, dlt_values))
-    dlt_szt = sum_by_product(stock, key, "ilosc",
-                             lambda r: _is_dlt(r, location_field, dlt_values))
+                             lambda r: not _is_mag1(r, location_field, mag1_values))
+    mag1_szt = sum_by_product(stock, key, "ilosc",
+                             lambda r: _is_mag1(r, location_field, mag1_values))
     dostawy_szt = sum_by_product(vbba, key, "ilosc",
                                  lambda r: r.get("status_pobrania") in open_statuses)
     zlec_niepotw_szt = sum_by_product(orders, key, orders_unconfirmed_field)
     zlec_potw_szt = sum_by_product(orders, key, orders_confirmed_field)
     usage_daily, has_daily_usage = daily_usage_map(usage, key, usage_window_days)
-    hu_map, has_hu = dlt_hu_map(stock, key, location_field, dlt_values)
+    hu_map, has_hu = mag1_hu_map(stock, key, location_field, mag1_values)
 
-    produkty = set(mag_szt) | set(dlt_szt) | set(dostawy_szt) | set(zlec_niepotw_szt)
+    produkty = set(mag_szt) | set(mag1_szt) | set(dostawy_szt) | set(zlec_niepotw_szt)
     rows, disc = [], []
     for p in sorted(produkty):
         paz = paz_map.get(p)
         mag_pal = to_pallets(mag_szt.get(p, 0), paz)
-        dlt_pal = to_pallets(dlt_szt.get(p, 0), paz)
+        mag1_pal = to_pallets(mag1_szt.get(p, 0), paz)
         dost_pal = to_pallets(dostawy_szt.get(p, 0), paz) or 0
         zn_pal = to_pallets(zlec_niepotw_szt.get(p, 0), paz) or 0
         zp_pal = to_pallets(zlec_potw_szt.get(p, 0), paz) or 0
@@ -120,11 +120,11 @@ def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
             base = fc_pal if has_forecast else (zuzycie_pal or 0) * cel_dni
             need = (base or 0) + dost_pal + zn_pal
             raw = math.ceil(need - (mag_pal or 0) - wywolane)
-            # przycięcie do stanu DLT i do 132 miejsc (4 auta × 33)
-            sugestia = max(0, min(raw, math.floor(dlt_pal or 0), PALLET_CAP))
+            # przycięcie do stanu MAG-1 i do 132 miejsc (4 auta × 33)
+            sugestia = max(0, min(raw, math.floor(mag1_pal or 0), PALLET_CAP))
         rows.append({
-            "produkt": p, "stan_mag_pal": mag_pal, "stan_dlt_pal": dlt_pal,
-            "stan_mag_szt": mag_szt.get(p, 0), "stan_dlt_szt": dlt_szt.get(p, 0),
+            "produkt": p, "stan_mag_pal": mag_pal, "stan_mag1_pal": mag1_pal,
+            "stan_mag_szt": mag_szt.get(p, 0), "stan_mag1_szt": mag1_szt.get(p, 0),
             "zuzycie_szt_dzien": usage_daily.get(p) or 0, "cel_dni": cel_dni,
             "dostawy_pal": dost_pal, "zlec_niepotw_pal": zn_pal, "zlec_potw_pal": zp_pal,
             "wywolane_pal": wywolane, "projekcja_mag_pal": projekcja,

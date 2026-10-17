@@ -12,7 +12,7 @@ from tests.conftest import login
 CFG = {"sharepoint_tenant_id": "t", "sharepoint_client_id": "c",
        "sharepoint_client_secret": "SEKRET", "sharepoint_site": "acme.sharepoint.com:/sites/T",
        "sharepoint_queue_path": "Shared Documents/Kolejka/kolejka.xlsx",
-       "sharepoint_queue_company": "BOREALIS"}
+       "sharepoint_queue_company": "BETA"}
 
 
 class Resp:
@@ -97,7 +97,7 @@ def test_job_imports_then_skips_unchanged_etag(graph, fake_import):
         assert sharepoint.sharepoint_queue_sync(db) == "ok"
     assert len(fake_import) == 1
     code, content, actor, kw = fake_import[0]
-    assert (code, content, actor, kw["dry_run"]) == ("BOREALIS", b"XLSX", None, False)
+    assert (code, content, actor, kw["dry_run"]) == ("BETA", b"XLSX", None, False)
     assert kw["file_mtime"].isoformat() == "2026-09-20T10:00:00"
     st = _state()
     assert st["etag"] == "e1" and st["result"]["changed"] == 2

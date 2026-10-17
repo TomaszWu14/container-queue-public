@@ -3,24 +3,24 @@ import datetime
 from app.models import today_pl
 
 
-def _company(client, headers, code="BOREALIS"):
+def _company(client, headers, code="BETA"):
     companies = client.get("/api/companies", headers=headers).json()
     return next(c["id"] for c in companies if c["code"] == code)
 
 
 def test_dashboard_tiles_and_lists(client, admin_headers):
-    borealis = _company(client, admin_headers)
+    beta = _company(client, admin_headers)
     today = today_pl()
     yesterday = today - datetime.timedelta(days=1)
 
     client.post("/api/containers", headers=admin_headers, json={
-        "container_no": "MSDU0806613", "company_id": borealis,
+        "container_no": "MSDU0806613", "company_id": beta,
         "notify_date": today.isoformat(), "status": "AWIZOWANY"})
     client.post("/api/containers", headers=admin_headers, json={
-        "container_no": "CSQU3054383", "company_id": borealis,
+        "container_no": "CSQU3054383", "company_id": beta,
         "eta": yesterday.isoformat(), "status": "W_TRANSPORCIE"})  # opóźniony
     client.post("/api/containers", headers=admin_headers, json={
-        "container_no": "TGBU6784203", "company_id": borealis,
+        "container_no": "TGBU6784203", "company_id": beta,
         "notify_date": (today + datetime.timedelta(days=1)).isoformat(),
         "status": "W_PORCIE", "customs_status": "ZLECONA"})
 

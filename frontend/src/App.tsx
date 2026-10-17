@@ -37,7 +37,7 @@ const ChangesFeedPage = lazy(() => import('./pages/ChangesFeedPage'))
 const MasterDataPage = lazy(() => import('./pages/MasterDataPage'))
 const AvizoFormPage = lazy(() => import('./pages/AvizoFormPage'))
 const AvizoDriverFormPage = lazy(() => import('./pages/AvizoDriverFormPage'))
-const DltPage = lazy(() => import('./pages/DltPage'))
+const Mag1Page = lazy(() => import('./pages/Mag1Page'))
 const QuotesPage = lazy(() => import('./pages/QuotesPage'))
 const PalletCallsPage = lazy(() => import('./pages/PalletCallsPage'))
 const ComplaintsPage = lazy(() => import('./pages/ComplaintsPage'))
@@ -240,8 +240,8 @@ export default function App() {
                 <Guarded ok={canAccess(user.role, 'odprawa')}><CustomsPage /></Guarded>} />
               <Route path="/wyceny" element={
                 <Guarded ok={canAccess(user.role, 'wyceny')}><QuotesPage /></Guarded>} />
-              <Route path="/wywolania-dlt" element={
-                <Guarded ok={['admin', 'logistics', 'warehouse'].includes(user.role) && !hiddenInDemo(user, '/wywolania-dlt')}>
+              <Route path="/wywolania-mag1" element={
+                <Guarded ok={['admin', 'logistics', 'warehouse'].includes(user.role) && !hiddenInDemo(user, '/wywolania-mag1')}>
                   <PalletCallsPage /></Guarded>} />
               <Route path="/analityka" element={
                 <Guarded ok={user.role === 'admin' || user.role === 'logistics'}>
@@ -272,7 +272,7 @@ export default function App() {
                 <Guarded ok={canAccess(user.role, 'administracja')}><AdminPage /></Guarded>} />
               <Route path="/avizo/driver/:token" element={<AvizoDriverFormPage />} />
               <Route path="/avizo/:token" element={<AvizoFormPage />} />
-              <Route path="/dlt/:token" element={<DltPage />} />
+              <Route path="/mag1/:token" element={<Mag1Page />} />
               {/* redirecty ze starych ścieżek — zakładki i linki dalej działają */}
               {Object.entries(LEGACY_REDIRECTS).map(([oldPath, newPath]) => (
                 <Route key={oldPath} path={oldPath} element={<LegacyRedirect to={newPath} />} />
@@ -293,7 +293,7 @@ export default function App() {
           <Routes>
             <Route path="/avizo/driver/:token" element={<AvizoDriverFormPage />} />
             <Route path="/avizo/:token" element={<AvizoFormPage />} />
-            <Route path="/dlt/:token" element={<DltPage />} />
+            <Route path="/mag1/:token" element={<Mag1Page />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             {/* ekran wejścia 2b jest jednocześnie stroną startową; stary marketingowy

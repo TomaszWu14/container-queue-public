@@ -17,8 +17,8 @@ def _history_fields(client, headers, cid):
 
 
 def test_bulk_status_changes_all_and_audits(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    ids = _containers(client, admin_headers, borealis, VALID_NO, NO2)
+    beta = _company_id(client, admin_headers, "BETA")
+    ids = _containers(client, admin_headers, beta, VALID_NO, NO2)
     r = client.post("/api/containers/bulk/status", headers=admin_headers,
                     json={"ids": ids, "status": "W_PORCIE"})
     assert r.status_code == 200, r.text
@@ -29,8 +29,8 @@ def test_bulk_status_changes_all_and_audits(client, admin_headers):
 
 
 def test_bulk_status_partial_failure_keeps_valid_changes(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    back_id, fwd_id = _containers(client, admin_headers, borealis, VALID_NO, NO2)
+    beta = _company_id(client, admin_headers, "BETA")
+    back_id, fwd_id = _containers(client, admin_headers, beta, VALID_NO, NO2)
     client.post(f"/api/containers/{back_id}/status", headers=admin_headers,
                 json={"status": "AWIZOWANY"})
     # cofnięcie bez notatki → 422 dla tego jednego; drugi przechodzi
@@ -44,40 +44,40 @@ def test_bulk_status_partial_failure_keeps_valid_changes(client, admin_headers):
 
 
 def test_bulk_isolation_other_company_ids_fail(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    cobalt = _company_id(client, admin_headers, "COBALT")
-    (own,) = _containers(client, admin_headers, borealis, VALID_NO)
-    (foreign,) = _containers(client, admin_headers, cobalt, NO2)
-    _make_user(client, admin_headers, "log.borealis", "logistics", borealis)
-    headers = login(client, "log.borealis", "haslo123")
+    beta = _company_id(client, admin_headers, "BETA")
+    gamma = _company_id(client, admin_headers, "GAMMA")
+    (own,) = _containers(client, admin_headers, beta, VALID_NO)
+    (foreign,) = _containers(client, admin_headers, gamma, NO2)
+    _make_user(client, admin_headers, "log.beta", "logistics", beta)
+    headers = login(client, "log.beta", "haslo123")
     r = client.post("/api/containers/bulk/warehouse", headers=headers,
-                    json={"ids": [own, foreign], "name": "DLT"})
+                    json={"ids": [own, foreign], "name": "MAG-1"})
     assert r.json()["ok"] == [own]
     assert [f["id"] for f in r.json()["failed"]] == [foreign]
     assert client.get(f"/api/containers/{foreign}", headers=admin_headers).json()["warehouse_name"] is None
 
 
 def test_bulk_warehouse_sets_and_audits(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    ids = _containers(client, admin_headers, borealis, VALID_NO, NO2, NO3)
+    beta = _company_id(client, admin_headers, "BETA")
+    ids = _containers(client, admin_headers, beta, VALID_NO, NO2, NO3)
     r = client.post("/api/containers/bulk/warehouse", headers=admin_headers,
-                    json={"ids": ids, "name": "DLT"})
+                    json={"ids": ids, "name": "MAG-1"})
     assert r.json() == {"ok": ids, "failed": []}
     for cid in ids:
-        assert client.get(f"/api/containers/{cid}", headers=admin_headers).json()["warehouse_name"] == "DLT"
+        assert client.get(f"/api/containers/{cid}", headers=admin_headers).json()["warehouse_name"] == "MAG-1"
         assert "warehouse" in _history_fields(client, admin_headers, cid)
 
 
 def test_bulk_roles(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "Borealis", "company_id": borealis, "country": "PL"}).json()
-    ids = _containers(client, admin_headers, borealis, VALID_NO, NO2, warehouse_id=wh["id"])
-    _make_user(client, admin_headers, "mag.borealis", "warehouse", borealis, warehouse_id=wh["id"])
-    headers = login(client, "mag.borealis", "haslo123")
+        "name": "Beta", "company_id": beta, "country": "PL"}).json()
+    ids = _containers(client, admin_headers, beta, VALID_NO, NO2, warehouse_id=wh["id"])
+    _make_user(client, admin_headers, "mag.beta", "warehouse", beta, warehouse_id=wh["id"])
+    headers = login(client, "mag.beta", "haslo123")
     # magazyn: zmiana magazynu zabroniona, status tylko potwierdzenie rozładunku
     assert client.post("/api/containers/bulk/warehouse", headers=headers,
-                       json={"ids": ids, "name": "DLT"}).status_code == 403
+                       json={"ids": ids, "name": "MAG-1"}).status_code == 403
     denied = client.post("/api/containers/bulk/status", headers=headers,
                          json={"ids": ids, "status": "W_PORCIE"}).json()
     assert denied["ok"] == [] and len(denied["failed"]) == 2

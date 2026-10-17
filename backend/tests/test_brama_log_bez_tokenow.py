@@ -31,7 +31,7 @@ def _safe_uri(request_uri: str) -> str:
 
 def test_tokeny_w_sciezce_i_query_maskowane():
     for uri in (f"/avizo/{TOKEN}", f"/api/avizo/driver/{TOKEN}/confirm", f"/dostawa/{TOKEN}",
-                f"/portal/{TOKEN}", f"/api/public/portal/{TOKEN}", f"/dlt/{TOKEN}",
+                f"/portal/{TOKEN}", f"/api/public/portal/{TOKEN}", f"/mag1/{TOKEN}",
                 f"/reset-hasla?token={TOKEN}", f"/api/auth/reset?x=1&token={TOKEN}"):
         assert TOKEN not in _safe_uri(uri), uri
     assert _safe_uri("/api/containers?page=2") == "/api/containers?page=2"   # reszta bez zmian

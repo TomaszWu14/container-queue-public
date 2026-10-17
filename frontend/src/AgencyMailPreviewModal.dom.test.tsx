@@ -17,7 +17,7 @@ import type { InvoiceBatch } from './types'
 
 const batch = { id: 3, attachment_id: 41 } as InvoiceBatch
 const preview = {
-  to: ['odprawy@agencja.pl'], cc: ['zespol@firma.pl'], subject: 'Faktury — HLBU2672415 — ACME', agency: 'Delta',
+  to: ['odprawy@agencja.pl'], cc: ['zespol@firma.pl'], subject: 'Faktury — HLBU2672415 — ACME', agency: 'Omega',
   body: 'Dzień dobry,\n\nZałączniki:', warnings: ['1 faktur(y) niezatwierdzone — nie trafią do maila: CBN-E20260692'],
   attachments: [
     { name: 'Faktury_HLBU2672415.xlsx', size: 9000, kind: 'excel', job_id: null },

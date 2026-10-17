@@ -1,4 +1,4 @@
-"""Zakładanie zlecenia (Borealis/Cobalt): jedno zamówienie → N rekordów kontenerów,
+"""Zakładanie zlecenia (Beta/Gamma): jedno zamówienie → N rekordów kontenerów,
 master data portów/typów kontenerów, kontakty dostawcy, przewalutowanie NBP."""
 from app.nbp import convert
 from tests.conftest import forwarder, login
@@ -22,14 +22,14 @@ def test_ports_and_container_types_seeded(client, admin_headers):
 
 
 def test_found_order_splits_into_n_records(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     ports = client.get("/api/ports", headers=admin_headers).json()
     port = next(p for p in ports if p["name"] == "Ningbo")
     ctype = next(t for t in client.get("/api/container-types", headers=admin_headers).json()
                  if t["name"] == "40'HC")
 
     resp = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "ZL-1001", "company_id": borealis, "supplier_name": "ACME Ltd",
+        "number": "ZL-1001", "company_id": beta, "supplier_name": "ACME Ltd",
         "departure_port_id": port["id"], "container_type_id": ctype["id"],
         "main_mode": "SEA", "sea_service": "STANDARD", "container_count": 3,
         "goods_type": "meble", "is_adr": False, "goods_value": "50000.00",
@@ -52,7 +52,7 @@ def test_found_order_splits_into_n_records(client, admin_headers):
         assert container["transport_id"]  # nadany automatycznie
 
     # rekordy trafiają do kolejki spółki
-    listed = client.get("/api/containers?company_code=BOREALIS", headers=admin_headers).json()
+    listed = client.get("/api/containers?company_code=BETA", headers=admin_headers).json()
     assert sum(1 for c in listed if c["order_number"] == "ZL-1001") == 3
 
     # powiadomienie o nowym zleceniu
@@ -63,38 +63,38 @@ def test_found_order_splits_into_n_records(client, admin_headers):
 def test_new_order_notifies_acme_team(client, admin_headers):
     # centralny team Acme (logistyka ACME, bez view_all) musi dostać powiadomienie
     acme = _company_id(client, admin_headers, "ACME")
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     client.post("/api/users", headers=admin_headers, json={
         "login": "log.acme", "password": "haslo123", "role": "logistics",
         "company_id": acme, "email": "log.acme@example.com"})
     acme_h = login(client, "log.acme", "haslo123")
 
-    # zlecenie zakładane pod Borealis
+    # zlecenie zakładane pod Beta
     resp = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "ZL-Z-1", "company_id": borealis, "container_count": 1})
+        "number": "ZL-Z-1", "company_id": beta, "container_count": 1})
     assert resp.status_code == 201
 
-    # team Acme widzi dzwoneczek o nowym zleceniu Borealis
+    # team Acme widzi dzwoneczek o nowym zleceniu Beta
     notes = client.get("/api/notifications", headers=acme_h).json()
-    assert any("ZL-Z-1" in n["title"] and "Borealis" in n["title"] for n in notes)
+    assert any("ZL-Z-1" in n["title"] and "Beta" in n["title"] for n in notes)
 
 
 def test_found_order_rail_and_duplicate_number(client, admin_headers):
-    cobalt = _company_id(client, admin_headers, "COBALT")
+    gamma = _company_id(client, admin_headers, "GAMMA")
     r1 = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "ZL-2002", "company_id": cobalt, "container_count": 2, "main_mode": "RAIL"})
+        "number": "ZL-2002", "company_id": gamma, "container_count": 2, "main_mode": "RAIL"})
     assert r1.status_code == 201
     assert all(c["transport_type"] == "kolej" for c in r1.json()["containers"])
     # ten sam numer w tej samej spółce → konflikt
     dup = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "ZL-2002", "company_id": cobalt, "container_count": 1})
+        "number": "ZL-2002", "company_id": gamma, "container_count": 1})
     assert dup.status_code == 409
 
 
 def test_supplier_contacts_dictionary(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     supplier = client.post("/api/suppliers", headers=admin_headers,
-                           json={"name": "Contact Co", "company_id": borealis}).json()
+                           json={"name": "Contact Co", "company_id": beta}).json()
     contact = client.post("/api/supplier-contacts", headers=admin_headers, json={
         "supplier_id": supplier["id"], "full_name": "Li Wei",
         "email": "li@contact.example", "phone": "+86 100"}).json()
@@ -105,29 +105,29 @@ def test_supplier_contacts_dictionary(client, admin_headers):
 
     # zlecenie z kontaktem spoza dostawcy → 422
     bad = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "ZL-3003", "company_id": borealis, "supplier_id": supplier["id"],
+        "number": "ZL-3003", "company_id": beta, "supplier_id": supplier["id"],
         "supplier_contact_id": contact["id"] + 999, "container_count": 1})
     assert bad.status_code in (404, 422)
 
 
 def test_found_order_via_company_code(client, admin_headers):
     # admin bez company_id: spółkę ustala company_code (fallback, gdy klient nie zdążył
-    # załadować listy spółek) — zlecenie ma trafić do Borealis, nie do spółki admina
+    # załadować listy spółek) — zlecenie ma trafić do Beta, nie do spółki admina
     resp = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "ZL-CODE-1", "company_code": "BOREALIS", "container_count": 1})
+        "number": "ZL-CODE-1", "company_code": "BETA", "container_count": 1})
     assert resp.status_code == 201, resp.text
     order = resp.json()
-    assert order["company_name"] == "Borealis"
-    # numer zamówienia jest widoczny w kolejce Borealis
-    listed = client.get("/api/containers?company_code=BOREALIS", headers=admin_headers).json()
+    assert order["company_name"] == "Beta"
+    # numer zamówienia jest widoczny w kolejce Beta
+    listed = client.get("/api/containers?company_code=BETA", headers=admin_headers).json()
     assert any(c["order_number"] == "ZL-CODE-1" for c in listed)
 
 
 def test_supplier_contacts_isolated_from_forwarder(client, admin_headers):
     # spedytor (konto zewnętrzne) NIE może czytać kontaktów dostawców i nie widzi e-maili konkurencji
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     supplier = client.post("/api/suppliers", headers=admin_headers,
-                           json={"name": "Iso Co", "company_id": borealis}).json()
+                           json={"name": "Iso Co", "company_id": beta}).json()
     client.post("/api/supplier-contacts", headers=admin_headers, json={
         "supplier_id": supplier["id"], "full_name": "Secret Person",
         "email": "secret@x.example", "phone": "+48 1"})

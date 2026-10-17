@@ -200,7 +200,7 @@ class SupplierContactOut(ORMModel):
     is_active: bool = True
 
 
-# --- zakładanie zlecenia (Borealis/Cobalt): jedno zamówienie → N rekordów kontenerów ---
+# --- zakładanie zlecenia (Beta/Gamma): jedno zamówienie → N rekordów kontenerów ---
 
 class FoundOrderIn(BaseModel):
     number: str = Field(min_length=1, max_length=60)

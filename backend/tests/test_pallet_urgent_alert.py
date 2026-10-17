@@ -15,7 +15,7 @@ def test_pallet_urgent_notifications_are_committed(client, db_session, monkeypat
     db_session.commit()
     monkeypatch.setattr(powerbi, "is_configured", lambda: True)
     monkeypatch.setattr(pallets_cache, "get_analysis",
-                        lambda db: ([{"produkt": "DLT-1", "pilne": True}], None, None, None))
+                        lambda db: ([{"produkt": "MAG-1-1", "pilne": True}], None, None, None))
 
     assert jobs._run(check_pallet_urgent_alerts) >= 1   # ścieżka pętli tła
 

@@ -10,8 +10,8 @@ def _user_id(client, admin_headers, login):
 
 
 def test_changes_feed_actors_scoped_to_own_company(client, admin_headers):
-    a = _company_id(client, admin_headers, "BOREALIS")
-    b = _company_id(client, admin_headers, "COBALT")
+    a = _company_id(client, admin_headers, "BETA")
+    b = _company_id(client, admin_headers, "GAMMA")
     headers_a = _make_scoped_user(client, admin_headers, "logistyk.a", a)
     headers_b = _make_scoped_user(client, admin_headers, "logistyk.b", b)
     cont_a = _container_in(client, admin_headers, a)
@@ -35,8 +35,8 @@ def test_changes_feed_actors_scoped_to_own_company(client, admin_headers):
 
 
 def test_bulletin_acks_scoped_to_own_company(client, admin_headers):
-    a = _company_id(client, admin_headers, "BOREALIS")
-    b = _company_id(client, admin_headers, "COBALT")
+    a = _company_id(client, admin_headers, "BETA")
+    b = _company_id(client, admin_headers, "GAMMA")
     headers_a = _make_scoped_user(client, admin_headers, "logistyk.a2", a)
     _make_scoped_user(client, admin_headers, "logistyk.b2", b)
     bid = client.post("/api/knowledge/bulletins", headers=admin_headers, json={

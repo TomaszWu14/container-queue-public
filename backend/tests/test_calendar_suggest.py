@@ -17,14 +17,14 @@ def _company_id(client, headers, code):
 
 
 def _setup(client, headers, limit=None):
-    borealis = _company_id(client, headers, "BOREALIS")
-    payload = {"name": "Borealis", "company_id": borealis, "country": "PL"}
+    beta = _company_id(client, headers, "BETA")
+    payload = {"name": "Beta", "company_id": beta, "country": "PL"}
     if limit is not None:
         payload["default_daily_limit"] = limit
     wh = client.post("/api/warehouses", headers=headers, json=payload).json()
     sup = client.post("/api/suppliers", headers=headers, json={
-        "name": "Dostawca K", "company_id": borealis}).json()
-    return borealis, wh, sup
+        "name": "Dostawca K", "company_id": beta}).json()
+    return beta, wh, sup
 
 
 def _container(client, headers, no, company_id, **extra):
@@ -39,24 +39,24 @@ def _next_weekday(anchor: datetime.date, weekday: int) -> datetime.date:
 
 
 def test_notify_conflict_warning(client, admin_headers):
-    borealis, wh, sup = _setup(client, admin_headers)
+    beta, wh, sup = _setup(client, admin_headers)
     day = _next_weekday(today_pl() + datetime.timedelta(days=7), 0)  # pon.
     common = {"warehouse_id": wh["id"], "supplier_id": sup["id"]}
-    _container(client, admin_headers, "TESU0000008", borealis,
+    _container(client, admin_headers, "TESU0000008", beta,
                notify_date=day.isoformat(), **common)
-    c2 = _container(client, admin_headers, "TESU0000013", borealis, **common)
+    c2 = _container(client, admin_headers, "TESU0000013", beta, **common)
     # 1 inny kontener z tą datą → BEZ ostrzeżenia
     resp = client.patch(f"/api/containers/{c2['id']}", headers=admin_headers,
                         json={"notify_date": day.isoformat()})
     assert resp.status_code == 200 and not resp.json().get("notify_conflict")
     # inny magazyn z tą samą datą — nie liczy się do konfliktu
     other_wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "Inny", "company_id": borealis, "country": "PL"}).json()
-    _container(client, admin_headers, "TESU0000034", borealis,
+        "name": "Inny", "company_id": beta, "country": "PL"}).json()
+    _container(client, admin_headers, "TESU0000034", beta,
                notify_date=day.isoformat(), warehouse_id=other_wh["id"],
                supplier_id=sup["id"])
     # trzeci kontener: już ≥2 INNE z tą datą i magazynem → ostrzeżenie, nie blokada
-    c3 = _container(client, admin_headers, "TESU0000029", borealis, **common)
+    c3 = _container(client, admin_headers, "TESU0000029", beta, **common)
     resp = client.patch(f"/api/containers/{c3['id']}", headers=admin_headers,
                         json={"notify_date": day.isoformat()})
     assert resp.status_code == 200
@@ -65,11 +65,11 @@ def test_notify_conflict_warning(client, admin_headers):
 
 
 def test_suggest_notify_date_skips_free_and_full_days(client, admin_headers):
-    borealis, wh, sup = _setup(client, admin_headers, limit=1)
+    beta, wh, sup = _setup(client, admin_headers, limit=1)
     # ETA w środę: +3 dni bufora = sobota → propozycja przeskakuje na poniedziałek
     eta = _next_weekday(today_pl() + datetime.timedelta(days=7), 2)
     monday = _next_working(eta + datetime.timedelta(days=3))  # sob. → 1. dzień roboczy
-    c = _container(client, admin_headers, "TESU0000008", borealis,
+    c = _container(client, admin_headers, "TESU0000008", beta,
                    warehouse_id=wh["id"], supplier_id=sup["id"], eta=eta.isoformat())
     resp = client.get(f"/api/containers/{c['id']}/suggest-notify-date",
                       headers=admin_headers)
@@ -77,7 +77,7 @@ def test_suggest_notify_date_skips_free_and_full_days(client, admin_headers):
     assert resp.json() == {"date": monday.isoformat(), "eta": eta.isoformat(),
                            "buffer_days": 3}
     # poniedziałek zapełniony do limitu (liczy się tylko POTWIERDZONE) → wtorek
-    blocker = _container(client, admin_headers, "TESU0000013", borealis,
+    blocker = _container(client, admin_headers, "TESU0000013", beta,
                          warehouse_id=wh["id"], notify_date=monday.isoformat())
     client.post(f"/api/containers/{blocker['id']}/plan/confirm", headers=admin_headers,
                 json={"delivery_date": monday.isoformat()})
@@ -95,9 +95,9 @@ def test_suggest_notify_date_skips_free_and_full_days(client, admin_headers):
 
 
 def test_suggest_notify_date_without_warehouse(client, admin_headers):
-    borealis, _, _ = _setup(client, admin_headers)
+    beta, _, _ = _setup(client, admin_headers)
     eta = _next_weekday(today_pl() + datetime.timedelta(days=7), 0)
-    c = _container(client, admin_headers, "TESU0000055", borealis, eta=eta.isoformat())
+    c = _container(client, admin_headers, "TESU0000055", beta, eta=eta.isoformat())
     # bez magazynu: brak limitu, tylko dni wolne PL (pon.+3 = czwartek, roboczy)
     resp = client.get(f"/api/containers/{c['id']}/suggest-notify-date",
                       headers=admin_headers)

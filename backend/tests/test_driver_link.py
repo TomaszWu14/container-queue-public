@@ -17,14 +17,14 @@ def _setup(client, admin_headers, notify_days=1):
     settings.sms_provider = "mock"
     mock_outbox.clear()
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "MAG-SMS", "company_id": borealis, "address": "Magazynowa 1, Przykładowo",
+        "name": "MAG-SMS", "company_id": beta, "address": "Magazynowa 1, Przykładowo",
         "contact_phone": "500600700", "entry_instructions": "Brama B, zgłoś się na portierni",
     }).json()
     day = (today_pl() + datetime.timedelta(days=notify_days)).isoformat()
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "warehouse_id": wh["id"],
+        "container_no": VALID_NO, "company_id": beta, "warehouse_id": wh["id"],
         "notify_date": day}).json()
     # dane kierowcy przez dedykowany endpoint (ContainerIn ich nie przyjmuje)
     client.patch(f"/api/containers/{container['id']}/driver", headers=admin_headers,
@@ -117,11 +117,11 @@ def test_auto_sms_commits_each_send_and_survives_error(client, admin_headers, mo
     from app.models import SmsMessage
     from app.routers import driver as driver_mod
     first = _setup(client, admin_headers)
-    borealis, wh, day = first["company_id"], first["warehouse_id"], first["notify_date"]
+    beta, wh, day = first["company_id"], first["warehouse_id"], first["notify_date"]
     others = []
     for prefix in ("MSDU808831", "MSDU808832"):
         c = client.post("/api/containers", headers=admin_headers, json={
-            "container_no": _container_no(prefix), "company_id": borealis,
+            "container_no": _container_no(prefix), "company_id": beta,
             "warehouse_id": wh, "notify_date": day}).json()
         client.patch(f"/api/containers/{c['id']}/driver", headers=admin_headers,
                      json={"driver_name": "Jan", "driver_id_no": "", "truck_no": "",

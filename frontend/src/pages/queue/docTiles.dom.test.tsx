@@ -23,7 +23,7 @@ import { matchesView, viewCounts } from './enterprise'
 import type { Container } from '../../types'
 
 const row = (id: number) => ({
-  id, container_no: `MSCU000000${id}`, status: 'W_PORCIE', warehouse_name: 'DLT', customs_status: 'BRAK',
+  id, container_no: `MSCU000000${id}`, status: 'W_PORCIE', warehouse_name: 'MAG-1', customs_status: 'BRAK',
 }) as unknown as Container
 
 const BULK = {

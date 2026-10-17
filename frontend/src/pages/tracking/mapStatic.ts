@@ -34,8 +34,8 @@ export const KEY_PORTS: KeyPort[] = [
   { id: 'BRV', name: 'Bremerhaven', cc: 'Niemcy', lon: 8.54, lat: 53.55, role: 'hub', dx: -168, dy: 40, ais: ['BREMERHAVEN'] },
   { id: 'ALG', name: 'Algeciras', cc: 'Hiszpania', lon: -5.44, lat: 36.13, role: 'hub', dx: -136, dy: 22, ais: ['ALGECIRAS'] },
   { id: 'TNG', name: 'Tanger Med', cc: 'Maroko', lon: -5.50, lat: 35.89, role: 'hub', dx: -136, dy: 50, ais: ['TANGER MED', 'TANGER'] },
-  { id: 'SIN2', name: 'Sines', cc: 'Iberia', lon: -8.87, lat: 37.95, role: 'hub', dx: -136, dy: -6, ais: ['SINES'] },
-  { id: 'LEI', name: 'Leixões', cc: 'Iberia', lon: -8.70, lat: 41.18, role: 'hub', dx: -136, dy: -34, ais: ['LEIXOES', 'LEIXÕES'] },
+  { id: 'SIN2', name: 'Sines', cc: 'Delta', lon: -8.87, lat: 37.95, role: 'hub', dx: -136, dy: -6, ais: ['SINES'] },
+  { id: 'LEI', name: 'Leixões', cc: 'Delta', lon: -8.70, lat: 41.18, role: 'hub', dx: -136, dy: -34, ais: ['LEIXOES', 'LEIXÕES'] },
   { id: 'PIR', name: 'Pireus', cc: 'Grecja', lon: 23.62, lat: 37.94, role: 'hub', dx: 44, dy: 26, ais: ['PIRAEUS', 'PIREUS'] },
   { id: 'JEA', name: 'Jebel Ali', cc: 'ZEA', lon: 55.06, lat: 25.01, role: 'hub', dx: 38, dy: -28, ais: ['JEBEL ALI'] },
   { id: 'CMB', name: 'Colombo', cc: 'Sri Lanka', lon: 79.85, lat: 6.95, role: 'hub', dx: -104, dy: 24, ais: ['COLOMBO'] },
@@ -65,11 +65,11 @@ export interface Warehouse {
   alt?: boolean
 }
 export const WAREHOUSES: Warehouse[] = [
-  { id: 'CEN', name: 'MAG CENTRALNY', company: 'Borealis', addr: 'ul. Magazynowa 1, 00-001 Przykładowo, PL',
+  { id: 'CEN', name: 'MAG CENTRALNY', company: 'Beta', addr: 'ul. Magazynowa 1, 00-001 Przykładowo, PL',
     lon: 20.30, lat: 52.05, color: '#e9a13b', dx: 74, dy: -30, fromLon: 18.66, fromLat: 54.40 },
-  { id: 'DLT', name: 'MAG DLT', company: 'Acme · DLT', addr: 'ul. Logistyczna 2, 90-001 Łódź, PL',
+  { id: 'MAG-1', name: 'MAG-1', company: 'Acme · MAG-1', addr: 'ul. Logistyczna 2, 90-001 Łódź, PL',
     lon: 19.456, lat: 51.759, color: '#e0396b', dx: 74, dy: 26, fromLon: 18.66, fromLat: 54.40, alt: true },
-  { id: 'PT', name: 'MAG IBERIA', company: 'Iberia', addr: 'Rua Logística 1, 7520-000 Sines, PT',
+  { id: 'PT', name: 'MAG DELTA', company: 'Delta', addr: 'Rua Logística 1, 7520-000 Sines, PT',
     lon: -8.78, lat: 37.99, color: '#7c3aed', dx: -150, dy: 46, fromLon: -8.87, fromLat: 37.95, alt: true },
 ]
 
@@ -129,7 +129,7 @@ export const HL_STROKE = { dest: 'rgba(255,220,140,.95)', origin: 'rgba(240,183,
 /* polskie nazwy krajów (klucz: właściwość name z Natural Earth) — makieta PL_NAMES */
 export const PL_NAMES: Record<string, string> = {
   Poland: 'Polska', Germany: 'Niemcy', Netherlands: 'Holandia', Belgium: 'Belgia',
-  'United Kingdom': 'Wielka Brytania', Spain: 'Hiszpania', Portugal: 'Iberia', France: 'Francja', Italy: 'Włochy',
+  'United Kingdom': 'Wielka Brytania', Spain: 'Hiszpania', Portugal: 'Delta', France: 'Francja', Italy: 'Włochy',
   Greece: 'Grecja', Turkey: 'Turcja', Morocco: 'Maroko', Egypt: 'Egipt', China: 'Chiny', Malaysia: 'Malezja', Singapore: 'Singapur',
   India: 'Indie', 'Sri Lanka': 'Sri Lanka', 'United Arab Emirates': 'ZEA', 'South Africa': 'RPA', 'Saudi Arabia': 'Arabia Saudyjska',
   Oman: 'Oman', Japan: 'Japonia', 'South Korea': 'Korea Południowa', Vietnam: 'Wietnam', Thailand: 'Tajlandia', Indonesia: 'Indonezja',

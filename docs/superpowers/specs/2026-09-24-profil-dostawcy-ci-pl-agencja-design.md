@@ -5,7 +5,7 @@ Data: 2026-09-24 · Status: do przeglądu · Autor: brainstorming z użytkowniki
 ## Cel
 
 Aplikacja ma **niezawodnie czytać faktury handlowe (CI) i packing listy (PL) każdego dostawcy**,
-kontrolować je i wysyłać agencji celnej (Delta Brokers) dane w formacie, który agencja importuje do
+kontrolować je i wysyłać agencji celnej (Omega Brokers) dane w formacie, który agencja importuje do
 swojego systemu. Profil dostawcy budujemy z ~10 przykładowych faktur na dostawcę.
 
 ## Zakres
@@ -16,7 +16,7 @@ W zakresie:
 - przepływ dokumentu niezależny od źródła (przy kontenerze, wsad; SharePoint później);
 - kontrole: suma pozycji ↔ suma faktury, ilości CI ↔ PL per REF, ilości CI ↔ pozycje zamówienia SAP;
 - przeliczenie ilości na jednostkę podstawową i jednostkę uzupełniającą (np. pary);
-- eksport „Kartoteka symboli” (wzór Delta Brokers, 44 kolumny) + format eksportu per agencja.
+- eksport „Kartoteka symboli” (wzór Omega Brokers, 44 kolumny) + format eksportu per agencja.
 
 Poza zakresem (osobne etapy): PI (proforma), PO, SAD i porównania z nimi; łącznik SharePoint
 (czeka na dostęp IT i układ folderów); wiele układów faktury na jednego dostawcę; plik faktury
@@ -127,8 +127,8 @@ Format wg `CustomsAgency.export_format`:
 
 ## Sprawy otwarte
 
-- Znaczenie `IDZestawu` (106) — potwierdzić z Delta Brokers (konfigurowalne, bez zmian w kodzie).
+- Znaczenie `IDZestawu` (106) — potwierdzić z Omega Brokers (konfigurowalne, bez zmian w kodzie).
 - Który numer z faktury Pulp House jest Symbolem (Job Number 145851 vs Reference 71787/A) —
   ustawiane w profilu dostawcy; do potwierdzenia z agencją.
-- Wzór pliku **faktury z pozycjami** w formacie agencji (XML/Excel) — poprosić Delta Brokers.
+- Wzór pliku **faktury z pozycjami** w formacie agencji (XML/Excel) — poprosić Omega Brokers.
 - Próbki: ~10 faktur na dostawcę od użytkownika.

@@ -7,7 +7,7 @@ OTHER_NO = "HLXU2733056"
 
 
 def test_counts_scoped_to_forwarder(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     toll = forwarder(client, admin_headers, "Speddelta")["id"]
     client.post("/api/users", headers=admin_headers, json={
@@ -15,13 +15,13 @@ def test_counts_scoped_to_forwarder(client, admin_headers):
         "forwarder_id": spedalfa, "email": "spedalfa@example.com"})
     for no, fwd in ((VALID_NO, spedalfa), (OTHER_NO, toll)):
         r = client.post("/api/containers", headers=admin_headers, json={
-            "container_no": no, "company_id": borealis, "forwarder_id": fwd})
+            "container_no": no, "company_id": beta, "forwarder_id": fwd})
         assert r.status_code == 201, r.text
 
     admin_counts = client.get("/api/containers/counts", headers=admin_headers).json()
     dsv_counts = client.get("/api/containers/counts",
                             headers=login(client, "sped.spedalfa", "haslo123")).json()
 
-    assert admin_counts["BOREALIS"] == 2
-    assert dsv_counts["BOREALIS"] == 1            # tylko własny kontener spedytora
-    assert sum(v for k, v in dsv_counts.items() if k != "DLT") == 1
+    assert admin_counts["BETA"] == 2
+    assert dsv_counts["BETA"] == 1            # tylko własny kontener spedytora
+    assert sum(v for k, v in dsv_counts.items() if k != "MAG-1") == 1

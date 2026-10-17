@@ -26,7 +26,7 @@ Spec: `docs/superpowers/specs/2026-09-29-agencja-draft-sad-design.md` (§2). PR 
 ## Decyzje projektowe (w tym PR)
 
 1. **Odczyt przy pierwszym „Porównaj”, nie przy wgraniu.** Wgranie zostaje szybkie (także dla automatu z PR 4); skan idzie przez OCR (1–3 s/stronę) tylko raz — wynik w `parsed`. Zmiana wzorców = podbicie `PARSER_VERSION` → zapisane odczyty odświeżą się same.
-2. **Parser „etykieta: wartość” z opcjonalnym numerem rubryki** (`38 Masa netto (kg): 12,500`). Bez próbki od agencji nie zgadujemy układu kratek — to PR 5 (dostrojenie do draftu Deltaa). Czego nie odczytano, to trafia do `unread`, a status grupy to „sprawdź ręcznie”.
+2. **Parser „etykieta: wartość” z opcjonalnym numerem rubryki** (`38 Masa netto (kg): 12,500`). Bez próbki od agencji nie zgadujemy układu kratek — to PR 5 (dostrojenie do draftu Omegi). Czego nie odczytano, to trafia do `unread`, a status grupy to „sprawdź ręcznie”.
 3. **Numery faktur (rubryka 44)**: szukamy naszych numerów w całym tekście draftu (bez spacji/znaków) — odporne na format rubryki.
 4. **Masa netto**: tolerancja `tol_qty_pct` z profilu **albo ±1 kg** (zgłoszenie podaje kg zaokrąglone; domyślne `tol_qty_pct = 0` inaczej dawałoby fałszywe alarmy).
 5. **J. uzupełniające (41)**: porównywane tylko, gdy nasz materiał ma `suppl_unit` + `suppl_factor` (jedyny sygnał „CN tego wymaga”); grupa z materiałem bez przelicznika → „sprawdź ręcznie”.
@@ -208,7 +208,7 @@ Run (z `backend/`): `python -m pytest tests/test_sad_parse.py -q` → FAIL (`Imp
 Tekst jak faktury: `extractor.read_pages` (strona bez warstwy tekstowej → OCR). Pola po
 etykietach rubryk z opcjonalnym numerem w układzie „etykieta: wartość” w jednej linii
 („38 Masa netto (kg): 12,500”). Programy agencji drukują drafty różnie — PR 5 dostroi wzorce
-do draftu Deltaa (`layout`). Pole nieodczytane trafia do `unread`, nigdy nie zgadujemy.
+do draftu Omegi (`layout`). Pole nieodczytane trafia do `unread`, nigdy nie zgadujemy.
 Liczby w formacie polskim (przecinek dziesiętny) → `prefer_decimal`."""
 import io
 import logging
@@ -1200,4 +1200,4 @@ git commit -m "feat(agencja): okno porównania draftu SAD z fakturami i podgląd
 ## Kolejne PR-y (osobne plany)
 3. Szkic `.eml` odpowiedzi „Akceptuję” / „Do poprawy” — rozbieżności z `sad_drafts.comparison` w treści (reużycie `app/eml.py`, adresaci jak `invoice_agency.py`) + stan odprawy na kafelku kolejki („SAD do akceptacji” / „SAD OK”).
 4. Wejście automatu (n8n): endpoint z tokenem automatyzacji → `add_draft(..., source="automation")`.
-5. Dostrojenie odczytu do przykładowego draftu SAD od Deltaa: wzorce/układ w `sad_parse` (podbić `PARSER_VERSION`), ewentualnie rozdział kosztów dodatkowych na grupy CN, jeśli agencja je rozkłada.
+5. Dostrojenie odczytu do przykładowego draftu SAD od Omegi: wzorce/układ w `sad_parse` (podbić `PARSER_VERSION`), ewentualnie rozdział kosztów dodatkowych na grupy CN, jeśli agencja je rozkłada.

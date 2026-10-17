@@ -38,7 +38,7 @@ Plik jest importowany tylko, gdy zmienił się jego eTag — bez zmian nic się 
 | `SHAREPOINT_CLIENT_SECRET` | sekret (tylko w Coolify, nigdy w repo) |
 | `SHAREPOINT_SITE` | `acme.sharepoint.com:/sites/Transport` |
 | `SHAREPOINT_QUEUE_PATH` | `Shared Documents/Kolejka/kolejka.xlsx` (ścieżka w domyślnej bibliotece witryny) |
-| `SHAREPOINT_QUEUE_COMPANY` | kod spółki, np. `BOREALIS` |
+| `SHAREPOINT_QUEUE_COMPANY` | kod spółki, np. `BETA` |
 | `SHAREPOINT_QUEUE_INTERVAL_MINUTES` | `15` (domyślnie) |
 
 Po ustawieniu: Redeploy. Job działa tylko na instancji z `RUN_BACKGROUND_JOBS=true`.
@@ -55,5 +55,5 @@ treść błędu. Typowe błędy: `Graph HTTP 403` (IT nie nadało `read` na witr
 ## Kolejny krok: master data
 
 `app/sharepoint.py::fetch_file(path, etag)` pobiera dowolny plik z witryny — słowniki
-(EKKO, MARM, LFA1, porty, stany DLT) można podpiąć tym samym wzorcem: nowa zmienna ze
+(EKKO, MARM, LFA1, porty, stany MAG-1) można podpiąć tym samym wzorcem: nowa zmienna ze
 ścieżką + job wołający istniejący parser z `importers/master_data.py`. Nie wdrożone.

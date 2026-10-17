@@ -14,7 +14,7 @@ from .intake import *  # noqa: F401,F403
 from .invoices import *  # noqa: F401,F403
 from .knowledge import *  # noqa: F401,F403
 from .links import *  # noqa: F401,F403
-from .dlt import *  # noqa: F401,F403
+from .mag1 import *  # noqa: F401,F403
 from .orders import *  # noqa: F401,F403
 from .sad_drafts import *  # noqa: F401,F403
 from .sap import *  # noqa: F401,F403

@@ -6,7 +6,7 @@ import { LoadError } from '../feedback'
 import { useT } from '../i18n'
 import { formatDate } from '../dates'
 
-interface DltLine {
+interface Mag1Line {
   produkt: string
   krotki_opis: string
   ilosc_pal: number
@@ -15,16 +15,16 @@ interface DltLine {
   data_dostawy: string | null
 }
 
-interface DltInfo {
+interface Mag1Info {
   number: string
   status: string
   needed_by: string | null
   notes: string
-  trucks: { ordinal: number; capacity: number; lines: DltLine[] }[]
-  unassigned_lines: DltLine[]
+  trucks: { ordinal: number; capacity: number; lines: Mag1Line[] }[]
+  unassigned_lines: Mag1Line[]
 }
 
-function Lines({ lines }: { lines: DltLine[] }) {
+function Lines({ lines }: { lines: Mag1Line[] }) {
   const t = useT()
   return (
     <table className="grid">
@@ -45,12 +45,12 @@ function Lines({ lines }: { lines: DltLine[] }) {
   )
 }
 
-/** Publiczna strona DLT (link z maila wywołania): wywołanie read-only
+/** Publiczna strona MAG-1 (link z maila wywołania): wywołanie read-only
     (auta → pozycje → HU/ilości) + „Przygotowane" / „Wysłane". Bez logowania. */
-export default function DltPage() {
+export default function Mag1Page() {
   const t = useT()
   const { token } = useParams()
-  const [info, setInfo] = useState<DltInfo | null>(null)
+  const [info, setInfo] = useState<Mag1Info | null>(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState('')
@@ -58,7 +58,7 @@ export default function DltPage() {
 
   const load = useCallback(() => {
     setError('')
-    api.get<DltInfo>(`/api/dlt/${token}`)
+    api.get<Mag1Info>(`/api/mag1/${token}`)
       .then(setInfo)
       .catch(err => {
         if (err instanceof ApiError && (err.status === 404 || err.status === 410)) setNotFound(true)
@@ -70,9 +70,9 @@ export default function DltPage() {
   const act = async (path: string, doneMsg: string) => {
     setBusy(true); setError('')
     try {
-      await api.post(`/api/dlt/${token}/${path}`, {})
+      await api.post(`/api/mag1/${token}/${path}`, {})
       setDone(doneMsg)
-      if (path === 'shipped') setInfo(i => i ? { ...i, status: 'wyslane_z_dlt' } : i)
+      if (path === 'shipped') setInfo(i => i ? { ...i, status: 'wyslane_z_mag1' } : i)
       else setInfo(i => i ? { ...i, status: 'przygotowane' } : i)
     } catch (err) {
       setError(errorMessage(err))
@@ -86,14 +86,14 @@ export default function DltPage() {
   if (!info) return <main className="page driver-page"><p>{t('loading')}</p></main>
 
   const prepared = info.status === 'przygotowane'
-  const shipped = info.status === 'wyslane_z_dlt'
+  const shipped = info.status === 'wyslane_z_mag1'
 
   return (
     <main className="page driver-page">
       <div className="panel">
-        <div className="driver-brand">DLT · TIMPORYE</div>
+        <div className="driver-brand">MAG-1 · TIMPORYE</div>
         <h1 className="mono title-token">
-          {t('dltCallTitle')} {info.number}
+          {t('mag1CallTitle')} {info.number}
         </h1>
         {info.needed_by && (
           <p style={{ margin: '0 0 8px' }}>
@@ -114,21 +114,21 @@ export default function DltPage() {
 
       <div className="panel">
         {shipped
-          ? <p style={{ color: '#0e8a6a', fontWeight: 600, margin: 0 }}>✓ {done || t('dltShippedDone')}</p>
+          ? <p style={{ color: '#0e8a6a', fontWeight: 600, margin: 0 }}>✓ {done || t('mag1ShippedDone')}</p>
           : (
             <>
               {done && <p style={{ color: '#0e8a6a', fontWeight: 600 }}>✓ {done}</p>}
               {!prepared && (
                 <button className="btn driver-big" disabled={busy}
-                        onClick={() => act('prepared', t('dltPreparedDone'))}>
-                  <PackageIcon size={14} /> {t('dltPrepared')}
+                        onClick={() => act('prepared', t('mag1PreparedDone'))}>
+                  <PackageIcon size={14} /> {t('mag1Prepared')}
                 </button>
               )}
               <button className="btn driver-big" disabled={busy || !prepared}
                       style={{ marginTop: 10 }}
-                      title={prepared ? undefined : t('dltPreparedFirst')}
-                      onClick={() => act('shipped', t('dltShippedDone'))}>
-                <TruckIcon size={14} /> {t('dltShipped')}
+                      title={prepared ? undefined : t('mag1PreparedFirst')}
+                      onClick={() => act('shipped', t('mag1ShippedDone'))}>
+                <TruckIcon size={14} /> {t('mag1Shipped')}
               </button>
             </>
           )}

@@ -175,9 +175,9 @@ Ustalone 2026-09-02, do rozpisania we własnym specu — **nie wchodzi** do PR 1
 - **Widok:** własna zakładka w panelu obok istniejących. Zakładki są dziś zaszyte
   w `frontend/src/pages/QueuePage.tsx:30` (`type Module`, `MODULE_CODE`,
   `MODULE_WAREHOUSE`) — nie są generowane ze spółek, więc dojdzie tam nowy wpis.
-- **Precedens do naśladowania:** moduł DLT nie jest spółką, tylko `ACME` + filtr
+- **Precedens do naśladowania:** moduł MAG-1 nie jest spółką, tylko `ACME` + filtr
   magazynu (`MODULE_WAREHOUSE`). Tranzyt to ten sam wzorzec odwrócony — „poza naszym
-  magazynem" zamiast „magazyn = DLT".
+  magazynem" zamiast „magazyn = MAG-1".
 - **Do rozstrzygnięcia w osobnej rundzie:** czym tranzyt jest odróżniony w danych
   (brak `warehouse_id` / dedykowany magazyn / nowa flaga na `Container`), jakie pola
   są wymagane, co z odprawą celną i demurrage, kto go obsługuje.

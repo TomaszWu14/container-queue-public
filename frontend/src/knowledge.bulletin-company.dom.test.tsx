@@ -9,11 +9,11 @@ const { user, apiPost } = vi.hoisted(() => ({
   apiPost: vi.fn((_path: string, _body: unknown) => Promise.resolve({})),
 }))
 const COMPANIES = [{ id: 1, name: 'ACME', code: 'Z', is_active: true },
-                   { id: 2, name: 'DLT', code: 'L', is_active: true }]
+                   { id: 2, name: 'MAG-1', code: 'L', is_active: true }]
 const BULLETINS = [
   { id: 7, title: 'Nota grupowa', body: '', roles: ['admin'], company_id: null,
     created_at: '2026-09-01T10:00:00', created_by_name: 'Admin' },
-  { id: 8, title: 'Nota DLT', body: '', roles: ['admin'], company_id: 2,
+  { id: 8, title: 'Nota MAG-1', body: '', roles: ['admin'], company_id: 2,
     created_at: '2026-09-02T10:00:00', created_by_name: 'Admin' },
 ]
 
@@ -34,7 +34,7 @@ describe('nota eskalacyjna — wybór spółki', () => {
   it('admin: wybiera spółkę, POST niesie company_id; lista pokazuje plakietki spółek', async () => {
     user.current = { id: 1, role: 'admin', view_all_companies: false }
     render(<BulletinsTab />)
-    expect(await screen.findByText('DLT')).toBeTruthy()
+    expect(await screen.findByText('MAG-1')).toBeTruthy()
     expect(screen.getByText('Cała grupa')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: /Nowa nota/ }))
     fireEvent.change(screen.getByLabelText('Tytuł'), { target: { value: 'Brama' } })
@@ -48,7 +48,7 @@ describe('nota eskalacyjna — wybór spółki', () => {
   it('logistyk bez view_all: brak wyboru spółki', async () => {
     user.current = { id: 2, role: 'logistics', view_all_companies: false }
     render(<BulletinsTab />)
-    await screen.findByText('Nota DLT')
+    await screen.findByText('Nota MAG-1')
     fireEvent.click(screen.getByRole('button', { name: /Nowa nota/ }))
     expect(screen.queryByLabelText('Spółka noty')).toBeNull()
   })

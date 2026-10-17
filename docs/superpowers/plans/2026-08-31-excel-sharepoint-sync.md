@@ -48,7 +48,7 @@ from app.models import Company, ContainerStatus, CustomsStatus
 
 
 def _company(db):
-    return db.scalar(__import__("sqlalchemy").select(Company).where(Company.code == "BOREALIS"))
+    return db.scalar(__import__("sqlalchemy").select(Company).where(Company.code == "BETA"))
 
 
 def test_build_container_fields_maps_excel_row():
@@ -360,17 +360,17 @@ def test_sync_endpoint_updates_notifies_and_audits(client, monkeypatch):
     no = "MSKU7026499"
     # 1. pierwszy snapshot — insert
     f1 = _xlsx([["ACME", "MAERSK", datetime.datetime(2026, 9, 1), "kolej", no, "", ""]])
-    r1 = client.post("/api/import/sync?company_code=BOREALIS", headers=hdr,
+    r1 = client.post("/api/import/sync?company_code=BETA", headers=hdr,
                      files={"file": ("q.xlsx", f1)})
     assert r1.status_code == 200, r1.text
     assert r1.json()["changed"] == 1
     # 2. drugi snapshot — zmiana ETA → update + audyt + powiadomienie
     f2 = _xlsx([["ACME", "MAERSK", datetime.datetime(2026, 9, 9), "kolej", no, "", ""]])
-    r2 = client.post("/api/import/sync?company_code=BOREALIS", headers=hdr,
+    r2 = client.post("/api/import/sync?company_code=BETA", headers=hdr,
                      files={"file": ("q.xlsx", f2)})
     assert r2.json()["changed"] == 1 and r2.json()["notified"] >= 1
     # 3. idempotencja — ten sam plik, 0 zmian
-    r3 = client.post("/api/import/sync?company_code=BOREALIS", headers=hdr,
+    r3 = client.post("/api/import/sync?company_code=BETA", headers=hdr,
                      files={"file": ("q.xlsx", f2)})
     assert r3.json()["changed"] == 0
     # audyt zawiera wpis o zmianie eta
@@ -385,7 +385,7 @@ def test_sync_endpoint_updates_notifies_and_audits(client, monkeypatch):
 
 
 def test_sync_rejects_bad_token(client):
-    r = client.post("/api/import/sync?company_code=BOREALIS",
+    r = client.post("/api/import/sync?company_code=BETA",
                     headers={"Authorization": "Bearer wrong"},
                     files={"file": ("q.xlsx", b"x")})
     assert r.status_code == 401
@@ -534,10 +534,10 @@ def test_push_snapshot_posts_file_with_token(tmp_path):
     f = tmp_path / "q.xlsx"
     f.write_bytes(b"xlsxdata")
     s = _Session()
-    out = push_snapshot(s, "http://app", "tok", "BOREALIS", str(f))
+    out = push_snapshot(s, "http://app", "tok", "BETA", str(f))
     url, kw = s.calls[0]
     assert url == "http://app/api/import/sync"
-    assert kw["params"] == {"company_code": "BOREALIS"}
+    assert kw["params"] == {"company_code": "BETA"}
     assert kw["headers"]["Authorization"] == "Bearer tok"
     assert "file" in kw["files"]
     assert out["changed"] == 1

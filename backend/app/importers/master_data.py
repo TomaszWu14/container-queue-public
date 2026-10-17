@@ -1,4 +1,4 @@
-"""Parsery plików master data: MARM (jednostki), stany DLT, porty kontenerowe + auto-rozpoznanie
+"""Parsery plików master data: MARM (jednostki), stany MAG-1, porty kontenerowe + auto-rozpoznanie
 typu pliku po nagłówkach (LFA1 — importers/lfa1.py)."""
 
 from fastapi import HTTPException, status
@@ -110,10 +110,10 @@ def _parse_marm_rows(content: bytes, errors: list[dict] | None = None) -> tuple[
     return parsed, placeholders
 
 
-# --- import stanów DLT z xlsx (fallback gdy Power BI ich nie podaje) ---
+# --- import stanów MAG-1 z xlsx (fallback gdy Power BI ich nie podaje) ---
 
 # kolejność: bardziej szczegółowe fragmenty przed generycznymi
-DLT_HEADERS = [
+MAG1_HEADERS = [
     ("PRODUKT", "produkt"),
     ("MATERIA", "produkt"),         # MATERIAŁ / MATERIAL
     ("INDEKS", "produkt"),
@@ -132,15 +132,15 @@ DLT_HEADERS = [
 ]
 
 
-def _parse_dlt_stock_rows(content: bytes) -> list[dict]:
-    """Wiersze stanów DLT. Wymagane nagłówki: produkt + ilość (HU/lokalizacja opcjonalne).
+def _parse_mag1_stock_rows(content: bytes) -> list[dict]:
+    """Wiersze stanów MAG-1. Wymagane nagłówki: produkt + ilość (HU/lokalizacja opcjonalne).
     Wiersze bez produktu pomijane; 422 gdy nie znaleziono nagłówków."""
     sheet = _open_first_sheet(content)
     columns: dict[str, int] = {}
     parsed: list[dict] = []
     for row in sheet.iter_rows(values_only=True):
         if not columns:
-            columns = _map_headers(row, DLT_HEADERS)
+            columns = _map_headers(row, MAG1_HEADERS)
             if "produkt" in columns and "ilosc" in columns:
                 continue
             columns = {}
@@ -157,7 +157,7 @@ def _parse_dlt_stock_rows(content: bytes) -> list[dict]:
         })
     if not columns:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
-                            "Nie znaleziono nagłówków stanów DLT (Produkt / Ilość).")
+                            "Nie znaleziono nagłówków stanów MAG-1 (Produkt / Ilość).")
     return parsed
 
 

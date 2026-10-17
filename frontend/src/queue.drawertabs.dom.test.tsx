@@ -14,7 +14,7 @@ const CONTAINERS = [{
   status: 'W_TRANSPORCIE', customs_status: 'BRAK', document_status: 'BRAK', purchasing_status: 'BRAK',
   order_numbers: '', delivery_note: '', incoming_delivery_no: '', purchase_note: '', forwarder_name: 'SPEDALFA',
   document_flow: '', sent_required: null, sent_number: '', sent_status: '', is_delayed: true,
-  transport_id: null, order_number: null, warehouse_name: 'DLT', updated_at: '2026-08-01T10:00:00',
+  transport_id: null, order_number: null, warehouse_name: 'MAG-1', updated_at: '2026-08-01T10:00:00',
 }]
 const FILES = [
   { id: 5, container_id: 1, filename: 'BL_MSDU.pdf', content_type: 'application/pdf', size: 250_000,

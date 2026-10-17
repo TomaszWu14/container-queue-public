@@ -6,17 +6,17 @@ import type { Container, QueueDay } from '../../types'
 
 const c = (warehouse_name: string, extra: Partial<Container> = {}) =>
   ({ warehouse_name, customs_status: 'ZLECONA', is_delayed: false, ...extra }) as Container
-const WHS = [{ key: 'ACME', limit: 7 }, { key: 'DLT', limit: 7 }]
+const WHS = [{ key: 'ACME', limit: 7 }, { key: 'MAG-1', limit: 7 }]
 const day = (containers: Container[], is_free_day = false) =>
   ({ day: '2026-10-23', containers, is_free_day, limit: null, used: 0, over_limit: false }) as QueueDay
 
 describe('calModel', () => {
   it('dzień: sloty per magazyn, wolne, ponad limit, opóźnienia, odprawy, statki', () => {
-    const dlt = Array.from({ length: 8 }, () => c('DLT'))
+    const mag1 = Array.from({ length: 8 }, () => c('MAG-1'))
     const s = dayStat(day([c('ACME', { is_delayed: true }), c('ACME', { customs_status: 'ODPRAWIONY' }),
-      c('ACME', { customs_status: 'REWIZJA' }), ...dlt]), WHS,
-      [c('ACME', { vessel: 'EVER' }), c('DLT', { vessel: 'EVER' }), c('DLT', { vessel: 'MSC' })])
-    expect(s.byWh).toEqual([{ key: 'ACME', limit: 7, n: 3 }, { key: 'DLT', limit: 7, n: 8 }])
+      c('ACME', { customs_status: 'REWIZJA' }), ...mag1]), WHS,
+      [c('ACME', { vessel: 'EVER' }), c('MAG-1', { vessel: 'EVER' }), c('MAG-1', { vessel: 'MSC' })])
+    expect(s.byWh).toEqual([{ key: 'ACME', limit: 7, n: 3 }, { key: 'MAG-1', limit: 7, n: 8 }])
     expect([s.total, s.cap, s.free, s.over, s.late]).toEqual([11, 14, 4, 1, 1])
     expect([s.customsOpen, s.revision, s.vessels, s.toPort]).toEqual([10, 1, 2, 3])
     expect(tone(s.total, s.cap)).toBe('high')
@@ -24,7 +24,7 @@ describe('calModel', () => {
   })
 
   it('filtr magazynu i sumy (dni zamknięte poza pojemnością)', () => {
-    const s = dayStat(day([c('ACME'), c('DLT')]), WHS, [], 'DLT')
+    const s = dayStat(day([c('ACME'), c('MAG-1')]), WHS, [], 'MAG-1')
     expect([s.total, s.cap, s.byWh.length]).toEqual([1, 7, 1])
     const tot = totals([s, dayStat(day([], true), WHS)])
     expect([tot.bookings, tot.cap, tot.workdays]).toEqual([1, 7, 1])

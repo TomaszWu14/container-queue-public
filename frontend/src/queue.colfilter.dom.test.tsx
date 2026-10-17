@@ -18,8 +18,8 @@ const base = {
   sent_number: '', order_numbers: '',
 }
 const CONTAINERS = [
-  { ...base, id: 1, container_no: 'AAAU0000001', vessel: 'MV DEMO DELTA', supplier_name: 'Alfa' },
-  { ...base, id: 2, container_no: 'BBBU0000002', vessel: 'MV DEMO DELTA', supplier_name: 'Beta' },
+  { ...base, id: 1, container_no: 'AAAU0000001', vessel: 'MV DEMO OMEGA', supplier_name: 'Alfa' },
+  { ...base, id: 2, container_no: 'BBBU0000002', vessel: 'MV DEMO OMEGA', supplier_name: 'Beta' },
   { ...base, id: 3, container_no: 'CCCU0000003', vessel: 'COSCO', supplier_name: 'Alfa' },
   { ...base, id: 4, container_no: 'DDDU0000004', vessel: '', supplier_name: 'Gamma' },
 ]
@@ -67,7 +67,7 @@ describe('kolejka — filtry w nagłówkach kolumn (Excel)', () => {
     await ready()
     const dlg = openFilter('Statek')
     const labels = [...dlg.querySelectorAll('.kq-hf-list label')].map(l => l.textContent)
-    expect(labels).toEqual(['(Zaznacz wszystko)', 'COSCO1', 'MV DEMO DELTA2', '(Puste)1'])
+    expect(labels).toEqual(['(Zaznacz wszystko)', 'COSCO1', 'MV DEMO OMEGA2', '(Puste)1'])
     expect(document.activeElement).toBe(within(dlg).getByRole('searchbox'))
   })
 
@@ -75,13 +75,13 @@ describe('kolejka — filtry w nagłówkach kolumn (Excel)', () => {
     mount()
     await ready()
     const dlg = openFilter('Statek')
-    fireEvent.click(within(dlg).getByText('MV DEMO DELTA'))
+    fireEvent.click(within(dlg).getByText('MV DEMO OMEGA'))
     fireEvent.click(within(dlg).getByRole('button', { name: 'OK' }))
     await waitFor(() => expect(rowNos()).toEqual(['CCCU0000003', 'DDDU0000004']))
     expect(screen.queryByRole('dialog')).toBeNull()
     expect(screen.getByRole('button', { name: 'Filtruj: Statek' }).className).toContain('on')
     const bar = document.querySelector('.kq-filters')!
-    expect(bar.textContent).toContain('oprócz MV DEMO DELTA')
+    expect(bar.textContent).toContain('oprócz MV DEMO OMEGA')
     fireEvent.click(within(bar.querySelector('.kq-chip') as HTMLElement).getByRole('button'))
     await waitFor(() => expect(rowNos()).toHaveLength(4))
   })

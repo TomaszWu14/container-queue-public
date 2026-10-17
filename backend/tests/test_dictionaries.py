@@ -9,27 +9,27 @@ def _company_id(client, headers, code):
 
 def test_suppliers_scoped_by_module(client, admin_headers):
     acme = _company_id(client, admin_headers, "ACME")
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
 
     acme_sup = client.post("/api/suppliers", headers=admin_headers,
                             json={"name": "Dostawca Acme", "company_id": acme}).json()
-    borealis_sup = client.post("/api/suppliers", headers=admin_headers,
-                             json={"name": "Dostawca Borealis", "company_id": borealis}).json()
+    beta_sup = client.post("/api/suppliers", headers=admin_headers,
+                             json={"name": "Dostawca Beta", "company_id": beta}).json()
 
     # pełny słownik (admin) zawiera obu dostawców
     all_ids = {s["id"] for s in client.get("/api/suppliers", headers=admin_headers).json()}
-    assert {acme_sup["id"], borealis_sup["id"]} <= all_ids
+    assert {acme_sup["id"], beta_sup["id"]} <= all_ids
 
     # zakładka Acme — tylko dostawcy Acme
     acme_ids = {s["id"] for s in client.get(
         "/api/suppliers?company_code=ACME", headers=admin_headers).json()}
     assert acme_sup["id"] in acme_ids
-    assert borealis_sup["id"] not in acme_ids
+    assert beta_sup["id"] not in acme_ids
 
     # pozostałe spółki — Acme wykluczony
     other_ids = {s["id"] for s in client.get(
         "/api/suppliers?exclude_company_code=ACME", headers=admin_headers).json()}
-    assert borealis_sup["id"] in other_ids
+    assert beta_sup["id"] in other_ids
     assert acme_sup["id"] not in other_ids
 
 
@@ -58,15 +58,15 @@ def _make_user(client, headers, login_name, role, company_id):
 
 def test_merge_port_repins_containers_and_orders(client, admin_headers):
     """Scalenie duplikatu portu przepina kontenery I zamówienia, dopiero potem kasuje wpis."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     dirty = _port(client, admin_headers, "shangai")       # literówka z importu
     clean = _port(client, admin_headers, "Shanghai")
 
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": "MEDU9573834", "company_id": borealis, "port_id": dirty["id"]}).json()
+        "container_no": "MEDU9573834", "company_id": beta, "port_id": dirty["id"]}).json()
     # zamówienie z portem wyjścia zakłada się przez /zlecenia — OrderIn tego pola nie przyjmuje
     order = client.post("/api/zlecenia", headers=admin_headers, json={
-        "number": "PO-1", "company_id": borealis, "departure_port_id": dirty["id"],
+        "number": "PO-1", "company_id": beta, "departure_port_id": dirty["id"],
         "container_count": 1}).json()
 
     response = client.post(f"/api/ports/{dirty['id']}/merge", headers=admin_headers,
@@ -88,10 +88,10 @@ def test_merge_port_repins_containers_and_orders(client, admin_headers):
 
 def test_merge_supplier_across_companies_is_blocked(client, admin_headers):
     """Scalanie w poprzek spółek przepięłoby kontenery jednej spółki na słownik drugiej."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     acme = _company_id(client, admin_headers, "ACME")
     sup_t = client.post("/api/suppliers", headers=admin_headers,
-                        json={"name": "Fushide", "company_id": borealis}).json()
+                        json={"name": "Fushide", "company_id": beta}).json()
     sup_z = client.post("/api/suppliers", headers=admin_headers,
                         json={"name": "Fushide", "company_id": acme}).json()
 
@@ -108,16 +108,16 @@ def test_merge_supplier_across_companies_is_blocked(client, admin_headers):
 def test_merge_supplier_repins_material_maps_and_drops_colliding(client, admin_headers):
     """Scalanie dostawców przepina mapowania indeksów; kod obecny u celu wygrywa
     (unique company+supplier+code złamałoby się przy ślepym przepięciu)."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     src = client.post("/api/suppliers", headers=admin_headers,
-                      json={"name": "Fushide stary", "company_id": borealis}).json()
+                      json={"name": "Fushide stary", "company_id": beta}).json()
     dst = client.post("/api/suppliers", headers=admin_headers,
-                      json={"name": "Fushide", "company_id": borealis}).json()
+                      json={"name": "Fushide", "company_id": beta}).json()
     for supplier_id, code, ref in ((src["id"], "AA-1", "REF-STARY"),
                                    (src["id"], "BB-2", "REF-B"),
                                    (dst["id"], "AA-1", "REF-CEL")):
         assert client.post("/api/supplier-material-maps", headers=admin_headers,
-                           json={"company_code": "BOREALIS", "supplier_id": supplier_id,
+                           json={"company_code": "BETA", "supplier_id": supplier_id,
                                  "supplier_code": code, "ref_code": ref}).status_code == 201
 
     response = client.post(f"/api/suppliers/{src['id']}/merge", headers=admin_headers,
@@ -132,11 +132,11 @@ def test_merge_supplier_repins_material_maps_and_drops_colliding(client, admin_h
 
 def test_delete_blocked_when_in_use_allowed_when_free(client, admin_headers):
     """Usuwanie tylko dla nieużywanych wpisów — reszta przez scalanie/dezaktywację."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     used = _port(client, admin_headers, "NINGBO")
     free = _port(client, admin_headers, "Literówka")
     client.post("/api/containers", headers=admin_headers, json={
-        "container_no": "MSBU5870407", "company_id": borealis, "port_id": used["id"]})
+        "container_no": "MSBU5870407", "company_id": beta, "port_id": used["id"]})
 
     blocked = client.delete(f"/api/ports/{used['id']}", headers=admin_headers)
     assert blocked.status_code == 409
@@ -166,8 +166,8 @@ def test_deactivated_port_hidden_from_pickers_but_recoverable(client, admin_head
 
 def test_merge_requires_admin(client, admin_headers):
     """Słowniki żyją w panelu administracji — logistyk nie zapisuje w nich nic."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    _make_user(client, admin_headers, "log.merge", "logistics", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    _make_user(client, admin_headers, "log.merge", "logistics", beta)
     log_headers = login(client, "log.merge", "haslo123")
 
     a = _port(client, admin_headers, "XIAMEN")

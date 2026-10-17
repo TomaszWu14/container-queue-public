@@ -1,7 +1,7 @@
 """Odczyt draftu SAD (PDF od agencji celnej) → pola do porównania z fakturami (spec
 2026-09-29-agencja-draft-sad §2, PR 2).
 
-Dwa układy (`layout`): „winsad” — wydruk WinSAD od Delta Brokers, dwie kolumny z numerami
+Dwa układy (`layout`): „winsad” — wydruk WinSAD od Omega Brokers, dwie kolumny z numerami
 elementów danych (`sad_winsad`, PR 5); „generic” — „etykieta: wartość” w jednej linii
 („38 Masa netto (kg): 12,500”), tekst jak faktury: `extractor.read_pages` (skan → OCR).
 Pole nieodczytane trafia do `unread`, nigdy nie zgadujemy. Liczby w formacie polskim

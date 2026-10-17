@@ -85,7 +85,7 @@ export interface TransportJob {
   my_quote: Quote | null
 }
 
-// --- zakładanie zlecenia (Borealis/Cobalt) ---
+// --- zakładanie zlecenia (Beta/Gamma) ---
 
 export type PortCategory = 'GLOWNY_CN' | 'OUT'
 export type MainMode = 'SEA' | 'AIR' | 'RAIL'

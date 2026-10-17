@@ -11,12 +11,12 @@ const make = (id: number, warehouse_name: string | null, is_delayed = false) =>
 
 describe('warehouseKey', () => {
   it('dopasowuje po słowie, nie po całej nazwie', () => {
-    expect(warehouseKey('DLT Centralny')).toBe('DLT')
-    expect(warehouseKey('Magazyn BOREALIS')).toBe('BOREALIS')
+    expect(warehouseKey('MAG-1 Centralny')).toBe('MAG-1')
+    expect(warehouseKey('Magazyn BETA')).toBe('BETA')
   })
 
-  it('„ACME DLT" to DLT — DLT sprawdzamy pierwszy (jak whRowClass)', () => {
-    expect(warehouseKey('ACME DLT')).toBe('DLT')
+  it('„ACME MAG-1" to MAG-1 — MAG-1 sprawdzamy pierwszy (jak whRowClass)', () => {
+    expect(warehouseKey('ACME MAG-1')).toBe('MAG-1')
   })
 
   it('nieznany magazyn zostaje pod własną nazwą, pusty dostaje klucz zastępczy', () => {
@@ -26,7 +26,7 @@ describe('warehouseKey', () => {
   })
 
   it('kolor dostają tylko znane magazyny', () => {
-    expect(warehouseClass('DLT')).toBe('wh-dlt')
+    expect(warehouseClass('MAG-1')).toBe('wh-mag1')
     expect(warehouseClass('NOWY SKŁAD')).toBe('wh-other')
     expect(warehouseClass(NO_WAREHOUSE)).toBe('wh-other')
   })
@@ -34,7 +34,7 @@ describe('warehouseKey', () => {
 
 describe('summarizeRange', () => {
   const rows = [
-    { day: '2025-12-15', items: [make(1, 'ACME'), make(2, 'DLT', true)] },
+    { day: '2025-12-15', items: [make(1, 'ACME'), make(2, 'MAG-1', true)] },
     { day: '2025-12-16', items: [] },
     { day: '2025-12-17', items: [make(3, 'ACME'), make(4, null)] },
   ]
@@ -50,7 +50,7 @@ describe('summarizeRange', () => {
   it('magazyny malejąco po liczbie, z udziałem procentowym', () => {
     const s = summarizeRange(rows)
     expect(s.warehouses.map(w => [w.key, w.n, w.pct]))
-      .toEqual([['ACME', 2, 50], [NO_WAREHOUSE, 1, 25], ['DLT', 1, 25]])
+      .toEqual([['ACME', 2, 50], [NO_WAREHOUSE, 1, 25], ['MAG-1', 1, 25]])
   })
 
   it('kontener bez magazynu wchodzi do sumy — kafle zgadzają się z licznikiem dnia', () => {
@@ -66,8 +66,8 @@ describe('summarizeRange', () => {
 
 describe('bandWarehouses', () => {
   it('zwraca zestaw z całego zakresu, magazyn bez dostaw z zerem', () => {
-    const chips = bandWarehouses([make(1, 'ACME')], ['ACME', 'DLT'])
-    expect(chips.map(w => [w.key, w.n])).toEqual([['ACME', 1], ['DLT', 0]])
+    const chips = bandWarehouses([make(1, 'ACME')], ['ACME', 'MAG-1'])
+    expect(chips.map(w => [w.key, w.n])).toEqual([['ACME', 1], ['MAG-1', 0]])
   })
 })
 

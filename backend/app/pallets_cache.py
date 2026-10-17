@@ -23,8 +23,8 @@ from .models import (
 from .pallets_analysis import build_rows
 
 
-# wartość lokalizacji oznaczająca ręcznie zaimportowane stany jako DLT
-DLT_SENTINEL = "DLT"
+# wartość lokalizacji oznaczająca ręcznie zaimportowane stany jako MAG-1
+MAG1_SENTINEL = "MAG-1"
 
 # jedno odświeżanie naraz (4 zapytania PBI × do 120 s) — reszta dostaje ostatni wynik z cache
 # ponytail: blokada per proces; przy kilku workerach każdy może odświeżyć raz (wiersz i tak jeden)
@@ -35,14 +35,14 @@ class AnalysisRefreshInProgress(powerbi.PowerBINotConfigured):
     """Brak cache, a odświeżanie już trwa — wołający traktują to jak chwilowy brak PBI (503)."""
 
 
-def _imported_dlt_stock(db) -> list[dict]:
-    """Zaimportowane stany DLT jako wiersze `stock` dla build_rows (oznaczone jako DLT)."""
-    from .models import DltStock
+def _imported_mag1_stock(db) -> list[dict]:
+    """Zaimportowane stany MAG-1 jako wiersze `stock` dla build_rows (oznaczone jako MAG-1)."""
+    from .models import Mag1Stock
     key = settings.powerbi_merge_key
     loc = settings.powerbi_location_field
     out: list[dict] = []
-    for s in db.query(DltStock).all():
-        row = {key: s.produkt, "ilosc": float(s.ilosc), loc: DLT_SENTINEL}
+    for s in db.query(Mag1Stock).all():
+        row = {key: s.produkt, "ilosc": float(s.ilosc), loc: MAG1_SENTINEL}
         if s.hu:
             row["glowna_hu"] = s.hu
         out.append(row)
@@ -121,33 +121,33 @@ def _refresh(db):
         _, rows = powerbi.fetch_table(dataset, table, db=db)
         return powerbi.apply_column_map(rows)
 
-    dlt_values = settings.powerbi_dlt_locations_set
+    mag1_values = settings.powerbi_mag1_locations_set
     try:
         stock = _fetch(settings.powerbi_dataset_stock, settings.powerbi_table_stock)
         vbba = _fetch(settings.powerbi_dataset_vbba, settings.powerbi_table_vbba)
         orders = _fetch(settings.powerbi_dataset_orders, settings.powerbi_table_orders)
         usage = _fetch(settings.powerbi_dataset_usage, settings.powerbi_table_usage)
     except powerbi.PowerBINotConfigured:
-        # PBI wyłączone: analityka działa wyłącznie na ręcznym imporcie stanów DLT
-        imported = _imported_dlt_stock(db)
+        # PBI wyłączone: analityka działa wyłącznie na ręcznym imporcie stanów MAG-1
+        imported = _imported_mag1_stock(db)
         if not imported:
             raise
         stock, vbba, orders, usage = imported, [], [], []
-        dlt_values = dlt_values | {DLT_SENTINEL}
+        mag1_values = mag1_values | {MAG1_SENTINEL}
     else:
-        # PBI działa, ale bez stanów DLT → dołóż ręczny import (fallback per-źródło)
-        from .pallets_analysis import _is_dlt
+        # PBI działa, ale bez stanów MAG-1 → dołóż ręczny import (fallback per-źródło)
+        from .pallets_analysis import _is_mag1
         loc = settings.powerbi_location_field
-        if not any(_is_dlt(r, loc, dlt_values) for r in stock):
-            imported = _imported_dlt_stock(db)
+        if not any(_is_mag1(r, loc, mag1_values) for r in stock):
+            imported = _imported_mag1_stock(db)
             if imported:
                 stock = stock + imported
-                dlt_values = dlt_values | {DLT_SENTINEL}
+                mag1_values = mag1_values | {MAG1_SENTINEL}
     rows, disc, features = build_rows(
         stock, vbba, orders, usage, _paz_map(db), _called_map(db),
         key=settings.powerbi_merge_key,
         location_field=settings.powerbi_location_field,
-        dlt_values=dlt_values,
+        mag1_values=mag1_values,
         open_statuses=settings.vbba_open_statuses_set,
         target_days=settings.pallet_target_days,
         urgent_threshold=settings.pallet_urgent_threshold,

@@ -58,7 +58,7 @@ from .routers import (
     invoice_checks,
     invoices,
     knowledge,
-    dlt,
+    mag1,
     logs,
     materials,
     notifications,
@@ -214,7 +214,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         for name, value in self.HEADERS.items():
             response.headers.setdefault(name, value)
         path = request.url.path
-        if path.startswith(("/avizo/", "/api/avizo/", "/dlt/", "/api/dlt/")):
+        if path.startswith(("/avizo/", "/api/avizo/", "/mag1/", "/api/mag1/")):
             # link z tokenem nie może wyciec w Referer ani trafić do wyszukiwarek
             response.headers["Referrer-Policy"] = "no-referrer"
             response.headers["X-Robots-Tag"] = "noindex, nofollow"
@@ -326,7 +326,7 @@ app.include_router(paz.router)
 app.include_router(purchase_orders.router)
 app.include_router(analytics.router)
 app.include_router(driver.router)
-app.include_router(dlt.router)
+app.include_router(mag1.router)
 app.include_router(system.router)
 app.include_router(portal.router)
 app.include_router(customer_orders.router)

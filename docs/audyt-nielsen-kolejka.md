@@ -14,7 +14,7 @@ Checklista wielokrotnego użytku — przy ponownym audycie odhaczaj `[ ]` i aktu
 
 ## H2. Zgodność ze światem rzeczywistym — **✅**
 - [x] Język operacyjny PL: „Awizacja", „Odprawa", „Spedycja", „Nr dostawy", statusy po polsku
-- [x] Zakładki = spółki (Acme/DLT/Borealis…) — mentalny model użytkownika, nie struktura bazy
+- [x] Zakładki = spółki (Acme/MAG-1/Beta…) — mentalny model użytkownika, nie struktura bazy
 - [x] Dni jako naturalne nagłówki („4 sierpnia 2026 — wtorek"), weekendy/święta odróżnione
 - [ ] 🟡 „SENT", „RF", „ETD/ETA/ATD" — skróty branżowe OK dla logistyki, ale brak tooltipów z rozwinięciem dla nowych osób
 

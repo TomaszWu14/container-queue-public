@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Wywołania-DLT: analityka (sort/filtr wg zapasu w dniach) + kreator aut
+// Wywołania-MAG-1: analityka (sort/filtr wg zapasu w dniach) + kreator aut
 // (licznik 33/132, prefill podpowiedzi).
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
@@ -17,10 +17,10 @@ vi.mock('../feedback', async (orig) => ({
 afterEach(() => { cleanup(); apiGet.mockReset() })
 
 const row = (produkt: string, extra: Record<string, unknown> = {}) => ({
-  produkt, stan_mag_pal: 10, stan_dlt_pal: 20, dostawy_pal: 0,
+  produkt, stan_mag_pal: 10, stan_mag1_pal: 20, dostawy_pal: 0,
   zlec_niepotw_pal: 0, zlec_potw_pal: 0, wywolane_pal: 0, projekcja_mag_pal: 10,
   dni_zapasu: 5, pilne: false, sugestia_pal: 4, stan_mag_szt: 1000,
-  stan_dlt_szt: 2000, zuzycie_szt_dzien: 100, cel_dni: 14, hu: [], ...extra,
+  stan_mag1_szt: 2000, zuzycie_szt_dzien: 100, cel_dni: 14, hu: [], ...extra,
 })
 
 function mockAnalysis(items: unknown[]) {

@@ -7,7 +7,7 @@ Stan w PAMIĘCI procesu, nie w bazie: to ulotna informacja, a aplikacja chodzi w
 - czasu bezczynności NIE wysyłamy nikomu (decyzja 2026-10-01: pasek pokazuje tylko online),
 - wpis znika z pamięci: brak sygnału przez GONE_S (zamknięta karta, uśpiony komputer) albo wylogowanie.
 Widoczność: tylko role wewnętrzne widzą i są widoczne. Konta zewnętrzne (spedytor, agencja celna)
-i konta magazynu (m.in. zewnętrzny DLT — w modelu nie da się odróżnić magazynu własnego) — nie.
+i konta magazynu (m.in. zewnętrzny MAG-1 — w modelu nie da się odróżnić magazynu własnego) — nie.
 Między spółkami jak obserwujący (shares_company_scope): swoja spółka + konta grupowe (view_all)."""
 import threading
 import time

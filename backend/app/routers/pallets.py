@@ -1,4 +1,4 @@
-"""Wywołania palet do DLT: analiza per produkt (stan MAG/DLT vs zapotrzebowanie)
+"""Wywołania palet do MAG-1: analiza per produkt (stan MAG/MAG-1 vs zapotrzebowanie)
 oraz CRUD wywołań z eksportem xlsx mailem."""
 import io
 import math
@@ -63,7 +63,7 @@ from ..schemas import (
 TRUCK_CAPACITY = 33          # miejsc paletowych na naczepie
 MAX_TRUCKS = 4
 
-router = APIRouter(prefix="/api/pallet-calls", tags=["wywolania-dlt"])
+router = APIRouter(prefix="/api/pallet-calls", tags=["wywolania-mag1"])
 
 
 def _next_number(db: Session, company_id: int) -> str:
@@ -140,9 +140,9 @@ def analysis(user: User = staff, db: Session = Depends(get_db),
 
 @router.get("/hu-inventory")
 def hu_inventory(user: User = staff, db: Session = Depends(get_db)):
-    """#65 Inwentaryzacja HU: rozjazdy HU wg PBI (stan DLT) vs HU wywołane.
+    """#65 Inwentaryzacja HU: rozjazdy HU wg PBI (stan MAG-1) vs HU wywołane.
 
-    Zwraca wiersze per HU z flagami in_dlt/called; degradacja gdy PBI bez kolumny HU
+    Zwraca wiersze per HU z flagami in_mag1/called; degradacja gdy PBI bez kolumny HU
     (features.hu = False) — front pokazuje komunikat zamiast tabeli."""
     try:
         items, _, fetched_at, features = get_analysis(db)
@@ -151,11 +151,11 @@ def hu_inventory(user: User = staff, db: Session = Depends(get_db)):
     if not features.get("hu"):
         return {"available": False, "rows": [], "fetched_at": fetched_at}
 
-    # HU w DLT wg PBI: produkt -> {hu: ilosc}
-    dlt: dict[str, dict[str, float]] = {}
+    # HU w MAG-1 wg PBI: produkt -> {hu: ilosc}
+    mag1: dict[str, dict[str, float]] = {}
     for item in items:
         for h in item.get("hu", []):
-            dlt.setdefault(item["produkt"], {})[str(h["hu"])] = h.get("ilosc", 0)
+            mag1.setdefault(item["produkt"], {})[str(h["hu"])] = h.get("ilosc", 0)
 
     # HU wywołane (linie wywołań w obiegu: sent/confirmed/delivered): hu -> wywołanie
     stmt = (select(PalletCallLine, PalletCall)
@@ -172,23 +172,23 @@ def hu_inventory(user: User = staff, db: Session = Depends(get_db)):
                                           "call_status": call.status.value}
 
     rows = []
-    for produkt, hus in dlt.items():
+    for produkt, hus in mag1.items():
         for hu, qty in hus.items():
             info = called.pop((produkt, hu), None)
             rows.append({
                 "produkt": produkt, "hu": hu, "ilosc": qty,
-                "in_dlt": True, "called": info is not None,
+                "in_mag1": True, "called": info is not None,
                 "call_number": info["call_number"] if info else "",
                 "call_status": info["call_status"] if info else "",
-                # wywołane, a wciąż widoczne w DLT = potencjalny rozjazd
+                # wywołane, a wciąż widoczne w MAG-1 = potencjalny rozjazd
                 "mismatch": info is not None and info["call_status"] == "delivered",
             })
     for (produkt, hu), info in called.items():
         rows.append({
             "produkt": produkt, "hu": hu, "ilosc": None,
-            "in_dlt": False, "called": True,
+            "in_mag1": False, "called": True,
             "call_number": info["call_number"], "call_status": info["call_status"],
-            # wywołane wg statusu w drodze, ale zniknęło z DLT przed dostawą = rozjazd
+            # wywołane wg statusu w drodze, ale zniknęło z MAG-1 przed dostawą = rozjazd
             "mismatch": info["call_status"] != "delivered",
         })
     rows.sort(key=lambda r: (r["produkt"], r["hu"]))
@@ -201,8 +201,8 @@ def create(body: PalletCallCreate, user: User = editors, db: Session = Depends(g
     if not body.lines:
         raise HTTPException(422, "Wywołanie musi mieć co najmniej jedną pozycję")
     company_id = resolve_company_id(db, user, body.company_id)
-    if not body.allow_over_dlt:
-        _guard_dlt_stock(db, body.lines)
+    if not body.allow_over_mag1:
+        _guard_mag1_stock(db, body.lines)
     _guard_trucks(body.lines)
     call = PalletCall(company_id=company_id, number=_next_number(db, company_id),
                       status=PalletCallStatus.draft, needed_by=body.needed_by,
@@ -264,19 +264,19 @@ def _apply_lines(call: PalletCall, lines) -> None:
         call.lines.append(line)
 
 
-def _guard_dlt_stock(db: Session, lines) -> None:
-    """Odrzuca wywołanie, gdy ilość palet przekracza stan w DLT (chyba że allow_over_dlt)."""
+def _guard_mag1_stock(db: Session, lines) -> None:
+    """Odrzuca wywołanie, gdy ilość palet przekracza stan w MAG-1 (chyba że allow_over_mag1)."""
     try:
         items, _, _, _ = get_analysis(db)
     except PowerBINotConfigured:
         return                                # brak danych = nie blokujemy
-    dlt = {i["produkt"]: i.get("stan_dlt_pal") for i in items}
+    mag1 = {i["produkt"]: i.get("stan_mag1_pal") for i in items}
     over = [ln.produkt for ln in lines
-            if dlt.get(ln.produkt) is not None and ln.ilosc_pal > dlt[ln.produkt]]
+            if mag1.get(ln.produkt) is not None and ln.ilosc_pal > mag1[ln.produkt]]
     if over:
         raise HTTPException(422,
-            f"Ilość przekracza stan w DLT dla: {', '.join(over)}. "
-            f"Ustaw allow_over_dlt=true, aby wymusić.")
+            f"Ilość przekracza stan w MAG-1 dla: {', '.join(over)}. "
+            f"Ustaw allow_over_mag1=true, aby wymusić.")
 
 
 @router.get("", response_model=list[PalletCallOut])
@@ -312,36 +312,36 @@ def update(call_id: int, body: PalletCallUpdate, user: User = editors,
     return call
 
 
-def _dlt_recipients(db: Session) -> list[str]:
-    """Adresy DLT: e-mail magazynu DLT ze słownika -> env DLT_CALL_EMAILS -> DLT_EMAIL."""
+def _mag1_recipients(db: Session) -> list[str]:
+    """Adresy MAG-1: e-mail magazynu MAG-1 ze słownika -> env MAG1_CALL_EMAILS -> MAG1_EMAIL."""
     whs = db.scalars(select(Warehouse).where(Warehouse.is_active.is_(True))).all()
-    emails = [w.email for w in whs if w.email and "dlt" in w.name.lower()]
+    emails = [w.email for w in whs if w.email and "mag-1" in w.name.lower()]
     if emails:
         return emails
-    if settings.dlt_call_emails_list:
-        return settings.dlt_call_emails_list
-    return [settings.dlt_email] if settings.dlt_email else []
+    if settings.mag1_call_emails_list:
+        return settings.mag1_call_emails_list
+    return [settings.mag1_email] if settings.mag1_email else []
 
 
 @router.post("/{call_id}/send", response_model=PalletCallOut)
 def send(call_id: int, user: User = editors, db: Session = Depends(get_db)):
     call = _get_scoped_call(db, call_id, user)
-    recipients = _dlt_recipients(db)
+    recipients = _mag1_recipients(db)
     if not recipients:
         raise HTTPException(400,
-            "Brak adresu DLT (e-mail magazynu DLT, DLT_CALL_EMAILS lub DLT_EMAIL)")
+            "Brak adresu MAG-1 (e-mail magazynu MAG-1, MAG1_CALL_EMAILS lub MAG1_EMAIL)")
     if user.email:                          # kopia do wywołującego
         recipients = recipients + [user.email]
     xlsx = build_xlsx(call)
     trucks_info = f", {len(call.trucks)} aut" if call.trucks else ""
     html = (f"<p>Wywołanie palet <b>{call.number}</b> — {len(call.lines)} "
             f"pozycji{trucks_info}.</p>")
-    from .dlt import create_dlt_link
-    raw_token = create_dlt_link(db, call)
+    from .mag1 import create_mag1_link
+    raw_token = create_mag1_link(db, call)
     base = (settings.public_base_url or "").rstrip("/")
-    dlt_url = f"{base}/dlt/{raw_token}"
+    mag1_url = f"{base}/mag1/{raw_token}"
     html += (f'<p>Potwierdzenie przygotowania i wysyłki: '
-             f'<a href="{dlt_url}">{dlt_url}</a></p>')
+             f'<a href="{mag1_url}">{mag1_url}</a></p>')
     send_html_email(recipients, f"Wywołanie palet {call.number}", html,
                     attachments=[(xlsx_filename(call), xlsx, XLSX_MIME)])
     _set_status(db, call, PalletCallStatus.sent, user)
@@ -378,9 +378,9 @@ def confirm(call_id: int, user: User = editors, db: Session = Depends(get_db)):
 
 @router.post("/{call_id}/prepared", response_model=PalletCallOut)
 def prepared(call_id: int, user: User = warehouse_or_editors, db: Session = Depends(get_db)):
-    """Magazyn DLT (konto z rolą warehouse) potwierdza przygotowanie — zamiast linku z maila
-    (decyzja 2026-10-07: nic bez logowania). Ta sama reguła i powiadomienia co strona DLT."""
-    from .dlt import mark_prepared
+    """Magazyn MAG-1 (konto z rolą warehouse) potwierdza przygotowanie — zamiast linku z maila
+    (decyzja 2026-10-07: nic bez logowania). Ta sama reguła i powiadomienia co strona MAG-1."""
+    from .mag1 import mark_prepared
     call = _get_scoped_call(db, call_id, user)
     mark_prepared(db, call, user, "w aplikacji")
     db.refresh(call)
@@ -389,7 +389,7 @@ def prepared(call_id: int, user: User = warehouse_or_editors, db: Session = Depe
 
 @router.post("/{call_id}/shipped", response_model=PalletCallOut)
 def shipped(call_id: int, user: User = warehouse_or_editors, db: Session = Depends(get_db)):
-    from .dlt import mark_shipped
+    from .mag1 import mark_shipped
     call = _get_scoped_call(db, call_id, user)
     mark_shipped(db, call, user, "w aplikacji")
     db.refresh(call)
@@ -416,7 +416,7 @@ def cancel(call_id: int, user: User = editors, db: Session = Depends(get_db)):
 
 
 # --- Cele pokrycia zapasu (dni) per materiał — nadpisania globalnego celu ---
-targets_router = APIRouter(prefix="/api/stock-targets", tags=["wywolania-dlt"])
+targets_router = APIRouter(prefix="/api/stock-targets", tags=["wywolania-mag1"])
 
 
 @targets_router.get("", response_model=StockTargetsPage)

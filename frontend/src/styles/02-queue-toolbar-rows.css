@@ -122,7 +122,7 @@
 /* opóźnienie = tylko czerwony pasek z lewej (bez brzoskwiniowego tła — mniej kolorów naraz) */
 .tile.delayed { box-shadow: inset 4px 0 0 var(--danger); }
 /* kolejka Acme: tło całego wiersza wg magazynu rozładunku (tokeny, kontrast AA) */
-.tile.wh-dlt { --row-bg: var(--row-dlt); background: var(--row-bg); border-color: var(--wh-dlt-border); box-shadow: inset 6px 0 0 var(--row-dlt-border); }
+.tile.wh-mag1 { --row-bg: var(--row-mag1); background: var(--row-bg); border-color: var(--wh-mag1-border); box-shadow: inset 6px 0 0 var(--row-mag1-border); }
 .tile.wh-acme { --row-bg: var(--row-acme); background: var(--row-bg); border-color: var(--wh-acme-border); box-shadow: inset 6px 0 0 var(--row-acme-border); }
 /* bez magazynu: jasnoszary wiersz z łagodną pulsującą poświatą — sygnał „przypisz magazyn” */
 .tile.wh-none {
@@ -140,7 +140,7 @@
 }
 /* animacja nadpisuje box-shadow (wygrywa z regułami) — opóźnienie podajemy przez zmienną paska */
 .tile.delayed.wh-none { --row-bar: var(--danger); }
-.tile.delayed.wh-dlt, .tile.delayed.wh-acme { box-shadow: inset 4px 0 0 var(--danger); }
+.tile.delayed.wh-mag1, .tile.delayed.wh-acme { box-shadow: inset 4px 0 0 var(--danger); }
 
 .order-link { color: var(--accent-ink); font-weight: 600; cursor: pointer; }
 .order-link:hover { text-decoration: underline; }
@@ -155,7 +155,7 @@
 .tile.movable:active { cursor: grabbing; }
 .tile.dragging { opacity: 0.4; }
 /* Zaznaczenie = OBWÓDKA (border + inset ring), bez nadpisywania tła — dzięki temu
-   wiersz DLT/ACME zachowuje swoje tło również po zaznaczeniu (hierarchia stanów). */
+   wiersz MAG-1/ACME zachowuje swoje tło również po zaznaczeniu (hierarchia stanów). */
 .tile.selected {
   border-color: var(--accent);
   box-shadow: inset 0 0 0 2px var(--accent);
