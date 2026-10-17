@@ -61,7 +61,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-015 jedna wersja Python/Node | NFR-011 | test zgodności w CI | — | do akceptacji PO |
 | US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06, Z-022 | `test_phones_portugal.py` (13) | #29 | zrealizowane, czeka na merge |
 | US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | `test_plan_mail.py` (4), `BulkActionBar.plan.dom.test.tsx` (3) | #28 | wdrożone |
-| US-018 testy ekranów | TEST-007 | testy RTL | — | do akceptacji PO |
+| US-018 testy ekranów | TEST-007 | `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3), `ImportModal.dom.test.tsx` (4) | — | zrealizowane, czeka na merge |
 | US-019 2FA adminów | SR-004, E-01 | — | — | czeka na Z-008 |
 | US-027 demo pokazuje cały proces | FR-005, FR-009…011, FR-019, FR-020, FR-028 | `test_seed_demo_process.py` (5 testów), `test_demo_mode.py` | #18 | wdrożone |
 | US-028 konta demo per rola | FR-022…FR-024, E-05 | `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` | #18 | wdrożone |

@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Testy ekranów o wysokim ryzyku** (US-018, TEST-007): reset i wymuszona zmiana hasła (bez zdradzania, czy konto
+  istnieje), czyszczenie kolejki (podgląd przed usunięciem, liczba na przycisku) i import Excela (podgląd bez zapisu,
+  pominięte w wyniku). Lista stron bez testu: 21 → 16.
 - **Projekty decyzji do akceptacji PO:** ADR-0004 (publiczne API tylko do odczytu z kluczami per firma) i ADR-0005
   (własna kopia demo dla każdego odwiedzającego) — opcje, przegląd bezpieczeństwa STRIDE i pytania; bez kodu.
 - **Skaner kodu QR na bramie** (US-030, pomysł 4 PO): ochrona skanuje telefonem kod z karty rozładunku albo wpisuje

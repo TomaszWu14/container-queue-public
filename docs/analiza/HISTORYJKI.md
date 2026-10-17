@@ -280,6 +280,8 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 ### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
 - **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)
 - Testy RTL dla `ImportModal`, `ClearQueueModal`, resetu hasła w `AuthPages`.
+- **Stan:** zrealizowane (PR po #30); czeka na merge. `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3),
+  `ImportModal.dom.test.tsx` (4); lista stron bez testu w `docs/testy/E2E.md` odświeżona (21 → 16).
 
 ### US-019 · [SEC] 2FA obowiązkowe dla administratorów na produkcji
 - **Rozmiar:** XS (konfiguracja) · **Źródło:** E-01 · **Zależy od:** decyzji PO (Z-008).
