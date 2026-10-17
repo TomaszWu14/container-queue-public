@@ -43,3 +43,17 @@ def test_lock_floor_not_above_image():
     for lock in ("backend/requirements.txt", "backend/requirements-dev.txt"):
         (floor,) = _versions(r"--python-version (\d+\.\d+)", [lock])
         assert tuple(map(int, floor.split("."))) <= tuple(map(int, image.split("."))), lock
+
+
+def test_pre_commit_tools_match_ci():
+    """US-007: lokalny pre-commit używa tych samych wersji Bandit, gitleaks i ruff co CI / lock."""
+    pre_commit = (ROOT / ".pre-commit-config.yaml").read_text(encoding="utf-8")
+    security = (ROOT / ".github/workflows/security.yml").read_text(encoding="utf-8")
+    lock = (ROOT / "backend/requirements-dev.txt").read_text(encoding="utf-8")
+
+    def rev(repo: str) -> str:
+        return re.search(rf"{repo}\s*\n\s*rev:\s*v?([\d.]+)", pre_commit).group(1)
+
+    assert rev("PyCQA/bandit") == re.search(r'bandit\[toml\]==([\d.]+)', security).group(1)
+    assert rev("gitleaks/gitleaks") == re.search(r"GITLEAKS_VERSION:\s*([\d.]+)", security).group(1)
+    assert rev("astral-sh/ruff-pre-commit") == re.search(r"^ruff==([\d.]+)", lock, re.M).group(1)

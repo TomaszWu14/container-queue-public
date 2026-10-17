@@ -101,6 +101,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Trivy blokuje PR** (US-007, R-08): podatność HIGH/CRITICAL z dostępną poprawką w zależnościach albo błąd
+  konfiguracji zatrzymuje PR; cotygodniowy skan obrazu też jest bramką. Wyjątki tylko w `.trivyignore` z powodem i
+  datą przeglądu. Obraz panelu jawnie działa jako użytkownik bez uprawnień (`USER 101`). Semgrep (OWASP Top 10)
+  dochodzi jako raport; pre-commit używa tych samych wersji Bandit, gitleaks i ruff co CI.
 - **Strażnik izolacji spółek** (US-011, R-01): nowa trasa z identyfikatorem w adresie bez kontroli spółki
   z `deps.py` zatrzymuje testy, chyba że trafi na jawną listę wyjątków z powodem. Decyzja o wymuszeniu w bazie:
   ADR-0006 (do akceptacji).
