@@ -96,6 +96,11 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Publiczne linki chronione jednakowo** (US-005, R-06): link wywołań palet dla magazynu zewnętrznego (DLT) ma
+  ten sam limit żądań i kontrolę pochodzenia co formularz awizacji, a jego adres nie wycieka w nagłówku Referer;
+  wolne sloty awizacji można sprawdzić tylko w oknie ± 30 dni.
+- **Spreparowane pliki nie zatrzymują aplikacji** (US-006, R-07): ZIP z plikiem rozpakowującym się ponad 100×
+  (zip-bomba) jest pomijany z powodem; testy potwierdzają odrzucenie XML z „billion laughs” i XXE.
 - **Wgrywane pliki sprawdzane po zawartości** (US-004, R-03): `faktura.pdf`, który nie jest PDF-em (albo
   „Excel”, który nie jest Excelem), jest odrzucany z czytelnym powodem i nic nie zostaje zapisane. Dotyczy
   załączników, faktur transportowych, archiwów ZIP i poczty przychodzącej. Bez weryfikacji zostają .doc, .xls,
