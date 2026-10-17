@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 import httpx
 
-from .. import ai_quality, automation_catalog, automation_events, automation_savings
+from .. import ai_quality, automation_catalog, automation_events, automation_savings, process_mining
 from ..config import settings
 from ..audit import record
 from ..database import get_db
@@ -36,6 +36,14 @@ def ai_reading_quality(weeks: int = Query(8, ge=2, le=26), db: Session = Depends
     """US-037: odczyt faktur — reguły / ML / człowiek tydzień po tygodniu i trafność podpowiedzi
     modelu wg pewności; tylko paczki kontenerów w zakresie użytkownika."""
     return ai_quality.quality(db, user, weeks=weeks)
+
+
+@router.get("/automations/process")
+def process_flow(days: int = Query(90, ge=14, le=365), db: Session = Depends(get_db),
+                 user: User = editors) -> dict:
+    """US-038: czas w etapach procesu z historii statusów, cofnięcia i kontenery utknięte dłużej
+    niż zwykle (90. percentyl etapu); tylko kontenery w zakresie użytkownika."""
+    return process_mining.analyze(db, user, days=days)
 
 
 @router.put("/automations/minutes")

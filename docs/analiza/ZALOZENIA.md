@@ -34,6 +34,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-024 | Licznik oszczędności per automat (US-034): minuty pracy ręcznej na jeden efekt automatu. Wartości startowe zespołu: alerty 3–10 min (demurrage 5, odprawa 5, braki dokumentów 5, prognoza 10, tracking 3), paczka faktur 15, szkic reklamacji 20, SMS do kierowcy 3, poranny przegląd dnia 15, tydzień dla zakupów 10, mail z dokumentami 5, draft SAD z poczty 10; automaty porządkowe 0. Admin zmienia je w panelu. | — | do potwierdzenia | wartości PO | `backend/app/automation_savings.py` |
 | Z-025 | Mierniki „przed wdrożeniem” (US-050): bez danych PO pokazujemy je jako założenia, oznaczone wprost na ekranie i w dokumentach. | — | do potwierdzenia | dane PO z okresu przed aplikacją | US-050 |
 | Z-026 | Kreator reguł (US-036): 4 warunki na start (ETA minęło, awizacja blisko a kontener przed etapem, awizacja bez kierowcy, plan bez potwierdzenia), sprawdzanie co godzinę, jedno powiadomienie na regułę/kontener/dzień, odbiorcy: obserwujący kontener albo admini. Zmienia tylko admin. | — | do potwierdzenia | inne warunki / częstotliwość / zmiany także przez logistykę | `backend/app/automation_rules.py` |
+| Z-027 | Przebieg procesu (US-038): „dłużej niż zwykle” = powyżej 90. percentyla czasu w etapie z ostatnich 90 dni, liczone dopiero przy ≥ 5 zakończonych pobytach etapu; czas w dniach kalendarzowych (z weekendami). | — | do potwierdzenia | inny próg (np. mediana × 2), dni robocze, okno 30/180 dni | `backend/app/process_mining.py` |
 
 ## Jak potwierdzić
 

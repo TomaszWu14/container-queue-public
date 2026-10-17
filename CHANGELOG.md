@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Przebieg procesu z historii statusów** (US-038): ekran Automatyzacje pokazuje, ile dni kontenery zwykle
+  stoją w każdym etapie (mediana i 90. percentyl), ile było cofnięć statusu, najczęstsze przejścia i listę
+  kontenerów stojących dłużej niż zwykle — wyliczone z dziennika zmian, bez ręcznego raportu.
 - **Jakość odczytu faktur przez AI** (US-037): ekran Automatyzacje pokazuje, jaką część pozycji faktur dopasowały
   reguły, model ML i człowiek (8 tygodni), trafność podpowiedzi modelu i trafność w przedziałach pewności — czy
   automat ustawia sam tylko to, co rzeczywiście trafia.

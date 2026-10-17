@@ -36,3 +36,12 @@
 .aiq-seg { display: block; min-height: 2px; }
 .aiq-bar-col:hover .aiq-bar { outline: 2px solid var(--border); }
 .aiq-bar-label { font-size: 11px; color: var(--muted); }
+
+/* Przebieg procesu (US-038): pasek mediany na tle 90. percentyla */
+.proc-bar-cell { width: 34%; min-width: 120px; }
+.proc-bar { position: relative; display: block; height: 12px; border-radius: 3px; background: var(--border); }
+.proc-p90, .proc-median { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; }
+.proc-p90 { background: var(--viz-1); opacity: .35; }
+.proc-median { background: var(--viz-1); }
+.proc-transitions { margin: 0; padding-left: 18px; font-size: 14px; columns: 2 260px; }
+@media (max-width: 640px) { .proc-bar-cell { display: none; } }

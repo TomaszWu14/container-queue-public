@@ -10,6 +10,7 @@ import { useUser } from '../userContext'
 import AutomationMinutesModal from './AutomationMinutesModal'
 import AutomationRulesPanel from './AutomationRulesPanel'
 import AiQualityPanel from './AiQualityPanel'
+import ProcessFlowPanel from './ProcessFlowPanel'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -171,6 +172,7 @@ export default function AutomationsPage() {
           )}
         </>
       )}
+      {data && <ProcessFlowPanel />}
       {data && <AiQualityPanel />}
       {data && <AutomationRulesPanel canEdit={isAdmin} />}
       {editMinutes && data && (

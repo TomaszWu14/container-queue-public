@@ -407,11 +407,25 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      ustawia sam; próg `ML_AUTO_APPLY_THRESHOLD`) — czy „90% pewności” rzeczywiście trafia.
   4. Tylko paczki faktur kontenerów w zakresie użytkownika; admin i logistyka; pozycje pominięte nie liczą się.
 - **[SEC]:** tylko odczyt zliczeń (bez treści faktur), zakres przez `scope_containers`; wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge. Kolory wykresu z palety pulpitu, kolejność serii sprawdzona walidatorem
+- **Stan:** wdrożone w PR #40. Kolory wykresu z palety pulpitu, kolejność serii sprawdzona walidatorem
   palety (daltonizm, jasny i ciemny motyw).
 
 ### US-038 · [BA][DEV] Analiza przebiegu procesu z historii zmian (pomysł 16)
-- **Rozmiar:** M · Czas spędzony na każdym etapie (z `audit_log`), mediana i odchylenia, kontenery „utknięte”.
+- **Rozmiar:** M
+- **Jako** kierownik logistyki **chcę** widzieć, ile kontenery zwykle stoją w każdym etapie i które stoją dłużej
+  niż zwykle, **aby** reagować na wąskie gardła bez ręcznego raportu w Excelu.
+- **Kryteria akceptacji** (testy `backend/tests/test_process_mining.py`, `ProcessFlowPanel.dom.test.tsx`)
+  1. Czas w etapie liczony z historii zmian statusu (`audit_log`): od wejścia do wyjścia z etapu; pierwszy etap
+     od utworzenia kontenera. Dla każdego etapu: liczba pobytów, mediana i 90. percentyl (dni) — pobyty
+     zakończone w oknie (domyślnie 90 dni, 14–365). Etap końcowy „zrealizowany” pomijany.
+  2. Cofnięcia statusu (powrót do wcześniejszego etapu) liczone osobno i jako odsetek zmian — miara poprawek.
+  3. Najczęstsze przejścia między etapami (do 8).
+  4. „Do sprawdzenia”: kontenery w obecnym etapie dłużej niż 90. percentyl tego etapu, z linkiem do karty;
+     liczone dopiero przy ≥ 5 zakończonych pobytach etapu (mniej to szum) — Z-027.
+  5. Tylko kontenery w zakresie użytkownika; admin i logistyka.
+- **[SEC]:** tylko odczyt zliczeń i numerów kontenerów już widocznych dla użytkownika; zakres przez
+  `scope_containers`; bez danych osobowych z dziennika (kto zmienił — nie jest zwracane); wpis w `tests/permissions.yaml`.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-039 · [DEV] Asystent widoczny w demo (pomysł 15)
 - **Rozmiar:** S · W demo bez serwera AI — odpowiedzi przygotowane na kilka przykładowych pytań, wprost oznaczone.
