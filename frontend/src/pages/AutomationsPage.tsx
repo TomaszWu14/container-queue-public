@@ -6,6 +6,8 @@ import { api, errorMessage } from '../api'
 import { relTime } from '../dates'
 import { LangContext, useT } from '../i18n'
 import { PageHeader } from '../PageHeader'
+import { useUser } from '../userContext'
+import AutomationMinutesModal from './AutomationMinutesModal'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -21,12 +23,17 @@ export interface AutomationItem {
   runs: number | null
   errors: number | null
   effects: number | null
+  minutes_per_effect: number
+  minutes_saved: number
 }
 
 export interface AutomationCatalog {
   window_days: number
   items: AutomationItem[]
-  summary: { total: number; active: number; attention: number; runs: number; effects: number }
+  summary: {
+    total: number; active: number; attention: number; runs: number; effects: number
+    minutes_saved: number; hours_saved: number
+  }
 }
 
 const CATEGORIES: Category[] = ['alerts', 'documents', 'communication', 'data', 'integrations']
@@ -42,10 +49,13 @@ export default function AutomationsPage() {
   const [error, setError] = useState('')
   const [category, setCategory] = useState<Category | ''>('')
   const [onlyAttention, setOnlyAttention] = useState(false)
+  const [editMinutes, setEditMinutes] = useState(false)
+  const isAdmin = useUser()?.role === 'admin'
 
-  useEffect(() => {
+  const load = () => {
     api.get<AutomationCatalog>('/api/automations').then(setData).catch(err => setError(errorMessage(err)))
-  }, [])
+  }
+  useEffect(load, [])
 
   const fill = (key: string, vars: Record<string, string | number>) =>
     Object.entries(vars).reduce((s, [k, v]) => s.replace(`{${k}}`, String(v)), t(key))
@@ -62,10 +72,13 @@ export default function AutomationsPage() {
     return s >= 3600 && s % 3600 === 0 ? fill('autoEveryH', { n: s / 3600 }) : fill('autoEvery', { n: Math.round(s / 60) })
   }
   const num = (n: number | null) => (n == null ? t('autoNever') : String(n))
+  const saved = (min: number) => (min >= 60 ? fill('autoSavedHours', { h: Math.round(min / 6) / 10 }) : `${min} min`)
 
   return (
     <main className="page automations">
-      <PageHeader title={t('autoTitle')} />
+      <PageHeader title={t('autoTitle')} actions={isAdmin && data ? (
+        <button className="btn secondary small" onClick={() => setEditMinutes(true)}>{t('autoMinutesBtn')}</button>
+      ) : undefined} />
       <p className="muted" style={{ maxWidth: 820 }}>{t('autoIntro')}</p>
       {error && <p className="error">{error}</p>}
       {data && (
@@ -82,7 +95,11 @@ export default function AutomationsPage() {
               <div className="ctl-kpi-sub">{fill('autoKpiRuns', { days: data.window_days })}</div></div>
             <div className="ctl-kpi plain"><div className="ctl-kpi-value">{data.summary.effects}</div>
               <div className="ctl-kpi-sub">{fill('autoKpiEffects', { days: data.window_days })}</div></div>
+            <div className="ctl-kpi sky" title={t('autoSavedAssumption')}>
+              <div className="ctl-kpi-value">{fill('autoSavedHours', { h: data.summary.hours_saved })}</div>
+              <div className="ctl-kpi-sub">{fill('autoKpiSaved', { days: data.window_days })}</div></div>
           </section>
+          <p className="muted" style={{ fontSize: 12, margin: '6px 0 0' }}>* {t('autoSavedAssumption')}</p>
 
           <div className="row" style={{ gap: 8, flexWrap: 'wrap', margin: '16px 0 8px' }}>
             <select aria-label={t('autoColName')} value={category}
@@ -104,6 +121,7 @@ export default function AutomationsPage() {
                     <th>{t('autoColName')}</th><th>{t('autoColTrigger')}</th><th>{t('autoColAction')}</th>
                     <th>{t('autoColStatus')}</th><th>{t('autoColLast')}</th>
                     <th>{t('autoColRuns')}</th><th>{t('autoColErrors')}</th><th>{t('autoColEffects')}</th>
+                    <th>{t('autoColSaved')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -120,6 +138,9 @@ export default function AutomationsPage() {
                       <td data-label={t('autoColRuns')}>{num(i.runs)}</td>
                       <td data-label={t('autoColErrors')}>{num(i.errors)}</td>
                       <td data-label={t('autoColEffects')}>{num(i.effects)}</td>
+                      <td data-label={t('autoColSaved')}
+                          title={fill('autoSavedPer', { m: i.minutes_per_effect, n: (i.kind === 'event' ? i.runs : i.effects) ?? 0 })}>
+                        {saved(i.minutes_saved)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -127,6 +148,10 @@ export default function AutomationsPage() {
             </div>
           )}
         </>
+      )}
+      {editMinutes && data && (
+        <AutomationMinutesModal items={data.items} onClose={() => setEditMinutes(false)}
+                                onSaved={() => { setEditMinutes(false); load() }} />
       )}
     </main>
   )

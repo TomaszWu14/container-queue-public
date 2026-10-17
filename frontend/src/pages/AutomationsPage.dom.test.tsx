@@ -5,16 +5,19 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import type { AutomationCatalog, AutomationItem } from './AutomationsPage'
 
-const { get } = vi.hoisted(() => ({ get: vi.fn() }))
-vi.mock('../api', () => ({ api: { get }, errorMessage: (e: unknown) => (e as Error).message }))
+const { get, put } = vi.hoisted(() => ({ get: vi.fn(), put: vi.fn() }))
+vi.mock('../api', () => ({ api: { get, put }, errorMessage: (e: unknown) => (e as Error).message }))
 
 import AutomationsPage from './AutomationsPage'
+import { UserContext } from '../userContext'
+import type { User } from '../types'
 
-afterEach(() => { cleanup(); get.mockReset() })
+afterEach(() => { cleanup(); get.mockReset(); put.mockReset() })
 
 const item = (over: Partial<AutomationItem>): AutomationItem => ({
   key: 'demurrage', category: 'alerts', kind: 'schedule', status: 'ok', interval_s: 21600,
-  last_run_at: null, last_ok_at: null, runs: 4, errors: 0, effects: 7, ...over,
+  last_run_at: null, last_ok_at: null, runs: 4, errors: 0, effects: 7,
+  minutes_per_effect: 5, minutes_saved: 35, ...over,
 })
 
 const catalog: AutomationCatalog = {
@@ -28,7 +31,7 @@ const catalog: AutomationCatalog = {
     item({ key: 'congestion', category: 'integrations', status: 'off', interval_s: null, runs: 0 }),
     item({ key: 'invoice_ingest', category: 'documents', interval_s: 30 }),
   ],
-  summary: { total: 6, active: 5, attention: 2, runs: 12, effects: 7 },
+  summary: { total: 6, active: 5, attention: 2, runs: 12, effects: 7, minutes_saved: 95, hours_saved: 1.6 },
 }
 
 const rows = () => screen.getAllByRole('row').slice(1)
@@ -69,5 +72,33 @@ describe('ekran Automatyzacje', () => {
     get.mockRejectedValue(new Error('Brak uprawnień'))
     render(<AutomationsPage />)
     expect(await screen.findByText('Brak uprawnień')).toBeTruthy()
+  })
+
+  it('US-034: zaoszczędzony czas z jawnym założeniem i oszczędność w wierszu', async () => {
+    get.mockResolvedValue(catalog)
+    render(<AutomationsPage />)
+    await screen.findByText('Ostrzeżenie o karze za przestój')
+    expect(screen.getByText('Zaoszczędzony czas · 7 dni').previousElementSibling?.textContent).toBe('1.6 h')
+    expect(screen.getByText(/założenie: minuty pracy ręcznej/)).toBeTruthy()
+    const cell = within(rows()[0]).getByText('35 min')
+    expect(cell.getAttribute('title')).toBe('5 min × 7')
+    expect(screen.queryByRole('button', { name: 'Założenia minut' })).toBeNull()   // tylko admin
+  })
+
+  it('US-034: admin zmienia minuty — zapis i odświeżenie katalogu', async () => {
+    get.mockResolvedValue(catalog)
+    put.mockResolvedValue({})
+    render(
+      <UserContext.Provider value={{ user: { role: 'admin' } as User, reload: () => {} }}>
+        <AutomationsPage />
+      </UserContext.Provider>)
+    fireEvent.click(await screen.findByRole('button', { name: 'Założenia minut' }))
+    const dialog = screen.getByRole('dialog')
+    fireEvent.change(within(dialog).getByLabelText('Ostrzeżenie o karze za przestój'), { target: { value: '12' } })
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Zapisz założenia' }))
+    await vi.waitFor(() => expect(get).toHaveBeenCalledTimes(2))
+    const sent = put.mock.calls[0][1].minutes
+    expect([put.mock.calls[0][0], sent.demurrage, sent.mail_intake]).toEqual(['/api/automations/minutes', 12, 5])
+    expect(screen.queryByRole('dialog')).toBeNull()
   })
 })
