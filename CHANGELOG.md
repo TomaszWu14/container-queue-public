@@ -101,6 +101,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Eksport CSV z przeglądarki chroni przed formułami jak serwer** (US-008): wartość zaczynająca się od spacji
+  i znaku `= + - @` (Excel pomija spacje) dostaje apostrof, tak jak dotąd tabulator i powrót karetki.
 - **Semgrep blokuje PR** (US-007): reguły OWASP Top 10 jako bramka; pierwszy przegląd — 6 fałszywych alarmów
   (zapytania ze stałych nazw tabel) oznaczonych z uzasadnieniem.
 - **Trivy blokuje PR** (US-007, R-08): podatność HIGH/CRITICAL z dostępną poprawką w zależnościach albo błąd

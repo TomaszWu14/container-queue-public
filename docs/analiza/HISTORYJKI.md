@@ -93,7 +93,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - Dane: żądanie POST z obcym `Origin` → Gdy wysyłka → Wtedy 403.
   - Dane: `GET /api/avizo/{token}/slots` z datą poza zakresem ważności linku ± 30 dni → Gdy żądanie → Wtedy 422.
 - **Test:** `test_public_routes_guard.py`, `test_dlt_confirm.py`, `test_avizo_slots.py`.
-- **Stan:** zrealizowane (PR po #29); czeka na merge. Ochrona w jednym miejscu: `app/public_guards.py`
+- **Stan:** wdrożone w PR #30. Ochrona w jednym miejscu: `app/public_guards.py`
   (awizacja i DLT); link DLT dostał też nagłówki `no-referrer` / `noindex`.
 
 ### US-006 · [SEC] Bezpieczne parsowanie XML i archiwów ZIP
@@ -105,7 +105,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - Dane: ZIP deklarujący 1 MB, rozpakowujący się do 2 GB → Gdy upload archiwum → Wtedy 413 po przekroczeniu
     `MAX_UPLOAD_MB` w trakcie rozpakowywania; współczynnik kompresji > 100 odrzucony.
 - **Test:** `test_imports_malicious.py`, `test_sad_xml.py`, `test_archive_upload.py`.
-- **Stan:** zrealizowane (PR po #29); czeka na merge. Rozpoznanie: XML był już chroniony odrzuceniem DTD
+- **Stan:** wdrożone w PR #30. Rozpoznanie: XML był już chroniony odrzuceniem DTD
   przed parserem (expat; ten sam efekt co `defusedxml`, bez nowej zależności), a `zipfile` nie czyta więcej
   niż rozmiar z nagłówka. Dołożono limit kompresji > 100× dla plików powyżej 1 MB i testy na spreparowane pliki.
 
@@ -121,10 +121,10 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - `.pre-commit-config.yaml`: Bandit 1.9.4, gitleaks 8.30.1 (jak CI).
   - Zrobione w PR procesu: `.github/dependabot.yml` (Z-016).
 - **Uwaga:** CI nie biegnie na draftach — walidacja wymaga oznaczenia PR jako gotowy.
-- **Stan (2026-10-17):** częściowo — PR po #32. Trivy: bramka na PR (fs, HIGH/CRITICAL z poprawką) i w cotygodniowym
+- **Stan (2026-10-17):** wdrożone w PR #33 i #34. Trivy: bramka na PR (fs, HIGH/CRITICAL z poprawką) i w cotygodniowym
   skanie obrazu; `.trivyignore` z formatem wyjątków; obraz panelu z jawnym `USER 101` (jedyne znalezisko Trivy).
   pre-commit: Bandit 1.9.4, gitleaks 8.30.1, ruff 0.17.0 jak CI (test `test_runtime_versions.py`).
-- **Domknięcie (PR #34):** Semgrep p/owasp-top-ten jest bramką. Pierwszy raport: 6 znalezisk, wszystkie fałszywe
+- **Domknięcie (PR #34, wdrożone):** Semgrep p/owasp-top-ten jest bramką. Pierwszy raport: 6 znalezisk, wszystkie fałszywe
   (zapytania DDL/COUNT sklejane ze stałych nazw w `backup_verify.py` i `db_bootstrap.py` — nazw tabel i baz nie da się
   związać parametrem); oznaczone `# nosemgrep: <id>` z powodem.
 
@@ -132,6 +132,9 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - **Rozmiar:** XS · **Źródło:** B-002 · **Wymagania:** SR-006
 - Dane: wartość `\t=1+1` albo `\r=cmd` w eksporcie CSV → Gdy pobranie → Wtedy pole poprzedzone apostrofem,
   jak dla `= + - @`. **Test:** parametryzowany test `csv_safe` na wszystkie prefiksy OWASP.
+- **Stan:** serwer (`exports.csv_safe`) był już poprawiony w audycie SEC-008 (test `test_csv_safe_leading_whitespace_and_control_chars`).
+  Luka została w eksporcie budowanym w przeglądarce (`api.ts::csvCell`): formuła po wiodącej spacji (` =1+1`) nie była
+  neutralizowana — wyrównane z serwerem (PR po #34), test `csv.export.dom.test.ts`.
 
 ### US-009 · [BA][DEV] Odpowiedź na awizację w aplikacji nie udaje sukcesu
 - **Rozmiar:** S · **Źródło:** P-01 · **Wymagania:** FR-020, NFR-007
@@ -231,7 +234,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - Test statyczny: każda trasa `/api/...` z parametrem `{..._id}` używa `get_scoped`/`scope_*`/
   `check_container_access` albo jest na jawnej liście wyjątków z uzasadnieniem. ADR: czy spójność spółki
   wymuszać też w bazie (CHECK/FK/RLS).
-- **Stan:** zrealizowane (PR po #31); czeka na merge. `tests/test_isolation_guard.py`: 226 tras z identyfikatorem,
+- **Stan:** wdrożone w PR #32. `tests/test_isolation_guard.py`: 226 tras z identyfikatorem,
   34 wyjątki z powodem (słowniki wspólne, konta admina, baza wiedzy, statki, własne sesje). Decyzja o bazie:
   ADR-0006 (proponowana: bez RLS, klucze złożone punktowo dla nowych tabel).
 
@@ -259,14 +262,14 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - **Rozmiar:** S · **Źródło:** `AUDYT.md` §2.6 pkt 4 · **Wymagania:** NFR-011
 - Decyzja: Python 3.12 albo 3.14 wszędzie (lock kompilowany dla wybranej), Node jedna wersja LTS; test
   w CI, że obraz i lock są zgodne.
-- **Stan:** zrealizowane (PR po #30); czeka na merge. Decyzja [DEV]: wersje produkcji — **Python 3.14, Node 26**
+- **Stan:** wdrożone w PR #31. Decyzja [DEV]: wersje produkcji — **Python 3.14, Node 26**
   (obraz już na nich działał, a CI testowało 3.12 i 24). CI i README przełączone; lock zostaje „universal” od 3.12
   (lokalnie da się pracować na 3.12+). Sprawdzone przed zmianą na 3.14 / 26: backend 2223 testów, mypy bez nowych
   błędów, frontend 1013 testów i build, e2e demo 6/6. Strażnik: `backend/tests/test_runtime_versions.py`.
 
 ### US-016 · [BA][DEV] Dane dla Portugalii: prefiks telefonu i kraj magazynu
 - **Rozmiar:** S · **Źródło:** P-05, P-06 · **Wymagania:** FR-017
-- **Stan:** zrealizowane (PR #29); czeka na merge. Założenie Z-022 do potwierdzenia.
+- **Stan:** wdrożone w PR #29. Założenie Z-022 do potwierdzenia.
 - **Jako** logistyk **chcę**, żeby SMS do kierowcy portugalskiego dochodził, a magazyn w Portugalii miał
   portugalskie święta, **aby** dostawy do PT nie wymagały ręcznych poprawek.
 - **Kryteria akceptacji** (test: `backend/tests/test_phones_portugal.py`)
@@ -293,7 +296,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 ### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
 - **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)
 - Testy RTL dla `ImportModal`, `ClearQueueModal`, resetu hasła w `AuthPages`.
-- **Stan:** zrealizowane (PR po #30); czeka na merge. `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3),
+- **Stan:** wdrożone w PR #30. `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3),
   `ImportModal.dom.test.tsx` (4); lista stron bez testu w `docs/testy/E2E.md` odświeżona (21 → 16).
 
 ### US-019 · [SEC] 2FA obowiązkowe dla administratorów na produkcji

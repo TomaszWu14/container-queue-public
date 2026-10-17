@@ -48,20 +48,20 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-002 osobny klucz szyfrowania | SR-009, R-05 | `test_config_failfast.py`, testy `crypto` | — | do akceptacji PO |
 | US-003 ochrona przed cichym nadpisaniem | FR-006, NFR-013, R-02, ADR-0003 | `test_status_lost_update.py`, `test_container_lost_update.py`, `status.guard.dom.test.tsx`, `transportOrders.dom.test.tsx` | #18 | wdrożone |
 | US-004 załączniki po zawartości | SR-007, R-03 | `test_file_signatures.py` (31 przypadków) | #28 | wdrożone |
-| US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_public_routes_guard.py` (4), `test_dlt_confirm.py` | — | zrealizowane, czeka na merge |
-| US-006 bezpieczny XML, ZIP | SR-006, R-07 | `test_imports_malicious.py` (5), `test_sad_xml.py`, `test_archive_upload.py` | — | zrealizowane, czeka na merge |
-| US-007 bramki CI | SR-013, R-08 | przebieg `security.yml`, `test_runtime_versions.py::test_pre_commit_tools_match_ci` | #18 (`dependabot.yml`), #33, #34 | zrealizowane, czeka na merge |
-| US-008 `csv_safe` | SR-006, B-002 | test parametryzowany `csv_safe` | — | do akceptacji PO |
+| US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_public_routes_guard.py` (4), `test_dlt_confirm.py` | #30 | wdrożone |
+| US-006 bezpieczny XML, ZIP | SR-006, R-07 | `test_imports_malicious.py` (5), `test_sad_xml.py`, `test_archive_upload.py` | #30 | wdrożone |
+| US-007 bramki CI | SR-013, R-08 | przebieg `security.yml`, `test_runtime_versions.py::test_pre_commit_tools_match_ci` | #18, #33, #34 | wdrożone |
+| US-008 `csv_safe` | SR-006, B-002 | `test_exports.py::test_csv_safe*`, `csv.export.dom.test.ts` (US-008) | PR po #34 | zrealizowane, czeka na merge |
 | US-009 awizacja bez fałszywego sukcesu | FR-020, NFR-007, P-01 | `AvizoFormPage.dom.test.tsx`, `AvizoDriverFormPage.dom.test.tsx`, `test_avizo_tokens.py` | #18 | wdrożone |
 | US-010 dokumentacja po audycie | — | — | #18 (`SECURITY.md`) | częściowo |
-| US-011 strażnik izolacji | FR-022…024, SR-005, R-01, ADR-0006 | `test_isolation_guard.py` (4) | — | zrealizowane, czeka na merge |
+| US-011 strażnik izolacji | FR-022…024, SR-005, R-01, ADR-0006 | `test_isolation_guard.py` (4) | #32 | wdrożone |
 | US-012 RODO 1.0 | SR-011, R-09 | — | — | czeka na Z-009 |
 | US-013 kopia off-site | NFR-002, SR-014, R-10 | `test_backup_offsite.py` (4 testy), `test_backup_scripts.py`; ćwiczenie odtworzenia po włączeniu | #28 | kod gotowy; włączenie w Coolify po stronie PO |
 | US-014 mierniki (+ panel, pomysł 6) | M-1…M-7 | — | — | czeka na Z-004 |
-| US-015 jedna wersja Python/Node | NFR-011 | `test_runtime_versions.py` (4) | — | zrealizowane, czeka na merge |
-| US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06, Z-022 | `test_phones_portugal.py` (13) | #29 | zrealizowane, czeka na merge |
+| US-015 jedna wersja Python/Node | NFR-011 | `test_runtime_versions.py` (4) | #31 | wdrożone |
+| US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06, Z-022 | `test_phones_portugal.py` (13) | #29 | wdrożone |
 | US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | `test_plan_mail.py` (4), `BulkActionBar.plan.dom.test.tsx` (3) | #28 | wdrożone |
-| US-018 testy ekranów | TEST-007 | `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3), `ImportModal.dom.test.tsx` (4) | — | zrealizowane, czeka na merge |
+| US-018 testy ekranów | TEST-007 | `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3), `ImportModal.dom.test.tsx` (4) | #30 | wdrożone |
 | US-019 2FA adminów | SR-004, E-01 | — | — | czeka na Z-008 |
 | US-027 demo pokazuje cały proces | FR-005, FR-009…011, FR-019, FR-020, FR-028 | `test_seed_demo_process.py` (5 testów), `test_demo_mode.py` | #18 | wdrożone |
 | US-028 konta demo per rola | FR-022…FR-024, E-05 | `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` | #18 | wdrożone |

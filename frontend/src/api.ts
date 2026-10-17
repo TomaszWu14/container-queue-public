@@ -194,7 +194,9 @@ export function saveBlob(blob: Blob, filename: string): void {
 // wykona go jako formuły (jak backend quotes_core._csv_safe); liczby zostają liczbami
 export function csvCell(v: unknown): string {
   let s = v == null ? '' : String(v)
-  if (typeof v === 'string' && /^[=+\-@\t\r]/.test(s)) s = "'" + s
+  // jak csv_safe na serwerze (US-008): \t / \r na początku albo = + - @ po wiodących białych znakach,
+  // które Excel pomija przy otwieraniu pliku
+  if (typeof v === 'string' && (/^[\t\r]/.test(s) || /^[=+\-@]/.test(s.replace(/^[ \t\r\n]+/, '')))) s = "'" + s
   return /[";\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
 }
 
