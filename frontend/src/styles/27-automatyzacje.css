@@ -20,3 +20,19 @@
 .auto-rule { border: 1px solid var(--border); border-radius: var(--r-md, 10px); padding: 10px 12px; background: var(--panel); }
 .auto-rule label { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: var(--muted); }
 .auto-rule label.row { flex-direction: row; align-items: center; color: inherit; }
+/* Jakość odczytu faktur (US-037): słupki 100% tydzień po tygodniu — kolory serii z palety pulpitu
+   (--viz-*, 25-pulpit-analityczny.css), 2 px odstępu między segmentami, zaokrąglony koniec u góry */
+.aiq-sub { font-size: 14px; margin: 16px 0 6px; }
+.aiq-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 14px; padding: 0; margin: 0 0 8px; font-size: 13px; }
+.aiq-legend li { display: flex; align-items: center; gap: 6px; }
+.aiq-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.src-rules { background: var(--viz-1); } .src-ml { background: var(--viz-4); }
+.src-user { background: var(--viz-3); } .src-open { background: var(--viz-2); }
+/* kolejność w słupku = rules, ml, user, open: sąsiednie pary sprawdzone walidatorem dataviz (light/dark) */
+.aiq-bars { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(28px, 1fr); gap: 8px; align-items: end; }
+.aiq-bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.aiq-bar { width: min(100%, 40px); height: 140px; display: flex; flex-direction: column-reverse; gap: 2px;
+  background: var(--soft); border-radius: 4px 4px 0 0; overflow: hidden; }
+.aiq-seg { display: block; min-height: 2px; }
+.aiq-bar-col:hover .aiq-bar { outline: 2px solid var(--border); }
+.aiq-bar-label { font-size: 11px; color: var(--muted); }

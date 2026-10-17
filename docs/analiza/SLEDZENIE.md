@@ -70,8 +70,9 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-031 testy wysyłki i 2FA | TEST-007, FR-015, SEC-006 | `AvizoSendModal.dom.test.tsx` (2), `QueueEmailModal.dom.test.tsx` (2), `AvizoProposeForm.dom.test.tsx` (2), `Enroll2FAPage.dom.test.tsx` (3) | #36 | wdrożone |
 | US-032/033 ekran Automatyzacje i pilnowanie automatów | FR-015, OBS-009, Z-023 | `test_automations.py` (5), `AutomationsPage.dom.test.tsx` (3) | #37 | wdrożone |
 | US-034 licznik oszczędności per automat | Z-020, Z-024 | `test_automations.py` (4), `AutomationsPage.dom.test.tsx` (2), `AutomationMinutesModal.dom.test.tsx` (1) | #38 | wdrożone |
-| US-035 zdarzenia do n8n widoczne i testowalne | FR-020, Z-023 | `test_automations.py` (3), `test_automation.py` (3), `AutomationsPage.dom.test.tsx` (1) | — | czeka na merge |
-| US-036 kreator reguł bez kodu | Z-026, FR-015 | `test_automation_rules.py` (6), `AutomationRulesPanel.dom.test.tsx` (3) | — | czeka na merge |
+| US-035 zdarzenia do n8n widoczne i testowalne | FR-020, Z-023 | `test_automations.py` (3), `test_automation.py` (3), `AutomationsPage.dom.test.tsx` (1) | #39 | wdrożone |
+| US-036 kreator reguł bez kodu | Z-026, FR-015 | `test_automation_rules.py` (6), `AutomationRulesPanel.dom.test.tsx` (3) | #39 | wdrożone |
+| US-037 jakość odczytu faktur przez AI | FR-015 | `test_ai_quality.py` (3), `AiQualityPanel.dom.test.tsx` (2) | — | czeka na merge |
 
 ## Zasady utrzymania
 

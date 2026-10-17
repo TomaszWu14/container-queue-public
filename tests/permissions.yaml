@@ -206,6 +206,7 @@ routes:
   "GET /api/automations": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_company, scope_containers (ekran „Automatyzacje”; liczniki pętli tła systemowe)
   "PUT /api/automations/minutes": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # założenia minut licznika oszczędności (US-034), ustawienie globalne
   "POST /api/automations/test-event": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # zdarzenie testowe do n8n (US-035); bez URL webhooka → 409
+  "GET /api/automations/ai-quality": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (jakość odczytu faktur, US-037)
   "GET /api/automations/rules": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # kreator reguł (US-036): lista reguł, ustawienie globalne
   "PUT /api/automations/rules": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # zapis reguł tylko admin, z audytem
   "GET /api/automations/rules/preview": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (podgląd reguły)
