@@ -277,7 +277,7 @@ export const enModules: Partial<Record<TKey, string>> = {
   av2Title: 'Driver data', av2Intro: 'Please provide driver data for each container.',
   av2IdOptional: 'ID document number (optional)',
   av2ErrName: 'Enter the driver name.',
-  av2ErrPhone: 'Phone: digits, spaces and optional leading + (e.g. +48 600 000 000).',
+  av2ErrPhone: 'Phone: digits, spaces and optional leading + (e.g. +48 600 000 000 or +351 912 345 678).',
   av2ErrPlate: 'Registration number: 4–10 letters/digits.',
   av2RodoTitle: 'Privacy notice (GDPR)',
   av2Rodo: 'The controller of the drivers\' personal data is the Acme group company named in the booking request. The data (name, phone, registration numbers, optionally ID document number) is processed solely to organise site entry and unloading (Art. 6(1)(f) GDPR). The data is deleted 90 days after the request is closed. Data subjects have the right to access, rectify, erase, restrict processing, object, and lodge a complaint with the supervisory authority (UODO). By submitting driver data you confirm the driver has been informed.',

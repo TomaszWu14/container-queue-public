@@ -19,6 +19,7 @@ from ..deps import ForwarderOrEditors as forwarder_or_editors
 from ..models import (PL_TZ, AuditLog, Container, Role, SmsMessage, User, pl_midnight_utc,
                       utcnow)
 from ..notifications import company_watchers, notify, warehouse_users
+from ..phones import phone_for_sms
 from ..sms import SmsError, send_sms, sms_configured
 from ..sms_budget import SmsBudgetExceeded, check_budget
 
@@ -46,10 +47,10 @@ def send_driver_sms(db: Session, container: Container,
             + (f". Magazyn: {warehouse.name}, {warehouse.address}" if warehouse else "")
             + (f". Tel. magazynu: {warehouse.contact_phone}" if warehouse and warehouse.contact_phone else "")
             + ". Spoznienie? Zadzwon do magazynu.")
-    message = SmsMessage(container_id=container.id, phone=container.driver_phone,
-                         body=body, delivery_date=delivery)
+    phone = phone_for_sms(container)   # US-016: 9 cyfr + kierunkowy kraju magazynu (PL/PT)
+    message = SmsMessage(container_id=container.id, phone=phone, body=body, delivery_date=delivery)
     try:
-        send_sms(container.driver_phone, body)
+        send_sms(phone, body)
         message.status = "sent"
     except SmsError as exc:
         message.status = "error"

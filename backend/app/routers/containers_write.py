@@ -265,7 +265,12 @@ def apply_warehouse(db: Session, container: Container, raw_name: str, user: User
         Warehouse.company_id == container.company_id,
         func.upper(Warehouse.name) == name.upper()))
     if warehouse is None:
-        warehouse = Warehouse(company_id=container.company_id, name=name, country="PL")
+        # US-016 (P-06): kraj jak pozostałe magazyny spółki, gdy wszystkie są w jednym kraju
+        # (spółka portugalska → PT); inaczej PL — admin poprawi w Słownikach → Magazyny
+        countries = set(db.scalars(select(Warehouse.country).where(
+            Warehouse.company_id == container.company_id)))
+        country = countries.pop() if len(countries) == 1 else "PL"
+        warehouse = Warehouse(company_id=container.company_id, name=name, country=country or "PL")
         db.add(warehouse)
         db.flush()
     if container.warehouse_id == warehouse.id:

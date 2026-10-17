@@ -23,6 +23,7 @@ from ..deps import check_container_access
 from ..iso6346 import normalize
 from ..html_templates import render
 from ..mail_html import table_context
+from ..phones import normalize_phone, warehouse_country
 from ..models import (
     AvizoChangeProposal,
     AvizoRequest,
@@ -315,15 +316,9 @@ _PLATE = re.compile(r"^[A-Z0-9]{4,10}$")
 
 
 def _phone(value: str) -> str:
-    """E.164 albo polski 9-cyfrowy numer → +48…; zwraca postać znormalizowaną."""
-    digits = re.sub(r"[\s().-]", "", value or "")
-    if digits.startswith("00"):
-        digits = "+" + digits[2:]
-    if re.fullmatch(r"\d{9}", digits):
-        digits = "+48" + digits
-    if not re.fullmatch(r"\+[1-9]\d{7,14}", digits):
-        raise ValueError("Telefon w formacie +48 600 000 000 (E.164).")
-    return digits
+    """Sprawdza format; kierunkowy kraju dokłada `apply_drivers` (kraj magazynu kontenera, US-016)."""
+    normalize_phone(value)   # ValueError → 422 z podpowiedzią formatu
+    return value.strip()
 
 
 def _plate(value: str, required: bool = True) -> str:
@@ -378,10 +373,12 @@ def apply_drivers(db: Session, avizo: AvizoRequest, body: DriversIn, user: User 
     items = {i.container_id: i for i in wf.stage2_items(db, avizo)}
     _same_containers([e.container_id for e in body.items], set(items))
     for entry in body.items:
-        updates = {"driver_name": entry.driver_name.strip(), "driver_phone": entry.driver_phone,
+        container = items[entry.container_id].container
+        phone = normalize_phone(entry.driver_phone, warehouse_country(container))
+        updates = {"driver_name": entry.driver_name.strip(), "driver_phone": phone,
                    "truck_no": entry.truck_no, "trailer_no": entry.trailer_no,
                    "driver_id_no": entry.driver_id_no.strip()}
-        record_changes(db, items[entry.container_id].container,
+        record_changes(db, container,
                        {k: v for k, v in updates.items() if v}, user=user, note=note)
     wf.transition(db, avizo, AvizoStatus.DRIVERS_SUBMITTED, user, note=note)
     notify(db, company_watchers(db, avizo.company_id), kind="avizo",

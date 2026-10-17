@@ -143,7 +143,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 ### US-027 · [BA][DEV] Demo pokazuje cały proces, nie tylko kolejkę
 - **Rozmiar:** M · **Źródło:** pomysły 1–5 PO, 2026-10-16 („aplikacja flagowa”) · **Wymagania:** FR-005, FR-009…FR-011,
   FR-019, FR-020, FR-028 · **Priorytet:** Must (decyzja PO 2026-10-16: „rób”)
-- **Stan:** zrealizowane w PR #18; odbiór [BA] ✅, przegląd [SEC] ✅; czeka na scalenie i redeploy demo.
+- **Stan:** zrealizowane w PR #18; odbiór [BA] ✅, przegląd [SEC] ✅; scalone (wdrożone).
 - **Jako** osoba z zewnątrz oglądająca demo **chcę** zobaczyć odprawę, dokumenty, awizację, zamówienia i demurrage
   na żywych danych, **aby** ocenić cały proces, a nie samą listę kontenerów.
 - **Kryteria akceptacji**
@@ -175,7 +175,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-029 · [BA][SEC] Ograniczenia widoków kont demo (top 10)
 - **Rozmiar:** M · **Źródło:** PO, 2026-10-16 („wdrażaj wszystkie”) · **Wymagania:** E-05, R-12 · **Priorytet:** Must
-- **Stan:** zrealizowane (PR po #18); czeka na merge.
+- **Stan:** wdrożone w PR #27.
 - **Jako** właściciel publicznego demo **chcę**, żeby goście widzieli proces, ale nie zmieniali danych,
   nie podglądali siebie nawzajem i nie obciążali serwera, **aby** demo było bezpieczne i czytelne.
 - **Kryteria akceptacji** (testy: `backend/tests/test_demo_limits.py`, `frontend/src/demoLimits.dom.test.tsx`,
@@ -198,7 +198,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-030 · [BA][DEV] Skaner kodu QR na bramie
 - **Rozmiar:** S · **Źródło:** PO, 2026-10-16 („wdrażaj wszystko”, pomysł 4) · **Wymagania:** brak spisanego (moduł bramy #60 sprzed procesu; Z-005) · **Priorytet:** Should
-- **Stan:** zrealizowane; czeka na merge. Założenie Z-021 do potwierdzenia.
+- **Stan:** wdrożone w PR #28. Założenie Z-021 do potwierdzenia.
 - **Jako** ochrona przy bramie **chcę** zeskanować telefonem kod QR z karty rozładunku (albo wpisać numer kontenera)
   i jednym przyciskiem wpuścić auto, **aby** nie szukać go na liście przy kolejce aut.
 - **Kryteria akceptacji** (testy: `frontend/src/pages/gate/GateScanner.dom.test.tsx`, `gateScan.test.ts`)
@@ -248,8 +248,16 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-016 · [BA][DEV] Dane dla Portugalii: prefiks telefonu i kraj magazynu
 - **Rozmiar:** S · **Źródło:** P-05, P-06 · **Wymagania:** FR-017
-- Numer kierowcy z wyborem kraju (PL/PT) zamiast stałego +48; kraj magazynu ustawiany przy tworzeniu
-  i w imporcie.
+- **Stan:** zrealizowane (PR #29); czeka na merge. Założenie Z-022 do potwierdzenia.
+- **Jako** logistyk **chcę**, żeby SMS do kierowcy portugalskiego dochodził, a magazyn w Portugalii miał
+  portugalskie święta, **aby** dostawy do PT nie wymagały ręcznych poprawek.
+- **Kryteria akceptacji** (test: `backend/tests/test_phones_portugal.py`)
+  1. Numer kierowcy bez kierunkowego (9 cyfr) dostaje kierunkowy kraju magazynu: PL +48, PT +351 —
+     w formularzu kierowców z awizacji i przy SMS-ie z panelu kierowcy; brak magazynu = +48 jak dotąd.
+  2. Numer podany z „+” albo „00” zostaje bez zmian; numer nierozpoznany → 422 z przykładem PL i PT.
+  3. Magazyn tworzony w locie z kolejki dostaje kraj pozostałych magazynów spółki, gdy wszystkie są
+     w jednym kraju; inaczej PL. Formularz magazynu w Słownikach miał już wybór kraju (bez zmian).
+- **[SEC]:** bez nowych tras i danych; numer w audycie dalej maskowany (RODO).
 
 ### US-017 · [BA][DEV] „Wyślij plan do spedycji” wysyła wiadomość
 - **Rozmiar:** S · **Źródło:** P-09 · **Wymagania:** FR-015, FR-020
@@ -262,7 +270,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
     do zakładki Spedycja, bez danych dostawcy; wpis w historii kontenera.
   - Gdy spedytor nie ma adresu albo poczta nie działa → wynik mówi to wprost; status planu i tak zapisany.
   - Gdy plan już potwierdzony → bez maila („już potwierdzone”).
-- **Stan:** zrealizowane w PR #28, czeka na merge.
+- **Stan:** wdrożone w PR #28.
 
 ### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
 - **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)

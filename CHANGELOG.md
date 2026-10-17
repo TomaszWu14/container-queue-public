@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Projekty decyzji do akceptacji PO:** ADR-0004 (publiczne API tylko do odczytu z kluczami per firma) i ADR-0005
+  (własna kopia demo dla każdego odwiedzającego) — opcje, przegląd bezpieczeństwa STRIDE i pytania; bez kodu.
 - **Skaner kodu QR na bramie** (US-030, pomysł 4 PO): ochrona skanuje telefonem kod z karty rozładunku albo wpisuje
   numer kontenera i jednym przyciskiem wpuszcza auto. Kontener spoza dzisiejszej listy dostaje ostrzeżenie zamiast
   przycisku; obraz z aparatu nie opuszcza telefonu. Na iPhonie: zwykły aparat albo numer (Z-021).
@@ -67,6 +69,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- **Portugalia: SMS do kierowcy i kraj magazynu** (US-016, P-05, P-06): numer kierowcy bez kierunkowego dostaje
+  kierunkowy kraju magazynu (PT +351 zamiast zawsze +48), więc SMS do kierowcy portugalskiego dochodzi. Magazyn
+  tworzony z kolejki dziedziczy kraj spółki zamiast zawsze PL (Z-022).
 - Telefon: panel „Ile to oszczędza” chował podpisy kafelków (założenie minut, „a z b”) — teraz widoczne.
 - Demo: ostrzeżenia o karach za przestój w danych pokazowych (panel pokazywał 0 obok karty ryzyka); licznik
   karty ryzyka pokazuje wszystkie ryzyka, lista — najpilniejsze 8.
