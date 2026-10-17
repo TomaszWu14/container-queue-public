@@ -106,7 +106,7 @@ jobs:
       - run: pip install "semgrep==1.181.0"
       - name: Semgrep p/owasp-top-ten (raport, nie bramka)
         run: >-
-          semgrep scan --config p/owasp-top-ten --metrics off --sarif --output semgrep.sarif
+          semgrep scan --config p/owasp-top-ten --metrics off --text --sarif-output semgrep.sarif
           backend/app frontend/src
       - name: Artefakt Semgrep
         if: always()
