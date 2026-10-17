@@ -36,7 +36,7 @@ Objaw braku: pierwszy bieg nocny pada na starcie przeglądarki (`error while loa
 
 Moduły `frontend/src/pages/*.tsx`, których żaden test vitest nie importuje wprost (import przez
 komponent nadrzędny się nie liczy — lista jest zachowawcza). Odświeżanie:
-`python scripts/frontend_untested_pages.py`. **Stan 2026-10-17: 66 modułów, 12 bez testu:**
+`python scripts/frontend_untested_pages.py`. **Stan 2026-10-17: 67 modułów, 12 bez testu:**
 
 | Moduł | Uwagi / pokrycie pośrednie |
 |---|---|

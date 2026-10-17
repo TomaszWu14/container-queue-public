@@ -8,7 +8,7 @@ import { hiddenInDemo } from './demoLimits'
 import KnowledgePanel from './KnowledgePanel'
 import { LANGS, Lang, LangContext, useT } from './i18n'
 import { UserContext } from './userContext'
-import { Archive, Blocks, Calendar, ChartColumn, ChevronDown, DollarSign, FileText, Languages, LayoutDashboard, LogOut, MapPin, Menu, Palette, Rows3, Settings, ShieldCheck, TriangleAlert, Truck, type LucideIcon, X } from 'lucide-react'
+import { Archive, Blocks, Bot, Calendar, ChartColumn, ChevronDown, DollarSign, FileText, Languages, LayoutDashboard, LogOut, MapPin, Menu, Palette, Rows3, Settings, ShieldCheck, TriangleAlert, Truck, type LucideIcon, X } from 'lucide-react'
 import { formatDate } from './dates'
 import { PRESENCE_ROLES, PresenceBar } from './PresenceBar'
 import FullscreenToggle from './FullscreenToggle'
@@ -19,7 +19,7 @@ import { useVisibleInterval } from './useVisibleInterval'
 const NAV_ICONS: Record<string, LucideIcon> = {
   queue: Rows3, dashboard: LayoutDashboard, calendar: Calendar, orders: FileText,
   forwarding: Truck, quotes: DollarSign, tracking: MapPin, complaints: TriangleAlert,
-  archive: Archive, customs: ShieldCheck, admin: Settings, analytics: ChartColumn,
+  archive: Archive, customs: ShieldCheck, admin: Settings, analytics: ChartColumn, automation: Bot,
 }
 function NavIcon({ n }: { n: string }) {
   const I = NAV_ICONS[n]
@@ -166,6 +166,7 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
       { to: '/kolejka?spolka=analysis', icon: 'analytics', label: t('moduleAnalysis'),
         show: role === 'admin' || !!user?.view_all_companies },
       { to: '/analityka', icon: 'analytics', label: 'Analityka', show: some('admin', 'logistics') },
+      { to: '/automatyzacje', icon: 'automation', label: t('autoNav'), show: some('admin', 'logistics') },
       { to: '/wyceny', icon: 'quotes', label: t('navQuotes'), show: not('warehouse', 'customs', 'purchasing', 'sales') },
       { to: '/dziennik-zmian', icon: 'archive', label: t('changesFeedTitle'), show: some('admin', 'logistics') },
       { to: '/kolejka/archiwum', icon: 'archive', label: t('archive'), show: not('warehouse', 'customs', 'purchasing', 'sales') },

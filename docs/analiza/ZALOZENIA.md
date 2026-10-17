@@ -30,6 +30,9 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-019 | Specyfikacja wysyłki dokumentów do agencji opisuje stan obecny; luki L-1…L-8 nie są naprawiane, dopóki PO nie odpowie na pytania §11. | — | do potwierdzenia | historyjki z luk L-1…L-8 | `spec/WYSYLKA-DOKUMENTOW-DO-AGENCJI.md` |
 | Z-021 | Skaner na bramie (US-030) wpuszcza tylko auta z **dzisiejszej** listy bramy; kontener spoza niej dostaje ostrzeżenie zamiast przycisku. Odczyt kodu w aplikacji działa w Chrome na Androidzie; na iPhonie ochrona skanuje zwykłym aparatem (otwiera kartę kontenera) albo wpisuje numer. | — | do potwierdzenia | wpuszczanie aut spoza listy / osobna biblioteka do odczytu kodów na iPhonie | `frontend/src/pages/gate/` |
 | Z-022 | Kraj numeru kierowcy bez kierunkowego = kraj magazynu rozładunku (PL +48, PT +351); magazyn tworzony z kolejki dziedziczy kraj, gdy wszystkie magazyny spółki są w jednym kraju, inaczej PL. | — | do potwierdzenia | wybór kraju przy numerze w formularzu kierowcy | `backend/app/phones.py` |
+| Z-023 | Ekran „Automatyzacje” (US-032) widzą **admin i logistyka** (konto demo to logistyka); partnerzy (spedytor, agencja, magazyn) go nie widzą. Liczniki z ostatnich **7 dni**. | — | do potwierdzenia | inne role / inne okno | `backend/app/automation_catalog.py` |
+| Z-024 | Licznik oszczędności per automat (US-034): minuty pracy ręcznej na jeden efekt automatu — wartości startowe do podania przez PO, do tego czasu jawne założenia ustawiane w panelu admina. | — | do potwierdzenia | wartości PO | US-034 |
+| Z-025 | Mierniki „przed wdrożeniem” (US-050): bez danych PO pokazujemy je jako założenia, oznaczone wprost na ekranie i w dokumentach. | — | do potwierdzenia | dane PO z okresu przed aplikacją | US-050 |
 
 ## Jak potwierdzić
 

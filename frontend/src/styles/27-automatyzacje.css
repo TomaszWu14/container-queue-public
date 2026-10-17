@@ -1,0 +1,17 @@
+/* Ekran „Automatyzacje” (US-032): podpisy liczb także na telefonie, a tabela katalogu
+   na wąskim ekranie zamienia się w karty (etykieta kolumny przed wartością). */
+@media (max-width: 640px) { .automations .ctl-kpi-sub { display: block; } }
+@media (max-width: 760px) {
+  table.grid.auto-table, table.grid.auto-table tbody, table.grid.auto-table tr, table.grid.auto-table td {
+    display: block; width: 100%;
+  }
+  table.grid.auto-table thead { display: none; }
+  table.grid.auto-table tr {
+    border: 1px solid var(--border); border-radius: var(--r-md, 10px); background: var(--panel);
+    margin-bottom: 10px; padding: 8px 12px;
+  }
+  table.grid.auto-table td { border: 0; padding: 3px 0; }
+  table.grid.auto-table td[data-label]::before {
+    content: attr(data-label) ": "; color: var(--muted); font-size: 12px;
+  }
+}

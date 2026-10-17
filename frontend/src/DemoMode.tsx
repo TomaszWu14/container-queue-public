@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from './api'
 import { useT } from './i18n'
 import { Modal } from './Modal'
+import { useUser } from './userContext'
 
 // Instancja portfolio (konto z DEMO_READONLY_LOGINS, user.is_demo): stały baner „dane fikcyjne,
 // tylko podgląd” + ekran powitalny z czterema miejscami do obejrzenia (zamiast ogólnego onboardingu).
@@ -14,6 +15,8 @@ const STEPS = [
   { to: '/kolejka', n: 2 },
   { to: '/kalendarz', n: 3 },
   { to: '/sledzenie', n: 4 },
+  // US-032: katalog automatyzacji — ekran logistyki (konta demo partnerów go nie mają)
+  { to: '/automatyzacje', n: 5, roles: ['admin', 'logistics'] },
 ]
 
 function seen(): boolean {
@@ -23,6 +26,7 @@ function seen(): boolean {
 export default function DemoMode() {
   const t = useT()
   const navigate = useNavigate()
+  const role = useUser()?.role ?? ''
   const [open, setOpen] = useState(() => !seen())
   const [support, setSupport] = useState('')
   const [storyId, setStoryId] = useState<number | null>(null)   // kontener pokazowy (seed_demo_story)
@@ -66,7 +70,7 @@ export default function DemoMode() {
                 </button>
               </li>
             )}
-            {STEPS.map(s => (
+            {STEPS.filter(s => !s.roles || s.roles.includes(role)).map(s => (
               <li key={s.to}>
                 <div>
                   <b>{t(`demoStep${s.n}Title`)}</b>

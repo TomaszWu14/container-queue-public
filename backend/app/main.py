@@ -33,6 +33,7 @@ from .routers import (
     analytics,
     assistant,
     audit_read,
+    automations,
     auth,
     avatars,
     avizo,
@@ -343,6 +344,7 @@ app.include_router(sp_materials.router)
 app.include_router(watchers.router)
 app.include_router(avatars.router)
 app.include_router(logs.router)
+app.include_router(automations.router)
 app.include_router(health.router)   # OBS-009: /api/health/deep
 from .sms_settings import router as sms_settings_router  # noqa: E402
 

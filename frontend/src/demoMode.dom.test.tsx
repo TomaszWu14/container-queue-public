@@ -4,6 +4,8 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { MemoryRouter } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import DemoMode from './DemoMode'
+import { UserContext } from './userContext'
+import type { User } from './types'
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); localStorage.clear() })
 
@@ -87,5 +89,23 @@ describe('Konto demo po zalogowaniu', () => {
     // z banera można otworzyć ponownie
     fireEvent.click(screen.getByRole('button', { name: 'Co warto zobaczyć' }))
     expect(screen.getByRole('dialog')).toBeTruthy()
+  })
+})
+
+describe('Ekran powitalny demo — ekran Automatyzacje (US-032)', () => {
+  const asRole = (role: string) => (
+    <UserContext.Provider value={{ user: { role } as User, reload: () => {} }}>
+      <MemoryRouter><DemoMode /></MemoryRouter>
+    </UserContext.Provider>
+  )
+
+  it('konto demo logistyki widzi punkt „Automatyzacje”, konto spedytora nie', async () => {
+    stubFetch({})
+    const { unmount } = render(asRole('logistics'))
+    expect(await screen.findByText(/23 automaty z wyzwalaczem/)).toBeTruthy()
+    unmount()
+    render(asRole('forwarder'))
+    await screen.findByText('Pulpit')
+    expect(screen.queryByText(/23 automaty z wyzwalaczem/)).toBeNull()
   })
 })
