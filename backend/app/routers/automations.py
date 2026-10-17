@@ -4,13 +4,13 @@ założenia minut do licznika oszczędności (US-034) zmienia admin.
 Dostęp jak pulpit logistyki (admin, logistyka; konto demo to logistyka). Liczniki pętli tła są
 systemowe (bez danych spółek); obiegi z poczty liczone w zakresie użytkownika — patrz
 `automation_catalog._event_rows`."""
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 import httpx
 
-from .. import automation_catalog, automation_events, automation_savings
+from .. import ai_quality, automation_catalog, automation_events, automation_savings
 from ..config import settings
 from ..audit import record
 from ..database import get_db
@@ -28,6 +28,14 @@ class MinutesIn(BaseModel):
 @router.get("/automations")
 def list_automations(db: Session = Depends(get_db), user: User = editors) -> dict:
     return automation_catalog.catalog(db, user)
+
+
+@router.get("/automations/ai-quality")
+def ai_reading_quality(weeks: int = Query(8, ge=2, le=26), db: Session = Depends(get_db),
+                       user: User = editors) -> dict:
+    """US-037: odczyt faktur — reguły / ML / człowiek tydzień po tygodniu i trafność podpowiedzi
+    modelu wg pewności; tylko paczki kontenerów w zakresie użytkownika."""
+    return ai_quality.quality(db, user, weeks=weeks)
 
 
 @router.put("/automations/minutes")

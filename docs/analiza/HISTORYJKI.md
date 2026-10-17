@@ -374,7 +374,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Panel Integracje pokazuje kanał n8n, podpis (włączony/brak) i ostatnią wysyłkę. Format w `docs/ZDARZENIA-N8N.md`.
 - **[SEC]:** adres webhooka (bywa sekretem) nie wraca do przeglądarki; treść zdarzeń bez danych osobowych kierowców
   (GDPR-001, bez zmian); zdarzenie testowe tylko admin.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #39.
 
 ### US-036 · [BA][DEV][SEC] Kreator reguł bez kodu (pomysł 8)
 - **Rozmiar:** L · **Założenie:** Z-026
@@ -393,11 +393,22 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** warunki to stała lista w kodzie — bez wolnego tekstu wykonywanego jako zapytanie; parametry walidowane
   (pydantic); podgląd przez `scope_containers`; bezpiecznik 200 kontenerów na regułę na przebieg; reguły w
   ustawieniach aplikacji (bez nowej tabeli i migracji); uszkodzony wpis pomijany, pozostałe działają.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #39.
 
-### US-037 · [DEV] Pewność odczytu AI i trafność w czasie (pomysł 14)
-- **Rozmiar:** M · Każdy odczytany dokument z oceną pewności; niepewne trafiają do człowieka; wykres poprawek
-  operatora w czasie (miara uczenia modeli `RefModel` / `DocKindModel`).
+### US-037 · [DEV] Jakość odczytu faktur przez AI i trafność w czasie (pomysł 14)
+- **Rozmiar:** M
+- **Jako** kierownik logistyki **chcę** widzieć, jaką część pozycji faktur automat dopasowuje sam i jak trafne są
+  podpowiedzi modelu, **aby** ufać automatowi tam, gdzie się sprawdza, a resztę zostawić człowiekowi.
+- **Kryteria akceptacji** (testy `backend/tests/test_ai_quality.py`, `AiQualityPanel.dom.test.tsx`)
+  1. Tydzień po tygodniu (8 tygodni): ile pozycji dopasowały reguły, model ML, człowiek, a ile czeka na decyzję.
+  2. Odsetek pozycji dopasowanych automatycznie (reguły + ML) i trafność podpowiedzi modelu (ostateczny materiał =
+     podpowiedź; poprawka operatora po automacie = pudło).
+  3. Trafność w trzech przedziałach pewności: < 70% i 70%–próg (tylko podpowiedź dla człowieka), ≥ próg (automat
+     ustawia sam; próg `ML_AUTO_APPLY_THRESHOLD`) — czy „90% pewności” rzeczywiście trafia.
+  4. Tylko paczki faktur kontenerów w zakresie użytkownika; admin i logistyka; pozycje pominięte nie liczą się.
+- **[SEC]:** tylko odczyt zliczeń (bez treści faktur), zakres przez `scope_containers`; wpis w `tests/permissions.yaml`.
+- **Stan:** zrealizowane, czeka na merge. Kolory wykresu z palety pulpitu, kolejność serii sprawdzona walidatorem
+  palety (daltonizm, jasny i ciemny motyw).
 
 ### US-038 · [BA][DEV] Analiza przebiegu procesu z historii zmian (pomysł 16)
 - **Rozmiar:** M · Czas spędzony na każdym etapie (z `audit_log`), mediana i odchylenia, kontenery „utknięte”.

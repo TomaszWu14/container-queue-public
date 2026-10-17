@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Jakość odczytu faktur przez AI** (US-037): ekran Automatyzacje pokazuje, jaką część pozycji faktur dopasowały
+  reguły, model ML i człowiek (8 tygodni), trafność podpowiedzi modelu i trafność w przedziałach pewności — czy
+  automat ustawia sam tylko to, co rzeczywiście trafia.
 - **Kreator reguł bez kodu** (US-036): na ekranie Automatyzacje admin ustawia własne alerty „gdy warunek → powiadom”
   (4 warunki z liczbą dni i etapem), z podglądem, które kontenery spełniają regułę dziś. Automat sprawdza reguły
   co godzinę i powiadamia raz dziennie na kontener; każda zmiana reguł w dzienniku zmian.

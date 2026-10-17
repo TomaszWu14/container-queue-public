@@ -37,7 +37,8 @@ const catalog: AutomationCatalog = {
 const rows = () => screen.getAllByRole('row').slice(1)
 // katalog i lista reguł (panel US-036) to osobne zapytania
 const mockGet = (data: AutomationCatalog = catalog) => get.mockImplementation((url: string) => Promise.resolve(
-  url.startsWith('/api/automations/rules') ? { rules: [], conditions: [], statuses: [], max_rules: 20 } : data))
+  url.startsWith('/api/automations/rules') ? { rules: [], conditions: [], statuses: [], max_rules: 20 }
+    : url.startsWith('/api/automations/ai-quality') ? null : data))
 const catalogCalls = () => get.mock.calls.filter(c => c[0] === '/api/automations').length
 
 describe('ekran Automatyzacje', () => {
