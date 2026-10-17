@@ -54,7 +54,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-008 `csv_safe` | SR-006, B-002 | test parametryzowany `csv_safe` | — | do akceptacji PO |
 | US-009 awizacja bez fałszywego sukcesu | FR-020, NFR-007, P-01 | `AvizoFormPage.dom.test.tsx`, `AvizoDriverFormPage.dom.test.tsx`, `test_avizo_tokens.py` | #18 | wdrożone |
 | US-010 dokumentacja po audycie | — | — | #18 (`SECURITY.md`) | częściowo |
-| US-011 strażnik izolacji | FR-022…024, SR-005, R-01 | test statyczny tras | — | do akceptacji PO |
+| US-011 strażnik izolacji | FR-022…024, SR-005, R-01, ADR-0006 | `test_isolation_guard.py` (4) | — | zrealizowane, czeka na merge |
 | US-012 RODO 1.0 | SR-011, R-09 | — | — | czeka na Z-009 |
 | US-013 kopia off-site | NFR-002, SR-014, R-10 | `test_backup_offsite.py` (4 testy), `test_backup_scripts.py`; ćwiczenie odtworzenia po włączeniu | #28 | kod gotowy; włączenie w Coolify po stronie PO |
 | US-014 mierniki (+ panel, pomysł 6) | M-1…M-7 | — | — | czeka na Z-004 |

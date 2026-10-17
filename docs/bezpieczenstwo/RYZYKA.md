@@ -11,7 +11,7 @@ Status: otwarte · w realizacji · zaakceptowane (wyjątek E-xx) · zamknięte (
 
 | ID | Ryzyko | P | S | Waga | Status | Decyzja PO | Właściciel | Historyjka | Przegląd |
 |---|---|---|---|---|---|---|---|---|---|
-| R-01 | Izolacja spółek i partnerów wyłącznie w `deps.py`; baza nie wymusza spójności `company_id` — jedno pominięcie w nowej trasie = wyciek między firmami | niskie | krytyczny | W | otwarte | brak | SEC | US-011 | 2026-11-15 |
+| R-01 | Izolacja spółek i partnerów wyłącznie w `deps.py`; baza nie wymusza spójności `company_id` — jedno pominięcie w nowej trasie = wyciek między firmami | niskie | krytyczny | W | w realizacji (US-011: strażnik tras w CI, wyjątki z powodem; wymuszenie w bazie — ADR-0006) | brak | SEC | US-011 | 2026-11-15 |
 | R-02 | Ciche nadpisanie przy równoczesnej edycji (brak wersjonowania rekordów) — utrata zmian bez śladu | wysokie | wysoki | W | zamknięte dla ścieżek interaktywnych (PR #18, ADR-0003); import Excela wg FR-026 | brak | DEV | US-003 | 2026-11-15 |
 | R-03 | Załączniki kontenerów weryfikowane tylko po rozszerzeniu; pliki krążą między firmami; brak AV | niskie | wysoki | Ś | w realizacji: zawartość sprawdzana (US-004) dla PDF, obrazów, DOCX/XLSX, ZIP, tekstu; bez weryfikacji .doc/.xls/.msg/.eml (eksporty „.xls” bywają HTML-em); brak AV | brak | SEC | US-004 | 2026-11-15 |
 | R-04 | Produkcja bez `DATABASE_URL` startuje na SQLite (pusta baza bez kopii) | niskie | wysoki | Ś | w realizacji (PR #18, merge po Z-007) | brak (Z-007) | SEC | US-001 | 2026-11-15 |
