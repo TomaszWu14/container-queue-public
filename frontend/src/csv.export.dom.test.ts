@@ -11,6 +11,12 @@ describe('csvCell / toCsv (wspólny eksport CSV)', () => {
     expect(csvCell('-1+1')).toBe("'-1+1")
     expect(csvCell('@SUM(A1)')).toBe("'@SUM(A1)")
   })
+  it('US-008: tabulator, powrót karetki i formuła po wiodących spacjach (jak csv_safe na serwerze)', () => {
+    for (const evil of ['\t=1+1', ' =1+1', '  -2+3', '\n@x']) expect(csvCell(evil).replace(/^"|"$/g, '')).toBe("'" + evil)
+    expect(csvCell('\r=cmd')).toBe(`"'\r=cmd"`)
+    expect(csvCell(' abc')).toBe(' abc')
+    expect(csvCell('')).toBe('')
+  })
   it('liczby (także ujemne) zostają liczbami, null → pusto', () => {
     expect(csvCell(-5)).toBe('-5')
     expect(csvCell(null)).toBe('')
