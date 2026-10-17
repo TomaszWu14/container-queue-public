@@ -40,7 +40,8 @@ def _count_rows(url, tables) -> dict[str, int | None]:
             for table in tables:
                 try:
                     out[table] = conn.execute(
-                        text(f"SELECT COUNT(*) FROM {table}")).scalar()  # nosec B608 — stałe nazwy
+                        # {table} z KEY_TABLES (stała w kodzie) — nazwy tabeli nie da się związać parametrem
+                        text(f"SELECT COUNT(*) FROM {table}")).scalar()  # nosec B608 nosemgrep: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
                 except Exception:  # noqa: BLE001 — brak tabeli w dumpie = None
                     logger.warning("verify_backup: COUNT(%s) niedostępny", table, exc_info=True)
                     out[table] = None
@@ -85,8 +86,9 @@ def verify_backup() -> dict:
         admin_url = url.set(database="postgres", drivername="postgresql")
         admin_eng = create_engine(admin_url, isolation_level="AUTOCOMMIT")
         with admin_eng.connect() as conn:
-            conn.execute(text(f'DROP DATABASE IF EXISTS "{temp_db}"'))
-            conn.execute(text(f'CREATE DATABASE "{temp_db}"'))
+            # temp_db = stała „timporye_verify” — nazwy bazy nie da się związać parametrem
+            conn.execute(text(f'DROP DATABASE IF EXISTS "{temp_db}"'))  # nosemgrep: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
+            conn.execute(text(f'CREATE DATABASE "{temp_db}"'))  # nosemgrep: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
         admin_eng.dispose()
         temp_url = url.set(database=temp_db, drivername="postgresql")
         try:
@@ -103,7 +105,7 @@ def verify_backup() -> dict:
         finally:
             admin_eng = create_engine(admin_url, isolation_level="AUTOCOMMIT")
             with admin_eng.connect() as conn:
-                conn.execute(text(f'DROP DATABASE IF EXISTS "{temp_db}"'))
+                conn.execute(text(f'DROP DATABASE IF EXISTS "{temp_db}"'))  # nosemgrep: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
             admin_eng.dispose()
         mismatched = [t for t in KEY_TABLES
                       if restored.get(t) is None

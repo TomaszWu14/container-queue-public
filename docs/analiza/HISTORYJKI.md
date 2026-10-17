@@ -123,9 +123,10 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - **Uwaga:** CI nie biegnie na draftach — walidacja wymaga oznaczenia PR jako gotowy.
 - **Stan (2026-10-17):** częściowo — PR po #32. Trivy: bramka na PR (fs, HIGH/CRITICAL z poprawką) i w cotygodniowym
   skanie obrazu; `.trivyignore` z formatem wyjątków; obraz panelu z jawnym `USER 101` (jedyne znalezisko Trivy).
-  pre-commit: Bandit 1.9.4, gitleaks 8.30.1, ruff 0.17.0 jak CI (test `test_runtime_versions.py`). **Semgrep** na razie
-  raport (SARIF) — reguł p/owasp-top-ten nie da się pobrać w środowisku pracy, więc bramka po przejrzeniu pierwszego
-  raportu z CI.
+  pre-commit: Bandit 1.9.4, gitleaks 8.30.1, ruff 0.17.0 jak CI (test `test_runtime_versions.py`).
+- **Domknięcie (PR #34):** Semgrep p/owasp-top-ten jest bramką. Pierwszy raport: 6 znalezisk, wszystkie fałszywe
+  (zapytania DDL/COUNT sklejane ze stałych nazw w `backup_verify.py` i `db_bootstrap.py` — nazw tabel i baz nie da się
+  związać parametrem); oznaczone `# nosemgrep: <id>` z powodem.
 
 ### US-008 · [SEC] `csv_safe` neutralizuje tabulator i powrót karetki
 - **Rozmiar:** XS · **Źródło:** B-002 · **Wymagania:** SR-006

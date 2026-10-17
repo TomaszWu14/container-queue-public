@@ -101,6 +101,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Semgrep blokuje PR** (US-007): reguły OWASP Top 10 jako bramka; pierwszy przegląd — 6 fałszywych alarmów
+  (zapytania ze stałych nazw tabel) oznaczonych z uzasadnieniem.
 - **Trivy blokuje PR** (US-007, R-08): podatność HIGH/CRITICAL z dostępną poprawką w zależnościach albo błąd
   konfiguracji zatrzymuje PR; cotygodniowy skan obrazu też jest bramką. Wyjątki tylko w `.trivyignore` z powodem i
   datą przeglądu. Obraz panelu jawnie działa jako użytkownik bez uprawnień (`USER 101`). Semgrep (OWASP Top 10)
