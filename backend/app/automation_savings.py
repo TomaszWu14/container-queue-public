@@ -28,6 +28,7 @@ DEFAULT_MINUTES: dict[str, int] = {
     "tracking": 3,             # sprawdzenie statku na stronie armatora / w AIS
     "stale_import": 2,
     "pallet_urgent": 5,
+    "custom_rules": 5,         # reguła z kreatora: ręczne sprawdzenie warunku w Excelu + mail
     "invoice_ingest": 15,      # przepisanie paczki faktur do zestawienia
     "complaint_drafts": 20,    # przygotowanie szkicu reklamacji
     "complaint_reminders": 3,

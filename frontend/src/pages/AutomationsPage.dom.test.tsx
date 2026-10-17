@@ -35,10 +35,14 @@ const catalog: AutomationCatalog = {
 }
 
 const rows = () => screen.getAllByRole('row').slice(1)
+// katalog i lista reguł (panel US-036) to osobne zapytania
+const mockGet = (data: AutomationCatalog = catalog) => get.mockImplementation((url: string) => Promise.resolve(
+  url.startsWith('/api/automations/rules') ? { rules: [], conditions: [], statuses: [], max_rules: 20 } : data))
+const catalogCalls = () => get.mock.calls.filter(c => c[0] === '/api/automations').length
 
 describe('ekran Automatyzacje', () => {
   it('katalog: nazwa, wyzwalacz, akcja, stan i podsumowanie', async () => {
-    get.mockResolvedValue(catalog)
+    mockGet()
     render(<AutomationsPage />)
     expect(await screen.findByText('Ostrzeżenie o karze za przestój')).toBeTruthy()
     expect(get).toHaveBeenCalledWith('/api/automations')
@@ -56,7 +60,7 @@ describe('ekran Automatyzacje', () => {
   })
 
   it('filtr kategorii i „tylko wymagające uwagi”', async () => {
-    get.mockResolvedValue(catalog)
+    mockGet()
     render(<AutomationsPage />)
     await screen.findByText('Ostrzeżenie o karze za przestój')
     fireEvent.click(screen.getByLabelText('Tylko wymagające uwagi'))
@@ -75,7 +79,7 @@ describe('ekran Automatyzacje', () => {
   })
 
   it('US-034: zaoszczędzony czas z jawnym założeniem i oszczędność w wierszu', async () => {
-    get.mockResolvedValue(catalog)
+    mockGet()
     render(<AutomationsPage />)
     await screen.findByText('Ostrzeżenie o karze za przestój')
     expect(screen.getByText('Zaoszczędzony czas · 7 dni').previousElementSibling?.textContent).toBe('1.6 h')
@@ -86,7 +90,7 @@ describe('ekran Automatyzacje', () => {
   })
 
   it('US-034: admin zmienia minuty — zapis i odświeżenie katalogu', async () => {
-    get.mockResolvedValue(catalog)
+    mockGet()
     put.mockResolvedValue({})
     render(
       <UserContext.Provider value={{ user: { role: 'admin' } as User, reload: () => {} }}>
@@ -96,14 +100,14 @@ describe('ekran Automatyzacje', () => {
     const dialog = screen.getByRole('dialog')
     fireEvent.change(within(dialog).getByLabelText('Ostrzeżenie o karze za przestój'), { target: { value: '12' } })
     fireEvent.click(within(dialog).getByRole('button', { name: 'Zapisz założenia' }))
-    await vi.waitFor(() => expect(get).toHaveBeenCalledTimes(2))
+    await vi.waitFor(() => expect(catalogCalls()).toBe(2))
     const sent = put.mock.calls[0][1].minutes
     expect([put.mock.calls[0][0], sent.demurrage, sent.mail_intake]).toEqual(['/api/automations/minutes', 12, 5])
     expect(screen.queryByRole('dialog')).toBeNull()
   })
 
   it('US-035: admin wysyła zdarzenie testowe — wynik, ostrzeżenie o braku podpisu, błąd odbiorcy', async () => {
-    get.mockResolvedValue(catalog)
+    mockGet()
     post.mockResolvedValueOnce({ ok: true, status_code: 200, error: '', signed: false })
       .mockResolvedValueOnce({ ok: false, status_code: 404, error: 'HTTPStatusError' })
     render(
@@ -113,7 +117,7 @@ describe('ekran Automatyzacje', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Wyślij zdarzenie testowe' }))
     expect((await screen.findByRole('status')).textContent).toMatch(/dotarło \(HTTP 200\).*bez podpisu HMAC/)
     expect(post).toHaveBeenCalledWith('/api/automations/test-event', {})
-    await vi.waitFor(() => expect(get).toHaveBeenCalledTimes(2))   // licznik zdarzeń odświeżony
+    await vi.waitFor(() => expect(catalogCalls()).toBe(2))   // licznik zdarzeń odświeżony
     fireEvent.click(screen.getByRole('button', { name: 'Wyślij zdarzenie testowe' }))
     await vi.waitFor(() => expect(screen.getByRole('status').textContent).toMatch(/nie przyjął zdarzenia: HTTP 404/))
   })

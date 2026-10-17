@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Kreator reguł bez kodu** (US-036): na ekranie Automatyzacje admin ustawia własne alerty „gdy warunek → powiadom”
+  (4 warunki z liczbą dni i etapem), z podglądem, które kontenery spełniają regułę dziś. Automat sprawdza reguły
+  co godzinę i powiadamia raz dziennie na kontener; każda zmiana reguł w dzienniku zmian.
 - **Zdarzenia do n8n widoczne i testowalne** (US-035): ekran Automatyzacje liczy wysłane zdarzenia i błędy,
   admin wysyła zdarzenie testowe jednym przyciskiem, panel Integracje pokazuje kanał n8n i podpis HMAC.
   Zdarzenie ma `id` (deduplikacja), `version` i `source`; nieudana wysyłka zapala dzwonek admina.

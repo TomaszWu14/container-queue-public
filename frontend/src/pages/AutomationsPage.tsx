@@ -8,6 +8,7 @@ import { LangContext, useT } from '../i18n'
 import { PageHeader } from '../PageHeader'
 import { useUser } from '../userContext'
 import AutomationMinutesModal from './AutomationMinutesModal'
+import AutomationRulesPanel from './AutomationRulesPanel'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -169,6 +170,7 @@ export default function AutomationsPage() {
           )}
         </>
       )}
+      {data && <AutomationRulesPanel canEdit={isAdmin} />}
       {editMinutes && data && (
         <AutomationMinutesModal items={data.items} onClose={() => setEditMinutes(false)}
                                 onSaved={() => { setEditMinutes(false); load() }} />

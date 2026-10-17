@@ -48,6 +48,7 @@ SCHEDULED: tuple[Scheduled, ...] = (
     Scheduled("tracking", "alerts", "customs_delay", ("check_tracking_alerts",)),
     Scheduled("stale_import", "alerts", "customs_delay", ("check_stale_import_alerts",)),
     Scheduled("pallet_urgent", "alerts", "pallet_urgent", ("check_pallet_urgent_alerts",)),
+    Scheduled("custom_rules", "alerts", "automation_rules", ("run_rules",)),
     Scheduled("invoice_ingest", "documents", "invoice_ingest", ("process_pending",)),
     Scheduled("complaint_drafts", "documents", "complaints", ("check_complaint_auto_drafts",)),
     Scheduled("complaint_reminders", "communication", "complaints", ("check_complaint_reminders",)),

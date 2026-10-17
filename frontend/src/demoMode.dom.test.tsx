@@ -102,10 +102,10 @@ describe('Ekran powitalny demo — ekran Automatyzacje (US-032)', () => {
   it('konto demo logistyki widzi punkt „Automatyzacje”, konto spedytora nie', async () => {
     stubFetch({})
     const { unmount } = render(asRole('logistics'))
-    expect(await screen.findByText(/23 automaty z wyzwalaczem/)).toBeTruthy()
+    expect(await screen.findByText(/każdy automat z wyzwalaczem/)).toBeTruthy()
     unmount()
     render(asRole('forwarder'))
     await screen.findByText('Pulpit')
-    expect(screen.queryByText(/23 automaty z wyzwalaczem/)).toBeNull()
+    expect(screen.queryByText(/każdy automat z wyzwalaczem/)).toBeNull()
   })
 })
