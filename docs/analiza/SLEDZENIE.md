@@ -50,7 +50,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-004 załączniki po zawartości | SR-007, R-03 | `test_file_signatures.py` (31 przypadków) | #28 | wdrożone |
 | US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_public_routes_guard.py` (4), `test_dlt_confirm.py` | — | zrealizowane, czeka na merge |
 | US-006 bezpieczny XML, ZIP | SR-006, R-07 | `test_imports_malicious.py` (5), `test_sad_xml.py`, `test_archive_upload.py` | — | zrealizowane, czeka na merge |
-| US-007 bramki CI | SR-013, R-08 | przebieg `security.yml` | #18 (`dependabot.yml`) | częściowo |
+| US-007 bramki CI | SR-013, R-08 | przebieg `security.yml`, `test_runtime_versions.py::test_pre_commit_tools_match_ci` | #18 (`dependabot.yml`), PR po #32 | częściowo — Semgrep jako raport |
 | US-008 `csv_safe` | SR-006, B-002 | test parametryzowany `csv_safe` | — | do akceptacji PO |
 | US-009 awizacja bez fałszywego sukcesu | FR-020, NFR-007, P-01 | `AvizoFormPage.dom.test.tsx`, `AvizoDriverFormPage.dom.test.tsx`, `test_avizo_tokens.py` | #18 | wdrożone |
 | US-010 dokumentacja po audycie | — | — | #18 (`SECURITY.md`) | częściowo |

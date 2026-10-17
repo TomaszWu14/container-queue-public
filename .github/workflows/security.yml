@@ -3,8 +3,11 @@ name: Security
 # Skany bezpieczeństwa (audyt CICD-003):
 #  - PR (każdy, bez filtra paths): gitleaks TYLKO na commitach PR-a + Bandit na backend/app.
 #    Job „Skany — sekrety i Bandit” jest w REQUIRED w automerge.yml → czerwony = brak merge'a.
-#  - co tydzień / ręcznie: gitleaks na CAŁEJ historii, Bandit, Trivy (informacyjnie: repo + obraz)
-#    i SBOM obrazu (CycloneDX) jako artefakt biegu (DEP-006).
+#  - PR (nie-draft): „Trivy — PR” (fs: zależności, sekrety, konfiguracja) — HIGH/CRITICAL z dostępną
+#    poprawką = czerwony (US-007); Semgrep p/owasp-top-ten jako raport (bramka po przejrzeniu wyników).
+#  - co tydzień / ręcznie: gitleaks na CAŁEJ historii, Bandit, Trivy repo + obrazu (bramka: HIGH/CRITICAL
+#    z poprawką) i SBOM obrazu (CycloneDX) jako artefakt biegu (DEP-006).
+#  Wyjątki Trivy: .trivyignore (ID + uzasadnienie + data przeglądu).
 #  Podatności zależności (pip-audit, npm audit) + build obrazu: ci-infra.yml.
 # Fałszywe sekrety w fiksturach testowych: .gitleaksignore (fingerprinty z historii); nowy
 # fałszywy sekret w teście oznacz komentarzem `gitleaks:allow` w tej samej linii.
@@ -65,6 +68,55 @@ jobs:
       - name: Bandit
         run: bandit -q -r backend/app -c backend/pyproject.toml
 
+  trivy-pr:
+    # US-007: szybki skan repo na PR (bez budowy obrazu) — bramka; obraz skanuje job „trivy” co tydzień
+    name: ${{ github.event.pull_request.draft && 'Trivy — PR (draft — pominięty)' || 'Trivy — PR' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+    env:
+      TRIVY_VERSION: 0.74.0
+      TRIVY_SHA256: 2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Instalacja Trivy (przypięta wersja + sha256, bez sudo)
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl -sSfL -o trivy.tgz \
+            "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          echo "${TRIVY_SHA256}  trivy.tgz" | sha256sum -c -
+          tar -xzf trivy.tgz trivy
+      - name: Skan Trivy (fs, HIGH/CRITICAL z dostępną poprawką — bramka)
+        run: >-
+          "$RUNNER_TEMP/trivy" fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL
+          --ignore-unfixed --ignorefile .trivyignore --exit-code 1 --no-progress .
+
+  semgrep:
+    # US-007: reguły OWASP Top 10 — na razie raport (SARIF jako artefakt); bramka (--error) po przejrzeniu
+    # pierwszych wyników i oznaczeniu fałszywych alarmów `# nosemgrep: <id>` z powodem
+    name: ${{ github.event.pull_request.draft && 'Semgrep — raport OWASP (draft — pominięty)' || 'Semgrep — raport OWASP' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.14'
+      - run: pip install "semgrep==1.181.0"
+      - name: Semgrep p/owasp-top-ten (raport, nie bramka)
+        run: >-
+          semgrep scan --config p/owasp-top-ten --metrics off --sarif --output semgrep.sarif
+          backend/app frontend/src
+      - name: Artefakt Semgrep
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: semgrep-${{ github.sha }}
+          path: semgrep.sarif
+          if-no-files-found: warn
+          retention-days: 30
+
   trivy:
     name: Trivy (podatności plików i zależności)
     runs-on: ubuntu-latest
@@ -82,10 +134,10 @@ jobs:
             "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
           echo "${TRIVY_SHA256}  trivy.tgz" | sha256sum -c -
           tar -xzf trivy.tgz trivy
-      - name: Skan Trivy (fs, HIGH/CRITICAL — raport, nie bramka)
+      - name: Skan Trivy (fs, HIGH/CRITICAL z dostępną poprawką — bramka, US-007)
         run: >-
           "$RUNNER_TEMP/trivy" fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL
-          --exit-code 0 --no-progress .
+          --ignore-unfixed --ignorefile .trivyignore --exit-code 1 --no-progress .
       # DEP-006: SBOM i skan OBRAZU (pakiety Debiana: openssl, libpq, tesseract… + Python w obrazie),
       # którego `trivy fs` nie widzi. Tylko tu (cron/ręcznie, self-hosted) — PR-ów nie spowalnia,
       # a job nie jest w REQUIRED, więc np. problem z artefaktem nie blokuje merge'y.
@@ -102,10 +154,10 @@ jobs:
           path: sbom-obraz.cdx.json
           if-no-files-found: error
           retention-days: 90
-      - name: Skan Trivy obrazu (HIGH/CRITICAL z dostępną poprawką — raport, nie bramka)
+      - name: Skan Trivy obrazu (HIGH/CRITICAL z dostępną poprawką — bramka, US-007)
         run: >-
           "$RUNNER_TEMP/trivy" image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed
-          --exit-code 0 --no-progress "timporye-sbom:${GITHUB_RUN_ID}"
+          --ignorefile .trivyignore --exit-code 1 --no-progress "timporye-sbom:${GITHUB_RUN_ID}"
       - name: Sprzątanie obrazu
         if: always()
         run: docker image rm -f "timporye-sbom:${GITHUB_RUN_ID}" || echo "brak obrazu do usunięcia"

@@ -1,0 +1,4 @@
+# Wyjątki Trivy (US-007). Każdy wpis: ID, uzasadnienie i data przeglądu — bez tego PR nie przejdzie przeglądu SEC.
+# Format:
+#   <ID>    # powód; przegląd: RRRR-MM-DD
+# Brak wyjątków (2026-10-17).
