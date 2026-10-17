@@ -4,7 +4,8 @@ name: Security
 #  - PR (każdy, bez filtra paths): gitleaks TYLKO na commitach PR-a + Bandit na backend/app.
 #    Job „Skany — sekrety i Bandit” jest w REQUIRED w automerge.yml → czerwony = brak merge'a.
 #  - PR (nie-draft): „Trivy — PR” (fs: zależności, sekrety, konfiguracja) — HIGH/CRITICAL z dostępną
-#    poprawką = czerwony (US-007); Semgrep p/owasp-top-ten jako raport (bramka po przejrzeniu wyników).
+#    poprawką = czerwony (US-007); Semgrep p/owasp-top-ten — znalezisko = czerwony; fałszywy alarm
+#    oznacz `# nosemgrep: <id>` z powodem w komentarzu obok.
 #  - co tydzień / ręcznie: gitleaks na CAŁEJ historii, Bandit, Trivy repo + obrazu (bramka: HIGH/CRITICAL
 #    z poprawką) i SBOM obrazu (CycloneDX) jako artefakt biegu (DEP-006).
 #  Wyjątki Trivy: .trivyignore (ID + uzasadnienie + data przeglądu).
@@ -92,9 +93,9 @@ jobs:
           --ignore-unfixed --ignorefile .trivyignore --exit-code 1 --no-progress .
 
   semgrep:
-    # US-007: reguły OWASP Top 10 — na razie raport (SARIF jako artefakt); bramka (--error) po przejrzeniu
-    # pierwszych wyników i oznaczeniu fałszywych alarmów `# nosemgrep: <id>` z powodem
-    name: ${{ github.event.pull_request.draft && 'Semgrep — raport OWASP (draft — pominięty)' || 'Semgrep — raport OWASP' }}
+    # US-007: reguły OWASP Top 10 — bramka; znaleziska w logu i jako SARIF (artefakt). Pierwszy przegląd
+    # (2026-10-17): 6 fałszywych alarmów (DDL/COUNT ze stałych nazw) oznaczonych `# nosemgrep: <id>`
+    name: ${{ github.event.pull_request.draft && 'Semgrep — OWASP (draft — pominięty)' || 'Semgrep — OWASP' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: ${{ !github.event.pull_request.draft }}
@@ -104,9 +105,9 @@ jobs:
         with:
           python-version: '3.14'
       - run: pip install "semgrep==1.181.0"
-      - name: Semgrep p/owasp-top-ten (raport, nie bramka)
+      - name: Semgrep p/owasp-top-ten (bramka)
         run: >-
-          semgrep scan --config p/owasp-top-ten --metrics off --text --sarif-output semgrep.sarif
+          semgrep scan --config p/owasp-top-ten --metrics off --error --text --sarif-output semgrep.sarif
           backend/app frontend/src
       - name: Artefakt Semgrep
         if: always()

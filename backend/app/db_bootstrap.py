@@ -323,17 +323,19 @@ def ensure_new_columns() -> None:
             'created_at': "TIMESTAMP",
         },
     }
+    # DDL z nazw i typów zapisanych wyżej w kodzie (dev-shim, nie produkcja) — identyfikatorów nie da się
+    # związać parametrem, a żadna wartość nie pochodzi od użytkownika
     with engine.begin() as connection:
         for name, spec in ddl.items():
             if name not in existing:
-                connection.execute(text(f"ALTER TABLE containers ADD COLUMN {name} {spec}"))
+                connection.execute(text(f"ALTER TABLE containers ADD COLUMN {name} {spec}"))  # nosemgrep: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
         for table, columns in extra_tables.items():
             if table not in inspector.get_table_names():
                 continue
             present = {column['name'] for column in inspector.get_columns(table)}
             for name, spec in columns.items():
                 if name not in present:
-                    connection.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {spec}"))
+                    connection.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {spec}"))  # nosemgrep: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
         connection.execute(text(
             "CREATE UNIQUE INDEX IF NOT EXISTS ix_containers_transport_id "
             "ON containers (transport_id)"))
