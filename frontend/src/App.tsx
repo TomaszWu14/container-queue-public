@@ -65,6 +65,7 @@ const WarehouseQueuePage = lazy(() => import('./pages/WarehouseQueuePage'))
 const TrackingPage = lazy(() => import('./pages/TrackingPage'))
 const WiedzaPage = lazy(() => import('./pages/WiedzaPage'))
 const HowBuiltPage = lazy(() => import('./pages/HowBuiltPage'))
+const AutomationsPage = lazy(() => import('./pages/AutomationsPage'))
 const KoszykPage = lazy(() => import('./pages/KoszykPage'))
 const SadImportPage = lazy(() => import('./pages/SadImportPage'))
 const pageFallback = <main className="page"><Skeleton rows={6} /></main>
@@ -245,6 +246,9 @@ export default function App() {
               <Route path="/analityka" element={
                 <Guarded ok={user.role === 'admin' || user.role === 'logistics'}>
                   <AnalitykaPage /></Guarded>} />
+              <Route path="/automatyzacje" element={
+                <Guarded ok={user.role === 'admin' || user.role === 'logistics'}>
+                  <AutomationsPage /></Guarded>} />
               <Route path="/dziennik-zmian" element={
                 <Guarded ok={(user.role === 'admin' || user.role === 'logistics') && !hiddenInDemo(user, '/dziennik-zmian')}>
                   <ChangesFeedPage /></Guarded>} />

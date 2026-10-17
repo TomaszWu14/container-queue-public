@@ -8,6 +8,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Ekran „Automatyzacje”** (US-032, US-033): katalog wszystkiego, co aplikacja robi sama — 20 automatów
+  z harmonogramu i 3 obiegi z n8n, każdy z wyzwalaczem, akcją, stanem (działa / spóźniony / błąd / wyłączony)
+  i licznikami przebiegów, błędów i efektów z 7 dni. Menu → Automatyzacje (admin, logistyka, demo).
+  Backlog „wizytówki automatyzacji” (US-032…US-051) w `HISTORYJKI.md`.
 - **Testy ekranów wysyłki do firm zewnętrznych i włączania 2FA** (US-031, TEST-007): wysyłka do awizacji,
   kolejka dnia do spedycji (tylko po potwierdzeniu), propozycja terminu od spedytora i wymuszone 2FA administratora.
   Lista stron bez testu: 16 → 12.

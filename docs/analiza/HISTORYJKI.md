@@ -314,11 +314,100 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   4. Wymuszone 2FA: kod przycięty wysłany z sekretem, kody zapasowe przed przejściem do panelu, błędny kod
      nie przepuszcza, wylogowanie dostępne (`Enroll2FAPage.dom.test.tsx`).
 - **[SEC]:** tylko testy, bez zmian w kodzie aplikacji i bez nowych tras.
-- **Stan:** zrealizowane, czeka na merge. Lista stron bez testu: 16 → 12.
+- **Stan:** wdrożone w PR #36. Lista stron bez testu: 16 → 12.
 
 ### US-019 · [SEC] 2FA obowiązkowe dla administratorów na produkcji
 - **Rozmiar:** XS (konfiguracja) · **Źródło:** E-01 · **Zależy od:** decyzji PO (Z-008).
 - `REQUIRE_2FA_ADMIN=true` w Coolify po tym, jak każdy admin włączy 2FA; procedura w RUNBOOK.
+
+## Wizytówka automatyzacji procesów (prośba PO 2026-10-17)
+
+PO: projekt ma być flagowym portfolio na stanowiska automatyzacji procesów, analizy biznesowej i pracy
+z *citizen developerami*. 20 punktów z listy PO („wdróż wszystko”), po jednym temacie na PR. Wiele automatów
+już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa od zera. Założenia: Z-023…Z-025.
+
+### US-032 · [BA][DEV] Ekran „Automatyzacje” — katalog automatów (pomysł 1)
+- **Rozmiar:** M · **Wymagania:** FR-015, NFR (obserwowalność, OBS-009) · **Założenie:** Z-023
+- **Jako** kierownik logistyki (i rekruter w demo) **chcę** jednej listy wszystkiego, co aplikacja robi sama,
+  **aby** widzieć wyzwalacz, akcję i efekt każdego automatu bez czytania kodu.
+- **Kryteria akceptacji** (testy `backend/tests/test_automations.py`, `AutomationsPage.dom.test.tsx`)
+  1. Każda funkcja pętli tła z `jobs.build_jobs` ma wpis w katalogu (nowy automat bez wpisu = czerwony test);
+     do tego obiegi z n8n: poczta → poczekalnia, draft SAD z poczty, zdarzenia wysyłane do n8n.
+  2. Każdy wpis: nazwa, wyzwalacz, akcja (PL/EN/PT), kategoria, częstotliwość, ostatni przebieg, liczba przebiegów,
+     błędów i efektów (utworzonych powiadomień) z 7 dni.
+  3. Obiegi z poczty liczone tylko dla spółek użytkownika; treść błędów nie wychodzi poza dziennik admina.
+  4. Ekran widzą admin i logistyka (konto demo to logistyka); partnerzy dostają 403.
+- **[SEC]:** tylko odczyt; liczniki pętli tła są systemowe (bez danych spółek), obiegi z poczty w zakresie
+  `scope_company` / `scope_containers`. Wpis w `tests/permissions.yaml`.
+- **Stan:** zrealizowane, czeka na merge.
+
+### US-033 · [OPS][DEV] Pilnowanie automatów (pomysł 17)
+- **Rozmiar:** S · **Wymagania:** OBS-009 · razem z US-032
+- Stan automatu: **błąd** (ostatni przebieg nieudany), **spóźniony** (brak udanego przebiegu dłużej niż interwał
+  + 1 h), **wyłączony** (pętla nie powstaje w tej konfiguracji), **brak przebiegów**; licznik „wymaga uwagi”.
+- **Stan:** zrealizowane, czeka na merge (te same testy co US-032).
+
+### US-034 · [BA][DEV] Licznik oszczędności per automat (pomysł 3)
+- **Rozmiar:** M · **Rozszerza:** panel „Ile to oszczędza” (Z-020) · **Założenie:** Z-024
+- Minuty pracy ręcznej na jeden efekt każdego automatu (np. mail z przeglądem dnia, odczytana faktura, SMS do
+  kierowcy) ustawiane w panelu admina; ekran „Automatyzacje” pokazuje godziny zaoszczędzone w okresie.
+
+### US-035 · [DEV][SEC] Zdarzenia do n8n / Power Automate / Make widoczne i testowalne (pomysł 9)
+- **Rozmiar:** S · Webhook z podpisem HMAC już istnieje (`notifications.notify_n8n`). Do zrobienia: licznik
+  wysłanych zdarzeń i błędów, przycisk „Wyślij zdarzenie testowe”, opis formatu zdarzenia w dokumentacji.
+
+### US-036 · [BA][DEV][SEC] Kreator reguł bez kodu (pomysł 8)
+- **Rozmiar:** L · Reguły „gdy warunek przez N dni → powiadom rolę/kanał” ustawiane w panelu admina, z podglądem,
+  ile kontenerów spełnia regułę dziś; dziś progi i wagi są w kodzie (`signals.SIGNAL_WEIGHTS`).
+
+### US-037 · [DEV] Pewność odczytu AI i trafność w czasie (pomysł 14)
+- **Rozmiar:** M · Każdy odczytany dokument z oceną pewności; niepewne trafiają do człowieka; wykres poprawek
+  operatora w czasie (miara uczenia modeli `RefModel` / `DocKindModel`).
+
+### US-038 · [BA][DEV] Analiza przebiegu procesu z historii zmian (pomysł 16)
+- **Rozmiar:** M · Czas spędzony na każdym etapie (z `audit_log`), mediana i odchylenia, kontenery „utknięte”.
+
+### US-039 · [DEV] Asystent widoczny w demo (pomysł 15)
+- **Rozmiar:** S · W demo bez serwera AI — odpowiedzi przygotowane na kilka przykładowych pytań, wprost oznaczone.
+
+### US-040 · [BA][DEV] „Symuluj dzień” w demo (pomysł 6)
+- **Rozmiar:** M · Jeden przycisk puszcza na fikcyjnych danych napływ maila, odczyt dokumentu i alert; wynik
+  widać na ekranie „Automatyzacje”. Tylko instancja demo.
+
+### US-041 · [DEV][SEC] Akceptacja z poziomu Teams (pomysł 18)
+- **Rozmiar:** M · Karta w Teams z przyciskiem prowadzącym do akcji w aplikacji (zatwierdzenie po zalogowaniu —
+  bez akcji wykonywanych anonimowo z czatu).
+
+### US-042 · [DEV] Konektor Power Automate (pomysł 10)
+- **Rozmiar:** S · Plik konektora (OpenAPI 2.0) dla odczytu kolejki i zdarzeń + przykładowy przepływ.
+
+### US-043 · [BA] Szablon Excela z Power Query (pomysł 11)
+- **Rozmiar:** S · Excel pobierający kolejkę z API tokenem tylko do odczytu; instrukcja krok po kroku.
+
+### US-044 · [BA] Raport Power BI na danych aplikacji (pomysł 12)
+- **Rozmiar:** M · Model danych i zapytania Power Query (M) + instrukcja zbudowania raportu.
+
+### US-045 · [BA] Poradnik „Własna automatyzacja w 15 minut” (pomysł 13)
+- **Rozmiar:** S · n8n + token serwisowy, krok po kroku, z gotowym workflow do zaimportowania.
+
+### US-046 · [BA] Mapa procesu „przed i po” (pomysł 2)
+- **Rozmiar:** S · Rysunek z `docs/bpmn/timporye-proces.bpmn`, kroki przejęte przez automaty zaznaczone.
+
+### US-047 · [BA] Studium przypadku na jedną stronę (pomysł 4)
+- **Rozmiar:** XS · Problem → miara → rozwiązanie → wynik; do CV i LinkedIn.
+
+### US-048 · [BA] README po angielsku (pomysł 7)
+- **Rozmiar:** S · `README.en.md` z sekcją „Automations in numbers”.
+
+### US-049 · [BA] „Jak wybieram, co automatyzować” (pomysł 19)
+- **Rozmiar:** S · Macierz liczba spraw × czas × ryzyko błędu na pomysłach z `docs/pomysly-automatyzacje.md`.
+
+### US-050 · [BA] Mierniki przed i po wdrożeniu (pomysł 20)
+- **Rozmiar:** S · **Założenie:** Z-025 · Czas zaplanowania dostawy, liczba maili, liczba błędów — wartości
+  „przed” od PO albo jawne założenia.
+
+### US-051 · [DEV] Nagranie obiegu z poczty (pomysł 5)
+- **Rozmiar:** S · Wideo z testu przeglądarkowego: mail → n8n → poczekalnia → „Potwierdź”.
 
 ## Could
 
