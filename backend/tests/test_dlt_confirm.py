@@ -48,36 +48,36 @@ def test_full_flow_prepared_shipped(client, admin_headers, db_session, monkeypat
     assert line["produkt"] == "DEMO-SKU-X" and line["hu_numbers"] == "HU001,HU002"
 
     # Przygotowane: status + audyt + dzwonek (raz)
-    assert client.post(f"/api/dlt/{token}/prepared").status_code == 200
+    assert client.post(f"/api/dlt/{token}/prepared", json={}).status_code == 200
     call = client.get(f"/api/pallet-calls/{call_id}", headers=admin_headers).json()
     assert call["status"] == "przygotowane"
     n_after_prepared = len(_dlt_notifications(db_session))
     assert n_after_prepared >= 1
 
     # idempotencja: drugi klik nie dubluje powiadomień
-    assert client.post(f"/api/dlt/{token}/prepared").status_code == 200
+    assert client.post(f"/api/dlt/{token}/prepared", json={}).status_code == 200
     db_session.expire_all()
     assert len(_dlt_notifications(db_session)) == n_after_prepared
 
     # Wysłane: status + dezaktywacja tokenu
-    assert client.post(f"/api/dlt/{token}/shipped").status_code == 200
+    assert client.post(f"/api/dlt/{token}/shipped", json={}).status_code == 200
     call = client.get(f"/api/pallet-calls/{call_id}", headers=admin_headers).json()
     assert call["status"] == "wyslane_z_dlt"
     assert client.get(f"/api/dlt/{token}").status_code == 404
-    assert client.post(f"/api/dlt/{token}/shipped").status_code == 404
+    assert client.post(f"/api/dlt/{token}/shipped", json={}).status_code == 404
     db_session.expire_all()
     assert len(_dlt_notifications(db_session)) == 2 * n_after_prepared
 
 
 def test_shipped_before_prepared_409(client, admin_headers, monkeypatch):
     _, token = _send_call(client, admin_headers, monkeypatch)
-    assert client.post(f"/api/dlt/{token}/shipped").status_code == 409
+    assert client.post(f"/api/dlt/{token}/shipped", json={}).status_code == 409
 
 
 def test_unknown_token_uniform_404(client):
     assert client.get("/api/dlt/deadbeef").status_code == 404
-    assert client.post("/api/dlt/deadbeef/prepared").status_code == 404
-    assert client.post("/api/dlt/deadbeef/shipped").status_code == 404
+    assert client.post("/api/dlt/deadbeef/prepared", json={}).status_code == 404
+    assert client.post("/api/dlt/deadbeef/shipped", json={}).status_code == 404
 
 
 def test_resend_deactivates_old_token(client, admin_headers, monkeypatch):

@@ -22,6 +22,7 @@ from ..audit import record
 from ..database import get_db
 from ..models import PalletCall, PalletCallLink, PalletCallStatus, User, utcnow
 from ..notifications import company_watchers, notify
+from ..public_guards import PUBLIC, PUBLIC_POST
 from ..public_links import capped, past_hard_limit
 
 router = APIRouter(prefix="/api/dlt", tags=["dlt"])
@@ -68,7 +69,7 @@ def _line_out(ln) -> dict:
             "data_dostawy": ln.data_dostawy.isoformat() if ln.data_dostawy else None}
 
 
-@router.get("/{token}")
+@router.get("/{token}", dependencies=PUBLIC)
 def dlt_info(token: str, db: Session = Depends(get_db)):
     link = _get_link(db, token)
     call = link.call
@@ -124,13 +125,13 @@ def mark_shipped(db: Session, call: PalletCall, user: User | None, note: str) ->
                 "DLT: wywołanie wysłane", user, note)
 
 
-@router.post("/{token}/prepared")
+@router.post("/{token}/prepared", dependencies=PUBLIC_POST)
 def dlt_prepared(token: str, db: Session = Depends(get_db)):
     mark_prepared(db, _get_link(db, token).call, None, "strona DLT")
     return {"status": "ok"}
 
 
-@router.post("/{token}/shipped")
+@router.post("/{token}/shipped", dependencies=PUBLIC_POST)
 def dlt_shipped(token: str, db: Session = Depends(get_db)):
     mark_shipped(db, _get_link(db, token).call, None, "strona DLT")
     return {"status": "ok"}
