@@ -197,7 +197,9 @@ def _event_rows(db: Session, user, now: datetime.datetime) -> list[dict]:
 
 def catalog(db: Session, user, now: datetime.datetime | None = None) -> dict:
     now = now or utcnow()
+    from . import automation_savings
     items = _scheduled_rows(db, now) + _event_rows(db, user, now)
+    savings = automation_savings.apply(items, automation_savings.minutes(db))   # US-034
     active = [i for i in items if i["status"] != "off"]
     return {
         "window_days": WINDOW_DAYS,
@@ -208,5 +210,6 @@ def catalog(db: Session, user, now: datetime.datetime | None = None) -> dict:
             "attention": sum(1 for i in items if i["status"] in ("error", "late")),
             "runs": sum(i["runs"] or 0 for i in items),
             "effects": sum(i["effects"] or 0 for i in items),
+            **savings,
         },
     }

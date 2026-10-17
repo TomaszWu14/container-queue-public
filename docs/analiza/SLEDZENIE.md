@@ -68,7 +68,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-029 ograniczenia widoków demo | E-05, R-12 | `test_demo_limits.py` (17 przypadków), `demoLimits.dom.test.tsx`, `ProfilePage.demo.dom.test.tsx` | #27 | wdrożone |
 | US-030 skaner QR na bramie | Z-021 (brama #60) | `GateScanner.dom.test.tsx` (6), `gateScan.test.ts` (3) | #28 | wdrożone |
 | US-031 testy wysyłki i 2FA | TEST-007, FR-015, SEC-006 | `AvizoSendModal.dom.test.tsx` (2), `QueueEmailModal.dom.test.tsx` (2), `AvizoProposeForm.dom.test.tsx` (2), `Enroll2FAPage.dom.test.tsx` (3) | #36 | wdrożone |
-| US-032/033 ekran Automatyzacje i pilnowanie automatów | FR-015, OBS-009, Z-023 | `test_automations.py` (5), `AutomationsPage.dom.test.tsx` (3) | — | czeka na merge |
+| US-032/033 ekran Automatyzacje i pilnowanie automatów | FR-015, OBS-009, Z-023 | `test_automations.py` (5), `AutomationsPage.dom.test.tsx` (3) | #37 | wdrożone |
+| US-034 licznik oszczędności per automat | Z-020, Z-024 | `test_automations.py` (4), `AutomationsPage.dom.test.tsx` (2), `AutomationMinutesModal.dom.test.tsx` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 

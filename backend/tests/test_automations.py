@@ -90,3 +90,53 @@ def test_forbidden_for_partners(client, admin_headers):
     _user("mag-auto", Role.warehouse)
     r = client.get("/api/automations", headers=login(client, "mag-auto", "pass12345"))
     assert r.status_code == 403
+
+
+# --- US-034: licznik oszczędności per automat -------------------------------------------------
+
+def test_default_minutes_cover_whole_catalog():
+    from app.automation_savings import DEFAULT_MINUTES
+    assert set(DEFAULT_MINUTES) == {s.key for s in cat.SCHEDULED} | {e.key for e in cat.EVENTS}
+
+
+def test_savings_from_effects_and_mail_runs(client, admin_headers, monkeypatch):
+    monkeypatch.setattr(settings, "automation_api_token", "t" * 40)
+    with SessionLocal() as db:
+        company_id = db.query(Company.id).order_by(Company.id).first()[0]
+        db.add_all([_run("demurrage", "check_demurrage_alerts", 1, detail="4"),
+                    _run("applog_retention", "purge", 1, detail="900"),   # porządek danych: 0 min
+                    IntakeBatch(company_id=company_id, source="mail"),
+                    IntakeBatch(company_id=company_id, source="mail")])
+        db.commit()
+    body, items = _items(client, admin_headers)
+    assert items["demurrage"]["minutes_per_effect"] == 5 and items["demurrage"]["minutes_saved"] == 20
+    assert items["retention"]["minutes_saved"] == 0
+    assert items["mail_intake"]["minutes_saved"] == 10          # 2 maile × 5 min
+    assert body["summary"]["minutes_saved"] == 30 and body["summary"]["hours_saved"] == 0.5
+
+
+def test_admin_changes_minutes_with_audit(client, admin_headers):
+    with SessionLocal() as db:
+        db.add(_run("demurrage", "check_demurrage_alerts", 1, detail="4"))
+        db.commit()
+    r = client.put("/api/automations/minutes", headers=admin_headers,
+                   json={"minutes": {"demurrage": 12, "tracking": 3}})
+    assert r.status_code == 200 and r.json()["minutes"]["demurrage"] == 12
+    _, items = _items(client, admin_headers)
+    assert items["demurrage"]["minutes_saved"] == 48
+    with SessionLocal() as db:
+        from app.models import AuditLog
+        rows = db.query(AuditLog).filter(AuditLog.field.like("automation_minutes.%")).all()
+        assert [(a.field, a.old_value, a.new_value) for a in rows] == [
+            ("automation_minutes.demurrage", "5", "12")]   # bez zmiany (tracking 3 → 3) bez wpisu
+
+
+def test_minutes_validation_and_role(client, admin_headers):
+    assert client.put("/api/automations/minutes", headers=admin_headers,
+                      json={"minutes": {"nieznany": 5}}).status_code == 422
+    assert client.put("/api/automations/minutes", headers=admin_headers,
+                      json={"minutes": {"demurrage": 999}}).status_code == 422
+    _user("logi-min", Role.logistics)
+    r = client.put("/api/automations/minutes", headers=login(client, "logi-min", "pass12345"),
+                   json={"minutes": {"demurrage": 1}})
+    assert r.status_code == 403

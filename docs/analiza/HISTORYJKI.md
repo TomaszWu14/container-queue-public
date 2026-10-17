@@ -339,18 +339,27 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Ekran widzą admin i logistyka (konto demo to logistyka); partnerzy dostają 403.
 - **[SEC]:** tylko odczyt; liczniki pętli tła są systemowe (bez danych spółek), obiegi z poczty w zakresie
   `scope_company` / `scope_containers`. Wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #37.
 
 ### US-033 · [OPS][DEV] Pilnowanie automatów (pomysł 17)
 - **Rozmiar:** S · **Wymagania:** OBS-009 · razem z US-032
 - Stan automatu: **błąd** (ostatni przebieg nieudany), **spóźniony** (brak udanego przebiegu dłużej niż interwał
   + 1 h), **wyłączony** (pętla nie powstaje w tej konfiguracji), **brak przebiegów**; licznik „wymaga uwagi”.
-- **Stan:** zrealizowane, czeka na merge (te same testy co US-032).
+- **Stan:** wdrożone w PR #37 (te same testy co US-032).
 
 ### US-034 · [BA][DEV] Licznik oszczędności per automat (pomysł 3)
 - **Rozmiar:** M · **Rozszerza:** panel „Ile to oszczędza” (Z-020) · **Założenie:** Z-024
-- Minuty pracy ręcznej na jeden efekt każdego automatu (np. mail z przeglądem dnia, odczytana faktura, SMS do
-  kierowcy) ustawiane w panelu admina; ekran „Automatyzacje” pokazuje godziny zaoszczędzone w okresie.
+- **Jako** kierownik logistyki **chcę** widzieć, ile godzin pracy ręcznej zastąpiły automaty, **aby** odpowiedzieć
+  na pytanie „ile to oszczędza” liczbą z danych, a nie szacunkiem z głowy.
+- **Kryteria akceptacji** (testy `test_automations.py` — część US-034, `AutomationsPage.dom.test.tsx`)
+  1. Każdy automat ma minuty pracy ręcznej na jeden efekt (wartości startowe = założenia Z-024); oszczędność =
+     efekty z 7 dni × minuty (obiegi z poczty: liczba maili × minuty). Automaty porządkowe mają 0.
+  2. Ekran pokazuje łączny zaoszczędzony czas w godzinach i oszczędność w każdym wierszu, z założeniem napisanym wprost.
+  3. Admin zmienia minuty w oknie „Założenia minut” (0–240); nieznany automat albo wartość spoza zakresu = 422;
+     każda zmiana trafia do dziennika zmian; logistyka dostaje 403.
+- **[SEC]:** zapis tylko admin (`PUT /api/automations/minutes`, wpis w `tests/permissions.yaml`), ustawienie globalne
+  bez danych spółek, audyt każdej zmiany.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-035 · [DEV][SEC] Zdarzenia do n8n / Power Automate / Make widoczne i testowalne (pomysł 9)
 - **Rozmiar:** S · Webhook z podpisem HMAC już istnieje (`notifications.notify_n8n`). Do zrobienia: licznik

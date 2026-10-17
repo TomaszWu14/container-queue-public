@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Licznik oszczędności per automat** (US-034): ekran „Automatyzacje” pokazuje, ile godzin pracy ręcznej
+  zastąpiły automaty w ostatnich 7 dniach — efekty × minuty na efekt, z założeniem napisanym wprost (Z-024).
+  Admin zmienia minuty w oknie „Założenia minut”; każda zmiana w dzienniku zmian.
 - **Ekran „Automatyzacje”** (US-032, US-033): katalog wszystkiego, co aplikacja robi sama — 20 automatów
   z harmonogramu i 3 obiegi z n8n, każdy z wyzwalaczem, akcją, stanem (działa / spóźniony / błąd / wyłączony)
   i licznikami przebiegów, błędów i efektów z 7 dni. Menu → Automatyzacje (admin, logistyka, demo).
