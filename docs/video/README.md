@@ -2,7 +2,7 @@
 
 | Plik | Co to |
 |---|---|
-| `prezentacja.mp4` | film 2:14, 1280×720, napisy w obrazie, bez dźwięku, dane pokazowe |
+| `prezentacja.mp4` | film 2:11, 1280×720, napisy w obrazie, bez dźwięku, dane pokazowe |
 | `miniatura-youtube.png` | miniatura 1280×720 |
 
 ## Opis na YouTube (do wklejenia)
