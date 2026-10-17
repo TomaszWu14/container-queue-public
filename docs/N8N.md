@@ -256,10 +256,14 @@ trigger. W zmiennych panelu:
 To **nie** ta sama zmienna co `N8N_WEBHOOK_URL` w stacku n8n (tam: publiczna baza adresów,
 tu: konkretny trigger) — dlatego nasza nosi przedrostek `AUTOMATION_`.
 
-Ciało żądania:
+Ciało żądania (pełny opis formatu, rodzajów zdarzeń, licznika i zdarzenia testowego:
+[ZDARZENIA-N8N.md](ZDARZENIA-N8N.md)):
 
 ```json
 {
+  "id": "4f1c2a9e0b7d4c3e8a6f5d2b1c0e9a87",
+  "version": 1,
+  "source": "timporye",
   "event": "demurrage",
   "title": "Kontener MSDU0806613 — zbliża się demurrage",
   "body": "...",
@@ -291,8 +295,9 @@ return [{ json: JSON.parse(body.toString('utf8')) }];
 Nie chcesz surowego ciała? Zabezpiecz webhook credentialem *Header Auth* po stronie n8n
 i traktuj podpis jako drugą warstwę.
 
-Kanał jest **best-effort**: wysyłka idzie w tle (pula `notify`), a padnięty n8n tylko
-loguje błąd — nie wywraca operacji w panelu.
+Kanał jest **best-effort**: wysyłka idzie w tle (pula `notify`), a padnięty n8n nie wywraca
+operacji w panelu. Wynik każdej wysyłki trafia do dziennika zadań (`n8n_events`); błąd zapala
+dzwonek admina, a ekran Automatyzacje liczy wysłane zdarzenia i błędy (US-035).
 
 ## 6. Backup
 

@@ -181,9 +181,9 @@ def _event_rows(db: Session, user, now: datetime.datetime) -> list[dict]:
             count = db.scalar(q.where(SadDraft.created_at >= since))
             last_at = db.scalar(q.with_only_columns(func.max(SadDraft.created_at)))
             enabled = bool(settings.automation_api_token)
-        else:   # zdarzenia wysyłane do n8n — licznik w kolejnym kroku (zdarzenia do n8n, US-035)
-            enabled = bool(settings.automation_webhook_url)
-            count = None
+        else:   # zdarzenia wysyłane do n8n (US-035): wynik każdej wysyłki w dzienniku zadań
+            rows.append(_outbound_row(db, spec, since))
+            continue
         rows.append({
             "key": spec.key, "category": spec.category, "kind": "event",
             "status": ("ok" if count or last_at else "unknown") if enabled else "off",
@@ -193,6 +193,28 @@ def _event_rows(db: Session, user, now: datetime.datetime) -> list[dict]:
             "runs": count, "errors": None, "effects": None,
         })
     return rows
+
+
+def _outbound_row(db: Session, spec: Event, since: datetime.datetime) -> dict:
+    """Zdarzenia do n8n: systemowe (jak pętle tła) — liczone z dziennika zadań, bez treści."""
+    from .automation_events import JOB_NAME
+    runs, errors = db.execute(
+        select(func.count(), func.count().filter(JobRun.ok.is_(False)))
+        .where(JobRun.job == JOB_NAME, JobRun.started_at >= since)).one()
+    last = db.execute(select(JobRun.started_at, JobRun.ok).where(JobRun.job == JOB_NAME)
+                      .order_by(JobRun.started_at.desc()).limit(1)).first()
+    last_ok = db.scalar(select(func.max(JobRun.started_at))
+                        .where(JobRun.job == JOB_NAME, JobRun.ok.is_(True)))
+    if not settings.automation_webhook_url:
+        status = "off"
+    elif last is None:
+        status = "unknown"
+    else:
+        status = "ok" if last.ok else "error"
+    return {"key": spec.key, "category": spec.category, "kind": "event", "status": status,
+            "interval_s": None, "last_run_at": last.started_at.isoformat() if last else None,
+            "last_ok_at": last_ok.isoformat() if last_ok else None,
+            "runs": runs, "errors": errors, "effects": None}
 
 
 def catalog(db: Session, user, now: datetime.datetime | None = None) -> dict:

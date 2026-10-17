@@ -140,3 +140,71 @@ def test_minutes_validation_and_role(client, admin_headers):
     r = client.put("/api/automations/minutes", headers=login(client, "logi-min", "pass12345"),
                    json={"minutes": {"demurrage": 1}})
     assert r.status_code == 403
+
+
+# --- US-035: zdarzenia do n8n — koperta, wynik w dzienniku, licznik, zdarzenie testowe ---------
+
+def _fake_post(status, box=None):
+    import httpx
+
+    def post(url, content, headers, timeout):
+        if box is not None:
+            box.update(content=content, headers=headers)
+        return httpx.Response(status, request=httpx.Request("POST", url))
+    return post
+
+
+def test_envelope_has_id_version_and_signature(monkeypatch):
+    import json
+
+    from app import automation_events as E
+    box: dict = {}
+    monkeypatch.setattr(settings, "automation_webhook_secret", "sekret")
+    monkeypatch.setattr(E.httpx, "post", _fake_post(200, box))
+    payload = E.envelope("demurrage", "Tytuł", container_id=7)
+    assert E.post("https://n8n.example.com/webhook/x", payload) == 200
+    sent = json.loads(box["content"])
+    assert sent["version"] == 1 and sent["source"] == "timporye" and len(sent["id"]) == 32
+    assert box["headers"]["X-Timporye-Signature"] == E.sign_payload(box["content"], "sekret")
+    assert E.envelope("x", "t")["id"] != sent["id"]   # id unikalne → deduplikacja u odbiorcy
+
+
+def test_outbound_counted_from_job_log(client, admin_headers, monkeypatch):
+    import httpx
+    import pytest
+
+    from app import applog
+    from app import automation_events as E
+    monkeypatch.setattr(settings, "automation_webhook_url", "https://n8n.example.com/webhook/x")
+    applog.reset_for_tests()
+    monkeypatch.setattr(E.httpx, "post", _fake_post(200))
+    E.post(settings.automation_webhook_url, E.envelope("demurrage", "a"))
+    monkeypatch.setattr(E.httpx, "post", _fake_post(500))
+    with pytest.raises(httpx.HTTPStatusError):
+        E.post(settings.automation_webhook_url, E.envelope("customs", "b"))
+    with SessionLocal() as db:
+        applog.flush(db)
+    _, items = _items(client, admin_headers)
+    out = items["outbound_events"]
+    assert (out["runs"], out["errors"], out["status"]) == (2, 1, "error")
+
+
+def test_test_event_endpoint(client, admin_headers, monkeypatch):
+    from app import automation_events as E
+    monkeypatch.setattr(settings, "automation_webhook_url", "")
+    assert client.post("/api/automations/test-event", headers=admin_headers).status_code == 409
+    monkeypatch.setattr(settings, "automation_webhook_url", "https://n8n.example.com/webhook/tajny-adres")
+    box: dict = {}
+    monkeypatch.setattr(E.httpx, "post", _fake_post(200, box))
+    r = client.post("/api/automations/test-event", headers=admin_headers).json()
+    assert r["ok"] is True and r["status_code"] == 200 and b'"event":"test"' in box["content"]
+    monkeypatch.setattr(E.httpx, "post", _fake_post(404))
+    r = client.post("/api/automations/test-event", headers=admin_headers).json()
+    assert (r["ok"], r["status_code"]) == (False, 404)
+    assert "tajny-adres" not in str(r)   # adres webhooka nie wraca do przeglądarki
+    with SessionLocal() as db:
+        from app.models import AuditLog
+        assert [a.new_value for a in db.query(AuditLog).filter_by(field="test_event")] == ["HTTP 200", "HTTP 404"]
+    _user("logi-evt", Role.logistics)
+    assert client.post("/api/automations/test-event",
+                       headers=login(client, "logi-evt", "pass12345")).status_code == 403

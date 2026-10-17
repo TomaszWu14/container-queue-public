@@ -6,8 +6,10 @@ użytkownika, więc obowiązują te same role i izolacja per zasób co dla ludzi
 import json
 import threading
 
+import httpx
 import pytest
 
+from app import automation_events as E
 from app import notifications as N
 from app.config import settings
 from app.security import AUTOMATION_HEADER
@@ -95,6 +97,10 @@ def test_role_limits_what_automation_can_do(client, admin_headers, monkeypatch):
     assert response.status_code == 403
 
 
+def _ok(url):
+    return httpx.Response(200, request=httpx.Request("POST", url))
+
+
 def test_event_signed_and_offloaded(monkeypatch):
     done = threading.Event()
     box: dict[str, object] = {}
@@ -103,10 +109,11 @@ def test_event_signed_and_offloaded(monkeypatch):
         box.update(url=url, content=content, headers=headers,
                    thread=threading.current_thread().name)
         done.set()
+        return _ok(url)
 
     monkeypatch.setattr(N.settings, "automation_webhook_url", "https://n8n.example.com/webhook/x")
     monkeypatch.setattr(N.settings, "automation_webhook_secret", "sekret-webhooka")
-    monkeypatch.setattr(N.httpx, "post", fake_post)
+    monkeypatch.setattr(E.httpx, "post", fake_post)
 
     N.send_automation_event("demurrage", "Tytuł", "treść", container_id=7)
     assert done.wait(3), "zdarzenie nie poszło w tle"
@@ -136,10 +143,11 @@ def test_event_unsigned_when_secret_empty(monkeypatch):
     def fake_post(url, content, headers, timeout):
         box["headers"] = headers
         done.set()
+        return _ok(url)
 
     monkeypatch.setattr(N.settings, "automation_webhook_url", "https://n8n.example.com/webhook/x")
     monkeypatch.setattr(N.settings, "automation_webhook_secret", "")
-    monkeypatch.setattr(N.httpx, "post", fake_post)
+    monkeypatch.setattr(E.httpx, "post", fake_post)
     N.send_automation_event("demurrage", "Tytuł")
     assert done.wait(3)
     assert "X-Timporye-Signature" not in box["headers"]

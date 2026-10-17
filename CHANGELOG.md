@@ -8,6 +8,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Zdarzenia do n8n widoczne i testowalne** (US-035): ekran Automatyzacje liczy wysłane zdarzenia i błędy,
+  admin wysyła zdarzenie testowe jednym przyciskiem, panel Integracje pokazuje kanał n8n i podpis HMAC.
+  Zdarzenie ma `id` (deduplikacja), `version` i `source`; nieudana wysyłka zapala dzwonek admina.
+  Format i przykłady weryfikacji podpisu: `docs/ZDARZENIA-N8N.md`.
 - **Licznik oszczędności per automat** (US-034): ekran „Automatyzacje” pokazuje, ile godzin pracy ręcznej
   zastąpiły automaty w ostatnich 7 dniach — efekty × minuty na efekt, z założeniem napisanym wprost (Z-024).
   Admin zmienia minuty w oknie „Założenia minut”; każda zmiana w dzienniku zmian.

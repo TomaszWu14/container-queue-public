@@ -5,9 +5,6 @@ TEAMS_WEBHOOK_URL / AUTOMATION_WEBHOOK_URL i nigdy nie blokują operacji (błęd
 """
 import atexit
 import datetime
-import hashlib
-import hmac
-import json
 import logging
 import smtplib
 from concurrent.futures import ThreadPoolExecutor
@@ -17,11 +14,10 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-import httpx
 from sqlalchemy import delete, event, select
 from sqlalchemy.orm import Session
 
-from . import teams
+from . import automation_events, teams
 from .config import settings
 from .models import (
     Container,
@@ -247,33 +243,24 @@ def _send_teams(title: str, body: str) -> None:
     _submit(_teams_post, settings.teams_webhook_url, title, body)
 
 
-def sign_payload(body: bytes, secret: str) -> str:
-    """Podpis treści webhooka (HMAC-SHA256, format jak w GitHubie) — n8n weryfikuje go
-    przed wykonaniem workflow, żeby triggera nie odpalił ktokolwiek znający adres."""
-    return "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
+# US-035: koperta, podpis, kontrola odpowiedzi i zapis w dzienniku — app/automation_events.py
+sign_payload = automation_events.sign_payload
 
 
 def _n8n_post(url: str, payload: dict) -> None:
-    # serializujemy raz i wysyłamy dokładnie te bajty, które podpisaliśmy — inaczej
-    # podpis nie zgadzałby się po stronie n8n (separatory/kolejność kluczy)
-    body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode()
-    headers = {"Content-Type": "application/json"}
-    if settings.automation_webhook_secret:
-        headers["X-Timporye-Signature"] = sign_payload(body, settings.automation_webhook_secret)
-    httpx.post(url, content=body, headers=headers, timeout=15)
+    automation_events.post(url, payload)
 
 
 def send_automation_event(kind: str, title: str, body: str = "", **fields) -> None:
     """Zdarzenie do n8n (trigger workflow). Puste AUTOMATION_WEBHOOK_URL = kanał wyłączony.
 
-    Best-effort jak pozostałe kanały: wysyłka w tle, błędy tylko do logów — padnięty
-    n8n nie może wywrócić operacji w panelu.
+    Best-effort jak pozostałe kanały: wysyłka w tle, błędy do logów i dziennika zadań —
+    padnięty n8n nie może wywrócić operacji w panelu.
     """
     if not settings.automation_webhook_url:
         return
-    payload = {"event": kind, "title": title, "body": body,
-               "sent_at": utcnow().isoformat(), **fields}
-    _submit(_n8n_post, settings.automation_webhook_url, payload)
+    _submit(_n8n_post, settings.automation_webhook_url,
+            automation_events.envelope(kind, title, body, **fields))
 
 
 def notify(db: Session, users: list[User], *, kind: str, title: str, body: str = "",

@@ -5,14 +5,14 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import type { AutomationCatalog, AutomationItem } from './AutomationsPage'
 
-const { get, put } = vi.hoisted(() => ({ get: vi.fn(), put: vi.fn() }))
-vi.mock('../api', () => ({ api: { get, put }, errorMessage: (e: unknown) => (e as Error).message }))
+const { get, put, post } = vi.hoisted(() => ({ get: vi.fn(), put: vi.fn(), post: vi.fn() }))
+vi.mock('../api', () => ({ api: { get, put, post }, errorMessage: (e: unknown) => (e as Error).message }))
 
 import AutomationsPage from './AutomationsPage'
 import { UserContext } from '../userContext'
 import type { User } from '../types'
 
-afterEach(() => { cleanup(); get.mockReset(); put.mockReset() })
+afterEach(() => { cleanup(); get.mockReset(); put.mockReset(); post.mockReset() })
 
 const item = (over: Partial<AutomationItem>): AutomationItem => ({
   key: 'demurrage', category: 'alerts', kind: 'schedule', status: 'ok', interval_s: 21600,
@@ -100,5 +100,21 @@ describe('ekran Automatyzacje', () => {
     const sent = put.mock.calls[0][1].minutes
     expect([put.mock.calls[0][0], sent.demurrage, sent.mail_intake]).toEqual(['/api/automations/minutes', 12, 5])
     expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
+  it('US-035: admin wysyła zdarzenie testowe — wynik, ostrzeżenie o braku podpisu, błąd odbiorcy', async () => {
+    get.mockResolvedValue(catalog)
+    post.mockResolvedValueOnce({ ok: true, status_code: 200, error: '', signed: false })
+      .mockResolvedValueOnce({ ok: false, status_code: 404, error: 'HTTPStatusError' })
+    render(
+      <UserContext.Provider value={{ user: { role: 'admin' } as User, reload: () => {} }}>
+        <AutomationsPage />
+      </UserContext.Provider>)
+    fireEvent.click(await screen.findByRole('button', { name: 'Wyślij zdarzenie testowe' }))
+    expect((await screen.findByRole('status')).textContent).toMatch(/dotarło \(HTTP 200\).*bez podpisu HMAC/)
+    expect(post).toHaveBeenCalledWith('/api/automations/test-event', {})
+    await vi.waitFor(() => expect(get).toHaveBeenCalledTimes(2))   // licznik zdarzeń odświeżony
+    fireEvent.click(screen.getByRole('button', { name: 'Wyślij zdarzenie testowe' }))
+    await vi.waitFor(() => expect(screen.getByRole('status').textContent).toMatch(/nie przyjął zdarzenia: HTTP 404/))
   })
 })
