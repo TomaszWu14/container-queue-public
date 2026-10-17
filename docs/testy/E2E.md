@@ -36,15 +36,12 @@ Objaw braku: pierwszy bieg nocny pada na starcie przeglądarki (`error while loa
 
 Moduły `frontend/src/pages/*.tsx`, których żaden test vitest nie importuje wprost (import przez
 komponent nadrzędny się nie liczy — lista jest zachowawcza). Odświeżanie:
-`python scripts/frontend_untested_pages.py`. **Stan 2026-10-17: 66 modułów, 16 bez testu:**
+`python scripts/frontend_untested_pages.py`. **Stan 2026-10-17: 66 modułów, 12 bez testu:**
 
 | Moduł | Uwagi / pokrycie pośrednie |
 |---|---|
 | `AnalysisTab.tsx` | |
-| `AvizoProposeForm.tsx` | propozycja innego terminu (link spedytora) |
-| `AvizoSendModal.tsx` | wysyłka awizacji do spedycji |
 | `ComplaintDetailPage.tsx` | |
-| `Enroll2FAPage.tsx` | włączenie 2FA — kandydat na następny test |
 | `ForecastTab.tsx` | |
 | `ForwardingPage.tsx` | |
 | `FoundOrderModal.tsx` | |
@@ -52,7 +49,6 @@ komponent nadrzędny się nie liczy — lista jest zachowawcza). Odświeżanie:
 | `ImportErrors.tsx` | pośrednio przez `ImportModal` |
 | `LandingPage.tsx` | |
 | `MyColorsPage.tsx` | |
-| `QueueEmailModal.tsx` | |
 | `SectionShell.tsx` | ramka sekcji (layout) |
 | `StatsCharts.tsx` | |
 | `SupplierPage.tsx` | |
@@ -60,3 +56,5 @@ komponent nadrzędny się nie liczy — lista jest zachowawcza). Odświeżanie:
 US-018 (2026-10-17) dopisało testy RTL priorytetów audytu: `AuthPages` (reset hasła, wymuszona zmiana),
 `ClearQueueModal` (operacja masowa), `ImportModal` (import Excela). `DriverPage` nie istnieje — publiczny
 link kierowcy usunięty decyzją D11.
+US-031 (2026-10-17) dopisało testy ekranów wysyłki do firm zewnętrznych i 2FA: `AvizoSendModal`,
+`QueueEmailModal`, `AvizoProposeForm`, `Enroll2FAPage` (16 → 12).

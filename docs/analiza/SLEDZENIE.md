@@ -67,6 +67,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-028 konta demo per rola | FR-022…FR-024, E-05 | `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` | #18 | wdrożone |
 | US-029 ograniczenia widoków demo | E-05, R-12 | `test_demo_limits.py` (17 przypadków), `demoLimits.dom.test.tsx`, `ProfilePage.demo.dom.test.tsx` | #27 | wdrożone |
 | US-030 skaner QR na bramie | Z-021 (brama #60) | `GateScanner.dom.test.tsx` (6), `gateScan.test.ts` (3) | #28 | wdrożone |
+| US-031 testy wysyłki i 2FA | TEST-007, FR-015, SEC-006 | `AvizoSendModal.dom.test.tsx` (2), `QueueEmailModal.dom.test.tsx` (2), `AvizoProposeForm.dom.test.tsx` (2), `Enroll2FAPage.dom.test.tsx` (3) | — | czeka na merge |
 
 ## Zasady utrzymania
 

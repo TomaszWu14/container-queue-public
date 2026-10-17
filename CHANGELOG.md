@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Testy ekranów wysyłki do firm zewnętrznych i włączania 2FA** (US-031, TEST-007): wysyłka do awizacji,
+  kolejka dnia do spedycji (tylko po potwierdzeniu), propozycja terminu od spedytora i wymuszone 2FA administratora.
+  Lista stron bez testu: 16 → 12.
 - **Testy ekranów o wysokim ryzyku** (US-018, TEST-007): reset i wymuszona zmiana hasła (bez zdradzania, czy konto
   istnieje), czyszczenie kolejki (podgląd przed usunięciem, liczba na przycisku) i import Excela (podgląd bez zapisu,
   pominięte w wyniku). Lista stron bez testu: 21 → 16.

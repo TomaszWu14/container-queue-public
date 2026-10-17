@@ -299,6 +299,23 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - **Stan:** wdrożone w PR #30. `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3),
   `ImportModal.dom.test.tsx` (4); lista stron bez testu w `docs/testy/E2E.md` odświeżona (21 → 16).
 
+### US-031 · [DEV][SEC] Testy ekranów wysyłki na zewnątrz i włączania 2FA
+- **Rozmiar:** S · **Źródło:** TEST-007 (`docs/testy/E2E.md`), kontynuacja US-018 · **Wymagania:** FR-015, SR (2FA, SEC-006)
+- **Jako** właściciel aplikacji **chcę**, żeby ekrany wysyłające maile do spedytorów i magazynów oraz ekran
+  wymuszonego 2FA miały testy, **aby** regresja nie wysłała błędnych danych do firm zewnętrznych ani nie
+  przepuściła administratora bez 2FA.
+- **Kryteria akceptacji**
+  1. Wysyłka do awizacji: podgląd po spedytorze (także „bez spedytora”), wysyłane dokładnie zaznaczone kontenery
+     z uwagą i opcją magazynu; wynik pokazuje brak adresu; błąd nie zamyka okna (`AvizoSendModal.dom.test.tsx`).
+  2. Kolejka dnia: magazyny tylko tej spółki, wysyłka dopiero po potwierdzeniu, anulowanie nic nie wysyła
+     (`QueueEmailModal.dom.test.tsx`).
+  3. Propozycja terminu: bez daty nie wyśle; kontener, data, godzina, uwaga trafiają do serwera; odmowa widoczna
+     (`AvizoProposeForm.dom.test.tsx`).
+  4. Wymuszone 2FA: kod przycięty wysłany z sekretem, kody zapasowe przed przejściem do panelu, błędny kod
+     nie przepuszcza, wylogowanie dostępne (`Enroll2FAPage.dom.test.tsx`).
+- **[SEC]:** tylko testy, bez zmian w kodzie aplikacji i bez nowych tras.
+- **Stan:** zrealizowane, czeka na merge. Lista stron bez testu: 16 → 12.
+
 ### US-019 · [SEC] 2FA obowiązkowe dla administratorów na produkcji
 - **Rozmiar:** XS (konfiguracja) · **Źródło:** E-01 · **Zależy od:** decyzji PO (Z-008).
 - `REQUIRE_2FA_ADMIN=true` w Coolify po tym, jak każdy admin włączy 2FA; procedura w RUNBOOK.
