@@ -101,6 +101,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Strażnik izolacji spółek** (US-011, R-01): nowa trasa z identyfikatorem w adresie bez kontroli spółki
+  z `deps.py` zatrzymuje testy, chyba że trafi na jawną listę wyjątków z powodem. Decyzja o wymuszeniu w bazie:
+  ADR-0006 (do akceptacji).
 - **Publiczne linki chronione jednakowo** (US-005, R-06): link wywołań palet dla magazynu zewnętrznego (DLT) ma
   ten sam limit żądań i kontrolę pochodzenia co formularz awizacji, a jego adres nie wycieka w nagłówku Referer;
   wolne sloty awizacji można sprawdzić tylko w oknie ± 30 dni.

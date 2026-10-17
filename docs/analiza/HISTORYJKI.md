@@ -225,6 +225,9 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - Test statyczny: każda trasa `/api/...` z parametrem `{..._id}` używa `get_scoped`/`scope_*`/
   `check_container_access` albo jest na jawnej liście wyjątków z uzasadnieniem. ADR: czy spójność spółki
   wymuszać też w bazie (CHECK/FK/RLS).
+- **Stan:** zrealizowane (PR po #31); czeka na merge. `tests/test_isolation_guard.py`: 226 tras z identyfikatorem,
+  34 wyjątki z powodem (słowniki wspólne, konta admina, baza wiedzy, statki, własne sesje). Decyzja o bazie:
+  ADR-0006 (proponowana: bez RLS, klucze złożone punktowo dla nowych tabel).
 
 ### US-012 · [SEC][BA] RODO: rejestr czynności, podstawy, powierzenia
 - **Rozmiar:** M · **Źródło:** R-09 · **Wymagania:** SR-011 · **Zależy od:** odpowiedzi PO (Z-009).
