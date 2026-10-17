@@ -92,6 +92,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
   zostawia formularz z powodem z API. Przegrany wyścig dwóch wysyłek zwraca kod `already_submitted`.
 
 ### Changed
+- **Testy na wersjach z produkcji** (US-015, NFR-011): CI i README używają Pythona 3.14 i Node 26 — tych samych
+  co obraz produkcyjny (dotąd CI testowało 3.12 i 24). Test pilnuje, żeby obraz, CI i README się nie rozjechały.
 - Walidacja konfiguracji przy starcie wydzielona z `backend/app/main.py` do `backend/app/settings_check.py`
   (limit 500 linii); `main` re-eksportuje dotychczasowe nazwy, logi startu nadal pod nazwą `app.main`.
 - `SECURITY.md`: poprawione stwierdzenia niezgodne z repozytorium (runnery GitHub zamiast self-hosted,

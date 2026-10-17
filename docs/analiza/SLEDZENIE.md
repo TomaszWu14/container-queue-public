@@ -58,7 +58,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-012 RODO 1.0 | SR-011, R-09 | — | — | czeka na Z-009 |
 | US-013 kopia off-site | NFR-002, SR-014, R-10 | `test_backup_offsite.py` (4 testy), `test_backup_scripts.py`; ćwiczenie odtworzenia po włączeniu | #28 | kod gotowy; włączenie w Coolify po stronie PO |
 | US-014 mierniki (+ panel, pomysł 6) | M-1…M-7 | — | — | czeka na Z-004 |
-| US-015 jedna wersja Python/Node | NFR-011 | test zgodności w CI | — | do akceptacji PO |
+| US-015 jedna wersja Python/Node | NFR-011 | `test_runtime_versions.py` (4) | — | zrealizowane, czeka na merge |
 | US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06, Z-022 | `test_phones_portugal.py` (13) | #29 | zrealizowane, czeka na merge |
 | US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | `test_plan_mail.py` (4), `BulkActionBar.plan.dom.test.tsx` (3) | #28 | wdrożone |
 | US-018 testy ekranów | TEST-007 | `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3), `ImportModal.dom.test.tsx` (4) | — | zrealizowane, czeka na merge |
