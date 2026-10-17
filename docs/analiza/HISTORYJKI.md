@@ -250,6 +250,10 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - **Rozmiar:** S · **Źródło:** `AUDYT.md` §2.6 pkt 4 · **Wymagania:** NFR-011
 - Decyzja: Python 3.12 albo 3.14 wszędzie (lock kompilowany dla wybranej), Node jedna wersja LTS; test
   w CI, że obraz i lock są zgodne.
+- **Stan:** zrealizowane (PR po #30); czeka na merge. Decyzja [DEV]: wersje produkcji — **Python 3.14, Node 26**
+  (obraz już na nich działał, a CI testowało 3.12 i 24). CI i README przełączone; lock zostaje „universal” od 3.12
+  (lokalnie da się pracować na 3.12+). Sprawdzone przed zmianą na 3.14 / 26: backend 2223 testów, mypy bez nowych
+  błędów, frontend 1013 testów i build, e2e demo 6/6. Strażnik: `backend/tests/test_runtime_versions.py`.
 
 ### US-016 · [BA][DEV] Dane dla Portugalii: prefiks telefonu i kraj magazynu
 - **Rozmiar:** S · **Źródło:** P-05, P-06 · **Wymagania:** FR-017

@@ -102,7 +102,7 @@ docker compose up --build
 
 Porty 8000 i 8080 są stałe w `docker-compose.yml` — jeśli są zajęte, zwolnij je albo zmień mapowanie.
 
-**Bez Dockera** (SQLite; Node 22.12+, Python 3.12–3.14):
+**Bez Dockera** (SQLite; Node 26 i Python 3.14 — te same wersje co obraz produkcyjny i CI; lock zależności działa od Pythona 3.12):
 
 ```bash
 cd frontend && npm ci && npm run build      # panel trafia do frontend/dist
