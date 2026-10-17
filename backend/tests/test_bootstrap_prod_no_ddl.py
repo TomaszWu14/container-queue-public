@@ -14,7 +14,9 @@ def _boom(*_a, **_kw):
 
 
 @pytest.mark.parametrize("env", ["production", "prod", "Production"])
-def test_bootstrap_on_production_skips_ddl(monkeypatch, caplog, env):
+def test_bootstrap_on_production_skips_ddl(client, monkeypatch, caplog, env):
+    # `client` = schemat z szablonu conftest; bez niego test zależał od kolejności w procesie
+    # pytest-xdist (pierwszy w procesie trafiał na pustą bazę: „no such table: companies”)
     monkeypatch.setattr(db_bootstrap.settings, "environment", env)
     monkeypatch.setattr(db_bootstrap, "ensure_new_columns", _boom)
     monkeypatch.setattr(db_bootstrap.Base.metadata, "create_all", _boom)

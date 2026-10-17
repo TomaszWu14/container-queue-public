@@ -13,6 +13,12 @@ from tests.test_invoice_conformity import _container
 from tests.test_invoices_checks import _pdf, _setup
 
 PNG = b"\x89PNG\r\n\x1a\n" + b"\x00" * 16
+
+
+def _id(value):
+    """Nazwa przypadku bez bajtów: ZIP zawiera godzinę spakowania, a różne nazwy w procesach
+    pytest-xdist kończą się błędem „Different tests were collected”."""
+    return value if isinstance(value, str) else f"{len(value)}B"
 JPG = b"\xff\xd8\xff\xe0" + b"\x00" * 16
 
 
@@ -22,7 +28,7 @@ JPG = b"\xff\xd8\xff\xe0" + b"\x00" * 16
     ("zip", _zip({"a.txt": b"a"})), ("csv", b"a;b\n1;2\n"), ("txt", "zażółć".encode()),
     ("csv", "a;b".encode("utf-16")), ("json", b'{"a": 1}'), ("xml", b"<a/>"),
     ("msg", b"\xd0\xcf\x11\xe0 cokolwiek"), ("eml", b"From: x"), ("xls", b"<html>"), ("doc", b"\x00\x01"),
-])
+], ids=_id)
 def test_matching_content_accepted(ext, content):
     assert content_matches(ext, content)
 
@@ -31,7 +37,7 @@ def test_matching_content_accepted(ext, content):
     ("pdf", b"MZ\x90\x00 to jest program"), ("pdf", b""), ("png", b"%PDF-1.7"), ("jpg", b"<html>"),
     ("xlsx", b"x"), ("xlsx", _zip({"a.txt": b"a"})), ("docx", b"PK\x03\x04 uciety"),
     ("zip", b"MZ"), ("csv", b"a;b\x00\x01"), ("txt", b"MZ\x90\x00\x03\x00"),
-])
+], ids=_id)
 def test_mismatched_content_rejected(ext, content):
     assert not content_matches(ext, content)
 

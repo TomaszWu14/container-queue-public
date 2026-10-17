@@ -27,6 +27,10 @@ router = APIRouter(prefix="/api", tags=["dokumenty"])
 
 # anty zip-bomba: suma rozmiarów po rozpakowaniu (jak skoroszyty w tabular.py)
 MAX_UNCOMPRESSED_MB = 200
+# US-006 (R-07): plik rozpakowujący się > 100× (powyżej 1 MB) to typowa zip-bomba; dokumenty
+# (PDF, xlsx, zdjęcia) kompresują się kilka–kilkunastokrotnie
+MAX_RATIO = 100
+_RATIO_FROM_BYTES = 1024 * 1024
 _ARCHIVES = (".zip", ".7z", ".rar", ".tar", ".gz")
 _SYSTEM = ("__macosx/", "thumbs.db", "desktop.ini", ".ds_store")
 _INVOICE_ROLES = (Role.admin, Role.logistics, Role.purchasing)   # jak PurchasingReaders
@@ -64,6 +68,9 @@ def unpack(content: bytes) -> tuple[str, list[tuple[str, bytes]], list[str]]:
                 skipped.append(f"{name} (niedozwolony typ)")
             elif info.file_size > max_bytes:
                 skipped.append(f"{name} (ponad {settings.max_upload_mb} MB)")
+            elif (info.file_size > _RATIO_FROM_BYTES
+                  and info.file_size > MAX_RATIO * max(info.compress_size, 1)):
+                skipped.append(f"{name} (podejrzanie silna kompresja — możliwa zip-bomba)")
             else:
                 try:
                     with archive.open(info) as fh:

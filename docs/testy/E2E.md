@@ -36,31 +36,27 @@ Objaw braku: pierwszy bieg nocny pada na starcie przeglądarki (`error while loa
 
 Moduły `frontend/src/pages/*.tsx`, których żaden test vitest nie importuje wprost (import przez
 komponent nadrzędny się nie liczy — lista jest zachowawcza). Odświeżanie:
-`python scripts/frontend_untested_pages.py`. **63 moduły, 21 bez testu:**
+`python scripts/frontend_untested_pages.py`. **Stan 2026-10-17: 66 modułów, 16 bez testu:**
 
 | Moduł | Uwagi / pokrycie pośrednie |
 |---|---|
-| `AdminPage.tsx` | panel administracji |
 | `AnalysisTab.tsx` | |
-| `AuthPages.tsx` | logowanie — E2E `login.spec.ts`; reset hasła bez testu |
+| `AvizoProposeForm.tsx` | propozycja innego terminu (link spedytora) |
 | `AvizoSendModal.tsx` | wysyłka awizacji do spedycji |
-| `ClearQueueModal.tsx` | **operacja masowa** — priorytet (audyt TEST-007) |
 | `ComplaintDetailPage.tsx` | |
-| `ContainerSidePanels.tsx` | karta kontenera — częściowo E2E `container-crud.spec.ts` |
-| `DriverPage.tsx` | **publiczny link kierowcy** — priorytet |
+| `Enroll2FAPage.tsx` | włączenie 2FA — kandydat na następny test |
 | `ForecastTab.tsx` | |
 | `ForwardingPage.tsx` | |
 | `FoundOrderModal.tsx` | |
 | `FreightInvoicesPanel.tsx` | |
-| `ImportErrors.tsx` | |
-| `ImportModal.tsx` | **import Excela/SAP** — priorytet |
+| `ImportErrors.tsx` | pośrednio przez `ImportModal` |
 | `LandingPage.tsx` | |
-| `ProfilePage.tsx` | |
+| `MyColorsPage.tsx` | |
 | `QueueEmailModal.tsx` | |
 | `SectionShell.tsx` | ramka sekcji (layout) |
 | `StatsCharts.tsx` | |
 | `SupplierPage.tsx` | |
-| `WarehouseQueuePage.tsx` | |
 
-Kolejność pisania testów (rekomendacja audytu): `AuthPages` (reset hasła), `DriverPage`,
-`ClearQueueModal`, `ImportModal` — testy RTL (`*.dom.test.tsx`) jak dla istniejących modali.
+US-018 (2026-10-17) dopisało testy RTL priorytetów audytu: `AuthPages` (reset hasła, wymuszona zmiana),
+`ClearQueueModal` (operacja masowa), `ImportModal` (import Excela). `DriverPage` nie istnieje — publiczny
+link kierowcy usunięty decyzją D11.

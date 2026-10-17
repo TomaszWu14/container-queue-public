@@ -15,7 +15,6 @@ from sqlalchemy.orm import Session, selectinload
 from .. import avizo_workflow as wf
 from ..audit import record, record_changes
 from ..config import settings
-from ..csrf import origin_allowed
 from ..database import get_db
 from ..date_pl import date_pl
 from ..deps import Editors as editors
@@ -35,40 +34,16 @@ from ..models import (
     Warehouse,
 )
 from ..notifications import company_watchers, notify, send_html_email
-from ..security import ApiRateLimiter, client_ip
+# ochrona endpointów publicznych — wspólna z linkiem DLT (US-005); nazwy re-eksportowane (testy)
+from ..public_guards import (PUBLIC, PUBLIC_LIMIT_PER_MINUTE, PUBLIC_POST,  # noqa: F401
+                             _public_limiter, json_origin_guard, public_limit)
+from ..security import client_ip
 from ..slots import free_slots, windows
 from .avizo_proposals import _proposal_out, proposals_router  # noqa: F401 — re-eksport (main.py)
 
 router = APIRouter(prefix="/api/avizo", tags=["awizacja"])
+SLOTS_WINDOW_DAYS = 30
 logger = logging.getLogger(__name__)
-
-# --- ochrona endpointów publicznych (bez logowania, dostęp po tokenie) ---
-
-PUBLIC_LIMIT_PER_MINUTE = 30
-_public_limiter = ApiRateLimiter()   # osobny od globalnego — klucz avz:{ip}
-
-
-def public_limit(request: Request) -> None:
-    retry = _public_limiter.hit(f"avz:{client_ip(request)}", PUBLIC_LIMIT_PER_MINUTE)
-    if retry is not None:
-        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS,
-                            "Za dużo żądań. Spróbuj ponownie za chwilę.",
-                            headers={"Retry-After": str(int(retry))})
-
-
-def json_origin_guard(request: Request) -> None:
-    """Zamiast tokenu CSRF (brak ciasteczek = brak ambientnych poświadczeń): tylko JSON
-    (formularz HTML z obcej strony nie wyśle application/json bez preflightu CORS)
-    i Origin/Referer — jeśli jest — musi wskazywać nasz host."""
-    if not request.headers.get("content-type", "").lower().startswith("application/json"):
-        raise HTTPException(status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, "Wymagany application/json.")
-    source = request.headers.get("origin") or request.headers.get("referer")
-    if source and not origin_allowed(request, source):
-        raise HTTPException(status.HTTP_403_FORBIDDEN, "Niedozwolone źródło żądania.")
-
-
-PUBLIC = [Depends(public_limit)]
-PUBLIC_POST = [Depends(public_limit), Depends(json_origin_guard)]
 
 
 class AvizoSendIn(BaseModel):
@@ -223,6 +198,12 @@ def avizo_slots(token: str, container_id: int, date: datetime.date,
     item = next((i for i in avizo.items if i.container_id == container_id), None)
     if not item:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Kontener spoza tej awizacji.")
+    # US-005: link nie odpytuje obłożenia magazynu na dowolne daty — tylko ± SLOTS_WINDOW_DAYS
+    # od dziś i od terminu dostawy z zaproszenia
+    anchors = [today_pl()] + ([item.container.notify_date] if item.container.notify_date else [])
+    if all(abs((date - a).days) > SLOTS_WINDOW_DAYS for a in anchors):
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
+                            f"Data poza zakresem ± {SLOTS_WINDOW_DAYS} dni.")
     return free_slots(db, item.container.warehouse, date, exclude_container_id=container_id)
 
 

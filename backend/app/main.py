@@ -213,7 +213,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         for name, value in self.HEADERS.items():
             response.headers.setdefault(name, value)
         path = request.url.path
-        if path.startswith(("/avizo/", "/api/avizo/")):
+        if path.startswith(("/avizo/", "/api/avizo/", "/dlt/", "/api/dlt/")):
             # link z tokenem nie może wyciec w Referer ani trafić do wyszukiwarek
             response.headers["Referrer-Policy"] = "no-referrer"
             response.headers["X-Robots-Tag"] = "noindex, nofollow"

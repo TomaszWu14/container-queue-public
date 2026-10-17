@@ -92,7 +92,9 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - Dane: > 30 żądań/min z jednego IP na `/api/dlt/{token}` → Gdy kolejne → Wtedy 429 z `Retry-After`.
   - Dane: żądanie POST z obcym `Origin` → Gdy wysyłka → Wtedy 403.
   - Dane: `GET /api/avizo/{token}/slots` z datą poza zakresem ważności linku ± 30 dni → Gdy żądanie → Wtedy 422.
-- **Test:** `test_avizo_public.py` (parametryzacja o DLT), nowy test zakresu dat.
+- **Test:** `test_public_routes_guard.py`, `test_dlt_confirm.py`, `test_avizo_slots.py`.
+- **Stan:** zrealizowane (PR po #29); czeka na merge. Ochrona w jednym miejscu: `app/public_guards.py`
+  (awizacja i DLT); link DLT dostał też nagłówki `no-referrer` / `noindex`.
 
 ### US-006 · [SEC] Bezpieczne parsowanie XML i archiwów ZIP
 - **Rozmiar:** S · **Źródło:** R-07, T-06 · **Wymagania:** SR-006
@@ -102,7 +104,10 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   - Dane: XML z DTD/encjami zewnętrznymi albo „billion laughs” → Gdy import SAD → Wtedy 422, proces żyje.
   - Dane: ZIP deklarujący 1 MB, rozpakowujący się do 2 GB → Gdy upload archiwum → Wtedy 413 po przekroczeniu
     `MAX_UPLOAD_MB` w trakcie rozpakowywania; współczynnik kompresji > 100 odrzucony.
-- **Test:** `test_imports_malicious.py` (planowany, nie istnieje), `test_archive_upload.py`.
+- **Test:** `test_imports_malicious.py`, `test_sad_xml.py`, `test_archive_upload.py`.
+- **Stan:** zrealizowane (PR po #29); czeka na merge. Rozpoznanie: XML był już chroniony odrzuceniem DTD
+  przed parserem (expat; ten sam efekt co `defusedxml`, bez nowej zależności), a `zipfile` nie czyta więcej
+  niż rozmiar z nagłówka. Dołożono limit kompresji > 100× dla plików powyżej 1 MB i testy na spreparowane pliki.
 
 ### US-007 · [SEC][OPS] Bramki bezpieczeństwa w CI domknięte
 - **Rozmiar:** S · **Źródło:** R-08 · **Wymagania:** SR-013
@@ -275,6 +280,8 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 ### US-018 · [DEV] Testy brakujących ekranów o wysokim ryzyku
 - **Rozmiar:** M · **Źródło:** TEST-007 (`docs/testy/E2E.md`)
 - Testy RTL dla `ImportModal`, `ClearQueueModal`, resetu hasła w `AuthPages`.
+- **Stan:** zrealizowane (PR po #30); czeka na merge. `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3),
+  `ImportModal.dom.test.tsx` (4); lista stron bez testu w `docs/testy/E2E.md` odświeżona (21 → 16).
 
 ### US-019 · [SEC] 2FA obowiązkowe dla administratorów na produkcji
 - **Rozmiar:** XS (konfiguracja) · **Źródło:** E-01 · **Zależy od:** decyzji PO (Z-008).
