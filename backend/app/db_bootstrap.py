@@ -14,8 +14,8 @@ from .security import hash_password
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_COMPANIES = [("Borealis", "BOREALIS"), ("Cobalt Sport", "COBALT"),
-                     ("Iberia", "PT"), ("Acme", "ACME")]
+DEFAULT_COMPANIES = [("Beta", "BETA"), ("Gamma", "GAMMA"),
+                     ("Delta", "DELTA"), ("Acme", "ACME")]
 
 # firmy spedycyjne, dla których zakładamy osobne konta z własnym widokiem
 DEFAULT_FORWARDERS = ["SPEDALFA", "Spedgamma", "Spedomega", "Speddelta"]
@@ -259,7 +259,7 @@ def ensure_new_columns() -> None:
                        'claim_amount': "NUMERIC(14, 2)",
                        'recovered_amount': "NUMERIC(14, 2)",
                        'claim_currency': "VARCHAR(3) DEFAULT 'PLN' NOT NULL"},
-        # Wywołania-DLT: auta + HU + palety ułamkowe (migracja a1b2c3d4e5f7)
+        # Wywołania-MAG-1: auta + HU + palety ułamkowe (migracja a1b2c3d4e5f7)
         'pallet_call_lines': {'truck_id': "INTEGER",
                               'hu_numbers': "TEXT DEFAULT ''",
                               'pallets': "NUMERIC(7, 3)"},

@@ -33,7 +33,7 @@ ROLE_WORDS = ((("spedytor", "forwarder"), Role.forwarder), (("agencja", "celn", 
 def account_fields(login: str, company_id: int, forwarder_id: int, agency_id: int,
                    warehouse_id: int) -> dict:
     """Pola konta demo per rola: partner bez spółki (deps.own_company_id), magazyn zawężony
-    do magazynu DLT, reszta = logistyka grupy (widzi wszystkie spółki)."""
+    do magazynu MAG-1, reszta = logistyka grupy (widzi wszystkie spółki)."""
     low = login.lower()
     role = next((r for words, r in ROLE_WORDS if any(w in low for w in words)), Role.logistics)
     if role == Role.forwarder:

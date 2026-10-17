@@ -271,7 +271,7 @@ def update_driver(container_id: int, body: DriverIn,
     check_not_modified(db, container, body.expected_updated_at)
     record_changes(db, container, body.model_dump(exclude_unset=True, exclude={"expected_updated_at"}),
                    user, note="dane kierowcy")
-    # magazyn przyjmujący (np. DLT) też musi znać nr auta/kierowcy przed przyjazdem
+    # magazyn przyjmujący (np. MAG-1) też musi znać nr auta/kierowcy przed przyjazdem
     recipients = container_watchers(db, container) \
         + warehouse_users(db, container.company_id, container.warehouse_id)
     notify(db, recipients, kind="driver",

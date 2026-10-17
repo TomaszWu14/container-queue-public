@@ -60,11 +60,11 @@ def test_customs_status_on_stale_view_is_409(client, admin_headers):
 
 def test_transport_order_status_on_stale_view_is_409(client, admin_headers):
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     forwarder = login(client, "sped.spedalfa", "haslo123")
     order = client.post("/api/transport-orders", headers=logistics, json={
         "container_id": ctx["container"]["id"], "pickup_location": "DCT Gdańsk",
-        "delivery_location": "Magazyn Borealis", "pickup_date": "2026-07-06"}).json()
+        "delivery_location": "Magazyn Beta", "pickup_date": "2026-07-06"}).json()
     url = f"/api/transport-orders/{order['id']}/status"
     first = client.post(url, headers=forwarder, json={"status": "ZAAKCEPTOWANE", "expected_status": "WYSTAWIONE"})
     assert first.status_code == 200, first.text

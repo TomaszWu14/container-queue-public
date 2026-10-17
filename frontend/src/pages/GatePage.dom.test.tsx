@@ -31,7 +31,7 @@ afterEach(() => { cleanup(); apiGet.mockReset(); apiPost.mockReset() })
 
 const item = {
   id: 7, container_no: 'MSDU0806613', truck_no: 'WGM 1234A', trailer_no: 'WGM 5678B',
-  driver_name: 'Jan Kierowca', warehouse_id: 1, warehouse: 'DLT',
+  driver_name: 'Jan Kierowca', warehouse_id: 1, warehouse: 'MAG-1',
   notify_date: '2026-09-18', eta: null, status: 'AWIZOWANY',
   driver_arrived_at: null, checked_in_at: null,
 }

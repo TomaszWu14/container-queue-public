@@ -6,7 +6,7 @@ Status: spec zatwierdzony (do przeglądu przed planem implementacji)
 ## Cel
 
 Zastąpić ręczne reguły zapotrzebowania (`target_days × zużycie_dzienne`) w module
-wywołań palet z DLT **prognozą dziennego popytu per produkt**. Faza 1 dostarcza
+wywołań palet z MAG-1 **prognozą dziennego popytu per produkt**. Faza 1 dostarcza
 działający system end-to-end oparty o **baseline** (średnia krocząca + profil
 sezonowy), za interfejsem, który w Fazie 2 podmieni model ML — bez ruszania reszty.
 
@@ -21,19 +21,19 @@ z niego deterministycznie:
   (firma, magazyn, kontrahent). Master data leży dziś na dysku firmowym.
 - **Ingest:** ręczny upload pliku (CSV/XLSX) w panelu. Bez watchera/integracji SAP
   na tym etapie (YAGNI).
-- **Horyzont:** suwak w panelu (planista ustawia; lead time z DLT bywa różny).
+- **Horyzont:** suwak w panelu (planista ustawia; lead time z MAG-1 bywa różny).
 - **Odświeżanie:** automatycznie po wgraniu nowych danych + przycisk „Przelicz".
   Bez codziennego auto-retreningu (dane wchodzą ręcznie).
 - **Rola planisty:** prognoza to **sugestia z przedziałem niepewności**
   („18–24 palety"); człowiek decyduje i klika „Wywołaj".
 - **Kryterium sukcesu:** biznesowo — mniej braków (stockoutów) i mniej zalegania
-  w DLT; technicznie — **bramka: ML musi pobić baseline**, inaczej zostajemy przy
+  w MAG-1; technicznie — **bramka: ML musi pobić baseline**, inaczej zostajemy przy
   baseline.
 
 ## Architektura
 
 Nowy pakiet `backend/app/analytics/` + strona `AnalitykaPage` na froncie.
-Jedno źródło prawdy dla prognozy, konsumowane przez wywołania DLT.
+Jedno źródło prawdy dla prognozy, konsumowane przez wywołania MAG-1.
 
 ```
 upload (CSV/XLSX) → walidacja/podgląd → tabela material_issues (historia)
@@ -42,7 +42,7 @@ upload (CSV/XLSX) → walidacja/podgląd → tabela material_issues (historia)
                           (Faza 1: BaselinePredictor; Faza 2: ML — ten sam interfejs)
                                               │
                           ┌───────────────────┴───────────────────┐
-                 Analityka (wykres + przedział)          Wywołania DLT (sugestia palet)
+                 Analityka (wykres + przedział)          Wywołania MAG-1 (sugestia palet)
 ```
 
 ## Komponenty
@@ -70,7 +70,7 @@ interfejsem.
 ### Integracja z wywołaniami
 W `pallets_analysis.build_rows` zapotrzebowanie liczone z `sum(forecast na horyzont)`
 zamiast `zużycie_dzienne × target_days`. Przedział niepewności niesie się do sugestii
-palet. Reszta logiki (cap do `floor(stan_DLT)`, odejmowanie `już_wywołane`,
+palet. Reszta logiki (cap do `floor(stan_MAG1)`, odejmowanie `już_wywołane`,
 `brak_paz`) bez zmian.
 
 ## Przepływ / UI
@@ -79,7 +79,7 @@ Moduł „Analityka i Predykcja" (rola admin/logistics):
 1. **Wgraj dane** — drag pliku, podgląd raportu walidacji, zatwierdź.
 2. **Prognoza per produkt** — wykres historii + prognozy z pasmem niepewności,
    suwak horyzontu.
-3. Zasila **Wywołania DLT** (sugestia z przedziałem).
+3. Zasila **Wywołania MAG-1** (sugestia z przedziałem).
 
 ## Błędy i przypadki brzegowe
 
@@ -105,7 +105,7 @@ Moduł „Analityka i Predykcja" (rola admin/logistics):
 
 - ~~Dokładny format pliku (CSV vs XLSX) i nazwy kolumn źródłowych~~ — **rozstrzygnięte
   (D16, 2026-09-24): xlsx + autodetekcja nagłówków**. W praktyce ustalił to import stanów
-  DLT z autodetekcją kolumn. Nazwy kolumn nie są sztywnym kontraktem.
+  MAG-1 z autodetekcją kolumn. Nazwy kolumn nie są sztywnym kontraktem.
 - Skala (liczba produktów) — projekt zakłada setki–tysiące SKU (globalny model w
   Fazie 2 to obsługuje).
 - Mapping kolumny `niestandardowe` w istniejących wywołaniach (parking z Pytania 1)

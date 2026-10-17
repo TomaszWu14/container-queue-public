@@ -217,7 +217,7 @@ class Container(Base):
     slot_time: Mapped[str] = mapped_column(String(5), default="")
     # D9 etap rampy — drugi wymiar obok zamrożonego ContainerStatus (RAMP_STAGES; None = brak)
     ramp_stage: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    # szczegóły dla magazynu przyjmującego (np. zewnętrzny DLT) — widok konta klienta
+    # szczegóły dla magazynu przyjmującego (np. zewnętrzny MAG-1) — widok konta klienta
     materials_list: Mapped[str] = mapped_column(Text, default="")      # lista materiałów
     palletization_note: Mapped[str] = mapped_column(Text, default="")  # instrukcja paletyzacji
     pallet_count: Mapped[int | None] = mapped_column(Integer, nullable=True)  # ilość palet

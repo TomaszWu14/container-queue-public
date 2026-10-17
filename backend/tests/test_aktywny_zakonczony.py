@@ -8,14 +8,14 @@ import re
 
 from app.database import SessionLocal
 from app.models import Container, ContainerStatus
-from tests.test_tracking import _borealis_id
+from tests.test_tracking import _beta_id
 
 NO = "MSDU5050505"
 
 
 def _delivered() -> int:
     with SessionLocal() as db:
-        c = Container(container_no=NO, company_id=_borealis_id(db),
+        c = Container(container_no=NO, company_id=_beta_id(db),
                       status=ContainerStatus.DOSTARCZONY, rf_number="6200000099")
         db.add(c)
         db.commit()
@@ -29,7 +29,7 @@ def test_delivered_open_in_queue_but_not_tracked(client, admin_headers):
     # kolejka: aktywne tak, archiwum nie; licznik zakładki spółki go liczy
     assert cid in [c["id"] for c in get("/api/containers", completed="false")]
     assert cid not in [c["id"] for c in get("/api/containers", completed="true")]
-    assert get("/api/containers/counts")["BOREALIS"] >= 1
+    assert get("/api/containers/counts")["BETA"] >= 1
     # wyszukiwarka kolejki
     assert [s["container_id"] for s in get("/api/search/suggest", q="5050505",
                                            completed="false")] == [cid]

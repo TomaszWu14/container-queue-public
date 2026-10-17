@@ -4,7 +4,7 @@ Jedno miejsce na reguły biznesowe, które aplikacja egzekwuje. **Zatwierdza: w�
 
 | Obszar | Reguła | Od | Ref |
 |---|---|---|---|
-| Odprawa celna | Odprawia **wyłącznie agencja celna**. Spedycja (wycena i transport, np. port → magazyn) nie ma dostępu do statusów ani dokumentów odprawowych. Firma może być agencją i spedycją jednocześnie (Delta Brokers) — osobne konta i role | 2026-09-28 | — |
+| Odprawa celna | Odprawia **wyłącznie agencja celna**. Spedycja (wycena i transport, np. port → magazyn) nie ma dostępu do statusów ani dokumentów odprawowych. Firma może być agencją i spedycją jednocześnie (Omega Brokers) — osobne konta i role | 2026-09-28 | — |
 | Odprawa celna | Status odprawy zmienia agencja; logistyka/admin awaryjnie | 2026-09-28 | — |
 | Odprawa celna | „Odprawiony”/„Rozliczony” cofa tylko logistyka/admin, zawsze z notatką | 2026-09-28 | — |
 | Odprawa celna | Agencję przypisuje logistyka ze słownika (bez wolnego tekstu) | 2026-09-28 | — |
@@ -17,11 +17,11 @@ Jedno miejsce na reguły biznesowe, które aplikacja egzekwuje. **Zatwierdza: w�
 | Załączniki — magazyn | Magazyn widzi CMR, packing list i pozostałe typy poza handlowymi/odprawowymi (PI, CI, B/L, SAD); plik bez typu dokumentu tylko własny | 2026-10-05 | — |
 | Wiadomości przy kontenerze | Jeden wątek, ale wiadomości agencji celnej są ukryte przed spedytorem, a spedytora — przed agencją (także w powiadomieniach i wzmiankach); wiadomości personelu wewnętrznego widzą wszyscy z dostępem do kontenera | 2026-10-05 | ten PR |
 | Zlecenia transportowe | Akceptuje spedytor; logistyka może zaakceptować w jego imieniu z notatką; bez anulowania | 2026-09-28 | — |
-| Linki publiczne | Każdy publiczny link (udostępnienie kontenera, portal klienta, DLT, strona kierowcy) wygasa najpóźniej `PUBLIC_LINK_MAX_DAYS` (domyślnie 90) dni od wystawienia, niezależnie od własnego terminu; potem nowy link z panelu | 2026-09-28 | SEC-014 |
+| Linki publiczne | Każdy publiczny link (udostępnienie kontenera, portal klienta, MAG-1, strona kierowcy) wygasa najpóźniej `PUBLIC_LINK_MAX_DAYS` (domyślnie 90) dni od wystawienia, niezależnie od własnego terminu; potem nowy link z panelu | 2026-09-28 | SEC-014 |
 | Limity rozładunku | Przekroczenie dziennego limitu magazynu = ostrzeżenie (zapis w historii), nie blokada | 2026-09-28 | — |
 | Demurrage | Dni wolne: ręcznie przy kontenerze → armator (Master data) → wartość domyślna | 2026-09-28 | — |
 | Dane SAP (MARM) | Materiał, który zniknął z pełnego eksportu MARM („brak w SAP”), nadal liczy się w przeliczeniach palet; w Master data ma plakietkę „brak w SAP” | 2026-09-28 | — |
-| Dane wspólne grupy | PAZ, cele zapasu, stany DLT, przeliczniki MARM i porty kontenerowe zmienia (także importem) admin, logistyka grupowa („wszystkie spółki”) albo logistyka spółki-właściciela materiałów (`SUPPLIER_COMPANY_CODES`, np. Acme); logistyk innej spółki tylko je czyta | 2026-09-28 | ACL-003 |
+| Dane wspólne grupy | PAZ, cele zapasu, stany MAG-1, przeliczniki MARM i porty kontenerowe zmienia (także importem) admin, logistyka grupowa („wszystkie spółki”) albo logistyka spółki-właściciela materiałów (`SUPPLIER_COMPANY_CODES`, np. Acme); logistyk innej spółki tylko je czyta | 2026-09-28 | ACL-003 |
 | Dane kierowcy (RODO) | Imię, telefon, nr dokumentu, nr auta/naczepy nie trafiają jawnie do historii zmian ani treści powiadomień (e-mail/Teams/n8n); po retencji awizacji czyszczone są też powiadomienia „dane kierowcy” i historia SMS kontenera | 2026-09-28 | — |
 | Baza wiedzy | Pinezki i tematy wiedzy są wspólne dla spółek grupy; spedytor i agencja celna nie mają do nich dostępu (komunikaty adresowane do ich roli — tak). Pinezkę edytuje/usuwa autor albo admin | 2026-09-28 | — |
 | Separacja spółek | Konto jednej spółki (bez „wszystkie spółki”) w dzienniku zmian widzi w filtrach tylko autorów i typy zmian ze swoich kontenerów, a w „kto przeczytał” notę — tylko adresatów ze swojej spółki; konta grupowe widzą wszystkich | 2026-09-28 | ACL-002 |

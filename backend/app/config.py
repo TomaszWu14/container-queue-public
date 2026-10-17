@@ -112,7 +112,7 @@ class Settings(BaseSettings):
     # i limit prób auto-przypomnienia na kontener+dostawę na dobę (pętla co 15 min)
     sms_daily_cap: int = Field(default=200, ge=0)
     sms_auto_max_attempts: int = Field(default=2, ge=1)
-    # SEC-014: twardy limit dla KAŻDEGO publicznego linku (DLT, awizacja)
+    # SEC-014: twardy limit dla KAŻDEGO publicznego linku (MAG-1, awizacja)
     # liczony od wystawienia — także gdy link nie ma własnego terminu (public_links.py)
     public_link_max_days: int = Field(default=90, ge=1)
     # interwał joba kongestii portów (AIS)
@@ -144,9 +144,9 @@ class Settings(BaseSettings):
     docs_eta_days: int = Field(default=5, ge=0)
     invoice_tolerance_pct: float = Field(default=2.0, ge=0)
     # kartoteka dostawców (spec 2026-09-25): kody spółek (Company.code, CSV) pracujących na
-    # materiałach Acme — widzą i używają globalnej kartoteki. Pozostałe (Borealis, Cobalt…)
+    # materiałach Acme — widzą i używają globalnej kartoteki. Pozostałe (Beta, Gamma…)
     # mają tylko własnych nadawców kontenerów (Supplier.client_company_id). Env: SUPPLIER_COMPANY_CODES
-    supplier_company_codes: str = "ACME,PT"
+    supplier_company_codes: str = "ACME,DELTA"
     # masowy ZIP miesiąca: twardy limit liczby plików w archiwum
     archive_zip_max_files: int = Field(default=500, ge=1)
     # OCR skanów (Tesseract): strona bez warstwy tekstowej jest renderowana (pypdfium2)
@@ -269,7 +269,7 @@ class Settings(BaseSettings):
     # alert „stęchły import" master data: starszy niż N dni (0 nie ma sensu — min. 1)
     stale_import_days: int = Field(default=14, ge=1)
 
-    # --- Wywołania-DLT / Power BI (SAP BW) ---
+    # --- Wywołania-MAG-1 / Power BI (SAP BW) ---
     powerbi_provider: str = "off"          # off / mock / real
     powerbi_workspace_id: str = ""
     powerbi_dataset_stock: str = ""
@@ -287,7 +287,7 @@ class Settings(BaseSettings):
     powerbi_orders_confirmed_field: str = "potw"
     powerbi_orders_unconfirmed_field: str = "niestandardowe"
     powerbi_location_field: str = "miejsce_skladowania"
-    powerbi_dlt_locations: str = ""        # wartości/prefiksy lokalizacji = DLT (reszta = magazyn)
+    powerbi_mag1_locations: str = ""        # wartości/prefiksy lokalizacji = MAG-1 (reszta = magazyn)
     pallet_target_days: int = Field(default=14, ge=0)      # kalibracja: docelowy zapas w dniach
     pallet_urgent_threshold: float = Field(default=2.0)    # kalibracja: próg palet „pilne”
     powerbi_tenant_id: str = ""
@@ -297,8 +297,8 @@ class Settings(BaseSettings):
     powerbi_ca_bundle: str = ""            # ścieżka CA bundle (proxy re-sygnujące TLS)
     powerbi_ssl_verify: bool = True        # False tylko dla dev
     powerbi_cache_ttl_min: int = Field(default=15, ge=0)
-    dlt_email: str = ""                    # adresat wywołań palet
-    dlt_call_emails: str = ""              # lista adresów DLT (CSV) — fallback gdy magazyn DLT bez e-maila
+    mag1_email: str = ""                    # adresat wywołań palet
+    mag1_call_emails: str = ""              # lista adresów MAG-1 (CSV) — fallback gdy magazyn MAG-1 bez e-maila
     powerbi_column_map: str = ""           # JSON {nasza_nazwa: nazwa_w_kostce} — remap kolumn
     pallet_alert_interval_hours: float = Field(default=12.0, gt=0)  # cykl alertów „pilne”
     pallet_forecast_horizon_days: int = Field(default=14, ge=1)  # horyzont prognozy zapotrzebowania
@@ -310,12 +310,12 @@ class Settings(BaseSettings):
         return {s.strip() for s in self.vbba_open_statuses.split(",") if s.strip()}
 
     @property
-    def dlt_call_emails_list(self) -> list[str]:
-        return [s.strip() for s in self.dlt_call_emails.split(",") if s.strip()]
+    def mag1_call_emails_list(self) -> list[str]:
+        return [s.strip() for s in self.mag1_call_emails.split(",") if s.strip()]
 
     @property
-    def powerbi_dlt_locations_set(self) -> set[str]:
-        return {s.strip() for s in self.powerbi_dlt_locations.split(",") if s.strip()}
+    def powerbi_mag1_locations_set(self) -> set[str]:
+        return {s.strip() for s in self.powerbi_mag1_locations.split(",") if s.strip()}
 
     @property
     def cors_origins_list(self) -> list[str]:

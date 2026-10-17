@@ -201,7 +201,7 @@ class PalletCallStatus(str, enum.Enum):
     draft = "draft"
     sent = "sent"
     confirmed = "confirmed"
-    przygotowane = "przygotowane"        # DLT potwierdził przygotowanie (strona tokenowa)
-    wyslane_z_dlt = "wyslane_z_dlt"      # DLT potwierdził wysyłkę (dezaktywuje token)
+    przygotowane = "przygotowane"        # MAG-1 potwierdził przygotowanie (strona tokenowa)
+    wyslane_z_mag1 = "wyslane_z_mag1"      # MAG-1 potwierdził wysyłkę (dezaktywuje token)
     delivered = "delivered"      # palety przywiezione — przestają być odejmowane z sugestii
     cancelled = "cancelled"

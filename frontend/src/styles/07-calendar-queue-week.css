@@ -104,14 +104,14 @@
 .qs-warehouses { flex: 1; min-width: 320px; gap: 7px; }
 
 /* akcenty magazynów — te same, którymi zakładki firm znaczą spółki */
-/* DLT/ACME z tokenów --wh-* (tint/line/ink) — jedno źródło z kolejką (S6) */
+/* MAG-1/ACME z tokenów --wh-* (tint/line/ink) — jedno źródło z kolejką (S6) */
 .wh-acme      { --wh-ink: var(--wh-acme-ink); --wh-tint: var(--wh-acme-bg); --wh-line: var(--wh-acme-border); }
-.wh-dlt        { --wh-ink: var(--wh-dlt-ink); --wh-tint: var(--wh-dlt-bg); --wh-line: var(--wh-dlt-border); }
-.wh-borealis     { --wh-co: var(--co-borealis); }
-.wh-iberia { --wh-co: var(--co-pt); }
-.wh-cobaltsport{ --wh-co: var(--co-cobalt); }
+.wh-mag1        { --wh-ink: var(--wh-mag1-ink); --wh-tint: var(--wh-mag1-bg); --wh-line: var(--wh-mag1-border); }
+.wh-beta     { --wh-co: var(--co-beta); }
+.wh-delta { --wh-co: var(--co-delta); }
+.wh-gamma{ --wh-co: var(--co-gamma); }
 /* magazyny spółek bez własnych tokenów --wh-*: odcień z koloru spółki (--co-*), więc działa też w ciemnym motywie */
-.wh-borealis, .wh-iberia, .wh-cobaltsport { --wh-ink: var(--wh-co);
+.wh-beta, .wh-delta, .wh-gamma { --wh-ink: var(--wh-co);
   --wh-tint: color-mix(in srgb, var(--wh-co) 12%, var(--panel)); --wh-line: color-mix(in srgb, var(--wh-co) 40%, var(--panel)); }
 
 /* badge ryzyka (moduł Specjalna troska) */

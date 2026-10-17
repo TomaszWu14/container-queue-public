@@ -12,11 +12,11 @@ const STATUS_ORDER = ['ZAPOWIEDZIANY', 'W_TRANSPORCIE', 'W_PORCIE'] as const
 describe('groupByKey', () => {
   it('Magazyn: grupuje po warehouse_name, sort malejąco wg liczby, pusty → sentinel', () => {
     const rows: DayRow[] = [{ day: '2026-09-17', items: [
-      cont({ warehouse_name: 'DLT' }), cont({ warehouse_name: 'ACME' }),
-      cont({ warehouse_name: 'DLT' }), cont({ warehouse_name: '' }),
+      cont({ warehouse_name: 'MAG-1' }), cont({ warehouse_name: 'ACME' }),
+      cont({ warehouse_name: 'MAG-1' }), cont({ warehouse_name: '' }),
     ] }]
     const g = groupByKey(rows, 'warehouse', STATUS_ORDER, 'BEZ')
-    expect(g.map(x => [x.key, x.items.length])).toEqual([['DLT', 2], ['ACME', 1], ['BEZ', 1]])
+    expect(g.map(x => [x.key, x.items.length])).toEqual([['MAG-1', 2], ['ACME', 1], ['BEZ', 1]])
   })
 
   it('Status: kolejność wg cyklu życia, nieznane na końcu', () => {

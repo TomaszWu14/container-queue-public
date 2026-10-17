@@ -43,14 +43,14 @@
 .colprev td { padding: 0 8px; height: 26px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .colprev .mono { font-family: var(--font-mono); }
 .colprev-day td { background: var(--surface-2); font-weight: 600; }
-.colprev-row.wh-dlt td { background: var(--kq-row-dlt); }
+.colprev-row.wh-mag1 td { background: var(--kq-row-mag1); }
 .colprev-row.wh-acme td { background: var(--kq-row-acme); }
 .colprev-row.wh-none td { background: var(--kq-row-none); }
-.colprev-row.wh-dlt td:first-child { box-shadow: inset 3px 0 var(--wh-dlt-bar); }
+.colprev-row.wh-mag1 td:first-child { box-shadow: inset 3px 0 var(--wh-mag1-bar); }
 .colprev-row.wh-acme td:first-child { box-shadow: inset 3px 0 var(--wh-acme-bar); }
 .colprev-row.wh-none td:first-child { box-shadow: inset 3px 0 var(--wh-none-bar); }
-.colprev-row.wh-dlt:hover td { background: var(--kq-row-dlt-hover); }
+.colprev-row.wh-mag1:hover td { background: var(--kq-row-mag1-hover); }
 .colprev-row.wh-acme:hover td { background: var(--kq-row-acme-hover); }
-.colprev-row.wh-dlt .colprev-wh { color: var(--wh-dlt-ink); font-weight: 700; }
+.colprev-row.wh-mag1 .colprev-wh { color: var(--wh-mag1-ink); font-weight: 700; }
 .colprev-row.wh-acme .colprev-wh { color: var(--wh-acme-ink); font-weight: 700; }
 .colprev-muted { color: var(--text-muted); }

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Zastąpić ręczne `target_days × zużycie` w wywołaniach DLT prognozą dziennego popytu per produkt, opartą o baseline sezonowo-naiwny, za wymienialnym interfejsem `Predictor`.
+**Goal:** Zastąpić ręczne `target_days × zużycie` w wywołaniach MAG-1 prognozą dziennego popytu per produkt, opartą o baseline sezonowo-naiwny, za wymienialnym interfejsem `Predictor`.
 
 **Architecture:** Nowy pakiet `backend/app/analytics/` (ingest historii wydań → tabela `material_issues` → `BaselinePredictor` → integracja z `pallets_analysis`). Front: strona `AnalitykaPage` (upload + wykres prognozy). Interfejs `Predictor` jest szwem, za którym Faza 2 wstawia model ML bez zmian w konsumentach.
 
@@ -41,7 +41,7 @@ def test_material_issue_persists_and_dedups():
     with SessionLocal() as db:
         db.query(MaterialIssue).delete()
         db.add(MaterialIssue(produkt="A", date=datetime.date(2026, 1, 2), qty=10,
-                             firma="BOREALIS", magazyn="MAG1", kontrahent="", source_file="f1.csv"))
+                             firma="BETA", magazyn="MAG1", kontrahent="", source_file="f1.csv"))
         db.commit()
         row = db.query(MaterialIssue).one()
         assert row.produkt == "A" and float(row.qty) == 10.0
@@ -483,7 +483,7 @@ git commit -m "feat(analityka): router upload(podgląd/commit) + forecast"
 
 ---
 
-### Task 5: Integracja prognozy z wywołaniami DLT
+### Task 5: Integracja prognozy z wywołaniami MAG-1
 
 **Files:**
 - Modify: `backend/app/pallets_analysis.py` (`build_rows` — nowy opcjonalny arg `demand_forecast`)
@@ -506,10 +506,10 @@ def test_forecast_drives_need_when_present():
     paz = {"A": 10.0}          # 10 szt/paleta
     rows, _ = build_rows(
         stock, [], [], [], paz, {}, key="produkt", location_field="lok",
-        dlt_values={"DLT"}, open_statuses=set(), target_days=7, urgent_threshold=2,
+        mag1_values={"MAG-1"}, open_statuses=set(), target_days=7, urgent_threshold=2,
         demand_forecast={"A": 140.0}, horizon_days=14)   # 140 szt = 14 palet na 14 dni
     r = next(x for x in rows if x["produkt"] == "A")
-    # need = 14 palet forecast; stan_mag = 10 palet → sugestia dąży do 4 (cap floor(DLT)=0 → 0),
+    # need = 14 palet forecast; stan_mag = 10 palet → sugestia dąży do 4 (cap floor(MAG-1)=0 → 0),
     # ale dni_zapasu liczone z prognozy (10 palet / (1 pal/dzień) = 10 dni)
     assert round(r["dni_zapasu"], 1) == 10.0
 ```
@@ -525,7 +525,7 @@ W `pallets_analysis.build_rows` dodaj parametry i podmień źródło zapotrzebow
 
 ```python
 def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
-               key, location_field, dlt_values, open_statuses,
+               key, location_field, mag1_values, open_statuses,
                target_days, urgent_threshold,
                orders_confirmed_field="potw", orders_unconfirmed_field="niestandardowe",
                demand_forecast=None, horizon_days=14):
@@ -546,7 +546,7 @@ def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
                     else (zuzycie_pal or 0) * target_days)
             need = base + dost_pal + zn_pal
             raw = math.ceil(need - (mag_pal or 0) - wywolane)
-            sugestia = max(0, min(raw, math.floor(dlt_pal or 0)))
+            sugestia = max(0, min(raw, math.floor(mag1_pal or 0)))
 ```
 
 W `pallets_cache.get_analysis` policz prognozę i przekaż:
@@ -581,7 +581,7 @@ Expected: PASS (nowy + brak regresji w istniejących)
 
 ```bash
 git add backend/app/pallets_analysis.py backend/app/pallets_cache.py backend/app/config.py backend/tests/test_pallets_forecast_integration.py
-git commit -m "feat(analityka): prognoza napędza zapotrzebowanie w wywołaniach DLT"
+git commit -m "feat(analityka): prognoza napędza zapotrzebowanie w wywołaniach MAG-1"
 ```
 
 ---

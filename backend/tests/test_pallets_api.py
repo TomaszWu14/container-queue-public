@@ -8,7 +8,7 @@ import pytest
 def _mock_powerbi(monkeypatch):
     from app.config import settings
     monkeypatch.setattr(settings, "powerbi_provider", "mock")
-    monkeypatch.setattr(settings, "powerbi_dlt_locations", "3DLT")
+    monkeypatch.setattr(settings, "powerbi_mag1_locations", "3MAG1")
     monkeypatch.setattr(settings, "powerbi_table_stock", "stock")
     monkeypatch.setattr(settings, "powerbi_table_vbba", "vbba")
     monkeypatch.setattr(settings, "powerbi_table_orders", "vbbe")
@@ -31,7 +31,7 @@ def test_analysis_returns_signals(client, admin_headers):
     assert r.status_code == 200, r.text
     body = r.json()
     item = next(i for i in body["items"] if i["produkt"] == "DEMO-SKU-020")
-    assert item["stan_mag_pal"] == 10 and item["stan_dlt_pal"] == 20
+    assert item["stan_mag_pal"] == 10 and item["stan_mag1_pal"] == 20
     assert item["sugestia_pal"] == 10
     assert "discrepancies" in body
 
@@ -60,7 +60,7 @@ def test_send_sets_status(client, admin_headers, monkeypatch):
     sent = {}
     monkeypatch.setattr(pallets, "send_html_email",
                         lambda *a, **k: sent.update({"called": True, "kw": k}))
-    monkeypatch.setattr(settings, "dlt_email", "dlt@example.com")
+    monkeypatch.setattr(settings, "mag1_email", "mag1@example.com")
     call = client.post("/api/pallet-calls", headers=admin_headers, json={
         "company_id": _company_id(client, admin_headers),
         "lines": [{"produkt": "X", "ilosc_pal": 1}]}).json()
@@ -69,13 +69,13 @@ def test_send_sets_status(client, admin_headers, monkeypatch):
     assert sent.get("called") and sent["kw"]["attachments"]
 
 
-def test_dlt_guard_blocks_over_stock(client, admin_headers):
-    _add_paz(client, admin_headers)   # DEMO-SKU-020 stan DLT = 20 pal (2000/100)
+def test_mag1_guard_blocks_over_stock(client, admin_headers):
+    _add_paz(client, admin_headers)   # DEMO-SKU-020 stan MAG-1 = 20 pal (2000/100)
     cid = _company_id(client, admin_headers)
     over = {"company_id": cid, "lines": [{"produkt": "DEMO-SKU-020", "ilosc_pal": 25}]}
     r = client.post("/api/pallet-calls", headers=admin_headers, json=over)
-    assert r.status_code == 422 and "DLT" in r.text
-    over["allow_over_dlt"] = True
+    assert r.status_code == 422 and "MAG-1" in r.text
+    over["allow_over_mag1"] = True
     r2 = client.post("/api/pallet-calls", headers=admin_headers, json=over)
     assert r2.status_code == 201
 
@@ -83,7 +83,7 @@ def test_dlt_guard_blocks_over_stock(client, admin_headers):
 def test_deliver_and_xlsx(client, admin_headers):
     cid = _company_id(client, admin_headers)
     call = client.post("/api/pallet-calls", headers=admin_headers, json={
-        "company_id": cid, "allow_over_dlt": True,
+        "company_id": cid, "allow_over_mag1": True,
         "lines": [{"produkt": "DEMO-SKU-020", "ilosc_pal": 2}]}).json()
     r = client.post(f"/api/pallet-calls/{call['id']}/deliver", headers=admin_headers)
     assert r.status_code == 200 and r.json()["status"] == "delivered"

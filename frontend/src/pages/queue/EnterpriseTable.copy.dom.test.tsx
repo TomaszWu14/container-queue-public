@@ -20,7 +20,7 @@ import type { TableCtx } from './EnterpriseTable'
 import type { Container } from '../../types'
 
 const c = {
-  id: 1, container_no: 'FFAU1005416', status: 'W_PORCIE', warehouse_name: 'DLT', customs_status: 'BRAK',
+  id: 1, container_no: 'FFAU1005416', status: 'W_PORCIE', warehouse_name: 'MAG-1', customs_status: 'BRAK',
   order_numbers: '4500623852-2\n4500622711', incoming_delivery_no: '180001234',
 } as unknown as Container
 

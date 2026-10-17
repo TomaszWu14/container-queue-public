@@ -13,7 +13,7 @@ const CONTAINER = {
   supplier_name: 'Dostawca A', vessel: 'MV DEMO ATLAS', eta: '2026-08-01', atd: null,
   notify_date: '2026-08-10', transport_type: 'kola', status: 'W_TRANSPORCIE',
   customs_status: 'BRAK', document_status: 'BRAK', purchasing_status: 'BRAK',
-  order_numbers: 'PO-1', delivery_note: '', warehouse_name: 'DLT',
+  order_numbers: 'PO-1', delivery_note: '', warehouse_name: 'MAG-1',
   incoming_delivery_no: '18001', purchase_note: '', forwarder_name: 'SPEDALFA',
   document_flow: '', sent_required: null, sent_number: '', sent_status: '',
   is_delayed: false, transport_id: null, order_number: null,

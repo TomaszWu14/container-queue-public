@@ -61,7 +61,7 @@ def _validate_role_bindings(role: Role, company_id: int | None, forwarder_id: in
                                 "Rola agencja celna wymaga przypisania agencji.")
         return
     if role == Role.warehouse and warehouse_id is None:
-        # konto magazynu (np. zewnętrzny DLT) musi mieć magazyn — inaczej fail-closed = brak dostępu
+        # konto magazynu (np. zewnętrzny MAG-1) musi mieć magazyn — inaczej fail-closed = brak dostępu
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
                             "Rola magazyn wymaga przypisania magazynu.")
     if role != Role.admin and not view_all and company_id is None:

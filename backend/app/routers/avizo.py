@@ -1,6 +1,6 @@
 """Awizacja do spedycji (dwuetapowa): wysyłka z kolejki, publiczny formularz etapu 1
 (potwierdzenie dostaw) i etapu 2 (dane kierowców) po jednorazowych tokenach,
-informacja do magazynu (np. DLT). Przejścia stanów: app/avizo_workflow.py."""
+informacja do magazynu (np. MAG-1). Przejścia stanów: app/avizo_workflow.py."""
 from ..models import today_pl
 import datetime
 import logging
@@ -34,7 +34,7 @@ from ..models import (
     Warehouse,
 )
 from ..notifications import company_watchers, notify, send_html_email
-# ochrona endpointów publicznych — wspólna z linkiem DLT (US-005); nazwy re-eksportowane (testy)
+# ochrona endpointów publicznych — wspólna z linkiem MAG-1 (US-005); nazwy re-eksportowane (testy)
 from ..public_guards import (PUBLIC, PUBLIC_LIMIT_PER_MINUTE, PUBLIC_POST,  # noqa: F401
                              _public_limiter, json_origin_guard, public_limit)
 from ..security import client_ip

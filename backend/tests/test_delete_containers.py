@@ -103,8 +103,8 @@ def test_clear_queue_scoped_to_company(client):
     _seed_container(no="MSKU7026499")
     db = SessionLocal()
     try:
-        borealis = db.scalar(select(Company).where(Company.code == "BOREALIS"))
-        db.add(Container(company_id=borealis.id, container_no="TCLU1234567"))
+        beta = db.scalar(select(Company).where(Company.code == "BETA"))
+        db.add(Container(company_id=beta.id, container_no="TCLU1234567"))
         db.commit()
     finally:
         db.close()

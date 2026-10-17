@@ -9,7 +9,7 @@ from app.import_templates import TEMPLATES, build_template
 from app.importers.excel import _map_headers
 from app.importers.lfa1 import parse_lfa1
 from app.importers.master_data import (
-    _parse_cport_rows, _parse_dlt_stock_rows, _parse_marm_rows)
+    _parse_cport_rows, _parse_mag1_stock_rows, _parse_marm_rows)
 from app.importers.purchasing import EKKO_HEADERS, ETD_HEADERS, _parse_ekko_rows, _parse_etd_rows
 from app.importers.queue import HEADER_MAP, _parse_rows
 from app.invoices.master_import import load_xlsx_rows, parse_workbook_rows
@@ -48,7 +48,7 @@ def test_parsers_read_example_rows():
     marm, _ = _parse_marm_rows(build_template("marm"))
     assert marm[0]["material_no"] == "REF12345" and marm[0]["unit"] == "KAR" and marm[0]["numerator"] == 12
     assert parse_lfa1(build_template("lfa1"))[0][0]["sap_code"] == "100200"
-    assert _parse_dlt_stock_rows(build_template("dlt"))[0]["produkt"] == "REF12345"
+    assert _parse_mag1_stock_rows(build_template("mag1"))[0]["produkt"] == "REF12345"
     assert _parse_cport_rows(build_template("ports"), "wzor.xlsx")[0]["code"] == "CNNGB"
     ekko = _parse_ekko_rows(build_template("ekko"))[0]
     assert ekko["order_number"] == "4500617421" and ekko["delivery_date"] is not None   # data = komórka DATA

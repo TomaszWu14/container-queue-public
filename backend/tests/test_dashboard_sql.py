@@ -35,7 +35,7 @@ def _count_loaded_containers():
         event.remove(Container, "load", _inc)
 
 
-def _company_id(db, code="BOREALIS"):
+def _company_id(db, code="BETA"):
     return db.scalar(select(Company.id).where(Company.code == code))
 
 

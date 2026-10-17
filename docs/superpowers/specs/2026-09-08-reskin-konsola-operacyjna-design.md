@@ -67,14 +67,14 @@ Kropka statusu online zostaje.
   hairline border na `--panel`.
 - **Paski postępu**: wypełnienie `--accent`; stan „dobry" `--good`.
 
-## 5. Wiersze kolejki wg magazynu (DLT / ACME)
+## 5. Wiersze kolejki wg magazynu (MAG-1 / ACME)
 
 Pastelowe pełne tła zastąpione wzorcem **krawędź + tinta**:
 
-- DLT: `border-left: 3px solid #d6247a` (magenta ładunkowa) + tło `rgba(214,36,122,.04)`
+- MAG-1: `border-left: 3px solid #d6247a` (magenta ładunkowa) + tło `rgba(214,36,122,.04)`
 - ACME: `border-left: 3px solid #12a150` (zieleń sygnałowa) + tło `rgba(18,161,80,.04)`
 
-Tokeny `--row-dlt`/`--row-acme` (+ `-border`) przemapowane na nowe wartości — miejsca
+Tokeny `--row-mag1`/`--row-acme` (+ `-border`) przemapowane na nowe wartości — miejsca
 użycia w komponentach bez zmian, o ile stosują tokeny. Kolor niesie krawędź, nie tło:
 czytelny peryferyjnie, ekran z 50 wierszami nie „tęczuje".
 
@@ -104,7 +104,7 @@ Dokładne wartości dobrane przy implementacji z weryfikacją kontrastu AA.
 2. Kontrast WCAG AA na parach tekst/tło (w szczególności bursztyn: tylko `--accent-ink`
    na jasnym tle).
 3. Frontend build (`vite build`) bez błędów; istniejące testy repo zielone.
-4. Wiersze DLT/ACME rozróżnialne na liście kolejki przy pełnej tabeli.
+4. Wiersze MAG-1/ACME rozróżnialne na liście kolejki przy pełnej tabeli.
 
 ## 10. Ryzyka
 

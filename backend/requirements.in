@@ -21,7 +21,7 @@ httpx>=0.28.1
 # szablony maili awizacji do spedycji (PL/EN, app/templates/avizo)
 jinja2>=3.1.6
 openpyxl>=3.1.5
-# Wywołania-DLT: autoryzacja Power BI (service principal / delegated device-code).
+# Wywołania-MAG-1: autoryzacja Power BI (service principal / delegated device-code).
 # Importowany leniwie — reszta aplikacji działa bez tej zależności.
 msal>=1.39.0
 # szyfrowanie cache MSAL (refresh token) w DB — Fernet

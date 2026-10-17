@@ -71,10 +71,10 @@ def test_static_data_zero_dimensions_do_not_overwrite(db_session):
 def test_cargo_scoped_to_user_companies(client, db_session):
     headers = login(client)
     acme = _company_id(client, headers, "ACME")
-    borealis = _company_id(client, headers, "BOREALIS")
+    beta = _company_id(client, headers, "BETA")
     _mk_container(client, headers, "TGBU6784203", "MV CARGO", acme,
                   order_numbers="45001234")
-    _mk_container(client, headers, "MSDU0806613", "MV CARGO", borealis)
+    _mk_container(client, headers, "MSDU0806613", "MV CARGO", beta)
     vessel = _mk_vessel(db_session, "MV CARGO")
     db_session.add(OrderItem(company_id=acme, order_number="45001234", position="10",
                              material="REF001", description="Rękawice", quantity="500",
@@ -90,9 +90,9 @@ def test_cargo_scoped_to_user_companies(client, db_session):
     assert acme_c["items"] == [{"material": "REF001", "description": "Rękawice",
                                  "quantity": "500", "unit": "SZT"}]
 
-    # user spółki BOREALIS widzi tylko swój kontener
-    _scoped_user("log-borealis", borealis)
-    hdr2 = login(client, "log-borealis", "pass12345")
+    # user spółki BETA widzi tylko swój kontener
+    _scoped_user("log-beta", beta)
+    hdr2 = login(client, "log-beta", "pass12345")
     data2 = client.get(f"/api/tracking/vessels/{vessel.id}/cargo", headers=hdr2).json()
     assert [c["container_no"] for c in data2["containers"]] == ["MSDU0806613"]
 

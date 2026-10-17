@@ -6,12 +6,12 @@ import { ComplaintsPanel } from './ComplaintsPanel'
 import { LoadError, Skeleton } from '../feedback'
 import { formatDate } from '../dates'
 
-// Widok konta zewnętrznego magazynu (np. DLT): uproszczona kolejka dostaw z numerem
+// Widok konta zewnętrznego magazynu (np. MAG-1): uproszczona kolejka dostaw z numerem
 // kontenera, datą dostawy i szczegółami do rozładunku + zgłaszanie reklamacji.
 // Dane handlowe (dostawca, spedytor, zamówienia) są maskowane po stronie API.
 
 function deliveryDate(c: Container): string | null {
-  return c.notify_date  // data dostawy u DLT = data awizacji rozładunku
+  return c.notify_date  // data dostawy u MAG-1 = data awizacji rozładunku
 }
 
 // C28: kompaktowy wiersz tabeli (jak kolejka innych ról) — cały wiersz klikalny, przycisk secondary;

@@ -16,7 +16,7 @@ def _row(**over):
 
 
 def _setup(db, **over):
-    company = db.scalar(select(Company).where(Company.code == "BOREALIS"))
+    company = db.scalar(select(Company).where(Company.code == "BETA"))
     reconcile_queue(db, company, [_row(**over)], None); db.flush()
     c = db.scalar(select(Container).where(Container.company_id == company.id,
                                           Container.container_no == NO))
@@ -27,16 +27,16 @@ def test_app_changes_survive_repeated_syncs_and_later_excel_change_applies(clien
     db = SessionLocal()
     try:
         company, c = _setup(db)
-        dlt = Warehouse(company_id=company.id, name="DLT", country="PL")
-        db.add(dlt); db.flush()
+        mag1 = Warehouse(company_id=company.id, name="MAG-1", country="PL")
+        db.add(mag1); db.flush()
         c.customs_status = CustomsStatus.ROZLICZONY
-        c.warehouse_id = dlt.id
+        c.warehouse_id = mag1.id
         c.notes = "uwaga z apki"
         db.flush()
         for _ in range(3):
             reconcile_queue(db, company, [_row()], None); db.flush()
             assert (c.customs_status, c.warehouse_id, c.notes) == \
-                (CustomsStatus.ROZLICZONY, dlt.id, "uwaga z apki")
+                (CustomsStatus.ROZLICZONY, mag1.id, "uwaga z apki")
         # arkusz naprawdę się zmienia: magazyn ACME → przechodzi; odprawa „zlecona” to krok wstecz
         reconcile_queue(db, company, [_row(warehouse="ACME", customs="zlecona")], None); db.flush()
         assert db.get(Warehouse, c.warehouse_id).name == "ACME"

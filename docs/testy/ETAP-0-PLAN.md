@@ -38,9 +38,9 @@ upgrade/downgrade na PostgreSQL, współbieżność, E2E dla ról warehouse/forw
   adresów z przekierowaniem (w tym `/dzis`). Szczegóły: `tests/ui-permissions.yaml`.
 - **Formularze zapisujące:** ~20 (kontener, status, awizacja, wycena, zlecenie transportowe, reklamacja,
   odprawa, kierowca, użytkownicy, 10 słowników, EditableTable w master data).
-- **Importy (13):** kontenery xlsx, sync kolejki, PO/ETD, pozycje SAP, EKKO, MARM, stany DLT, porty,
+- **Importy (13):** kontenery xlsx, sync kolejki, PO/ETD, pozycje SAP, EKKO, MARM, stany MAG-1, porty,
   LFA1, auto-detekcja, materiały, PAZ, analityka. Część jest „wszystko albo nic”, część częściowa (savepoint per wiersz).
-- **Eksporty:** kolejka xlsx, wywołania DLT xlsx, paczka faktur xlsx, wyceny CSV, wzory importu, raport
+- **Eksporty:** kolejka xlsx, wywołania MAG-1 xlsx, paczka faktur xlsx, wyceny CSV, wzory importu, raport
   błędów SAP, CMR, list reklamacyjny, ZIP-y, .eml.
 - **Zadania w tle (13):** demurrage, odprawy/SMS, reklamacje, palety, digesty, weryfikacja backupu,
   awizacje/RODO, monitor, retencja logów, SharePoint, congestion, AIS websocket, applog.
@@ -60,7 +60,7 @@ upgrade/downgrade na PostgreSQL, współbieżność, E2E dla ról warehouse/forw
 |---|---|---|---|---|---|
 | R1 | Wyciek danych między spółkami (IDOR, eksport, wyszukiwarka, liczniki) | krytyczny: dane klienta u konkurenta | średnie | częściowe | 2 |
 | R2 | Migracja psuje prod (dwie głowy, różnica SQLite↔PG) | krytyczny: prod nie wstaje | średnie (2 incydenty) | tylko struktura | 1–2 |
-| R3 | Import nadpisuje lub gubi dane (sync kolejki, snapshot DLT) | wysoki: błędny plan dostaw | średnie | dobre dla happy path | 2 |
+| R3 | Import nadpisuje lub gubi dane (sync kolejki, snapshot MAG-1) | wysoki: błędny plan dostaw | średnie | dobre dla happy path | 2 |
 | R4 | Ciche nadpisanie przy równoczesnej edycji (B-004) | wysoki | wysokie przy kilku logistykach | brak | 2 |
 | R5 | Eskalacja uprawnień (niższa rola woła admin API) | krytyczny | niskie | dobre w deps | 2 |
 | R6 | Zła data „dziś”/DST/przełom roku → awizacje w zły dzień | wysoki | średnie | punktowe | 2 |
@@ -79,7 +79,7 @@ Każdy scenariusz jest parametryzowany po rolach, które go widzą. Rola bez dos
 2. Dodanie kontenera (ISO 6346: poprawny, zła cyfra kontrolna, małe litery, spacje) → wiersz na kolejce.
 3. Edycja kontenera i anulowanie: przycisk, Esc, zamknięcie modala, ostrzeżenie o niezapisanych zmianach.
 4. Zmiana statusu: do przodu, 1 krok wstecz z notatką, magazyn potwierdza rozładunek. Pasek postępu = etykieta.
-5. Zmiana daty awizacji i magazynu z menu „⋯” na wierszu. Liczniki DLT/ACME/bez magazynu się aktualizują.
+5. Zmiana daty awizacji i magazynu z menu „⋯” na wierszu. Liczniki MAG-1/ACME/bez magazynu się aktualizują.
 6. Operacje masowe: zaznacz kilka → status, data, magazyn. Admin: usuń.
 7. Obserwowane i specjalna troska: przełączenie, filtr „tylko obserwowane”, izolacja per użytkownik.
 8. Kopiowanie numeru kontenera, zamówienia i dostawy → zawartość schowka.

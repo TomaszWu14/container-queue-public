@@ -35,8 +35,8 @@ PRE_001 = [
     "REFERENCES supplier_doc_profiles(id) ON DELETE CASCADE, filename VARCHAR(255) NOT NULL, "
     "stored_path TEXT NOT NULL, created_at DATETIME, last_test JSON NOT NULL DEFAULT '{}', "
     "last_test_at DATETIME)",
-    "INSERT INTO companies VALUES (1,'Borealis','BOREALIS'),(2,'Acme','ACME'),(3,'Iberia','PT')",
-    # ACME z LFA1 w trzech spółkach (import szedł do każdej) + ręczny nadawca Borealis
+    "INSERT INTO companies VALUES (1,'Beta','BETA'),(2,'Acme','ACME'),(3,'Delta','PT')",
+    # ACME z LFA1 w trzech spółkach (import szedł do każdej) + ręczny nadawca Beta
     "INSERT INTO suppliers (id, name, company_id, sap_code) VALUES "
     "(1,'ACME',2,'100'),(2,'ACME',3,'100'),(3,'Nadawca T',1,''),(4,'ACME',1,'100')",
     "INSERT INTO materials VALUES (1,'REF1'),(2,'REF2')",
@@ -85,7 +85,7 @@ def test_kartoteka001_upgrade_and_downgrade(tmp_path, monkeypatch):
     assert {"supplier_materials", "supplier_doc_variants", "sap_imports"} <= set(
         inspect(eng).get_table_names())
     with eng.connect() as c:
-        # Acme i PT → kartoteka (NULL); Borealis → nadawca Borealis (także jego kopia z LFA1)
+        # Acme i PT → kartoteka (NULL); Beta → nadawca Beta (także jego kopia z LFA1)
         assert c.exec_driver_sql(
             "SELECT id, client_company_id FROM suppliers ORDER BY id").all() == [
             (1, None), (2, None), (3, 1), (4, 1)]

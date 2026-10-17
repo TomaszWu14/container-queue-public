@@ -1,7 +1,7 @@
 """Partnerzy zewnętrzni (spedytor, agencja celna) nie mają osi spółki.
 
 Bug: konto partnera z ustawionym company_id (+ view_all_companies) dostawało 200 na dane
-wewnętrzne spółki/grupy (wywołania DLT, PAZ, cele zapasu, mapy dostawców, zamówienia,
+wewnętrzne spółki/grupy (wywołania MAG-1, PAZ, cele zapasu, mapy dostawców, zamówienia,
 obsada magazynu, kontakty dostawców). Fix: deps.own_company_id ignoruje spółkę partnera,
 can_view_all = False, wewnętrzne trasy za StaffReaders/PurchasingReaders, a panel admina
 czyści company_id/view_all przy zapisie konta partnera. Stare dane (company_id w bazie)

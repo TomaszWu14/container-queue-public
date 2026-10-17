@@ -34,8 +34,8 @@ def test_customs_agency_contact_fields(client, admin_headers):
 
 def test_supplier_org_fields(client, admin_headers):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
-    body = {"name": "Dost Test", "company_id": borealis,
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
+    body = {"name": "Dost Test", "company_id": beta,
             "address": "Shanghai Rd 1", "note": "MOQ 100"}
     created = client.post("/api/suppliers", headers=admin_headers, json=body)
     assert created.status_code == 201, created.text

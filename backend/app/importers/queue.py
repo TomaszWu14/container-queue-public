@@ -62,7 +62,7 @@ HEADER_MAP = [
 
 
 def _pick_sheet(workbook, company, sheet_name: str | None = None):
-    """Arkusz pasujący do spółki (tytuł zawiera kod, np. „Borealis" dla BOREALIS) — pozwala
+    """Arkusz pasujący do spółki (tytuł zawiera kod, np. „Beta" dla BETA) — pozwala
     trzymać moduły w jednym pliku, po kilka zakładek. Fallback: aktywny, potem pierwszy.
 
     `sheet_name` (SYNC_SHEET agenta, np. „2026") ma pierwszeństwo przed heurystyką:
@@ -144,14 +144,14 @@ def _parse_forwarder_name(raw_text: str) -> str:
 
 
 def _map_warehouse(raw: str) -> tuple[str | None, str]:
-    """Zwraca (nazwa magazynu ACME/DLT/oryginał, dopisek do uwag)."""
+    """Zwraca (nazwa magazynu ACME/MAG-1/oryginał, dopisek do uwag)."""
     cleaned = raw.strip()
     upper = cleaned.upper()
     if upper.startswith("ACME"):
         extra = cleaned[5:].strip(" -!:") if len(cleaned) > 5 else ""
         return "ACME", extra
-    if "DLT" in upper.split() or upper == "DLT" or upper.startswith("DLT"):
-        return "DLT", ""
+    if "MAG-1" in upper.split() or upper == "MAG-1" or upper.startswith("MAG-1"):
+        return "MAG-1", ""
     return (None, cleaned) if cleaned else (None, "")
 
 

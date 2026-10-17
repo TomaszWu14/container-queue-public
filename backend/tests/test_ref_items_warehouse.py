@@ -5,19 +5,19 @@ from tests.test_api import VALID_NO, _company_id, _make_user
 
 
 def test_warehouse_reads_items_of_own_container_only(client, admin_headers, db_session):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     own = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "DLT", "company_id": borealis, "country": "PL"}).json()
+        "name": "MAG-1", "company_id": beta, "country": "PL"}).json()
     other = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "Inny", "company_id": borealis, "country": "PL"}).json()
+        "name": "Inny", "company_id": beta, "country": "PL"}).json()
     cid = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "warehouse_id": own["id"],
+        "container_no": VALID_NO, "company_id": beta, "warehouse_id": own["id"],
         "order_numbers": "4500000001"}).json()["id"]
-    db_session.add(OrderItem(company_id=borealis, order_number="4500000001", position="10",
+    db_session.add(OrderItem(company_id=beta, order_number="4500000001", position="10",
                              material="ABC1", description="Rurka", quantity="5", unit="PCS"))
     db_session.commit()
-    _make_user(client, admin_headers, "mag.own", "warehouse", borealis, warehouse_id=own["id"])
-    _make_user(client, admin_headers, "mag.other", "warehouse", borealis, warehouse_id=other["id"])
+    _make_user(client, admin_headers, "mag.own", "warehouse", beta, warehouse_id=own["id"])
+    _make_user(client, admin_headers, "mag.other", "warehouse", beta, warehouse_id=other["id"])
 
     own_h = login(client, "mag.own", "haslo123")
     r = client.get(f"/api/containers/{cid}/items", headers=own_h)

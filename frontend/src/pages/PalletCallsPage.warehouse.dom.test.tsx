@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Magazyn DLT z kontem (rola warehouse) potwierdza wywołanie w aplikacji — bez linku z maila (2026-10-07)
+// Magazyn MAG-1 z kontem (rola warehouse) potwierdza wywołanie w aplikacji — bez linku z maila (2026-10-07)
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 
@@ -28,7 +28,7 @@ function mockCalls(status: string) {
   })
 }
 
-describe('Wywołania DLT — magazyn', () => {
+describe('Wywołania MAG-1 — magazyn', () => {
   it('wysłane: tylko „Przygotowane”, bez akcji logistyki', async () => {
     mockCalls('sent')
     apiPost.mockResolvedValue({})
@@ -40,13 +40,13 @@ describe('Wywołania DLT — magazyn', () => {
     expect(screen.queryByRole('button', { name: 'Potwierdź' })).toBeNull()
   })
 
-  it('przygotowane: „Wysłane z DLT”', async () => {
+  it('przygotowane: „Wysłane z MAG-1”', async () => {
     mockCalls('przygotowane')
     apiPost.mockResolvedValue({})
     const { default: PalletCallsPage } = await import('./PalletCallsPage')
     render(<PalletCallsPage />)
-    expect(await screen.findAllByText('Przygotowane w DLT')).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', { name: 'Wysłane z DLT' }))
+    expect(await screen.findAllByText('Przygotowane w MAG-1')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Wysłane z MAG-1' }))
     await waitFor(() => expect(apiPost).toHaveBeenCalledWith('/api/pallet-calls/5/shipped', {}))
   })
 })

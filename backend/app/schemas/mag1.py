@@ -1,14 +1,14 @@
-"""Wywołania-DLT: analiza, PAZ, wywołania palet, cele stanów."""
+"""Wywołania-MAG-1: analiza, PAZ, wywołania palet, cele stanów."""
 import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
-# --- Wywołania-DLT ---
+# --- Wywołania-MAG-1 ---
 class AnalysisRow(BaseModel):
     produkt: str
     stan_mag_pal: float | None = None
-    stan_dlt_pal: float | None = None
+    stan_mag1_pal: float | None = None
     dostawy_pal: float = 0
     zlec_niepotw_pal: float = 0
     zlec_potw_pal: float = 0
@@ -19,10 +19,10 @@ class AnalysisRow(BaseModel):
     sugestia_pal: float | None = None
     # rozszerzony dataset PBI (feature-detect — stare cache/kostki bez tych pól)
     stan_mag_szt: float = 0
-    stan_dlt_szt: float = 0
+    stan_mag1_szt: float = 0
     zuzycie_szt_dzien: float = 0
     cel_dni: int | None = None
-    hu: list[dict] = []                    # stany DLT per HU: {hu, ilosc}
+    hu: list[dict] = []                    # stany MAG-1 per HU: {hu, ilosc}
 
 
 class AnalysisPage(BaseModel):
@@ -51,7 +51,7 @@ class PalletCallLineIn(BaseModel):
     data_dostawy: datetime.date | None = None
     note: str = ""
     truck_no: int | None = Field(default=None, ge=1, le=4)   # przydział do auta 1..4
-    hu_numbers: str = ""                   # CSV wskazanych HU z DLT
+    hu_numbers: str = ""                   # CSV wskazanych HU z MAG-1
     pallets: float | None = Field(default=None, gt=0)        # ułamkowe palety (np. 7.3)
 
 
@@ -71,7 +71,7 @@ class PalletCallCreate(BaseModel):
     company_id: int | None = None      # wymagane dla admina (cross-company)
     needed_by: datetime.date | None = None
     notes: str = ""
-    allow_over_dlt: bool = False       # pozwól wywołać więcej palet niż stan w DLT
+    allow_over_mag1: bool = False       # pozwól wywołać więcej palet niż stan w MAG-1
     lines: list[PalletCallLineIn]
 
 

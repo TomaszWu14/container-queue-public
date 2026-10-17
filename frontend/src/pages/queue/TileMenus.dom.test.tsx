@@ -24,7 +24,7 @@ function Harness({ watched, toggleWatch, replace, watchPrompt = null, confirmWat
 }) {
   const m = useTileMenus(replace)
   useEffect(() => { m.setTileMenu({ c: C, x: 10, y: 10 }) }, [])   // eslint-disable-line react-hooks/exhaustive-deps
-  return <TileMenus m={m} warehouseOptions={['DLT']} canEdit setPendingMove={() => {}}
+  return <TileMenus m={m} warehouseOptions={['MAG-1']} canEdit setPendingMove={() => {}}
                     watched={watched} toggleWatch={toggleWatch}
                     watchPrompt={watchPrompt} confirmWatch={confirmWatch} cancelWatch={cancelWatch}
                     onDetails={() => {}} onStatus={null} statusLabel="Status" />

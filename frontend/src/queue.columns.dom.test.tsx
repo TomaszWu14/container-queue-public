@@ -14,7 +14,7 @@ const CONTAINERS = [{
   transport_type: 'kolej', status: 'W_TRANSPORCIE', customs_status: 'BRAK', document_status: 'BRAK',
   purchasing_status: 'BRAK', order_numbers: '4500001', delivery_note: '', incoming_delivery_no: '',
   purchase_note: '', forwarder_name: 'SPEDALFA', document_flow: '', sent_required: null, sent_number: '',
-  sent_status: '', is_delayed: false, transport_id: null, order_number: null, warehouse_name: 'DLT',
+  sent_status: '', is_delayed: false, transport_id: null, order_number: null, warehouse_name: 'MAG-1',
 }]
 
 vi.mock('./api', () => ({

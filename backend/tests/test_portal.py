@@ -4,7 +4,7 @@ VALID_NO = "MSDU0806613"
 OTHER_NO = "TCLU5779674"
 
 
-def _company(client, headers, code="BOREALIS"):
+def _company(client, headers, code="BETA"):
     companies = client.get("/api/companies", headers=headers).json()
     return next(c["id"] for c in companies if c["code"] == code)
 
@@ -25,7 +25,7 @@ def test_customer_marker_on_container(client, admin_headers):
 
 
 def test_customer_company_isolation_and_roles(client, admin_headers):
-    company_a = _company(client, admin_headers, "BOREALIS")
+    company_a = _company(client, admin_headers, "BETA")
     company_b = _company(client, admin_headers, "ACME")
     cust = client.post("/api/customers", headers=admin_headers, json={
         "name": "Klient X", "company_id": company_a}).json()

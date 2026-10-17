@@ -290,7 +290,7 @@ def change_warehouse(container_id: int, body: WarehouseNameIn,
                      db: Session = Depends(get_db), user: User = editors):
     """Szybka zmiana magazynu rozładunku (menu kontekstowe w kolejce).
 
-    Magazyn to nazwa przypięta do spółki kontenera (DLT/ACME/BOREALIS/…); brakujący
+    Magazyn to nazwa przypięta do spółki kontenera (MAG-1/ACME/BETA/…); brakujący
     tworzony jest w locie — spójne z importem, który tworzy magazyny per spółka.
     """
     container = get_container_checked(db, container_id, user)

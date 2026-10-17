@@ -1,5 +1,5 @@
 """Importy master data: nagłówki zamówień SAP (EKKO), jednostki materiałów (MARM),
-stany DLT, porty kontenerowe, dostawcy (LFA1) i wspólny dropzone z auto-rozpoznaniem.
+stany MAG-1, porty kontenerowe, dostawcy (LFA1) i wspólny dropzone z auto-rozpoznaniem.
 
 Sub-router bez prefiksu — podpinany w routers/imports.py pod /api/import."""
 import io
@@ -18,7 +18,7 @@ from ..deps import check_global_data_editor, get_company_by_code
 from ..importers.lfa1 import apply_plan, build_plan, parse_lfa1, preview
 from ..importers.master_data import (
     _parse_cport_rows,
-    _parse_dlt_stock_rows,
+    _parse_mag1_stock_rows,
     _parse_marm_rows,
     detect_master_type,
 )
@@ -189,36 +189,36 @@ def import_material_units(
     return {"dry_run": False, "counts": counts, "errors": errors[:200]}
 
 
-# --- import stanów DLT z xlsx (fallback gdy Power BI ich nie podaje) ---
+# --- import stanów MAG-1 z xlsx (fallback gdy Power BI ich nie podaje) ---
 
-@router.post("/dlt-stock")
-def import_dlt_stock(
+@router.post("/mag1-stock")
+def import_mag1_stock(
     file: UploadFile,
     dry_run: bool = Query(default=True),
     db: Session = Depends(get_db),
     user: User = global_editors,
 ):
-    """Import stanów DLT z xlsx — snapshot (każdy import kasuje poprzedni).
+    """Import stanów MAG-1 z xlsx — snapshot (każdy import kasuje poprzedni).
 
     Analityka wywołań używa tych stanów, gdy Power BI ich nie podaje (fallback)."""
-    parsed = _parse_dlt_stock_rows(
-        read_upload_capped(file, app_config.max_upload_mb, "Plik stanów DLT"))
+    parsed = _parse_mag1_stock_rows(
+        read_upload_capped(file, app_config.max_upload_mb, "Plik stanów MAG-1"))
     counts = {"rows": len(parsed),
               "with_hu": sum(1 for r in parsed if r["hu"]),
               "produkty": len({r["produkt"] for r in parsed})}
     if dry_run:
         return {"dry_run": True, "counts": counts}
 
-    from ..models import DltStock
-    db.query(DltStock).delete()   # snapshot: zastępujemy poprzedni import w całości
+    from ..models import Mag1Stock
+    db.query(Mag1Stock).delete()   # snapshot: zastępujemy poprzedni import w całości
     now = utcnow()
     for raw in parsed:
-        db.add(DltStock(produkt=raw["produkt"], ilosc=raw["ilosc"], hu=raw["hu"],
+        db.add(Mag1Stock(produkt=raw["produkt"], ilosc=raw["ilosc"], hu=raw["hu"],
                         lokalizacja=raw["lokalizacja"], source_file=file.filename or "",
                         imported_at=now))
-    record(db, entity_type="dlt_stock", entity_id=0, field="import", old_value=None,
+    record(db, entity_type="mag1_stock", entity_id=0, field="import", old_value=None,
            new_value=f"{counts['rows']} wierszy / {counts['produkty']} produktów",
-           user=user, note=f"import stanów DLT ({file.filename})")
+           user=user, note=f"import stanów MAG-1 ({file.filename})")
     db.commit()
     # świeży snapshot → przelicz analizę przy następnym odczycie
     from ..pallets_cache import invalidate

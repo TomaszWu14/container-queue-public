@@ -11,7 +11,7 @@ from .containers import *  # noqa: F401,F403
 from .dictionaries import *  # noqa: F401,F403
 from .invoices import *  # noqa: F401,F403
 from .knowledge import *  # noqa: F401,F403
-from .dlt import *  # noqa: F401,F403
+from .mag1 import *  # noqa: F401,F403
 from .materials_customs import *  # noqa: F401,F403
 from .orders import *  # noqa: F401,F403
 from .queue import *  # noqa: F401,F403

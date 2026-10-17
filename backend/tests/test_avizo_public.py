@@ -24,7 +24,7 @@ def outbox(monkeypatch):
     return mailer._console.outbox
 
 
-def make_request(company_code="BOREALIS", n=2, email="fw@example.com"):
+def make_request(company_code="BETA", n=2, email="fw@example.com"):
     """Zlecenie wysłane serwisem (jak z kolejki) — zwraca (request_id, surowy token etapu 1, ids).
     Wymaga fixture `outbox` (token czytamy z wysłanego maila, jak spedycja)."""
     with SessionLocal() as db:

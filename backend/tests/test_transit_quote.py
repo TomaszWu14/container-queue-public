@@ -10,7 +10,7 @@ NORMAL_NO = "CAIU7654324"
 
 def _company_id(client, headers):
     companies = client.get("/api/companies", headers=headers).json()
-    return next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    return next(c["id"] for c in companies if c["code"] == "BETA")
 
 
 def _create(client, headers, container_no, **extra):

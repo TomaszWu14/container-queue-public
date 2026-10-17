@@ -22,7 +22,7 @@ def _co(db, code):
 
 def _pair():
     with SessionLocal() as db:
-        acme, pt = _co(db, "ACME"), _co(db, "PT")
+        acme, pt = _co(db, "ACME"), _co(db, "DELTA")
         src = Supplier(name="ACME TRADING", sap_code="100")
         dst = Supplier(name="Acme Trading Co.", sap_code="100")
         m1, m2 = Material(ref_code="REF-M1", ref_norm="REFM1"), Material(ref_code="REF-M2", ref_norm="REFM2")
@@ -69,7 +69,7 @@ def test_merge_resolves_unique_collisions_in_favour_of_target(client, admin_head
 
 def test_merge_of_same_name_adds_no_alias(client, admin_headers):
     with SessionLocal() as db:
-        pt = _co(db, "PT")
+        pt = _co(db, "DELTA")
         a, b = Supplier(name="Same Co", sap_code="7"), Supplier(name="SAME CO.", sap_code="7")
         db.add_all([a, b])
         db.flush()

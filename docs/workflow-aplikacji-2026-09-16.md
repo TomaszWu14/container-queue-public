@@ -12,7 +12,7 @@ Cel: podstawa do budowy BPMN — aktorzy, kroki, bramki, powiadomienia, masterda
 | `admin` | administrator | wszystko + panel admina |
 | `logistics` | logistyka spółki | kontenery swojej spółki (`view_all_companies` = wszystkie); pełna edycja |
 | `purchasing` | zakupy | odczyt spółki; edycja TYLKO statusu zakupowego + wysyłka dokumentów celnych; wykluczona z wycen; strony: kolejka/kontener/zamówienia/spedycja |
-| `warehouse` | magazyn (DLT) | tylko kontenery swojego magazynu; dane handlowe/PII ukryte (`_WAREHOUSE_HIDDEN`); status może ustawić TYLKO `DOSTARCZONY`/`ZREALIZOWANY`; nie uploaduje plików; brak dashboardu/zamówień |
+| `warehouse` | magazyn (MAG-1) | tylko kontenery swojego magazynu; dane handlowe/PII ukryte (`_WAREHOUSE_HIDDEN`); status może ustawić TYLKO `DOSTARCZONY`/`ZREALIZOWANY`; nie uploaduje plików; brak dashboardu/zamówień |
 | `forwarder` | spedycja | tylko kontenery jej zlecone; dane kierowcy, pliki, wiadomości, obieg zlecenia, potwierdzanie planu; w wycenach widzi tylko własną ofertę |
 | `customs` | agencja celna | tylko zlecone odprawy; dane handlowe/PII ukryte (`_CUSTOMS_HIDDEN`); zmienia status odprawy, wyznacza agenta |
 
@@ -25,7 +25,7 @@ Maskowanie działa też w historii audytu i endpointach pozycji/SENT.
 
 ## 1. Masterdata (co jest słownikiem, kto utrzymuje)
 
-- **Company** — spółki (Borealis, Cobalt Sport, Iberia, Acme); admin.
+- **Company** — spółki (Beta, Gamma, Delta, Acme); admin.
 - **User** — konta z rolą + wiązaniem (forwarder_id / customs_agency_id / warehouse_id / company_id — walidowane przy tworzeniu); zaproszenie e-mail z hasłem tymczasowym (`must_change_password`); `watch_only_notifications`; profil widoku `ui_prefs`.
 - **Supplier** (+ SupplierContact) — dostawcy per spółka; merge + statystyki on-time/transit.
 - **Forwarder** — spedycje (SPEDALFA, Spedgamma, Spedomega, Toll) + dane kontaktowe.
@@ -155,9 +155,9 @@ Oferty (**Quote**): `ZAPYTANIE → WYCENIONA → WYBRANA / ODRZUCONA / WYGASLA`.
 
 ---
 
-## 11. Wywołania DLT / palety / analityka
+## 11. Wywołania MAG-1 / palety / analityka
 
-- **PalletCall:** `draft → sent → confirmed → delivered / cancelled`; edycja tylko w draft; linie (produkt, ilość palet, data dostawy); eksport xlsx. Strona `/wywolania-dlt` (admin/logistyka).
+- **PalletCall:** `draft → sent → confirmed → delivered / cancelled`; edycja tylko w draft; linie (produkt, ilość palet, data dostawy); eksport xlsx. Strona `/wywolania-mag1` (admin/logistyka).
 - **PowerBI/PalletStockCache** + alert pilnych palet (pętla 12h, próg 2.0, target 14 dni — tylko gdy PowerBI skonfigurowane).
 - **PAZ:** słownik szt/paletę + import. **MaterialIssue:** upload analityczny. Karta rozładunku per kontener; proxy do serwisu paletyzacji.
 

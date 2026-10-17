@@ -39,7 +39,7 @@ def test_mapping_helpers():
     assert feed.category("crd_escalation") == "orders" and feed.category("bulletin") == "messages"
     assert feed.category("backup_verify_failed") == "system"
     assert feed.priority("backup_verify_failed") == "urgent"      # admin ma to zobaczyć w przypiętych
-    assert feed.vessel_name("Statek MV DEMO DELTA w rejonie portu FELIXSTOWE") == "MV DEMO DELTA"
+    assert feed.vessel_name("Statek MV DEMO OMEGA w rejonie portu FELIXSTOWE") == "MV DEMO OMEGA"
     assert feed.vessel_name("Statek MV DEMO PALLAS stoi przy GDANSK juz 30 h") == "MV DEMO PALLAS"
 
 

@@ -19,9 +19,9 @@ def _no_pii(text: str | None) -> bool:
 
 def _new_container(client, admin_headers, no):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     return client.post("/api/containers", headers=admin_headers,
-                       json={"container_no": no, "company_id": borealis}).json()
+                       json={"container_no": no, "company_id": beta}).json()
 
 
 def test_driver_data_masked_in_audit_and_notification(client, admin_headers, monkeypatch):

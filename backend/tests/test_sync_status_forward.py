@@ -11,7 +11,7 @@ NO = "MSKU7026492"
 
 
 def _setup(db, app_status):
-    company = db.scalar(select(Company).where(Company.code == "BOREALIS"))
+    company = db.scalar(select(Company).where(Company.code == "BETA"))
     reconcile_queue(db, company, [_raw(NO, 1)], None)          # nowy -> W_PORCIE z arkusza
     db.flush()
     c = db.scalar(select(Container).where(Container.company_id == company.id,

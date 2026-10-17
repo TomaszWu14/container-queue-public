@@ -20,7 +20,7 @@ const base = {
 const CONTAINERS = [
   { ...base, id: 1, container_no: 'CSNU0110266', notify_date: '2026-08-10', warehouse_name: 'ACME',
     is_delayed: true, order_numbers: '4500617421\n4500617412' },
-  { ...base, id: 2, container_no: 'TIIU9152821', notify_date: '2026-08-11', warehouse_name: 'DLT',
+  { ...base, id: 2, container_no: 'TIIU9152821', notify_date: '2026-08-11', warehouse_name: 'MAG-1',
     order_numbers: '4500618818' },
 ]
 

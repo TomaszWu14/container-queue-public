@@ -17,7 +17,7 @@
 - Tracking + timeline kontenera (tracking_loop, TrackingEvent, TrackingPage) + AIS statków (ais_loop, TrackedVessel/VesselPosition/VesselPortCall/PortCongestion).
 - Demurrage/free-time (demurrage_loop, PortTransitTime), opóźnienia odpraw (customs_delay_loop, CustomsPage).
 - Reklamacje (complaints, Complaint/Problem/Photo, complaint_reminder_loop, ComplaintStats).
-- Wywołania palet/DLT (pallets, dlt, PalletCall*, DltStock, pallet_urgent_loop, PalletCallsPage, DltPage).
+- Wywołania palet/MAG-1 (pallets, mag1, PalletCall*, Mag1Stock, pallet_urgent_loop, PalletCallsPage, Mag1Page).
 - Zlecenia spedycyjne/transportowe (forwarding, TransportOrder/Job, ForwardingPage, QuotesPage, Quote/Revision).
 - Awizacja (avizo, AvizoRequest/Item/Proposal, AvizoFormPage), karta rozładunku (warehouse_ops, KartaRozladunku, GatePage, UnloadPhoto), checklist (ChecklistPoint/Result).
 - Faktury/OCR + batch (invoices, InvoiceBatch/Job/Item, integracja Compare/CIPL), PO + import ETD/SAP (purchase_orders, purchasing, imports, PurchaseOrder, SapOrder).
@@ -419,10 +419,10 @@
 - 🔲 **[PowerBI]** KPI terminowości awizacji — % dostaw w oknie.
 - 🔲 **[Feature]** Auto-sugestia najbliższego wolnego slotu przy tworzeniu awizacji.
 
-### 2.5 Paletyzacja i wywołania DLT/palet
+### 2.5 Paletyzacja i wywołania MAG-1/palet
 - ✅ **[Feature]** Wywołania palet (pallets, PalletCall/Line/Truck/Link, PalletCallsPage).
 - ✅ **[Python]** Pętla pilnych wywołań palet (pallet_urgent_loop) — eskalacja.
-- ✅ **[Feature]** Stany DLT (dlt, DltStock, DltPage) — wywołania z magazynu DLT.
+- ✅ **[Feature]** Stany MAG-1 (mag1, Mag1Stock, Mag1Page) — wywołania z magazynu MAG-1.
 - ✅ **[Feature]** Cele stanów materiału (MaterialStockTarget) — progi wywołań.
 - ✅ **[Feature]** Cache stanu paletowego (PalletStockCache) — szybki odczyt.
 - ✅ **[Feature]** Produkty PAZ (paz, ProductPaz) — dane paletyzacji.
@@ -1033,7 +1033,7 @@
 - 🔲 **[Python]** Wykrywanie niekompletnego rozładunku (checklist nie 100%) → blokada zamknięcia.
 
 ### 4.2 Stany i inwentaryzacja
-- ✅ **[Feature]** Cache stanów paletowych i DLT (PalletStockCache/DltStock).
+- ✅ **[Feature]** Cache stanów paletowych i MAG-1 (PalletStockCache/Mag1Stock).
 - 🔲 **[Python]** Alert stanu minimalnego — pozycje poniżej min.
 - 🔲 **[Python]** Detektor slow-moving/dead stock (>90/180/365 dni).
 - 🔲 **[Python]** Analiza rotacji zapasów (turnover) per kategoria.
@@ -2036,7 +2036,7 @@
 - 🔲 **[Feature]** Powiadomienia push na urządzenie magazyniera.
 
 ### 11.4 Wydajność / jakość / testy
-- ✅ **[Feature]** Testy DOM ekranów (Avizo/Gate/Dlt/Orders/Quotes/Complaints/KartaRozladunku).
+- ✅ **[Feature]** Testy DOM ekranów (Avizo/Gate/Mag1/Orders/Quotes/Complaints/KartaRozladunku).
 - ✅ **[Feature]** E2E Playwright (TS, workers:1) — smoke krytycznych flow.
 - ✅ **[Feature]** Strażnik migracji + serializacja merge queue (automerge).
 - ✅ **[Feature]** Auto-deploy Coolify (deploy.yml) + smoke.
@@ -2168,7 +2168,7 @@
 ### 11.8 UX per ekran (rozszerzenie)
 - 🔲 **[Feature]** Zapisane filtry na ekranie awizacja — dołóż „zapisane filtry” do widoku awizacja.
 - 🔲 **[Feature]** Zapisane filtry na ekranie wywołania palet — dołóż „zapisane filtry” do widoku wywołania palet.
-- 🔲 **[Feature]** Zapisane filtry na ekranie DLT — dołóż „zapisane filtry” do widoku DLT.
+- 🔲 **[Feature]** Zapisane filtry na ekranie MAG-1 — dołóż „zapisane filtry” do widoku MAG-1.
 - 🔲 **[Feature]** Zapisane filtry na ekranie portal klienta — dołóż „zapisane filtry” do widoku portal klienta.
 - 🔲 **[Feature]** Zapisane filtry na ekranie reklamacje — dołóż „zapisane filtry” do widoku reklamacje.
 - 🔲 **[Feature]** Zapisane filtry na ekranie analityka — dołóż „zapisane filtry” do widoku analityka.
@@ -2176,7 +2176,7 @@
 - 🔲 **[Feature]** Zapisane filtry na ekranie brama — dołóż „zapisane filtry” do widoku brama.
 - 🔲 **[Feature]** Eksport do csv na ekranie awizacja — dołóż „eksport do CSV” do widoku awizacja.
 - 🔲 **[Feature]** Eksport do csv na ekranie wywołania palet — dołóż „eksport do CSV” do widoku wywołania palet.
-- 🔲 **[Feature]** Eksport do csv na ekranie DLT — dołóż „eksport do CSV” do widoku DLT.
+- 🔲 **[Feature]** Eksport do csv na ekranie MAG-1 — dołóż „eksport do CSV” do widoku MAG-1.
 - 🔲 **[Feature]** Eksport do csv na ekranie portal klienta — dołóż „eksport do CSV” do widoku portal klienta.
 - 🔲 **[Feature]** Eksport do csv na ekranie reklamacje — dołóż „eksport do CSV” do widoku reklamacje.
 - 🔲 **[Feature]** Eksport do csv na ekranie analityka — dołóż „eksport do CSV” do widoku analityka.
@@ -2184,7 +2184,7 @@
 - 🔲 **[Feature]** Eksport do csv na ekranie brama — dołóż „eksport do CSV” do widoku brama.
 - 🔲 **[Feature]** Eksport do excel na ekranie awizacja — dołóż „eksport do Excel” do widoku awizacja.
 - 🔲 **[Feature]** Eksport do excel na ekranie wywołania palet — dołóż „eksport do Excel” do widoku wywołania palet.
-- 🔲 **[Feature]** Eksport do excel na ekranie DLT — dołóż „eksport do Excel” do widoku DLT.
+- 🔲 **[Feature]** Eksport do excel na ekranie MAG-1 — dołóż „eksport do Excel” do widoku MAG-1.
 - 🔲 **[Feature]** Eksport do excel na ekranie portal klienta — dołóż „eksport do Excel” do widoku portal klienta.
 - 🔲 **[Feature]** Eksport do excel na ekranie reklamacje — dołóż „eksport do Excel” do widoku reklamacje.
 - 🔲 **[Feature]** Eksport do excel na ekranie analityka — dołóż „eksport do Excel” do widoku analityka.
@@ -2192,7 +2192,7 @@
 - 🔲 **[Feature]** Eksport do excel na ekranie brama — dołóż „eksport do Excel” do widoku brama.
 - 🔲 **[Feature]** Konfigurowalne kolumny na ekranie awizacja — dołóż „konfigurowalne kolumny” do widoku awizacja.
 - 🔲 **[Feature]** Konfigurowalne kolumny na ekranie wywołania palet — dołóż „konfigurowalne kolumny” do widoku wywołania palet.
-- 🔲 **[Feature]** Konfigurowalne kolumny na ekranie DLT — dołóż „konfigurowalne kolumny” do widoku DLT.
+- 🔲 **[Feature]** Konfigurowalne kolumny na ekranie MAG-1 — dołóż „konfigurowalne kolumny” do widoku MAG-1.
 - 🔲 **[Feature]** Konfigurowalne kolumny na ekranie portal klienta — dołóż „konfigurowalne kolumny” do widoku portal klienta.
 - 🔲 **[Feature]** Konfigurowalne kolumny na ekranie reklamacje — dołóż „konfigurowalne kolumny” do widoku reklamacje.
 - 🔲 **[Feature]** Konfigurowalne kolumny na ekranie analityka — dołóż „konfigurowalne kolumny” do widoku analityka.
@@ -2200,7 +2200,7 @@
 - 🔲 **[Feature]** Konfigurowalne kolumny na ekranie brama — dołóż „konfigurowalne kolumny” do widoku brama.
 - 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie awizacja — dołóż „sortowanie wielopoziomowe” do widoku awizacja.
 - 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie wywołania palet — dołóż „sortowanie wielopoziomowe” do widoku wywołania palet.
-- 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie DLT — dołóż „sortowanie wielopoziomowe” do widoku DLT.
+- 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie MAG-1 — dołóż „sortowanie wielopoziomowe” do widoku MAG-1.
 - 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie portal klienta — dołóż „sortowanie wielopoziomowe” do widoku portal klienta.
 - 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie reklamacje — dołóż „sortowanie wielopoziomowe” do widoku reklamacje.
 - 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie analityka — dołóż „sortowanie wielopoziomowe” do widoku analityka.
@@ -2208,7 +2208,7 @@
 - 🔲 **[Feature]** Sortowanie wielopoziomowe na ekranie brama — dołóż „sortowanie wielopoziomowe” do widoku brama.
 - 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie awizacja — dołóż „zaznaczanie wielu wierszy” do widoku awizacja.
 - 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie wywołania palet — dołóż „zaznaczanie wielu wierszy” do widoku wywołania palet.
-- 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie DLT — dołóż „zaznaczanie wielu wierszy” do widoku DLT.
+- 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie MAG-1 — dołóż „zaznaczanie wielu wierszy” do widoku MAG-1.
 - 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie portal klienta — dołóż „zaznaczanie wielu wierszy” do widoku portal klienta.
 - 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie reklamacje — dołóż „zaznaczanie wielu wierszy” do widoku reklamacje.
 - 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie analityka — dołóż „zaznaczanie wielu wierszy” do widoku analityka.
@@ -2216,7 +2216,7 @@
 - 🔲 **[Feature]** Zaznaczanie wielu wierszy na ekranie brama — dołóż „zaznaczanie wielu wierszy” do widoku brama.
 - 🔲 **[Feature]** Bulk-akcje na ekranie awizacja — dołóż „bulk-akcje” do widoku awizacja.
 - 🔲 **[Feature]** Bulk-akcje na ekranie wywołania palet — dołóż „bulk-akcje” do widoku wywołania palet.
-- 🔲 **[Feature]** Bulk-akcje na ekranie DLT — dołóż „bulk-akcje” do widoku DLT.
+- 🔲 **[Feature]** Bulk-akcje na ekranie MAG-1 — dołóż „bulk-akcje” do widoku MAG-1.
 - 🔲 **[Feature]** Bulk-akcje na ekranie portal klienta — dołóż „bulk-akcje” do widoku portal klienta.
 - 🔲 **[Feature]** Bulk-akcje na ekranie reklamacje — dołóż „bulk-akcje” do widoku reklamacje.
 - 🔲 **[Feature]** Bulk-akcje na ekranie analityka — dołóż „bulk-akcje” do widoku analityka.
@@ -2224,7 +2224,7 @@
 - 🔲 **[Feature]** Bulk-akcje na ekranie brama — dołóż „bulk-akcje” do widoku brama.
 - 🔲 **[Feature]** Szybki podgląd na ekranie awizacja — dołóż „szybki podgląd” do widoku awizacja.
 - 🔲 **[Feature]** Szybki podgląd na ekranie wywołania palet — dołóż „szybki podgląd” do widoku wywołania palet.
-- 🔲 **[Feature]** Szybki podgląd na ekranie DLT — dołóż „szybki podgląd” do widoku DLT.
+- 🔲 **[Feature]** Szybki podgląd na ekranie MAG-1 — dołóż „szybki podgląd” do widoku MAG-1.
 - 🔲 **[Feature]** Szybki podgląd na ekranie portal klienta — dołóż „szybki podgląd” do widoku portal klienta.
 - 🔲 **[Feature]** Szybki podgląd na ekranie reklamacje — dołóż „szybki podgląd” do widoku reklamacje.
 - 🔲 **[Feature]** Szybki podgląd na ekranie analityka — dołóż „szybki podgląd” do widoku analityka.
@@ -2232,7 +2232,7 @@
 - 🔲 **[Feature]** Szybki podgląd na ekranie brama — dołóż „szybki podgląd” do widoku brama.
 - 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie awizacja — dołóż „kopiowanie linku do rekordu” do widoku awizacja.
 - 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie wywołania palet — dołóż „kopiowanie linku do rekordu” do widoku wywołania palet.
-- 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie DLT — dołóż „kopiowanie linku do rekordu” do widoku DLT.
+- 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie MAG-1 — dołóż „kopiowanie linku do rekordu” do widoku MAG-1.
 - 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie portal klienta — dołóż „kopiowanie linku do rekordu” do widoku portal klienta.
 - 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie reklamacje — dołóż „kopiowanie linku do rekordu” do widoku reklamacje.
 - 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie analityka — dołóż „kopiowanie linku do rekordu” do widoku analityka.
@@ -2240,7 +2240,7 @@
 - 🔲 **[Feature]** Kopiowanie linku do rekordu na ekranie brama — dołóż „kopiowanie linku do rekordu” do widoku brama.
 - 🔲 **[Feature]** Historia zmian rekordu na ekranie awizacja — dołóż „historia zmian rekordu” do widoku awizacja.
 - 🔲 **[Feature]** Historia zmian rekordu na ekranie wywołania palet — dołóż „historia zmian rekordu” do widoku wywołania palet.
-- 🔲 **[Feature]** Historia zmian rekordu na ekranie DLT — dołóż „historia zmian rekordu” do widoku DLT.
+- 🔲 **[Feature]** Historia zmian rekordu na ekranie MAG-1 — dołóż „historia zmian rekordu” do widoku MAG-1.
 - 🔲 **[Feature]** Historia zmian rekordu na ekranie portal klienta — dołóż „historia zmian rekordu” do widoku portal klienta.
 - 🔲 **[Feature]** Historia zmian rekordu na ekranie reklamacje — dołóż „historia zmian rekordu” do widoku reklamacje.
 - 🔲 **[Feature]** Historia zmian rekordu na ekranie analityka — dołóż „historia zmian rekordu” do widoku analityka.
@@ -2248,7 +2248,7 @@
 - 🔲 **[Feature]** Historia zmian rekordu na ekranie brama — dołóż „historia zmian rekordu” do widoku brama.
 - 🔲 **[Feature]** Komentarze do rekordu na ekranie awizacja — dołóż „komentarze do rekordu” do widoku awizacja.
 - 🔲 **[Feature]** Komentarze do rekordu na ekranie wywołania palet — dołóż „komentarze do rekordu” do widoku wywołania palet.
-- 🔲 **[Feature]** Komentarze do rekordu na ekranie DLT — dołóż „komentarze do rekordu” do widoku DLT.
+- 🔲 **[Feature]** Komentarze do rekordu na ekranie MAG-1 — dołóż „komentarze do rekordu” do widoku MAG-1.
 - 🔲 **[Feature]** Komentarze do rekordu na ekranie portal klienta — dołóż „komentarze do rekordu” do widoku portal klienta.
 - 🔲 **[Feature]** Komentarze do rekordu na ekranie reklamacje — dołóż „komentarze do rekordu” do widoku reklamacje.
 - 🔲 **[Feature]** Komentarze do rekordu na ekranie analityka — dołóż „komentarze do rekordu” do widoku analityka.
@@ -2256,7 +2256,7 @@
 - 🔲 **[Feature]** Komentarze do rekordu na ekranie brama — dołóż „komentarze do rekordu” do widoku brama.
 - 🔲 **[Feature]** Załączniki do rekordu na ekranie awizacja — dołóż „załączniki do rekordu” do widoku awizacja.
 - 🔲 **[Feature]** Załączniki do rekordu na ekranie wywołania palet — dołóż „załączniki do rekordu” do widoku wywołania palet.
-- 🔲 **[Feature]** Załączniki do rekordu na ekranie DLT — dołóż „załączniki do rekordu” do widoku DLT.
+- 🔲 **[Feature]** Załączniki do rekordu na ekranie MAG-1 — dołóż „załączniki do rekordu” do widoku MAG-1.
 - 🔲 **[Feature]** Załączniki do rekordu na ekranie portal klienta — dołóż „załączniki do rekordu” do widoku portal klienta.
 - 🔲 **[Feature]** Załączniki do rekordu na ekranie reklamacje — dołóż „załączniki do rekordu” do widoku reklamacje.
 - 🔲 **[Feature]** Załączniki do rekordu na ekranie analityka — dołóż „załączniki do rekordu” do widoku analityka.
@@ -2264,7 +2264,7 @@
 - 🔲 **[Feature]** Załączniki do rekordu na ekranie brama — dołóż „załączniki do rekordu” do widoku brama.
 - 🔲 **[Feature]** Tagi/etykiety na ekranie awizacja — dołóż „tagi/etykiety” do widoku awizacja.
 - 🔲 **[Feature]** Tagi/etykiety na ekranie wywołania palet — dołóż „tagi/etykiety” do widoku wywołania palet.
-- 🔲 **[Feature]** Tagi/etykiety na ekranie DLT — dołóż „tagi/etykiety” do widoku DLT.
+- 🔲 **[Feature]** Tagi/etykiety na ekranie MAG-1 — dołóż „tagi/etykiety” do widoku MAG-1.
 - 🔲 **[Feature]** Tagi/etykiety na ekranie portal klienta — dołóż „tagi/etykiety” do widoku portal klienta.
 - 🔲 **[Feature]** Tagi/etykiety na ekranie reklamacje — dołóż „tagi/etykiety” do widoku reklamacje.
 - 🔲 **[Feature]** Tagi/etykiety na ekranie analityka — dołóż „tagi/etykiety” do widoku analityka.
@@ -2272,7 +2272,7 @@
 - 🔲 **[Feature]** Tagi/etykiety na ekranie brama — dołóż „tagi/etykiety” do widoku brama.
 - 🔲 **[Feature]** Ulubione na ekranie awizacja — dołóż „ulubione” do widoku awizacja.
 - 🔲 **[Feature]** Ulubione na ekranie wywołania palet — dołóż „ulubione” do widoku wywołania palet.
-- 🔲 **[Feature]** Ulubione na ekranie DLT — dołóż „ulubione” do widoku DLT.
+- 🔲 **[Feature]** Ulubione na ekranie MAG-1 — dołóż „ulubione” do widoku MAG-1.
 - 🔲 **[Feature]** Ulubione na ekranie portal klienta — dołóż „ulubione” do widoku portal klienta.
 - 🔲 **[Feature]** Ulubione na ekranie reklamacje — dołóż „ulubione” do widoku reklamacje.
 - 🔲 **[Feature]** Ulubione na ekranie analityka — dołóż „ulubione” do widoku analityka.
@@ -2280,7 +2280,7 @@
 - 🔲 **[Feature]** Ulubione na ekranie brama — dołóż „ulubione” do widoku brama.
 - 🔲 **[Feature]** Ostatnio oglądane na ekranie awizacja — dołóż „ostatnio oglądane” do widoku awizacja.
 - 🔲 **[Feature]** Ostatnio oglądane na ekranie wywołania palet — dołóż „ostatnio oglądane” do widoku wywołania palet.
-- 🔲 **[Feature]** Ostatnio oglądane na ekranie DLT — dołóż „ostatnio oglądane” do widoku DLT.
+- 🔲 **[Feature]** Ostatnio oglądane na ekranie MAG-1 — dołóż „ostatnio oglądane” do widoku MAG-1.
 - 🔲 **[Feature]** Ostatnio oglądane na ekranie portal klienta — dołóż „ostatnio oglądane” do widoku portal klienta.
 - 🔲 **[Feature]** Ostatnio oglądane na ekranie reklamacje — dołóż „ostatnio oglądane” do widoku reklamacje.
 - 🔲 **[Feature]** Ostatnio oglądane na ekranie analityka — dołóż „ostatnio oglądane” do widoku analityka.
@@ -2322,10 +2322,10 @@
 - 🔲 **[Feature]** A11y „obsługa klawiatury” na ekranie wywołania palet — audyt i poprawa dostępności „obsługa klawiatury” w widoku wywołania palet.
 - 🔲 **[Feature]** A11y „wsparcie czytnika ekranu” na ekranie wywołania palet — audyt i poprawa dostępności „wsparcie czytnika ekranu” w widoku wywołania palet.
 - 🔲 **[Feature]** A11y „widoczny focus” na ekranie wywołania palet — audyt i poprawa dostępności „widoczny focus” w widoku wywołania palet.
-- 🔲 **[Feature]** A11y „kontrast WCAG” na ekranie DLT — audyt i poprawa dostępności „kontrast WCAG” w widoku DLT.
-- 🔲 **[Feature]** A11y „obsługa klawiatury” na ekranie DLT — audyt i poprawa dostępności „obsługa klawiatury” w widoku DLT.
-- 🔲 **[Feature]** A11y „wsparcie czytnika ekranu” na ekranie DLT — audyt i poprawa dostępności „wsparcie czytnika ekranu” w widoku DLT.
-- 🔲 **[Feature]** A11y „widoczny focus” na ekranie DLT — audyt i poprawa dostępności „widoczny focus” w widoku DLT.
+- 🔲 **[Feature]** A11y „kontrast WCAG” na ekranie MAG-1 — audyt i poprawa dostępności „kontrast WCAG” w widoku MAG-1.
+- 🔲 **[Feature]** A11y „obsługa klawiatury” na ekranie MAG-1 — audyt i poprawa dostępności „obsługa klawiatury” w widoku MAG-1.
+- 🔲 **[Feature]** A11y „wsparcie czytnika ekranu” na ekranie MAG-1 — audyt i poprawa dostępności „wsparcie czytnika ekranu” w widoku MAG-1.
+- 🔲 **[Feature]** A11y „widoczny focus” na ekranie MAG-1 — audyt i poprawa dostępności „widoczny focus” w widoku MAG-1.
 - 🔲 **[Feature]** A11y „kontrast WCAG” na ekranie portal klienta — audyt i poprawa dostępności „kontrast WCAG” w widoku portal klienta.
 - 🔲 **[Feature]** A11y „obsługa klawiatury” na ekranie portal klienta — audyt i poprawa dostępności „obsługa klawiatury” w widoku portal klienta.
 - 🔲 **[Feature]** A11y „wsparcie czytnika ekranu” na ekranie portal klienta — audyt i poprawa dostępności „wsparcie czytnika ekranu” w widoku portal klienta.

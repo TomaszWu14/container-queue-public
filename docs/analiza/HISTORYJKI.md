@@ -85,16 +85,16 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-005 · [SEC] Jednolita ochrona wszystkich tras publicznych
 - **Rozmiar:** S · **Źródło:** R-06, T-01, T-03 · **Wymagania:** FR-021, SR-002
-- **Jako** administrator **chcę**, aby link wywołań palet (DLT) i wolne sloty awizacji miały ten sam limit
+- **Jako** administrator **chcę**, aby link wywołań palet (MAG-1) i wolne sloty awizacji miały ten sam limit
   żądań, kontrolę pochodzenia i walidację parametrów co formularz awizacji, **aby** żadna publiczna trasa nie
   była słabszym ogniwem.
 - **Kryteria akceptacji**
-  - Dane: > 30 żądań/min z jednego IP na `/api/dlt/{token}` → Gdy kolejne → Wtedy 429 z `Retry-After`.
+  - Dane: > 30 żądań/min z jednego IP na `/api/mag1/{token}` → Gdy kolejne → Wtedy 429 z `Retry-After`.
   - Dane: żądanie POST z obcym `Origin` → Gdy wysyłka → Wtedy 403.
   - Dane: `GET /api/avizo/{token}/slots` z datą poza zakresem ważności linku ± 30 dni → Gdy żądanie → Wtedy 422.
-- **Test:** `test_public_routes_guard.py`, `test_dlt_confirm.py`, `test_avizo_slots.py`.
+- **Test:** `test_public_routes_guard.py`, `test_mag1_confirm.py`, `test_avizo_slots.py`.
 - **Stan:** wdrożone w PR #30. Ochrona w jednym miejscu: `app/public_guards.py`
-  (awizacja i DLT); link DLT dostał też nagłówki `no-referrer` / `noindex`.
+  (awizacja i MAG-1); link MAG-1 dostał też nagłówki `no-referrer` / `noindex`.
 
 ### US-006 · [SEC] Bezpieczne parsowanie XML i archiwów ZIP
 - **Rozmiar:** S · **Źródło:** R-07, T-06 · **Wymagania:** SR-006
@@ -180,7 +180,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   że każdy partner widzi tylko swoje kontenery.
 - **Kryteria akceptacji**
   - Dane: `DEMO_READONLY_LOGINS=demo,demo-spedytor,demo-agencja,demo-magazyn` → Gdy seed → Wtedy role wg słowa
-    w loginie (logistyka, spedytor, agencja celna, magazyn DLT), to samo hasło `DEMO_PASSWORD`.
+    w loginie (logistyka, spedytor, agencja celna, magazyn MAG-1), to samo hasło `DEMO_PASSWORD`.
   - Gdy każde konto pobiera listę kontenerów → Wtedy ma co oglądać; spedytor widzi tylko swoje zlecenia,
     agencja tylko zlecone odprawy, magazyn tylko swój magazyn.
   - Gdy którekolwiek konto próbuje zapisu → Wtedy 403 „Konto demo — tylko podgląd”.
@@ -201,7 +201,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
   5. ZIP dokumentów, eksport kolejki do Excela, CSV wycen, raport błędów importu: ukryte, API 403.
   6. Profil: zamiast zdjęcia, 2FA i sesji — informacja o koncie wspólnym.
   7. Import SAD i Master data: ukryte w menu i trasach.
-  8. Wywołania DLT (linki publiczne dla partnera): ukryte, API 403. Linki awizacji nie są odczytywalne
+  8. Wywołania MAG-1 (linki publiczne dla partnera): ukryte, API 403. Linki awizacji nie są odczytywalne
      z bazy (tokeny jako SHA-256), więc demo ich nie zobaczy.
   9. Dzwonek powiadomień i aktualności na pulpicie: ukryte, API powiadomień 403.
   10. Baner „tylko podgląd” (był); przyciski zapisu w formularzach wyszarzone; każdy zapis odcinany

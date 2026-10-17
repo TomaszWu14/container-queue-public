@@ -32,13 +32,13 @@ Zasada łączenia: rekord dziedziczy najwyższą klasę swoich pól (kontener z 
 | Dokumenty transportowe (CMR, packing list, zdjęcia rozładunku) | W | `attachments`, wolumen `/data/uploads` | bez retencji | wg roli (`forwarder_may_see`) | — |
 | Dokumenty handlowe i celne (PI, CI, BL, SAD, draft SAD), faktury i pozycje | F | `attachments`, `invoices*`, `sad_drafts` | bez retencji | logistyka, zakupy, agencja (odprawowe); **nie** spedytor, **nie** magazyn | ukryte kafelki |
 | Wyceny transportu, ceny, oferty | F | `quotes`, `transport_jobs` | bez retencji | logistyka, admin; spedytor tylko swoje oferty | — |
-| Zamówienia SAP (EKKO), materiały (MARM, REF), stany DLT, PAZ, dane Power BI | F | `sap_orders`, `materials`, `pallet_*`, cache | bez retencji; cache 15 min | logistyka grupy, admin; inne spółki tylko odczyt wspólnych | — |
+| Zamówienia SAP (EKKO), materiały (MARM, REF), stany MAG-1, PAZ, dane Power BI | F | `sap_orders`, `materials`, `pallet_*`, cache | bez retencji; cache 15 min | logistyka grupy, admin; inne spółki tylko odczyt wspólnych | — |
 | Dane klientów na kontenerze (odbiorca, zamówienie klienta) | F (O, gdy osoba fizyczna) | `containers.customer_*`, `customer_orders` | bez retencji | logistyka, sprzedaż (bez kosztów) | — |
 | Historia zmian (kto, kiedy, było → jest, powód) | W | `audit_log` | bez retencji (rozliczalność) | wg separacji spółek (ACL-002) | pola kierowcy `•••` |
 | Dziennik serwera, metryki zadań, błędy JS z przeglądarki | W | `applog`, `job_runs`, `client_errors` | błędy JS 30 dni (`CLIENT_ERROR_RETENTION_DAYS`) | admin | tokeny linków `[token]` |
 | Sekrety konfiguracji: `SECRET_KEY`, `DATA_ENCRYPTION_KEY`, hasła DB/SMTP, tokeny M365, SMSAPI, AIS, n8n, klucz `age` | S | zmienne środowiskowe Coolify | — | operator | n/d |
 | Cache MSAL (refresh token M365) | S | baza, Fernet (`crypto.py`) | do wylogowania integracji | nikt | szyfrowane |
-| Tokeny linków publicznych (awizacja, DLT) | S | baza: tylko SHA-256; w URL u odbiorcy | 7/5 dni, maks. 90 (`PUBLIC_LINK_MAX_DAYS`) | odbiorca linku | `[token]` w logach, `no-referrer`, `noindex` |
+| Tokeny linków publicznych (awizacja, MAG-1) | S | baza: tylko SHA-256; w URL u odbiorcy | 7/5 dni, maks. 90 (`PUBLIC_LINK_MAX_DAYS`) | odbiorca linku | `[token]` w logach, `no-referrer`, `noindex` |
 | Dane demo (150 kontenerów, konto `demo`) | P | instancja demo | reset nocny | każdy | syntetyczne; **zakaz danych rzeczywistych** (Z-010) |
 | Kod, dokumentacja, zrzuty ekranu w repo | P | GitHub | — | każdy | bez danych rzeczywistych (anonimizacja 2026-10-12) |
 

@@ -12,7 +12,7 @@ const res = (status: number, body: unknown = {}) =>
   ({ ok: status < 300, status, json: async () => body })
 const DATA = { stage: 2, language: 'pl', forwarder: 'FW', company: 'ACME', note: '',
   items: [{ container_id: 7, container_no: 'MSCU1234571', vessel: '', notify_date: '2026-10-05',
-            warehouse: 'DLT', slot_time: '09:00' }] }
+            warehouse: 'MAG-1', slot_time: '09:00' }] }
 
 function renderPage() {
   return render(

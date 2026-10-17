@@ -69,7 +69,7 @@ def test_page_png_renders_real_pdf(tmp_path):
     assert sad_parse.page_png(str(path), 0).startswith(b"\x89PNG")
 
 
-# --- układ WinSAD (Delta Brokers, PR 5): dane fikcyjne, kształt jak prawdziwy wydruk --------------
+# --- układ WinSAD (Omega Brokers, PR 5): dane fikcyjne, kształt jak prawdziwy wydruk --------------
 
 # tekst po złożeniu kolumn przez sad_winsad.read_pages: etykiety złamane między liniami
 # („[14⏎08]”), kod CN w następnej linii, numer faktury (N935) rozcięty przez koniec linii

@@ -25,9 +25,9 @@ def _logistics(client, admin_headers, company_id, warehouses=None):
 
 
 def test_job_with_two_companies_is_rejected(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     acme = _company_id(client, admin_headers, "ACME")
-    ct = _container(client, admin_headers, "MSDU0806613", borealis)
+    ct = _container(client, admin_headers, "MSDU0806613", beta)
     cz = _container(client, admin_headers, "CSQU3054383", acme)
     r = _job(client, admin_headers, [ct, cz])
     assert r.status_code == 422 and "spółki" in r.json()["detail"]
@@ -35,34 +35,34 @@ def test_job_with_two_companies_is_rejected(client, admin_headers):
 
 
 def test_legacy_mixed_job_hidden_from_scoped_logistics(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     acme = _company_id(client, admin_headers, "ACME")
-    ct = _container(client, admin_headers, "MSDU0806613", borealis)
+    ct = _container(client, admin_headers, "MSDU0806613", beta)
     cz = _container(client, admin_headers, "CSQU3054383", acme)
     job = _job(client, admin_headers, [ct]).json()
     with SessionLocal() as db:   # zlecenie mieszane sprzed poprawki
         db.add(TransportJobContainer(job_id=job["id"], container_id=cz))
         db.commit()
-    log_h = _logistics(client, admin_headers, borealis)
+    log_h = _logistics(client, admin_headers, beta)
     assert job["id"] not in [j["id"] for j in client.get("/api/transport-jobs", headers=log_h).json()]
     assert client.get(f"/api/transport-jobs/{job['id']}", headers=log_h).status_code == 404
     assert client.get(f"/api/transport-jobs/{job['id']}", headers=admin_headers).status_code == 200
 
 
 def test_job_outside_allowed_warehouses_hidden(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     with SessionLocal() as db:
-        wa, wb = Warehouse(name="RFQ-MAG-A", company_id=borealis), Warehouse(name="RFQ-MAG-B", company_id=borealis)
+        wa, wb = Warehouse(name="RFQ-MAG-A", company_id=beta), Warehouse(name="RFQ-MAG-B", company_id=beta)
         db.add_all([wa, wb])
         db.flush()
-        ca = Container(container_no="MSDU0806613", company_id=borealis, warehouse_id=wa.id)
-        cb = Container(container_no="CSQU3054383", company_id=borealis, warehouse_id=wb.id)
+        ca = Container(container_no="MSDU0806613", company_id=beta, warehouse_id=wa.id)
+        cb = Container(container_no="CSQU3054383", company_id=beta, warehouse_id=wb.id)
         db.add_all([ca, cb])
         db.commit()
         wa_id, ca_id, cb_id = wa.id, ca.id, cb.id
     job_a = _job(client, admin_headers, [ca_id]).json()
     job_b = _job(client, admin_headers, [cb_id]).json()
-    log_h = _logistics(client, admin_headers, borealis, warehouses=[wa_id])
+    log_h = _logistics(client, admin_headers, beta, warehouses=[wa_id])
     ids = [j["id"] for j in client.get("/api/transport-jobs", headers=log_h).json()]
     assert job_a["id"] in ids and job_b["id"] not in ids
     assert client.get(f"/api/transport-jobs/{job_b['id']}", headers=log_h).status_code == 404

@@ -85,7 +85,7 @@ class User(Base):
 class Supplier(Base):
     """Dostawca. `client_company_id` NULL = globalna kartoteka dostawców Acme (spółki na jego
     materiałach, settings.supplier_company_codes); ustawione = nadawca kontenerów spółki-klienta
-    (Borealis, Cobalt…), widoczny tylko dla tej spółki. Spec 2026-09-25-kartoteka-dostawcy."""
+    (Beta, Gamma…), widoczny tylko dla tej spółki. Spec 2026-09-25-kartoteka-dostawcy."""
     __tablename__ = "suppliers"
     # GIN pg_trgm pod wyszukiwarkę (migracja trgm002); na SQLite zwykły indeks.
     # DB-007: CHECK statusu SAP. Unikalny kod SAP w kartotece dopiero po scaleniu kopii

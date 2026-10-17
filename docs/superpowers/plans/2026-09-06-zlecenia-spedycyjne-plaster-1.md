@@ -88,8 +88,8 @@ VALID_NO = "MSDU0806613"
 
 def _make_container(client, admin_headers, no=VALID_NO, forwarder_id=None):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
-    body = {"container_no": no, "company_id": borealis}
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
+    body = {"container_no": no, "company_id": beta}
     if forwarder_id:
         body["forwarder_id"] = forwarder_id
     return client.post("/api/containers", headers=admin_headers, json=body).json()
@@ -393,7 +393,7 @@ vi.mock('./dates', () => ({ formatDate: (s: string) => s }))
 import ForwardingRequestsPage from './pages/ForwardingRequestsPage'
 afterEach(() => { cleanup(); apiGet.mockReset(); apiPatch.mockReset() })
 
-const rows = [{ id: 1, container_no: 'MSDU1', warehouse_name: 'DLT', eta: '2026-07-08',
+const rows = [{ id: 1, container_no: 'MSDU1', warehouse_name: 'MAG-1', eta: '2026-07-08',
   notify_date: null, port_name: 'MUMBAI', needs_forwarding: false }]
 
 it('renderuje kolejkę i przełącza flagę', async () => {

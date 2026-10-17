@@ -23,7 +23,7 @@ const res = (status: number, body: unknown = {}) =>
   ({ ok: status < 300, status, json: async () => body })
 
 const ITEM = { container_id: 7, container_no: 'MSCU1234571', vessel: 'MV DEMO BOREAS',
-  notify_date: '2026-10-05', warehouse: 'DLT', slot_time: '', planning_status: 'PROPOZYCJA',
+  notify_date: '2026-10-05', warehouse: 'MAG-1', slot_time: '', planning_status: 'PROPOZYCJA',
   slots: [{ time: '07:00', free: 0 }, { time: '09:00', free: 1 }] }
 const DATA = { stage: 1, language: 'en', forwarder: 'FW', company: 'ACME', note: '',
   reject_comment: '', items: [ITEM] }
@@ -59,7 +59,7 @@ describe('AvizoFormPage — etap 1', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(res(200, DATA)))
     renderPage()
     expect(await screen.findByText('MSCU1234571')).toBeTruthy()
-    expect(screen.getByText('MV DEMO BOREAS · DLT')).toBeTruthy()
+    expect(screen.getByText('MV DEMO BOREAS · MAG-1')).toBeTruthy()
     expect(screen.getByText('en:av1Title')).toBeTruthy()
     expect(screen.queryByText(/driverName/)).toBeNull()
   })

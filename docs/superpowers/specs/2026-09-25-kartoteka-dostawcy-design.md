@@ -6,11 +6,11 @@ ekstrakcja (etap 2, #617) i kontrole (etap 3, #625) zostają i są podpięte pod
 
 ## 1. Kontekst i decyzje
 
-- **Podmioty w aplikacji:** Acme = właściciel dostawców i materiałów; Iberia = spółka zależna,
-  kontenery z materiałami Acme; DLT = magazyn zewnętrzny (podwykonawca, nie kupuje); Borealis,
-  Cobalt Sport = klienci, dla których prowadzimy przepływ kontenerów (bez materiałów).
-- **Jedna globalna kartoteka dostawców** (dostawcy Acme). Nadawcy kontenerów klientów (Borealis,
-  Cobalt Sport) zostają tekstem na kontenerze (`supplier_raw`), bez kartoteki.
+- **Podmioty w aplikacji:** Acme = właściciel dostawców i materiałów; Delta = spółka zależna,
+  kontenery z materiałami Acme; MAG-1 = magazyn zewnętrzny (podwykonawca, nie kupuje); Beta,
+  Gamma = klienci, dla których prowadzimy przepływ kontenerów (bez materiałów).
+- **Jedna globalna kartoteka dostawców** (dostawcy Acme). Nadawcy kontenerów klientów (Beta,
+  Gamma) zostają tekstem na kontenerze (`supplier_raw`), bez kartoteki.
 - **SAP = jedyne źródło** danych dostawcy i indeksów dostawcy. Dostawców nie zakłada się ręcznie —
   przychodzą z Excela SE16N (LFA1, EINA). Aplikacja tylko wzbogaca rekord o dane, których SAP nie ma.
 - **Kod SAP (LIFNR) obowiązkowy i unikalny.**
@@ -56,7 +56,7 @@ ekstrakcja (etap 2, #617) i kontrole (etap 3, #625) zostają i są podpięte pod
 ### Widoczność
 
 Dostawcy widoczni dla ról/spółek pracujących na materiałach Acme (admin, logistyka, zakupy Acme
-i Iberia). Borealis, Cobalt Sport, DLT, magazyn, spedytor, agencja — brak dostępu do kartoteki.
+i Delta). Beta, Gamma, MAG-1, magazyn, spedytor, agencja — brak dostępu do kartoteki.
 Reguła w `deps.py` (jedno miejsce, jak `scope_*`), nie w routerach.
 
 ## 3. Import z SAP (Master data → Importy, tylko admin)
@@ -151,7 +151,7 @@ kolor monogramu. Tryb ciemny i kontrast ≥4.5:1 (test tokenów).
 | admin | wszystko (import SAP, usuwanie, zatwierdzanie wariantów) |
 | logistyka | podgląd, kontakty, pinezka, notatki, czas realizacji, wgrywanie dokumentów |
 | zakupy | podgląd + kontakty |
-| magazyn / spedytor / agencja / Borealis / Cobalt Sport | brak dostępu do kartoteki |
+| magazyn / spedytor / agencja / Beta / Gamma | brak dostępu do kartoteki |
 
 ## 8. Testy
 
@@ -175,5 +175,5 @@ kolor monogramu. Tryb ciemny i kontrast ≥4.5:1 (test tokenów).
 ## 10. Poza zakresem
 
 Ceny i waluty per indeks (zostają w SAP); zdjęcia fabryk/produktów; archiwum i statystyki z
-historycznych dokumentów; kartoteka nadawców klientów (Borealis, Cobalt Sport); edycja danych SAP w
+historycznych dokumentów; kartoteka nadawców klientów (Beta, Gamma); edycja danych SAP w
 aplikacji.

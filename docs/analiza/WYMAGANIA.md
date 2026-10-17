@@ -30,7 +30,7 @@ Priorytety MoSCoW: wszystko, co wdrożone, jest *Must* (utrzymujemy); nowe — w
 | FR-018 | W-18 | Sloty rozładunku z pojemnością | Must | wdrożone |
 | FR-019 | W-19 | Awizacja przez jednorazowe linki (7 / 5 dni), 409 po użyciu, 410 po wygaśnięciu, SHA-256 w bazie | Must | wdrożone |
 | FR-020 | W-20 | Odpowiedź spedytora zmienia plan dopiero po decyzji logistyki | Must | wdrożone; P-01 (US-009) |
-| FR-021 | W-21 | Publiczny formularz: 30 żądań/min na IP → 429; obcy Origin odrzucony | Must | wdrożone dla awizacji; DLT — US-005 |
+| FR-021 | W-21 | Publiczny formularz: 30 żądań/min na IP → 429; obcy Origin odrzucony | Must | wdrożone dla awizacji; MAG-1 — US-005 |
 | FR-022 | W-22 | Spółka widzi tylko swoje kontenery; cudzy rekord = 404 | Must | wdrożone |
 | FR-023 | W-23 | Partner widzi tylko kontenery mu zlecone; konto bez przypisania nie widzi nic | Must | wdrożone |
 | FR-024 | W-24 | Role widzą tylko potrzebne pola; po ukrytym polu nie da się szukać | Must | wdrożone |

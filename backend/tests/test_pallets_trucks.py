@@ -1,4 +1,4 @@
-"""Wywołania-DLT: auta 4×33, MARM, cele dni per materiał, mail, Excel per auto,
+"""Wywołania-MAG-1: auta 4×33, MARM, cele dni per materiał, mail, Excel per auto,
 degradacja feature-detect, izolacja spółek."""
 import io
 
@@ -12,7 +12,7 @@ from app.pallets_analysis import build_rows
 def _mock_powerbi(monkeypatch):
     from app.config import settings
     monkeypatch.setattr(settings, "powerbi_provider", "mock")
-    monkeypatch.setattr(settings, "powerbi_dlt_locations", "3DLT")
+    monkeypatch.setattr(settings, "powerbi_mag1_locations", "3MAG1")
     monkeypatch.setattr(settings, "powerbi_table_stock", "stock")
     monkeypatch.setattr(settings, "powerbi_table_vbba", "vbba")
     monkeypatch.setattr(settings, "powerbi_table_orders", "vbbe")
@@ -25,7 +25,7 @@ def _company_id(client, headers):
 
 
 def _create(client, headers, lines, **extra):
-    body = {"company_id": _company_id(client, headers), "allow_over_dlt": True,
+    body = {"company_id": _company_id(client, headers), "allow_over_mag1": True,
             "lines": lines, **extra}
     return client.post("/api/pallet-calls", headers=headers, json=body)
 
@@ -102,19 +102,19 @@ def test_no_pal_unit_keeps_szt_only(client, admin_headers):
 
 # --- degradacja feature-detect (bez kolumn HU / rozchodów dziennych) ---
 
-_KW = dict(key="produkt", location_field="lok", dlt_values={"DLT"},
+_KW = dict(key="produkt", location_field="lok", mag1_values={"MAG-1"},
            open_statuses=set(), target_days=14, urgent_threshold=2)
 
 
 def test_degradation_without_hu_column():
-    stock = [{"produkt": "A", "ilosc": 100, "lok": "DLT"}]
+    stock = [{"produkt": "A", "ilosc": 100, "lok": "MAG-1"}]
     rows, _, feats = build_rows(stock, [], [], [], {"A": 10}, {}, **_KW)
     assert feats["hu"] is False and rows[0]["hu"] == []
 
 
 def test_hu_column_detected_and_grouped():
-    stock = [{"produkt": "A", "ilosc": 60, "lok": "DLT", "glowna_hu": "H1"},
-             {"produkt": "A", "ilosc": 40, "lok": "DLT", "glowna_hu": "H2"},
+    stock = [{"produkt": "A", "ilosc": 60, "lok": "MAG-1", "glowna_hu": "H1"},
+             {"produkt": "A", "ilosc": 40, "lok": "MAG-1", "glowna_hu": "H2"},
              {"produkt": "A", "ilosc": 5, "lok": "MAG", "glowna_hu": "H3"}]
     rows, _, feats = build_rows(stock, [], [], [], {"A": 10}, {}, **_KW)
     assert feats["hu"] is True
@@ -153,7 +153,7 @@ def test_stock_target_overrides_global(client, admin_headers):
     after = client.get("/api/pallet-calls/analysis?q=DEMO-SKU-020&refresh=true",
                        headers=admin_headers).json()["items"][0]
     assert after["cel_dni"] == 28
-    # potrzeba 28*1 + 6 - 10 = 24, przycięte do stanu DLT (20 pal)
+    # potrzeba 28*1 + 6 - 10 = 24, przycięte do stanu MAG-1 (20 pal)
     assert after["sugestia_pal"] == 20
     lst = client.get("/api/stock-targets", headers=admin_headers).json()
     assert lst["global_days"] == 14
@@ -174,12 +174,12 @@ def test_stock_target_upsert_updates_days(client, admin_headers):
 
 # --- mail przy wysłaniu ---
 
-def test_send_uses_dlt_warehouse_email_and_cc_author(client, admin_headers,
+def test_send_uses_mag1_warehouse_email_and_cc_author(client, admin_headers,
                                                      monkeypatch, db_session):
     from app.models import User, Warehouse
     from app.routers import pallets
     cid = _company_id(client, admin_headers)
-    db_session.add(Warehouse(name="Magazyn DLT", email="dlt@dlt.pl", company_id=cid))
+    db_session.add(Warehouse(name="Magazyn MAG-1", email="mag1@mag1.pl", company_id=cid))
     admin = db_session.query(User).filter_by(login="admin").first()
     admin.email = "autor@example.com"
     db_session.commit()
@@ -192,21 +192,21 @@ def test_send_uses_dlt_warehouse_email_and_cc_author(client, admin_headers,
     r = client.post(f"/api/pallet-calls/{call['id']}/send", headers=admin_headers)
     assert r.status_code == 200 and r.json()["status"] == "sent"
     assert r.json()["sent_at"] is not None
-    assert sent["recipients"] == ["dlt@dlt.pl", "autor@example.com"]
+    assert sent["recipients"] == ["mag1@mag1.pl", "autor@example.com"]
     assert sent["kw"]["attachments"][0][0].endswith(".xlsx")
 
 
 def test_send_fallback_env_emails(client, admin_headers, monkeypatch):
     from app.config import settings
     from app.routers import pallets
-    monkeypatch.setattr(settings, "dlt_call_emails", "a@dlt.pl, b@dlt.pl")
+    monkeypatch.setattr(settings, "mag1_call_emails", "a@mag1.pl, b@mag1.pl")
     sent = {}
     monkeypatch.setattr(pallets, "send_html_email",
                         lambda recipients, *a, **k: sent.update({"r": recipients}))
     call = _create(client, admin_headers, [{"produkt": "X", "ilosc_pal": 1}]).json()
     r = client.post(f"/api/pallet-calls/{call['id']}/send", headers=admin_headers)
     assert r.status_code == 200
-    assert sent["r"][:2] == ["a@dlt.pl", "b@dlt.pl"]
+    assert sent["r"][:2] == ["a@mag1.pl", "b@mag1.pl"]
 
 
 def test_send_without_any_address_400(client, admin_headers):

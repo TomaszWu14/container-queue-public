@@ -1,7 +1,7 @@
 """Twardy termin ważności publicznych linków (audyt SEC-014, PUBLIC_LINK_MAX_DAYS).
 
 Niezależnie od własnych reguł linku (expires_at, wygasanie po realizacji kontenera) żaden
-publiczny link — udostępnienie kontenera, portal klienta, DLT, strona kierowcy — nie działa
+publiczny link — udostępnienie kontenera, portal klienta, MAG-1, strona kierowcy — nie działa
 dłużej niż PUBLIC_LINK_MAX_DAYS od wystawienia. Liczone od created_at, więc obejmuje też
 stare linki bez expires_at (działają do created_at + limit). Nowy link = nowy termin.
 """

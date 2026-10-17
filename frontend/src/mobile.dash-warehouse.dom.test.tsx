@@ -10,9 +10,9 @@ import { readAppCss } from './appCss.testutil'
 
 vi.mock('./api', () => ({
   api: { get: vi.fn((p: string) => Promise.resolve(p === '/api/containers' ? [
-    { id: 1, container_no: 'DLT0000001', status: 'AWIZOWANY', notify_date: '2026-10-02', warehouse_name: 'DLT',
+    { id: 1, container_no: 'MAG10000001', status: 'AWIZOWANY', notify_date: '2026-10-02', warehouse_name: 'MAG-1',
       container_size: "40'HC", pallet_count: 20, materials_list: 'Lampy', palletization_note: '' },
-    { id: 2, container_no: 'DLT0000002', status: 'W_PORCIE', notify_date: '2026-10-01', warehouse_name: 'DLT',
+    { id: 2, container_no: 'MAG10000002', status: 'W_PORCIE', notify_date: '2026-10-01', warehouse_name: 'MAG-1',
       container_size: null, pallet_count: null, materials_list: '', palletization_note: '' },
   ] : [])), post: vi.fn() },
   errorMessage: (e: unknown) => String(e),
@@ -36,9 +36,9 @@ describe('telefon i magazyn', () => {
 
   it('kolejka magazynu: tabela, wiersze wg daty dostawy, bez pełnych przycisków, szczegóły po kliknięciu', async () => {
     render(<WarehouseQueuePage />)
-    await screen.findByText('DLT0000001')
+    await screen.findByText('MAG10000001')
     const rows = [...document.querySelectorAll('table.grid tbody tr.clickable')]
-    expect(rows.map(r => r.querySelector('.mono')?.textContent)).toEqual(['DLT0000002', 'DLT0000001'])
+    expect(rows.map(r => r.querySelector('.mono')?.textContent)).toEqual(['MAG10000002', 'MAG10000001'])
     expect(document.querySelectorAll('button.btn:not(.secondary)')).toHaveLength(0)
     expect(screen.queryByText('REKLAMACJE')).toBeNull()
     fireEvent.click(rows[1])

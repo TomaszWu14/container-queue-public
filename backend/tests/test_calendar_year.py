@@ -13,12 +13,12 @@ def _seed(db_session, admin_headers, client):
         companies.append(client.post("/api/companies", headers=admin_headers,
                                      json={"name": "Druga Spółka", "code": "DRUGA"}).json())
     a, b = companies[0]["id"], companies[1]["id"]
-    dlt = Warehouse(name="DLT", company_id=a)
-    db_session.add(dlt)
+    mag1 = Warehouse(name="MAG-1", company_id=a)
+    db_session.add(mag1)
     db_session.flush()
-    rows = [(a, dlt.id, D(2031, 3, 2)), (a, dlt.id, D(2031, 3, 2)), (a, None, D(2031, 3, 2)),
-            (a, dlt.id, D(2031, 7, 9)), (b, None, D(2031, 3, 2)),
-            (a, dlt.id, D(2030, 12, 31)), (a, None, None)]     # poza rokiem / bez daty
+    rows = [(a, mag1.id, D(2031, 3, 2)), (a, mag1.id, D(2031, 3, 2)), (a, None, D(2031, 3, 2)),
+            (a, mag1.id, D(2031, 7, 9)), (b, None, D(2031, 3, 2)),
+            (a, mag1.id, D(2030, 12, 31)), (a, None, None)]     # poza rokiem / bez daty
     for i, (company, wh, day) in enumerate(rows):
         db_session.add(Container(container_no=f"YEAR{i:07d}", company_id=company,
                                  warehouse_id=wh, notify_date=day))
@@ -36,8 +36,8 @@ def test_year_aggregates_per_day_and_warehouse(client, admin_headers, db_session
     assert r.status_code == 200, r.text
     body = r.json()
     assert body["year"] == 2031 and body["today"]
-    assert _counts(body) == {("2031-03-02", "DLT"): 2, ("2031-03-02", None): 2,
-                             ("2031-07-09", "DLT"): 1}
+    assert _counts(body) == {("2031-03-02", "MAG-1"): 2, ("2031-03-02", None): 2,
+                             ("2031-07-09", "MAG-1"): 1}
 
 
 def test_year_company_isolation(client, admin_headers, db_session):

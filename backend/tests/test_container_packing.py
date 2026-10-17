@@ -171,9 +171,9 @@ def test_packing_endpoint_no_type_and_no_items(client, admin_headers, db_session
 
 def test_packing_endpoint_company_isolation(client, admin_headers, db_session):
     from tests.test_isolation import _company_id, _make_scoped_user
-    cid = _seed_container(client, admin_headers, db_session, company_code="BOREALIS",
+    cid = _seed_container(client, admin_headers, db_session, company_code="BETA",
                           no="MSNU2506240")
-    b_id = _company_id(client, admin_headers, "COBALT")
+    b_id = _company_id(client, admin_headers, "GAMMA")
     headers_b = _make_scoped_user(client, admin_headers, "intruz.pack", b_id)
     r = client.get(f"/api/containers/{cid}/packing", headers=headers_b)
     assert r.status_code in (403, 404), f"IDOR: B odczytał packing kontenera A ({r.status_code})"

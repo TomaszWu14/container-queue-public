@@ -9,11 +9,11 @@ URL_ADMIN, URL = "/api/admin/theme-colors", "/api/theme-colors"
 
 def test_defaults_then_save_and_read_back(client, admin_headers, db_session):
     assert client.get(URL, headers=admin_headers).json() == {"light": {}, "dark": {}}
-    body = {"light": {"--kq-row-dlt": "#F7D9E3"}, "dark": {"--bg": "#0e1f3f", "--kq-row-dlt": "#4d3a12"}}
+    body = {"light": {"--kq-row-mag1": "#F7D9E3"}, "dark": {"--bg": "#0e1f3f", "--kq-row-mag1": "#4d3a12"}}
     r = client.put(URL_ADMIN, headers=admin_headers, json=body)
     assert r.status_code == 200, r.text
-    assert r.json()["light"] == {"--kq-row-dlt": "#f7d9e3"}                 # hex małymi literami
-    assert client.get(URL, headers=admin_headers).json()["dark"] == {"--bg": "#0e1f3f", "--kq-row-dlt": "#4d3a12"}
+    assert r.json()["light"] == {"--kq-row-mag1": "#f7d9e3"}                 # hex małymi literami
+    assert client.get(URL, headers=admin_headers).json()["dark"] == {"--bg": "#0e1f3f", "--kq-row-mag1": "#4d3a12"}
     logs = db_session.scalars(select(AuditLog).where(AuditLog.field.like("theme_colors_%"))).all()
     assert {log.field for log in logs} == {"theme_colors_light", "theme_colors_dark"}
     assert "--bg" in next(log.note for log in logs if log.field == "theme_colors_dark")

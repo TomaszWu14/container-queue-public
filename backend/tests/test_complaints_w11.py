@@ -7,7 +7,7 @@ from sqlalchemy import select
 from app.models import Complaint, ComplaintStatus, Notification, to_pl_date, today_pl, utcnow
 
 
-def _company_id(client, headers, code="BOREALIS"):
+def _company_id(client, headers, code="BETA"):
     return next(c["id"] for c in client.get("/api/companies", headers=headers).json()
                 if c["code"] == code)
 
@@ -160,8 +160,8 @@ def test_stats_per_supplier_and_carrier_with_costs(client, admin_headers):
 
 
 def test_stats_isolated_between_companies(client, admin_headers):
-    a = _company_id(client, admin_headers, "BOREALIS")
-    b = _company_id(client, admin_headers, "COBALT")
+    a = _company_id(client, admin_headers, "BETA")
+    b = _company_id(client, admin_headers, "GAMMA")
     cid = _container(client, admin_headers, "MSDU0806613", a)
     _complaint(client, admin_headers, cid)
     headers_b = _scoped_user(client, admin_headers, "intruz.w11", b)
@@ -218,8 +218,8 @@ def test_checklist_dictionary_and_results(client, admin_headers):
 
 
 def test_checklist_isolated_between_companies(client, admin_headers):
-    a = _company_id(client, admin_headers, "BOREALIS")
-    b = _company_id(client, admin_headers, "COBALT")
+    a = _company_id(client, admin_headers, "BETA")
+    b = _company_id(client, admin_headers, "GAMMA")
     cid = _container(client, admin_headers, "MSDU0806613", a)
     point = client.post("/api/checklist-points", headers=admin_headers,
                         json={"name": "Plomba"}).json()

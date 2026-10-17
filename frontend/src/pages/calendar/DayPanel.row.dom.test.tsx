@@ -15,9 +15,9 @@ vi.mock('../../i18n', async () => {
 
 it('status-pill kontenera i „Odprawa: brak”, bez „—” przy braku godziny', () => {
   const info = { day: '2026-09-14', is_free_day: false, containers: [{ id: 1, container_no: 'MSDU0806613',
-    warehouse_name: 'DLT', status: 'W_PORCIE', customs_status: 'BRAK', is_delayed: false, slot_time: null,
+    warehouse_name: 'MAG-1', status: 'W_PORCIE', customs_status: 'BRAK', is_delayed: false, slot_time: null,
     eta: null }] } as unknown as QueueDay
-  const s = dayStat(info, [{ key: 'DLT', limit: 6 }])
+  const s = dayStat(info, [{ key: 'MAG-1', limit: 6 }])
   render(<MemoryRouter><DayPanel iso="2026-09-14" info={info} s={s} holiday={null} /></MemoryRouter>)
   const row = screen.getByText('MSDU0806613').closest('.cal2-p-row')!
   expect(row.querySelector('.badge.st-W_PORCIE')?.textContent).toBe('4 · Port docelowy')

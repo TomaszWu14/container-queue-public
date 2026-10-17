@@ -103,7 +103,7 @@ TEMPLATES: dict[str, tuple[str, list[tuple[str, object, str]]]] = {
         ("ETA", D, "komórka typu DATA"),
         ("Nr kontenera", "MSDU0806613", "* numer ISO 6346 — klucz"),
         ("Numer zamówienia", "4500617421", "kilka numerów: w osobnych liniach lub po przecinku"),
-        ("Magazyn", "DLT", "tworzony automatycznie, gdy nowy"),
+        ("Magazyn", "MAG-1", "tworzony automatycznie, gdy nowy"),
         ("Numer dostawy", "18001", ""),
         ("Spedytor", "SPEDALFA", "tworzony automatycznie, gdy nowy"),
         ("Agencja", "", "tylko z rejestru agencji celnych"),
@@ -112,7 +112,7 @@ TEMPLATES: dict[str, tuple[str, list[tuple[str, object, str]]]] = {
         ("SENT wymagany", "", ""),
         ("Numer SENT", "", ""),
     ]),
-    "dlt": ("Stany DLT (snapshot)", [
+    "mag1": ("Stany MAG-1 (snapshot)", [
         ("Produkt", "REF12345", "* materiał"),
         ("Nr HU", "00159012340000000017", ""),
         ("Ilość", 240, "* ilość"),
@@ -137,7 +137,7 @@ TEMPLATES: dict[str, tuple[str, list[tuple[str, object, str]]]] = {
         ("produkt", "REF12345", "*"),
         ("ilosc", 24, "*"),
         ("firma", "ACME", ""),
-        ("magazyn", "DLT", ""),
+        ("magazyn", "MAG-1", ""),
         ("kontrahent", "Klient ABC", ""),
     ]),
 }

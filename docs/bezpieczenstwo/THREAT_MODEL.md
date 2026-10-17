@@ -15,7 +15,7 @@ flowchart LR
     subgraph Internet["Internet (niezaufane)"]
         U[Użytkownik<br/>przeglądarka]
         SP[Spedytor bez konta<br/>link awizacji]
-        DLT[Magazyn zewnętrzny<br/>link wywołań palet]
+        MAG-1[Magazyn zewnętrzny<br/>link wywołań palet]
         MAIL[Poczta przychodząca]
     end
     subgraph Host["Serwer (Coolify, sieć Dockera)"]
@@ -35,7 +35,7 @@ flowchart LR
     end
     U -- F1 logowanie, F2 API z cookie --> PROXY --> API
     SP -- F3 token w URL --> PROXY
-    DLT -- F4 token w URL --> PROXY
+    MAG-1 -- F4 token w URL --> PROXY
     MAIL -- F6 przez n8n --> N8N -- F7 X-Automation-Token --> API
     API -- F7 webhook HMAC --> N8N
     API -- F5 pliki --> FS
@@ -102,7 +102,7 @@ zewnętrzne (sekrety w env), API → Ollama (bez uwierzytelniania, dlatego tylko
 | I | dane kierowcy w SMS/mailach | treść bez danych osobowych poza niezbędnymi; retencja 90 dni | — |
 | D | zalew formularza | 30 żądań/min na IP | parametr daty slotów bez zakresu (T-03) — US-005 |
 
-### F4 · Publiczny link wywołań palet (DLT)
+### F4 · Publiczny link wywołań palet (MAG-1)
 
 | STRIDE | Zagrożenie | Kontrola | Luka / ryzyko |
 |---|---|---|---|

@@ -46,7 +46,7 @@ def iso6346(prefix: str) -> str:
 
 
 COMMON = {"importer_nip": "0000000000", "eori": "PL000000000000000", "zgl_nip": "0000000000",
-          "odbiorca": "ACME SP. Z O.O.", "zglaszajacy": "DELTA BROKERS LOGISTICS SA",
+          "odbiorca": "ACME SP. Z O.O.", "zglaszajacy": "OMEGA BROKERS LOGISTICS SA",
           "uc": "PL999999"}
 
 # Struktura (liczba pozycji, dokumentów, stawki, podziały stron) jak w prawdziwych drukach,

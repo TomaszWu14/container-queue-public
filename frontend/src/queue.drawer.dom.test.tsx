@@ -15,7 +15,7 @@ const base = {
   purchasing_status: 'BRAK', order_numbers: '4500001', delivery_note: '',
   incoming_delivery_no: '', purchase_note: '', forwarder_name: 'SPEDALFA', document_flow: '',
   sent_required: null, sent_number: '', sent_status: '', is_delayed: false,
-  transport_id: null, order_number: null, warehouse_name: 'DLT', container_size: '40HC',
+  transport_id: null, order_number: null, warehouse_name: 'MAG-1', container_size: '40HC',
   port_name: 'Gdańsk', updated_at: '2026-08-01T10:00:00',
 }
 const CONTAINERS = [

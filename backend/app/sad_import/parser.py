@@ -1,7 +1,7 @@
 """Odczyt PDF „Podgląd danych zgłoszenia celnego importowego” z WinSAD (Huzar Software,
 wydruk z pliku ZC415) — pełne dane: nagłówek, wszystkie pozycje, opłaty, podsumowanie.
 
-Pułapki układu (sprawdzone na drafach Delta Brokers, testy: tests/fixtures/sad):
+Pułapki układu (sprawdzone na drafach Omega Brokers, testy: tests/fixtures/sad):
 - dwie kolumny — lewa (opis, CN, dokumenty, opłaty) od x≈27, prawa (wartości, masy, kraje)
   od x≈441; tniemy na `COLUMN_X` i czytamy kolumny osobno (`extract_text` całej strony skleja
   je w jedną linię);

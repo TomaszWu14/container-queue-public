@@ -27,9 +27,9 @@ def _make_scoped_user(client, admin_headers, login_name, company_id):
 
 @pytest.fixture()
 def two_companies(client, admin_headers):
-    """A = BOREALIS (zasoby), B = COBALT (intruz). Zwraca (a_id, b_id, headers_b)."""
-    a = _company_id(client, admin_headers, "BOREALIS")
-    b = _company_id(client, admin_headers, "COBALT")
+    """A = BETA (zasoby), B = GAMMA (intruz). Zwraca (a_id, b_id, headers_b)."""
+    a = _company_id(client, admin_headers, "BETA")
+    b = _company_id(client, admin_headers, "GAMMA")
     headers_b = _make_scoped_user(client, admin_headers, "intruz.b", b)
     return a, b, headers_b
 

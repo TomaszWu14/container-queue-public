@@ -110,9 +110,9 @@ def test_fk_match_is_indexable_any_array_on_postgres():
 
 def test_queue_search_by_linked_order_number(client, admin_headers):
     """?q= po numerze zamówienia powiązanego (orders.number, nie order_numbers)."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     r = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "order_number": "PO-LINK-7781"})
+        "container_no": VALID_NO, "company_id": beta, "order_number": "PO-LINK-7781"})
     assert r.status_code == 201, r.text
     cid = r.json()["id"]
     found = client.get("/api/containers", params={"q": "link-778"}, headers=admin_headers)

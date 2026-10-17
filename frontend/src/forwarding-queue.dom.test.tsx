@@ -13,7 +13,7 @@ vi.mock('./api', () => ({ api: { get: apiGet, patch: apiPatch }, errorMessage: (
 import ForwardingRequestsPage from './pages/ForwardingRequestsPage'
 afterEach(() => { cleanup(); apiGet.mockReset(); apiPatch.mockReset() })
 
-const rows = [{ id: 1, container_no: 'MSDU1', warehouse_name: 'DLT', eta: '2026-07-08',
+const rows = [{ id: 1, container_no: 'MSDU1', warehouse_name: 'MAG-1', eta: '2026-07-08',
   notify_date: null, port_name: 'MUMBAI', needs_forwarding: false }]
 
 // /api/forwarders zwraca listę spedytorów, /api/containers/to-forward — kolejkę

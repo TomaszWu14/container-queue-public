@@ -135,7 +135,7 @@ export function toFilter(checked: Set<string>, opts: ValueOpt[]): ColFilter | nu
 
 export const colLabel = (col: string, t: T) => t(COLUMN_LABEL[col] ?? col)
 
-/** Chipy w istniejącym pasku filtrów (decyzja 15): „Statek: MV DEMO DELTA, COSCO". */
+/** Chipy w istniejącym pasku filtrów (decyzja 15): „Statek: MV DEMO OMEGA, COSCO". */
 export function colFilterChips(f: ColFilters, t: T, set: (col: string, v: ColFilter | null) => void) {
   return Object.entries(f).map(([col, flt]) => {
     const spec = FILTER_COLS[col]

@@ -1,7 +1,7 @@
 """Spedytorzy: edycja nazwy, dezaktywacja, usuwanie (guarded) i scalanie duplikatów."""
 
 
-def _company(client, headers, code="BOREALIS"):
+def _company(client, headers, code="BETA"):
     return next(c["id"] for c in client.get("/api/companies", headers=headers).json()
                if c["code"] == code)
 

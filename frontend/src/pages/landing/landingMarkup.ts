@@ -43,7 +43,7 @@ export const MARKUP = `
     <svg viewBox="0 0 660 190" width="100%" style="display:block">
       <defs><linearGradient id="kl-fg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
       <path id="kl-fpath" class="flowline" d="M56 60 H604"></path>
-      <path id="kl-fpathlit" class="flowline-dlt" d="M56 60 H604"></path>
+      <path id="kl-fpathlit" class="flowline-mag1" d="M56 60 H604"></path>
       <g id="kl-stages"></g>
       <g id="kl-gps" style="display:none"><circle class="gps-ring" cx="0" cy="0" r="4"></circle><circle class="gps" cx="0" cy="0" r="4"></circle></g>
       <g id="kl-ctr" class="ctr"></g>

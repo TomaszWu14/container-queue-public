@@ -21,7 +21,7 @@ def _rows(db, company):
 
 
 def _finished(db):
-    company = db.scalar(select(Company).where(Company.code == "BOREALIS"))
+    company = db.scalar(select(Company).where(Company.code == "BETA"))
     reconcile_queue(db, company, [_raw(NO, 1, notify_day=3)], None)
     db.flush()
     old = _rows(db, company)[0]
@@ -68,7 +68,7 @@ def test_sync_finished_delivery_left_in_excel_is_skipped(client):
 def test_sync_active_container_still_updated_without_duplicate(client):
     db = SessionLocal()
     try:
-        company = db.scalar(select(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(select(Company).where(Company.code == "BETA"))
         reconcile_queue(db, company, [_raw(NO, 1)], None); db.flush()
         reconcile_queue(db, company, [_raw(NO, 5)], None); db.flush()
         rows = _rows(db, company)
@@ -87,7 +87,7 @@ def test_import_repeat_number_of_finished_creates_new_container(client, admin_he
     finally:
         db.close()
     f = _xlsx([["ACME", "MAERSK", datetime.datetime(2026, 9, 20), "kolej", NO, "", ""]])
-    url = "/api/import/containers?company_code=BOREALIS&dry_run="
+    url = "/api/import/containers?company_code=BETA&dry_run="
     prev = client.post(url + "true", headers=admin_headers, files={"file": ("q.xlsx", f)}).json()
     assert prev["counts"]["new"] == 1 and prev["rows"][0]["note"] == NOTE
     r = client.post(url + "false", headers=admin_headers, files={"file": ("q.xlsx", f)})

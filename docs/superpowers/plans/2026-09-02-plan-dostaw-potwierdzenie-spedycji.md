@@ -81,7 +81,7 @@ from tests.conftest import login
 
 def _create(client, headers, container_no, **extra):
     companies = client.get("/api/companies", headers=headers).json()
-    company_id = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    company_id = next(c["id"] for c in companies if c["code"] == "BETA")
     payload = {"container_no": container_no, "company_id": company_id,
                "status": "ZAPOWIEDZIANY", **extra}
     response = client.post("/api/containers", json=payload, headers=headers)
@@ -582,7 +582,7 @@ from tests.conftest import login
 
 def _create(client, headers, container_no, **extra):
     companies = client.get("/api/companies", headers=headers).json()
-    company_id = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    company_id = next(c["id"] for c in companies if c["code"] == "BETA")
     payload = {"container_no": container_no, "company_id": company_id,
                "status": "ZAPOWIEDZIANY", **extra}
     response = client.post("/api/containers", json=payload, headers=headers)
@@ -1352,4 +1352,4 @@ git commit -m "test(plan): weryfikacja końcowa cyklu planowania dostawy"
 
 ## Poza zakresem tego planu
 
-Grupowe przypisywanie jednej daty wielu kontenerom, estymacja czasu rozładunku (ML), godziny slotów 7:15 / DLT 7:00, SMS-y i kod awizacyjny kierowcy, statusy rampowe (Podstawiony / Rozładowany / Przyjęty / Rozliczony), faktury transportowe, ranking pilności. Każde z nich dostaje własny spec i plan.
+Grupowe przypisywanie jednej daty wielu kontenerom, estymacja czasu rozładunku (ML), godziny slotów 7:15 / MAG-1 7:00, SMS-y i kod awizacyjny kierowcy, statusy rampowe (Podstawiony / Rozładowany / Przyjęty / Rozliczony), faktury transportowe, ranking pilności. Każde z nich dostaje własny spec i plan.

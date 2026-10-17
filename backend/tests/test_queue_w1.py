@@ -19,7 +19,7 @@ from tests.conftest import login
 VALID = ["MSDU0806613", "CSQU3054383", "TGHU9876537", "CSNU0110266", "MSKU5696108"]
 
 
-def _company_id(client, headers, code="BOREALIS"):
+def _company_id(client, headers, code="BETA"):
     return next(c["id"] for c in client.get("/api/companies", headers=headers).json()
                 if c["code"] == code)
 

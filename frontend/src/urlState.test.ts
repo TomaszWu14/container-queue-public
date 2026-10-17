@@ -13,8 +13,8 @@ describe('resolveModule — wybór spółki z URL z egzekwowaniem uprawnień', (
     expect(resolveModule('', true, 'acme')).toBe('acme')
   })
   it('konto bez wglądu we wszystkie spółki: URL NIE przełącza spółki (zawsze własna)', () => {
-    expect(resolveModule('borealis', false, 'dlt')).toBe('dlt')
-    expect(resolveModule('acme', false, 'dlt')).toBe('dlt')
-    expect(resolveModule('', false, 'dlt')).toBe('dlt')
+    expect(resolveModule('beta', false, 'mag1')).toBe('mag1')
+    expect(resolveModule('acme', false, 'mag1')).toBe('mag1')
+    expect(resolveModule('', false, 'mag1')).toBe('mag1')
   })
 })
