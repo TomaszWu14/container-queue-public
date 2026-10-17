@@ -9,7 +9,7 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 ![Błędny numer kontenera zatrzymany walidacją ISO 6346, poprawka i wpis w historii zmian](docs/screenshots/demo.gif)
 
 📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
-🎬 [Ścieżka rekrutera — 17 s: historia jednego kontenera, pulpit, „Jak to zbudowano”](docs/video/sciezka-rekrutera.mp4) — nagranie testu przeglądarkowego (`sh scripts/record_demo_video.sh`); świeże wideo z każdego PR w artefaktach workflow „E2E — ścieżka rekrutera”.
+🎬 [Ścieżka rekrutera — 20 s: historia jednego kontenera, pulpit, „Jak to zbudowano”](docs/video/sciezka-rekrutera.mp4) — nagranie testu przeglądarkowego (`sh scripts/record_demo_video.sh`); świeże wideo z każdego PR w artefaktach workflow „E2E — ścieżka rekrutera”.
 
 🌐 **Demo online bez logowania: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** —
 link od razu wpuszcza na konto demo. Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
