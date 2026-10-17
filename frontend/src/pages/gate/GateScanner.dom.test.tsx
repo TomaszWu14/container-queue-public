@@ -67,7 +67,8 @@ describe('skaner bramy', () => {
     scanner()
     fireEvent.click(screen.getByRole('button', { name: /Skanuj kod QR/ }))
     expect(await screen.findByRole('button', { name: /Przyjechał — wpuść/ }, { timeout: 2000 })).toBeTruthy()
-    expect(stop).toHaveBeenCalled()
+    // aparat gaśnie w sprzątaniu efektu — tuż po pokazaniu wyniku, nie w tym samym kroku
+    await vi.waitFor(() => expect(stop).toHaveBeenCalled())
   })
 
   it('brak zgody na aparat — komunikat', async () => {
