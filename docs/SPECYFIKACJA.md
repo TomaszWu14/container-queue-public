@@ -1,11 +1,11 @@
 # TIMPORYE — System zarządzania kolejką kontenerów
 
 Specyfikacja ustalona w wywiadzie projektowym (50 pytań, 02.07.2026).
-Źródłem danych startowych jest plik `KOLEJKA_KONTENERÓW_2025_BOREALIS.xlsx`.
+Źródłem danych startowych jest plik `KOLEJKA_KONTENERÓW_2025_BETA.xlsx`.
 
 ## 1. Użytkownicy i spółki
 
-- **Spółki w systemie:** Borealis, Cobalt Sport, Iberia, Acme (+ możliwość dodawania kolejnych).
+- **Spółki w systemie:** Beta, Gamma, Delta, Acme (+ możliwość dodawania kolejnych).
 - **Separacja danych:** pełna — każda spółka widzi wyłącznie swoje kontenery.
   Wyjątek: **logistyka Acme oraz admin widzą wszystko** (flaga `view_all_companies`).
 - **Logowanie:** login + hasło (konta lokalne, zakładane przez admina).
@@ -20,9 +20,9 @@ Specyfikacja ustalona w wywiadzie projektowym (50 pytań, 02.07.2026).
   - `sales` (sprzedaż) — tylko odczyt (kolejka, kalendarz, śledzenie, Specjalna troska), bez kosztów.
 - **Zawężenie do magazynów** (`deps.scope_containers`): logistyk z ustawioną listą
   `allowed_warehouse_ids` widzi tylko kontenery tych magazynów (pusta lista = wszystkie);
-  konto magazynu (np. zewnętrzny DLT) widzi wyłącznie swój jeden magazyn — bez przypisanego
+  konto magazynu (np. zewnętrzny MAG-1) widzi wyłącznie swój jeden magazyn — bez przypisanego
   magazynu nie ma dostępu.
-- **Spedytorzy (SPEDALFA, SPEDBETA, Delta Brokers):** osobny moduł współpracy (Etap 3):
+- **Spedytorzy (SPEDALFA, SPEDBETA, Omega Brokers):** osobny moduł współpracy (Etap 3):
   zlecenia transportowe (pełny obieg: wystawienie → akceptacja/odrzucenie → realizacja → potwierdzenie),
   wymiana plików (dokumenty transportowe: CMR, zlecenia, awizacje, kwity),
   wątki wiadomości/zapytań przy kontenerze, wskazywanie agenta celnego.
@@ -67,7 +67,7 @@ Specyfikacja ustalona w wywiadzie projektowym (50 pytań, 02.07.2026).
 - **Limit dzienny rozładunków:** domyślny per magazyn + **nadpisanie na konkretny dzień**
   (np. domyślnie 7, jednego dnia 10, kolejnego 6). Przekroczenie = **ostrzeżenie, można zapisać**.
 - **Przeniesienie awizacji:** zwykła zmiana daty, ale zapisywana w historii z poprzednią datą i powodem.
-- **Dni wolne:** kalendarz oznacza soboty, niedziele i święta **PL i PT** (magazyn w Iberia)
+- **Dni wolne:** kalendarz oznacza soboty, niedziele i święta **PL i PT** (magazyn w Delta)
   + własne dni wolne/robocze per magazyn (np. sobota pracująca za święto).
 - **Magazyn potwierdza rozładunek** po fakcie (bez akceptacji terminu awizacji).
 
@@ -145,7 +145,7 @@ punkty oznaczone **[?]** wymagają decyzji przed implementacją, **[✓]** są j
 ### 10.1 Widok
 
 - **Minimalistyczny wygląd** — mniej ozdobników niż obecna kolejka, nacisk na czytelność wiersza.
-- **[✓] Wybór widocznych kolumn** — przycisk „Kolumny" w kolejce (szeroki układ Acme/DLT);
+- **[✓] Wybór widocznych kolumn** — przycisk „Kolumny" w kolejce (szeroki układ Acme/MAG-1);
   wybór zapamiętany per użytkownik w `localStorage` (przeżywa wylogowanie), nr kontenera
   zablokowany. Kolumny opisane jedną listą w `QueuePage.tsx` (szerokość + nagłówek + komórka).
 - **[✓] Przestawianie kolejności kolumn** — przeciąganie nagłówka w kolejce

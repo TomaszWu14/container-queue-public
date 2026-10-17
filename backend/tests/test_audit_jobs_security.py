@@ -54,7 +54,7 @@ def test_customs_bundle_split_into_separate_fns():
 TOKEN = "Zx9_" + "a" * 39
 PATHS = [
     f"/avizo/{TOKEN}", f"/api/avizo/driver/{TOKEN}", f"/api/public/portal/{TOKEN}",
-    f"/api/public/containers/{TOKEN}/docs", f"/api/driver/{TOKEN}", f"/api/dlt/{TOKEN}",
+    f"/api/public/containers/{TOKEN}/docs", f"/api/driver/{TOKEN}", f"/api/mag1/{TOKEN}",
     f"/dostawa/{TOKEN}", f"/portal/{TOKEN}", f"/reset-password?token={TOKEN}",
     f"/api/auth/reset?foo=1&token={TOKEN}&x=2",
 ]

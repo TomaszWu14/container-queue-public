@@ -64,8 +64,8 @@ export default function LandingPage() {
       g.appendChild(box); g.appendChild(ic); g.appendChild(lb); sg.appendChild(g); stageEls.push(g)
     })
 
-    const dltPath = q('#kl-fpathlit'), dltLen = dltPath ? dltPath.getTotalLength() : 0
-    if (dltPath) { dltPath.setAttribute('stroke-dasharray', String(dltLen)); dltPath.setAttribute('stroke-dashoffset', String(dltLen)) }
+    const mag1Path = q('#kl-fpathlit'), mag1Len = mag1Path ? mag1Path.getTotalLength() : 0
+    if (mag1Path) { mag1Path.setAttribute('stroke-dasharray', String(mag1Len)); mag1Path.setAttribute('stroke-dashoffset', String(mag1Len)) }
     const gpsG = q('#kl-gps')
     const ctrG = q('#kl-ctr'); if (ctrG) ctrG.innerHTML = ''
     const body = document.createElementNS(NS, 'rect'); body.setAttribute('class', 'body')
@@ -82,7 +82,7 @@ export default function LandingPage() {
       const globalFrac = (seg + e) / segs
       const x = X0 + (X1 - X0) * globalFrac
       if (ctrG) ctrG.setAttribute('transform', `translate(${x},${Y})`)
-      if (dltPath) dltPath.setAttribute('stroke-dashoffset', String(dltLen * (1 - globalFrac)))
+      if (mag1Path) mag1Path.setAttribute('stroke-dashoffset', String(mag1Len * (1 - globalFrac)))
       const activeIdx = Math.round(globalFrac * segs)
       stageEls.forEach((g, i) => g.classList.toggle('active', i <= activeIdx))
       const col = activeIdx >= 4 ? '#10b981' : activeIdx === 2 ? '#06b6d4' : activeIdx === 3 ? '#f59e0b' : '#3b82f6'

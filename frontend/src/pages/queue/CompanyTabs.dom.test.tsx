@@ -15,12 +15,12 @@ import CompanyTabs from './CompanyTabs'
 describe('zakładki spółek — znacznik spółki', () => {
   it('każda spółka ma kropkę w swoim kolorze, Tranzyt bez kropki', () => {
     const { container } = render(<CompanyTabs module="acme" setModule={() => {}}
-      counts={{ ACME: 3, DLT: 1, BOREALIS: 0, COBALT: 2, PT: 5 }} transitCount={0} />)
+      counts={{ ACME: 3, 'MAG-1': 1, BETA: 0, GAMMA: 2, DELTA: 5 }} transitCount={0} />)
     const pills = [...container.querySelectorAll('.kq-pill')]
     const dots = pills.map(p => (p.querySelector('.kq-pill-dot') as HTMLElement | null)
       ?.style.getPropertyValue('--kq-co') ?? null)
-    expect(dots).toEqual(['var(--co-acme)', 'var(--co-dlt)', 'var(--co-borealis)',
-      'var(--co-cobalt)', 'var(--co-pt)', null])
+    expect(dots).toEqual(['var(--co-acme)', 'var(--co-mag1)', 'var(--co-beta)',
+      'var(--co-gamma)', 'var(--co-delta)', null])
     expect(container.querySelector('.kq-pill-dot')?.getAttribute('aria-hidden')).toBe('true')
     expect(pills[0].classList.contains('active')).toBe(true)
   })

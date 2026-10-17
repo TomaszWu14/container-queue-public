@@ -1,4 +1,4 @@
-"""#65 Inwentaryzacja HU: rozjazdy HU wg PBI (stan DLT) vs HU wywołane."""
+"""#65 Inwentaryzacja HU: rozjazdy HU wg PBI (stan MAG-1) vs HU wywołane."""
 import pytest
 
 
@@ -6,7 +6,7 @@ import pytest
 def _mock_powerbi(monkeypatch):
     from app.config import settings
     monkeypatch.setattr(settings, "powerbi_provider", "mock")
-    monkeypatch.setattr(settings, "powerbi_dlt_locations", "3DLT")
+    monkeypatch.setattr(settings, "powerbi_mag1_locations", "3MAG1")
     monkeypatch.setattr(settings, "powerbi_table_stock", "stock")
     monkeypatch.setattr(settings, "powerbi_table_vbba", "vbba")
     monkeypatch.setattr(settings, "powerbi_table_orders", "vbbe")
@@ -19,9 +19,9 @@ def _company_id(client, headers):
 
 
 def test_hu_inventory_marks_called_and_mismatches(client, admin_headers):
-    # mock DLT ma HU 10000777 dla DEMO-SKU-020; wywołujemy je + jedno nieistniejące
+    # mock MAG-1 ma HU 10000777 dla DEMO-SKU-020; wywołujemy je + jedno nieistniejące
     call = client.post("/api/pallet-calls", headers=admin_headers, json={
-        "company_id": _company_id(client, admin_headers), "allow_over_dlt": True,
+        "company_id": _company_id(client, admin_headers), "allow_over_mag1": True,
         "lines": [
             {"produkt": "DEMO-SKU-020", "ilosc_pal": 1, "hu_numbers": "10000777"},
             {"produkt": "DEMO-SKU-020", "ilosc_pal": 1, "hu_numbers": "99999999"},
@@ -31,7 +31,7 @@ def test_hu_inventory_marks_called_and_mismatches(client, admin_headers):
     assert r0["available"] is True
     assert all(not row["called"] for row in r0["rows"])
 
-    # po wysłaniu (sent) HU są 'called'; brakujące w DLT = mismatch
+    # po wysłaniu (sent) HU są 'called'; brakujące w MAG-1 = mismatch
     from app.database import SessionLocal
     from app.models import PalletCall, PalletCallStatus
     with SessionLocal() as db:
@@ -41,10 +41,10 @@ def test_hu_inventory_marks_called_and_mismatches(client, admin_headers):
 
     r = client.get("/api/pallet-calls/hu-inventory", headers=admin_headers).json()
     by_hu = {row["hu"]: row for row in r["rows"]}
-    assert by_hu["10000777"]["called"] and by_hu["10000777"]["in_dlt"]
+    assert by_hu["10000777"]["called"] and by_hu["10000777"]["in_mag1"]
     assert by_hu["10000777"]["call_number"] == call["number"]
     ghost = by_hu["99999999"]
-    assert ghost["called"] and not ghost["in_dlt"] and ghost["mismatch"]
+    assert ghost["called"] and not ghost["in_mag1"] and ghost["mismatch"]
     assert r["mismatches"] >= 1
 
 

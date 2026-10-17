@@ -1,5 +1,5 @@
 """Draft SAD z programu WinSAD (Huzar Software) — wydruk „Podgląd danych zgłoszenia celnego
-importowego” od Delta Brokers (spec 2026-09-29-agencja-draft-sad, PR 5: dostrojenie odczytu).
+importowego” od Omega Brokers (spec 2026-09-29-agencja-draft-sad, PR 5: dostrojenie odczytu).
 
 Wydruk ma dwie kolumny — lewa: opis, kod CN, dokumenty; prawa: wartości, masy, kraje — a pola
 niosą numery elementów danych AIS/IMPORT PLUS („Masa netto [18 01]: 5377.83”). Zwykły

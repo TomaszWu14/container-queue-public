@@ -119,11 +119,11 @@ describe('MasterDataPage', () => {
     mockApi({
       '/api/companies': companies,
       '/api/suppliers': suppliers,
-      '/api/warehouses': [{ id: 3, name: 'Magazyn DLT', company_id: 1, country: 'LT', email: '' }],
+      '/api/warehouses': [{ id: 3, name: 'Magazyn MAG-1', company_id: 1, country: 'LT', email: '' }],
     })
     render(mdAt('magazyny', <MasterDataPage />))
-    await screen.findByText('Magazyn DLT')
+    await screen.findByText('Magazyn MAG-1')
     fireEvent.change(screen.getByPlaceholderText('mdSearch'), { target: { value: 'xxx' } })
-    await waitFor(() => expect(screen.queryByText('Magazyn DLT')).toBeNull())
+    await waitFor(() => expect(screen.queryByText('Magazyn MAG-1')).toBeNull())
   })
 })

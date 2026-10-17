@@ -5,14 +5,14 @@ from tests.test_api import VALID_NO, _company_id
 
 
 def test_sales_reads_own_company_only_without_writes_or_costs(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     other = next(c["id"] for c in client.get("/api/companies", headers=admin_headers).json()
-                 if c["id"] != borealis)
+                 if c["id"] != beta)
     assert client.post("/api/users", headers=admin_headers, json={
-        "login": "sprzedaz.a", "password": "haslo123", "role": "sales", "company_id": borealis,
+        "login": "sprzedaz.a", "password": "haslo123", "role": "sales", "company_id": beta,
         "full_name": "Anna Sprzedaż", "email": "sprzedaz@example.com"}).status_code == 201
     own = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis}).json()
+        "container_no": VALID_NO, "company_id": beta}).json()
     client.patch(f"/api/containers/{own['id']}/driver", headers=admin_headers, json={
         "driver_name": "Jan", "driver_id_no": "ABC123", "truck_no": "", "trailer_no": "",
         "driver_phone": "600100200"})
@@ -41,7 +41,7 @@ def test_sales_reads_own_company_only_without_writes_or_costs(client, admin_head
     assert client.post(f"/api/containers/{own['id']}/status", headers=h,
                        json={"status": "W_PORCIE"}).status_code == 403
     assert client.post("/api/customer-orders", headers=h, json={
-        "name": "X", "company_id": borealis}).status_code == 403
+        "name": "X", "company_id": beta}).status_code == 403
     # koszty: pulpit (demurrage €), wyceny, faktury frachtowe — zamknięte
     for url in ("/api/stats/dashboard", "/api/transport-jobs", "/api/freight-invoices",
                 "/api/purchase-orders", "/api/users"):

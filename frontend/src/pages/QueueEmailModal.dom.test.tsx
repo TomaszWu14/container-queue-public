@@ -16,7 +16,7 @@ const sendButtons = () => screen.getAllByRole('button', { name: 'Wyślij' })
 
 describe('kolejka dnia do spedycji', () => {
   it('magazyny spółki, potwierdzenie, wysyłka z filtrami i wynik', async () => {
-    get.mockResolvedValue([{ id: 5, name: 'DLT' }])
+    get.mockResolvedValue([{ id: 5, name: 'MAG-1' }])
     post.mockResolvedValue({
       sent: [{ forwarder: 'Spedex', email: 'awizo@spedex.pl', containers: 4 }],
       missing_email: ['Trans-B'], no_forwarder: 0,
@@ -24,7 +24,7 @@ describe('kolejka dnia do spedycji', () => {
     render(<QueueEmailModal companyCode="A&B" onClose={vi.fn()} />)
     expect(get).toHaveBeenCalledWith('/api/warehouses?company_code=A%26B')
     fireEvent.change(await screen.findByLabelText('Magazyn'), { target: { value: '5' } })
-    expect(screen.getByRole('option', { name: 'DLT' })).toBeTruthy()
+    expect(screen.getByRole('option', { name: 'MAG-1' })).toBeTruthy()
     const day = screen.getByLabelText(/Awizacja/)
     fireEvent.change(day, { target: { value: '2026-10-20' } })
 

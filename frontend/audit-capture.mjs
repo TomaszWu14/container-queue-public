@@ -25,7 +25,7 @@ const ROUTES = {
   '/kontenery/{id}': ALL,
   '/brama': ['admin', 'logistics', 'warehouse'],
   '/awizacje/propozycje': ['admin', 'logistics'], '/zlecenia-spedycyjne': ['admin', 'logistics'],
-  '/specjalna-troska': ['admin', 'logistics'], '/wywolania-dlt': ['admin', 'logistics'],
+  '/specjalna-troska': ['admin', 'logistics'], '/wywolania-mag1': ['admin', 'logistics'],
   '/analityka': ['admin', 'logistics'], '/dziennik-zmian': ['admin', 'logistics'],
   '/master-data': ['admin', 'logistics'],
   '/koszyk': ['admin', 'logistics', 'purchasing'],

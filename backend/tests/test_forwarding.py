@@ -8,10 +8,10 @@ SECOND_NO = "CSQU3054383"
 
 
 def _setup(client, admin_headers):
-    """Spółka Borealis + spedytor SPEDALFA + kontener przypisany do SPEDALFA + konta."""
+    """Spółka Beta + spedytor SPEDALFA + kontener przypisany do SPEDALFA + konta."""
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
-    cobalt = next(c["id"] for c in companies if c["code"] == "COBALT")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
+    gamma = next(c["id"] for c in companies if c["code"] == "GAMMA")
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")
     kn = forwarder(client, admin_headers, "SPEDBETA")
 
@@ -19,16 +19,16 @@ def _setup(client, admin_headers):
         "login": "sped.spedalfa", "password": "haslo123", "role": "forwarder",
         "forwarder_id": spedalfa["id"]})
     client.post("/api/users", headers=admin_headers, json={
-        "login": "log.borealis", "password": "haslo123", "role": "logistics",
-        "company_id": borealis})
+        "login": "log.beta", "password": "haslo123", "role": "logistics",
+        "company_id": beta})
 
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis,
+        "container_no": VALID_NO, "company_id": beta,
         "forwarder_id": spedalfa["id"]}).json()
     other = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": SECOND_NO, "company_id": cobalt,
+        "container_no": SECOND_NO, "company_id": gamma,
         "forwarder_id": kn["id"]}).json()
-    return {"borealis": borealis, "spedalfa": spedalfa, "kn": kn,
+    return {"beta": beta, "spedalfa": spedalfa, "kn": kn,
             "container": container, "other": other}
 
 
@@ -48,12 +48,12 @@ def test_forwarder_sees_only_assigned_containers(client, admin_headers):
 
 def test_transport_order_full_flow(client, admin_headers):
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     forwarder = login(client, "sped.spedalfa", "haslo123")
 
     order = client.post("/api/transport-orders", headers=logistics, json={
         "container_id": ctx["container"]["id"],
-        "pickup_location": "DCT Gdańsk", "delivery_location": "Magazyn Borealis",
+        "pickup_location": "DCT Gdańsk", "delivery_location": "Magazyn Beta",
         "pickup_date": "2026-07-06", "instructions": "awizacja 08:00"}).json()
     assert order["status"] == "WYSTAWIONE"
     assert order["forwarder_id"] == ctx["spedalfa"]["id"]  # domyślnie z kontenera
@@ -119,7 +119,7 @@ def test_messages_and_attachments(client, admin_headers, tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "uploads_dir", str(tmp_path))
 
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     forwarder = login(client, "sped.spedalfa", "haslo123")
     cid = ctx["container"]["id"]
 
@@ -128,7 +128,7 @@ def test_messages_and_attachments(client, admin_headers, tmp_path, monkeypatch):
     client.post(f"/api/containers/{cid}/messages", headers=forwarder,
                 json={"body": "Jutro rano, kierowca zamówiony."})
     thread = client.get(f"/api/containers/{cid}/messages", headers=logistics).json()
-    assert [m["user_login"] for m in thread] == ["log.borealis", "sped.spedalfa"]
+    assert [m["user_login"] for m in thread] == ["log.beta", "sped.spedalfa"]
 
     upload = client.post(
         f"/api/containers/{cid}/attachments", headers=forwarder,
@@ -216,7 +216,7 @@ def test_messages_walled_between_customs_and_forwarder(client, admin_headers):
                        json={"customs_agency_id": agency["id"]}).status_code == 200
     client.post("/api/users", headers=admin_headers, json={
         "login": "celna.w", "password": "haslo123", "role": "customs", "customs_agency_id": agency["id"]})
-    hdr = {"log": login(client, "log.borealis", "haslo123"), "sped": login(client, "sped.spedalfa", "haslo123"),
+    hdr = {"log": login(client, "log.beta", "haslo123"), "sped": login(client, "sped.spedalfa", "haslo123"),
            "celna": login(client, "celna.w", "haslo123")}
     for who, text in (("celna", "Rewizja, dług celny 1200 zł"), ("sped", "Kierowca jutro @celna.w"),
                       ("log", "Info dla wszystkich")):
@@ -225,9 +225,9 @@ def test_messages_walled_between_customs_and_forwarder(client, admin_headers):
 
     def thread(who):
         return [m["user_login"] for m in client.get(f"/api/containers/{cid}/messages", headers=hdr[who]).json()]
-    assert thread("log") == ["celna.w", "sped.spedalfa", "log.borealis"]
-    assert thread("sped") == ["sped.spedalfa", "log.borealis"]
-    assert thread("celna") == ["celna.w", "log.borealis"]
+    assert thread("log") == ["celna.w", "sped.spedalfa", "log.beta"]
+    assert thread("sped") == ["sped.spedalfa", "log.beta"]
+    assert thread("celna") == ["celna.w", "log.beta"]
 
     def bodies(who):
         return " ".join(n["body"] or "" for n in client.get("/api/notifications", headers=hdr[who]).json())

@@ -19,11 +19,11 @@ import { ChevronDownIcon, ChevronRightIcon, Ellipsis, StarIcon } from 'lucide-re
 
 // kolor dnia tygodnia (nd..sb) — kwadracik w nagłówku grupy (makieta)
 const DAY_COLORS = ['#F3ABA2', '#A9D2EE', '#A0D8D0', '#C2B6DF', '#F4C59B', '#F5AAC5', '#C1D4A9']
-const WH_COLORS: Record<string, string> = { ACME: 'var(--wh-acme)', DLT: 'var(--wh-dlt)' }
-// tło wiersza wg magazynu — ten sam klucz co kolumna Magazyn / grupa „Magazyn"; kolor tylko DLT i ACME
+const WH_COLORS: Record<string, string> = { ACME: 'var(--wh-acme)', 'MAG-1': 'var(--wh-mag1)' }
+// tło wiersza wg magazynu — ten sam klucz co kolumna Magazyn / grupa „Magazyn"; kolor tylko MAG-1 i ACME
 const rowWarehouseClass = (name: string | null) => {
   const k = warehouseKey(name)
-  return k === 'DLT' || k === 'ACME' ? ` kq-wh-${k.toLowerCase()}` : ''
+  return k === 'MAG-1' || k === 'ACME' ? ` kq-wh-${k.toLowerCase().replace('-', '')}` : ''
 }
 const PLAN_KEYS: Record<string, [string, string]> = {
   POTWIERDZONE: ['planConfirmed', 'helpPlanConfirmed'],

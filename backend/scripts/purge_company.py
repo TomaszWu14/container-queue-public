@@ -1,6 +1,6 @@
-"""Czyszczenie danych demonstracyjnych spółki (np. Borealis wgrane seedem).
+"""Czyszczenie danych demonstracyjnych spółki (np. Beta wgrane seedem).
 
-Powstało, bo kolejka i zamówienia Borealis pochodzą z jednorazowego seeda
+Powstało, bo kolejka i zamówienia Beta pochodzą z jednorazowego seeda
 (scripts/import_excel.py → seed_data.json). Skrypt pozwala je usunąć, aby
 w systemie zostały wyłącznie realne dane (np. Acme z eksportu SAP/EKPO).
 
@@ -14,9 +14,9 @@ Bezpieczeństwo: domyślnie DRY-RUN (tylko podsumowanie, zero zmian).
 Zapis następuje wyłącznie z flagą --yes.
 
 Uruchomienie (z katalogu backend/):
-  python -m scripts.purge_company --company BOREALIS --mode orders          # podgląd
-  python -m scripts.purge_company --company BOREALIS --mode orders --yes    # wykonanie
-  python -m scripts.purge_company --company BOREALIS --mode all --yes
+  python -m scripts.purge_company --company BETA --mode orders          # podgląd
+  python -m scripts.purge_company --company BETA --mode orders --yes    # wykonanie
+  python -m scripts.purge_company --company BETA --mode all --yes
 """
 import argparse
 import pathlib
@@ -100,7 +100,7 @@ def purge(company_code: str, mode: str, commit: bool) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Czyszczenie danych demo spółki.")
-    parser.add_argument("--company", default="BOREALIS", help="kod spółki (np. BOREALIS)")
+    parser.add_argument("--company", default="BETA", help="kod spółki (np. BETA)")
     parser.add_argument("--mode", default="orders", choices=["orders", "all"],
                         help="orders=tylko zamówienia PO, all=pełny reset spółki")
     parser.add_argument("--yes", action="store_true", help="wykonaj zapis (bez tej flagi: podgląd)")

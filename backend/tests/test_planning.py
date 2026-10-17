@@ -14,7 +14,7 @@ from tests.conftest import login
 
 def _create(client, headers, container_no, **extra):
     companies = client.get("/api/companies", headers=headers).json()
-    company_id = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    company_id = next(c["id"] for c in companies if c["code"] == "BETA")
     payload = {"container_no": container_no, "company_id": company_id,
                "status": "ZAPOWIEDZIANY", **extra}
     response = client.post("/api/containers", json=payload, headers=headers)

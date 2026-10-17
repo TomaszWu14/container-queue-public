@@ -90,8 +90,8 @@ VALID_NO = "MSDU0806613"
 
 def _create_container(client, headers, **extra):
     companies = client.get("/api/companies", headers=headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
-    body = {"container_no": VALID_NO, "company_id": borealis,
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
+    body = {"container_no": VALID_NO, "company_id": beta,
             "status": "W_TRANSPORCIE", **extra}
     response = client.post("/api/containers", headers=headers, json=body)
     assert response.status_code == 201, response.text

@@ -34,13 +34,13 @@ def _finish(cid, etd, atd, port_name=None):
 
 
 def test_transit_trend_aggregates_and_ports(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     today = today_pl()
     m = today.replace(day=15) - datetime.timedelta(days=60)  # ~2 mies. temu, w oknie 12 mies.
     key = f"{m.year:04d}-{m.month:02d}"
 
-    a = _container(client, admin_headers, VALID[0], borealis)
-    b = _container(client, admin_headers, VALID[1], borealis)
+    a = _container(client, admin_headers, VALID[0], beta)
+    b = _container(client, admin_headers, VALID[1], beta)
     _finish(a["id"], m - datetime.timedelta(days=30), m, "Shanghai")   # 30 dni
     _finish(b["id"], m - datetime.timedelta(days=40), m, "Ningbo")     # 40 dni
 
@@ -54,35 +54,35 @@ def test_transit_trend_aggregates_and_ports(client, admin_headers):
 
 
 def test_transit_trend_scope_excludes_other_company(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     acme = _company_id(client, admin_headers, "ACME")
     today = today_pl()
     c = _container(client, admin_headers, VALID[2], acme)
     _finish(c["id"], today - datetime.timedelta(days=25), today)
 
     client.post("/api/users", headers=admin_headers, json={
-        "login": "log.borealis", "password": "haslo123", "role": "logistics",
-        "company_id": borealis})
-    hdrs = login(client, "log.borealis", "haslo123")
+        "login": "log.beta", "password": "haslo123", "role": "logistics",
+        "company_id": beta})
+    hdrs = login(client, "log.beta", "haslo123")
     data = client.get("/api/stats/transit-trend", headers=hdrs).json()
     assert sum(p["count"] for p in data["overall"]) == 0  # cudza spółka niewidoczna
 
 
 def test_occupancy_forecast_buckets_and_scope(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     acme = _company_id(client, admin_headers, "ACME")
     today = today_pl()
     # tydzień 1: dwa kontenery (10+5 palet), tydzień 3: jeden bez palet
-    _container(client, admin_headers, VALID[0], borealis,
+    _container(client, admin_headers, VALID[0], beta,
                notify_date=(today + datetime.timedelta(days=1)).isoformat(),
                pallet_count=10)
-    _container(client, admin_headers, VALID[1], borealis,
+    _container(client, admin_headers, VALID[1], beta,
                notify_date=(today + datetime.timedelta(days=6)).isoformat(),
                pallet_count=5)
-    _container(client, admin_headers, VALID[2], borealis,
+    _container(client, admin_headers, VALID[2], beta,
                notify_date=(today + datetime.timedelta(days=15)).isoformat())
     # poza oknem 28 dni — nie liczy się
-    _container(client, admin_headers, VALID[3], borealis,
+    _container(client, admin_headers, VALID[3], beta,
                notify_date=(today + datetime.timedelta(days=40)).isoformat())
 
     data = client.get("/api/stats/occupancy-forecast", headers=admin_headers).json()
@@ -93,13 +93,13 @@ def test_occupancy_forecast_buckets_and_scope(client, admin_headers):
     assert weeks[1]["containers"] == 0
     assert weeks[2]["containers"] == 1 and weeks[2]["pallets"] == 0
 
-    # scope: użytkownik BOREALIS nie widzi kontenerów ACME
+    # scope: użytkownik BETA nie widzi kontenerów ACME
     _container(client, admin_headers, "MSKU1788607", acme,
                notify_date=(today + datetime.timedelta(days=2)).isoformat(),
                pallet_count=99)
     client.post("/api/users", headers=admin_headers, json={
-        "login": "log.borealis2", "password": "haslo123", "role": "logistics",
-        "company_id": borealis})
-    hdrs = login(client, "log.borealis2", "haslo123")
+        "login": "log.beta2", "password": "haslo123", "role": "logistics",
+        "company_id": beta})
+    hdrs = login(client, "log.beta2", "haslo123")
     mine = client.get("/api/stats/occupancy-forecast", headers=hdrs).json()["weeks"]
     assert mine[0]["containers"] == 2 and mine[0]["pallets"] == 15

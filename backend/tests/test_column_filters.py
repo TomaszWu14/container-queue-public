@@ -1,7 +1,7 @@
 """#5 — filtry per kolumna na /api/containers (tekst ILIKE, enum, zakres ETA)."""
 
 
-def _company(client, headers, code="BOREALIS"):
+def _company(client, headers, code="BETA"):
     return next(c["id"] for c in client.get("/api/companies", headers=headers).json()
                 if c["code"] == code)
 
@@ -32,7 +32,7 @@ def test_text_and_range_filters(client, admin_headers):
     assert ids("eta_to=2026-07-31") == {a}
     assert ids("eta_from=2026-07-01&eta_to=2026-12-31") == {a, b}
     # brak filtra → oba
-    assert {a, b} <= ids("company_code=BOREALIS")
+    assert {a, b} <= ids("company_code=BETA")
 
 
 def test_enum_filter_empty_sentinel_no_422(client, admin_headers):

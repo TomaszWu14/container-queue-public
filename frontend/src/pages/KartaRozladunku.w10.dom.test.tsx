@@ -21,7 +21,7 @@ afterEach(() => { cleanup(); apiGet.mockReset(); apiPost.mockReset() })
 
 const container = {
   id: 5, container_no: 'MSDU0806613', supplier_name: 'ACME', vessel: 'MV DEMO ATLAS',
-  eta: '2026-09-10', notify_date: '2026-09-18', warehouse_name: 'DLT',
+  eta: '2026-09-10', notify_date: '2026-09-18', warehouse_name: 'MAG-1',
   pallet_count: 20, notes: '', unload_started_at: null, unload_finished_at: null,
 }
 

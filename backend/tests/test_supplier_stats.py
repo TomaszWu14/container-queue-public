@@ -55,10 +55,10 @@ def test_supplier_stats_counts_active_ontime_and_transit(client, admin_headers, 
 
 def test_supplier_stats_scoped_out_for_other_company(client, admin_headers):
     acme = _company_id(client, admin_headers, "ACME")
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     supplier = client.post("/api/suppliers", headers=admin_headers,
-                           json={"name": "Dostawca Obcy", "company_id": borealis}).json()
-    _container(client, admin_headers, "MSCU8004349", borealis, supplier["id"])
+                           json={"name": "Dostawca Obcy", "company_id": beta}).json()
+    _container(client, admin_headers, "MSCU8004349", beta, supplier["id"])
 
     acme_user = client.post("/api/users", headers=admin_headers, json={
         "login": "acme.viewer", "password": "haslo123", "role": "logistics",

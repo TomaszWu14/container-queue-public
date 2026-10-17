@@ -9,8 +9,8 @@ VALID_NO = "MSDU0806613"
 
 def _create_container(client, headers, **extra):
     companies = client.get("/api/companies", headers=headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
-    body = {"container_no": VALID_NO, "company_id": borealis,
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
+    body = {"container_no": VALID_NO, "company_id": beta,
             "status": "W_TRANSPORCIE", **extra}
     response = client.post("/api/containers", headers=headers, json=body)
     assert response.status_code == 201, response.text
@@ -28,9 +28,9 @@ def test_ui_config_buffer(client, admin_headers):
         "warehouse_eta_buffer_days"] == 5
 
 
-def _borealis_id(db):
+def _beta_id(db):
     from app.models import Company
-    return db.scalar(select(Company).where(Company.code == "BOREALIS")).id
+    return db.scalar(select(Company).where(Company.code == "BETA")).id
 
 
 def test_tracking_error_cleared_on_status_leaving_tracked(client, admin_headers):

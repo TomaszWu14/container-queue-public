@@ -15,15 +15,15 @@ def _co(db, code):
 
 def _seed():
     with SessionLocal() as db:
-        acme, pt, borealis = (_co(db, c) for c in ("ACME", "PT", "BOREALIS"))
+        acme, pt, beta = (_co(db, c) for c in ("ACME", "DELTA", "BETA"))
         cat = Supplier(name="Kartoteka Co", sap_code="500100", address="Ningbo, CN")
-        tim = Supplier(name="Nadawca Borealis", client_company_id=borealis.id, address="Adres T")
+        tim = Supplier(name="Nadawca Beta", client_company_id=beta.id, address="Adres T")
         wh = Warehouse(name="WH-Z", company_id=acme.id)
         db.add_all([cat, tim, wh])
         db.flush()
         db.add(SupplierContact(supplier_id=cat.id, full_name="Li", email="li@k.example"))
         for login_, role, cid, whid in (("vis-pt-zak", Role.purchasing, pt.id, None),
-                                        ("vis-t-log", Role.logistics, borealis.id, None),
+                                        ("vis-t-log", Role.logistics, beta.id, None),
                                         ("vis-z-wh", Role.warehouse, acme.id, wh.id)):
             db.add(User(login=login_, hashed_password=hash_password("pass12345"), role=role,
                         company_id=cid, warehouse_id=whid))
@@ -39,7 +39,7 @@ def test_material_company_purchasing_sees_catalog_with_details(client):
     cat, _ = _seed()
     hdr = login(client, "vis-pt-zak", "pass12345")
     rows = _rows(client, hdr)
-    assert "Kartoteka Co" in rows and "Nadawca Borealis" not in rows
+    assert "Kartoteka Co" in rows and "Nadawca Beta" not in rows
     assert rows["Kartoteka Co"]["sap_code"] == "500100"
     assert rows["Kartoteka Co"]["client_company_id"] is None
     assert client.get(f"/api/suppliers/{cat}/stats", headers=hdr).status_code == 200
@@ -50,7 +50,7 @@ def test_material_company_purchasing_sees_catalog_with_details(client):
 def test_client_company_sees_only_own_senders(client):
     cat, tim = _seed()
     hdr = login(client, "vis-t-log", "pass12345")
-    assert set(_rows(client, hdr)) == {"Nadawca Borealis"}
+    assert set(_rows(client, hdr)) == {"Nadawca Beta"}
     assert client.get(f"/api/suppliers/{cat}/stats", headers=hdr).status_code == 404
     assert client.get(f"/api/suppliers/{tim}/stats", headers=hdr).status_code == 200
     assert client.get("/api/supplier-contacts", headers=hdr).json() == []
@@ -72,7 +72,7 @@ def test_forwarder_gets_names_without_details(client, admin_headers):
         "login": "vis.fwd", "password": "haslo123", "role": "forwarder",
         "forwarder_id": spedalfa, "email": "vis.fwd@example.com"})
     rows = _rows(client, login(client, "vis.fwd", "haslo123"))
-    assert rows["Kartoteka Co"]["sap_code"] == "" and rows["Nadawca Borealis"]["address"] == ""
+    assert rows["Kartoteka Co"]["sap_code"] == "" and rows["Nadawca Beta"]["address"] == ""
 
 
 def test_material_company_codes_come_from_settings(client, monkeypatch):
@@ -83,21 +83,21 @@ def test_material_company_codes_come_from_settings(client, monkeypatch):
 
 def test_create_maps_company_to_catalog_or_client_sender(client, admin_headers):
     with SessionLocal() as db:
-        acme, borealis = _co(db, "ACME").id, _co(db, "BOREALIS").id
+        acme, beta = _co(db, "ACME").id, _co(db, "BETA").id
     a = client.post("/api/suppliers", headers=admin_headers,
                     json={"name": "Nowy K", "company_id": acme}).json()
     b = client.post("/api/suppliers", headers=admin_headers,
-                    json={"name": "Nowy K", "company_id": borealis}).json()
+                    json={"name": "Nowy K", "company_id": beta}).json()
     c = client.post("/api/suppliers", headers=admin_headers, json={"name": "Bez spółki"}).json()
     assert (a["client_company_id"], b["client_company_id"], c["client_company_id"]) == (
-        None, borealis, None)
+        None, beta, None)
     # ta sama nazwa w kartotece → 409 (spółka z materiałami i brak spółki = ta sama kartoteka)
     assert client.post("/api/suppliers", headers=admin_headers,
                        json={"name": "Nowy K"}).status_code == 409
 
 
 def test_patch_catalog_twin_with_unchanged_name_is_ok(client, admin_headers):
-    """Po migracji kopia ACME/PT ma bliźniaka o tej samej nazwie — „Nieaktywny" nie może 409."""
+    """Po migracji kopia ACME/DELTA ma bliźniaka o tej samej nazwie — „Nieaktywny" nie może 409."""
     with SessionLocal() as db:
         a, b = Supplier(name="Blizniak", sap_code="610"), Supplier(name="Blizniak", sap_code="611")
         db.add_all([a, b])
@@ -111,9 +111,9 @@ def test_patch_catalog_twin_with_unchanged_name_is_ok(client, admin_headers):
 
 def test_rename_client_sender_to_taken_name_is_409(client, admin_headers):
     with SessionLocal() as db:
-        borealis = _co(db, "BOREALIS").id
-        a = Supplier(name="Nadawca A", client_company_id=borealis)
-        db.add_all([a, Supplier(name="Nadawca B", client_company_id=borealis)])
+        beta = _co(db, "BETA").id
+        a = Supplier(name="Nadawca A", client_company_id=beta)
+        db.add_all([a, Supplier(name="Nadawca B", client_company_id=beta)])
         db.commit()
         aid = a.id
     assert client.patch(f"/api/suppliers/{aid}", headers=admin_headers,

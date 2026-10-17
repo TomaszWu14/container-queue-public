@@ -1,6 +1,6 @@
 // Strażnik UX-042: tabele danych używają wspólnej klasy `grid` (table.grid w styles/04-*.css).
 // Nieistniejąca klasa „table” albo samo „dict-table” (reguły są tylko dla table.grid.dict-table)
-// dawały surową, nieostylowaną tabelę (Dziennik zmian, DLT, Dostawca, Reguły powiadomień).
+// dawały surową, nieostylowaną tabelę (Dziennik zmian, MAG-1, Dostawca, Reguły powiadomień).
 import { describe, expect, it } from 'vitest'
 
 const sources = import.meta.glob(['./**/*.tsx', '!./**/*.test.tsx'],

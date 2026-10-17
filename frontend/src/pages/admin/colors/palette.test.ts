@@ -26,7 +26,7 @@ describe('palette', () => {
       expect(d['--kq-row-none']).toBe(d['--panel'])            // wiersz bez magazynu = panel (jak dziś)
     }
     expect(defaults('dark')['--bg']).not.toBe(defaults('light')['--bg'])
-    expect(defaults('dark')['--kq-row-dlt']).not.toBe(defaults('light')['--kq-row-dlt'])
+    expect(defaults('dark')['--kq-row-mag1']).not.toBe(defaults('light')['--kq-row-mag1'])
     // brak odczytu dałby szary zastępczy — żaden token nie może na nim wylądować
     for (const mode of ['light', 'dark'] as const) expect(Object.values(defaults(mode))).not.toContain(hsl(0, 0, 0.5))
   })

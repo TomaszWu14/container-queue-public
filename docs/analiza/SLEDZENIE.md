@@ -48,7 +48,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-002 osobny klucz szyfrowania | SR-009, R-05 | `test_config_failfast.py`, testy `crypto` | — | do akceptacji PO |
 | US-003 ochrona przed cichym nadpisaniem | FR-006, NFR-013, R-02, ADR-0003 | `test_status_lost_update.py`, `test_container_lost_update.py`, `status.guard.dom.test.tsx`, `transportOrders.dom.test.tsx` | #18 | wdrożone |
 | US-004 załączniki po zawartości | SR-007, R-03 | `test_file_signatures.py` (31 przypadków) | #28 | wdrożone |
-| US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_public_routes_guard.py` (4), `test_dlt_confirm.py` | #30 | wdrożone |
+| US-005 ochrona tras publicznych | FR-021, SR-002, R-06 | `test_public_routes_guard.py` (4), `test_mag1_confirm.py` | #30 | wdrożone |
 | US-006 bezpieczny XML, ZIP | SR-006, R-07 | `test_imports_malicious.py` (5), `test_sad_xml.py`, `test_archive_upload.py` | #30 | wdrożone |
 | US-007 bramki CI | SR-013, R-08 | przebieg `security.yml`, `test_runtime_versions.py::test_pre_commit_tools_match_ci` | #18, #33, #34 | wdrożone |
 | US-008 `csv_safe` | SR-006, B-002 | `test_exports.py::test_csv_safe*`, `csv.export.dom.test.ts` (US-008) | PR po #34 | zrealizowane, czeka na merge |

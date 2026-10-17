@@ -35,7 +35,7 @@ def _row(order_no, cbm=55.5, supplier="DEMO MEDICAL"):
     return [order_no, datetime.datetime(2026, 8, 1), supplier, "PI2604080071",
             "Wound Dressing", cbm, "STANDARD TT", "by sea", "YES", "WUHAN", "40'HQ",
             "RMB2800", 22075.8, "2026.7.25", "Confirmed",
-            "Kontakt kontakt@dostawca-demo.example", "ACME", "GDANSK", "Delta brokers"]
+            "Kontakt kontakt@dostawca-demo.example", "ACME", "GDANSK", "Omega brokers"]
 
 
 def test_import_etd_maps_dry_run_then_commits(client):

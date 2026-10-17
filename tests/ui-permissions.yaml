@@ -30,7 +30,7 @@ routes:
   /awizacje/propozycje:   {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
   /zlecenia-spedycyjne:   {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
   /specjalna-troska:      {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
-  /wywolania-dlt:         {admin: true, logistics: true, warehouse: true,  forwarder: false, customs: false, purchasing: false}
+  /wywolania-mag1:         {admin: true, logistics: true, warehouse: true,  forwarder: false, customs: false, purchasing: false}
   /analityka:             {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
   /dziennik-zmian:        {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
   /master-data:           {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
@@ -71,7 +71,7 @@ nav:
   Propozycje awizacji:   {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
   Odprawa:               {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
   Specjalna troska:      {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}
-  Wywołania DLT:         {admin: true, logistics: true, warehouse: true,  forwarder: false, customs: false, purchasing: false}
+  Wywołania MAG-1:         {admin: true, logistics: true, warehouse: true,  forwarder: false, customs: false, purchasing: false}
   Koszyk:                {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: true}
   Brama:                 {admin: true, logistics: true, warehouse: true, forwarder: false, customs: false, purchasing: false}
   Reklamacje:            {admin: true, logistics: true, warehouse: true, forwarder: true, customs: false, purchasing: false}
@@ -89,7 +89,7 @@ sections:
   admin_only:
     administracja: [uzytkownicy, spolki, agencje-celne, spedytorzy, ustawienia, system, powiadomienia, log-logowan]
     master-data: [klienci, materialy, armatorzy, punkty-kontroli, szablony-wysylki, problemy-dostaw,
-                  import-excel, import-po, import-marm, import-portow, import-dlt, audyt]
+                  import-excel, import-po, import-marm, import-portow, import-mag1, audyt]
   admin_logistics:
     master-data: [dostawcy, jednostki-materialow, porty, porty-kontenerowe, magazyny, zamowienia-sap,
                   cele-zapasu, statusy-sprawy-celnej, typy-dokumentow, jakosc-danych, dokumenty, podejrzane-faktury,
@@ -102,7 +102,7 @@ queue:
   add_container:         {admin: true, logistics: true, forwarder: false, purchasing: false}   # QFB:133
   edit_lock:             {admin: true, logistics: true, forwarder: false, purchasing: false}   # QFB:113
   export_xlsx:           {admin: true, logistics: true, forwarder: true, purchasing: true}     # QFB:122
-  menu_found_order:      {admin: true, logistics: true, forwarder: false, purchasing: false}   # ⋯ tylko moduł borealis/cobalt
+  menu_found_order:      {admin: true, logistics: true, forwarder: false, purchasing: false}   # ⋯ tylko moduł beta/gamma
   menu_clear_queue:      {admin: true, logistics: false, forwarder: false, purchasing: false}  # ⋯
   bulk_bar:              {admin: true, logistics: true, forwarder: false, purchasing: false}   # status/magazyn/data/awizacja/wycena
   bulk_delete:           {admin: true, logistics: false, forwarder: false, purchasing: false}  # BulkActionBar.tsx:94
@@ -140,8 +140,8 @@ other:
   customs_status_change: {admin: true, logistics: true, customs: true}
   quotes_csv_export:     {admin: true, logistics: true, forwarder: false}                      # QuotesPage.tsx:79
   gate_checkin:          {admin: true, logistics: true, warehouse: true}
-  dlt_calls_actions:     {admin: true, logistics: true}                                        # PalletCallsPage.tsx:79
-  dlt_company_select_powerbi: {admin: true, logistics: false}
+  mag1_calls_actions:     {admin: true, logistics: true}                                        # PalletCallsPage.tsx:79
+  mag1_company_select_powerbi: {admin: true, logistics: false}
   complaint_edit:        {admin: true, logistics: true, warehouse: false, forwarder: false}    # ComplaintDetailPage.tsx:29
   complaint_create:      {admin: true, logistics: true, warehouse: true, forwarder: true}
   knowledge_edit:        {admin: true, logistics: true, warehouse: false, forwarder: false, customs: false, purchasing: false}

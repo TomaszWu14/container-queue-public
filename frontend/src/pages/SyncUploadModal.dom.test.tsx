@@ -16,25 +16,25 @@ afterEach(() => { cleanup(); apiGet.mockClear(); apiUpload.mockClear() })
 
 describe('SyncUploadModal — filtr od daty rozładunku (queue-sync)', () => {
   it('pokazuje pole daty i prefilluje je z GET queue-sync-date-from', async () => {
-    render(<SyncUploadModal companyCode="BOREALIS" endpoint="/api/import/queue-sync"
+    render(<SyncUploadModal companyCode="BETA" endpoint="/api/import/queue-sync"
                             titleKey="queueSync" hintKey="queueSyncHint"
                             onDone={() => {}} onClose={() => {}} />)
     expect(screen.getByText('queueDateFrom')).toBeTruthy()
     await waitFor(() => expect(apiGet).toHaveBeenCalledWith(
-      '/api/import/queue-sync-date-from?company_code=BOREALIS'))
+      '/api/import/queue-sync-date-from?company_code=BETA'))
     const input = screen.getByText('queueDateFrom').querySelector('input') as HTMLInputElement
     await waitFor(() => expect(input.value).toBe('2026-09-05'))
   })
 
   it('nie pokazuje pola daty dla innych endpointów (ETD)', () => {
-    render(<SyncUploadModal companyCode="BOREALIS" endpoint="/api/import/purchase-orders"
+    render(<SyncUploadModal companyCode="BETA" endpoint="/api/import/purchase-orders"
                             titleKey="etdImport" hintKey="etdImportHint"
                             onDone={() => {}} onClose={() => {}} />)
     expect(screen.queryByText('queueDateFrom')).toBeNull()
   })
 
   it('przekazuje date_from w query przy uploadzie i pokazuje skipped_old', async () => {
-    render(<SyncUploadModal companyCode="BOREALIS" endpoint="/api/import/queue-sync"
+    render(<SyncUploadModal companyCode="BETA" endpoint="/api/import/queue-sync"
                             titleKey="queueSync" hintKey="queueSyncHint"
                             onDone={() => {}} onClose={() => {}} />)
     await waitFor(() => expect(apiGet).toHaveBeenCalled())

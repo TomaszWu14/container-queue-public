@@ -63,7 +63,7 @@ class Material(Base):
 
 
 class MaterialOverride(Base):
-    """Nadpisanie pól materiału dla jednej spółki (np. inny kod CN w Iberia).
+    """Nadpisanie pól materiału dla jednej spółki (np. inny kod CN w Delta).
 
     Puste pole tekstowe / NULL w `sent` = bez nadpisania (obowiązuje wartość globalna)."""
     __tablename__ = "material_overrides"
@@ -123,7 +123,7 @@ class Order(Base):
     supplier_id: Mapped[int | None] = mapped_column(
         ForeignKey("suppliers.id"), nullable=True, index=True)
     notes: Mapped[str] = mapped_column(Text, default="")
-    # --- pola zlecenia (Borealis/Cobalt): dane spedycyjne uzupełniane przy zakładaniu ---
+    # --- pola zlecenia (Beta/Gamma): dane spedycyjne uzupełniane przy zakładaniu ---
     supplier_contact_id: Mapped[int | None] = mapped_column(
         ForeignKey("supplier_contacts.id"), nullable=True)
     departure_port_id: Mapped[int | None] = mapped_column(ForeignKey("ports.id"), nullable=True)

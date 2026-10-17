@@ -25,14 +25,14 @@ def _notified(name):
 
 
 def test_bulletins_scoped_to_company(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     acme = _company_id(client, admin_headers, "ACME")
     f_a, f_b = forwarder(client, admin_headers, "SPED-A")["id"], forwarder(client, admin_headers, "SPED-B")["id"]
-    with SessionLocal() as db:   # SPED-A wozi dla BOREALIS, SPED-B tylko dla ACME
-        db.add_all([Container(container_no="MSDU0806613", company_id=borealis, forwarder_id=f_a),
+    with SessionLocal() as db:   # SPED-A wozi dla BETA, SPED-B tylko dla ACME
+        db.add_all([Container(container_no="MSDU0806613", company_id=beta, forwarder_id=f_a),
                     Container(container_no="CSQU3054383", company_id=acme, forwarder_id=f_b)])
         db.commit()
-    log_a = _user(client, admin_headers, "log.a", role="logistics", company_id=borealis,
+    log_a = _user(client, admin_headers, "log.a", role="logistics", company_id=beta,
                   view_all_companies=False)
     log_b = _user(client, admin_headers, "log.b", role="logistics", company_id=acme,
                   view_all_companies=False)
@@ -40,17 +40,17 @@ def test_bulletins_scoped_to_company(client, admin_headers):
     fw_b = _user(client, admin_headers, "fw.b", role="forwarder", forwarder_id=f_b)
 
     # logistyk jednej spółki nie wybierze cudzej spółki — nota zawsze jego spółki
-    r = client.post(URL, headers=log_a, json={"title": "Brama BOREALIS", "roles": ["logistics", "forwarder"],
+    r = client.post(URL, headers=log_a, json={"title": "Brama BETA", "roles": ["logistics", "forwarder"],
                                               "company_id": acme})
     assert r.status_code == 201, r.text
     note = r.json()
-    assert note["company_id"] == borealis
+    assert note["company_id"] == beta
 
     ids = lambda h: [b["id"] for b in client.get(URL, headers=h).json()]   # noqa: E731
     assert note["id"] in ids(log_a) and note["id"] in ids(admin_headers)
     assert note["id"] not in ids(log_b) and note["id"] not in ids(fw_b)
     assert note["id"] in ids(fw_a)
-    assert "Nota: Brama BOREALIS" in _notified("fw.a") and _notified("fw.b") == []
+    assert "Nota: Brama BETA" in _notified("fw.a") and _notified("fw.b") == []
     assert _notified("log.b") == []
     assert client.get(f"{URL}/unread", headers=fw_b).json() == []
     assert client.post(f"{URL}/{note['id']}/ack", headers=fw_b).status_code == 404

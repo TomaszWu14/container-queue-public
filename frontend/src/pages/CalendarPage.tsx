@@ -70,7 +70,7 @@ export default function CalendarPage() {
 
   const byDate = useMemo(() => new Map(days.map(d => [d.day, d])), [days])
   const eta = useMemo(() => etaIndex(days), [days])
-  // magazyny z limitem dziennym: te, do których w roku są awizacje (np. ACME, DLT)
+  // magazyny z limitem dziennym: te, do których w roku są awizacje (np. ACME, MAG-1)
   const whs = useMemo(() => {
     const used = new Set((view === 'rok'
       ? (agg?.days ?? []).map(r => (r.warehouse ?? '').toUpperCase())

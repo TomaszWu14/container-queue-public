@@ -23,14 +23,14 @@ def _agency(client, headers, name):
 
 def _setup(client, admin_headers):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
-    cobalt = next(c["id"] for c in companies if c["code"] == "COBALT")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
+    gamma = next(c["id"] for c in companies if c["code"] == "GAMMA")
     ag_a = _agency(client, admin_headers, "TEST-CELNA-A")
     ag_b = _agency(client, admin_headers, "TEST-CELNA-B")
 
     client.post("/api/users", headers=admin_headers, json={
         "login": "log.tim", "password": "haslo123", "role": "logistics",
-        "company_id": borealis})
+        "company_id": beta})
     client.post("/api/users", headers=admin_headers, json={
         "login": "celna.a", "password": "haslo123", "role": "customs",
         "customs_agency_id": ag_a["id"]})
@@ -39,10 +39,10 @@ def _setup(client, admin_headers):
         "customs_agency_id": ag_b["id"]})
 
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis}).json()
+        "container_no": VALID_NO, "company_id": beta}).json()
     other = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": SECOND_NO, "company_id": cobalt}).json()
-    return {"borealis": borealis, "ag_a": ag_a, "ag_b": ag_b,
+        "container_no": SECOND_NO, "company_id": gamma}).json()
+    return {"beta": beta, "ag_a": ag_a, "ag_b": ag_b,
             "container": container, "other": other}
 
 
@@ -169,12 +169,12 @@ def test_customs_cannot_read_commercial_endpoints(client, admin_headers):
 def test_import_matches_agency_by_name(client, admin_headers):
     """Import dopasowuje nazwę agencji do rejestru (bez wielkości liter), pomija nieaktywne."""
     with SessionLocal() as db:
-        db.add(CustomsAgency(name="AC Delta", is_active=True))
+        db.add(CustomsAgency(name="AC Omega", is_active=True))
         db.add(CustomsAgency(name="AC Stara", is_active=False))
         db.commit()
 
-        assert _match_customs_agency(db, "ac delta") is not None
-        assert _match_customs_agency(db, "AC DELTA").name == "AC Delta"
+        assert _match_customs_agency(db, "ac omega") is not None
+        assert _match_customs_agency(db, "AC OMEGA").name == "AC Omega"
         assert _match_customs_agency(db, "AC Stara") is None      # nieaktywna
         assert _match_customs_agency(db, "Nieznana") is None      # brak w rejestrze
         assert _match_customs_agency(db, "") is None

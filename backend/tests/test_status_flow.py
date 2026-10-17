@@ -5,11 +5,11 @@ from .test_api import _company_id, _make_user
 
 
 def test_status_transitions(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    _make_user(client, admin_headers, "log.flow", "logistics", borealis)
+    beta = _company_id(client, admin_headers, "BETA")
+    _make_user(client, admin_headers, "log.flow", "logistics", beta)
     log = login(client, "log.flow", "haslo123")
     cid = client.post("/api/containers", headers=log,
-                      json={"container_no": "CSQU3054383", "company_id": borealis}).json()["id"]
+                      json={"container_no": "CSQU3054383", "company_id": beta}).json()["id"]
 
     def move(headers, st, note=""):
         return client.post(f"/api/containers/{cid}/status", headers=headers,
@@ -32,9 +32,9 @@ def test_process_stages_2_3(client, admin_headers):
     flow = list(ContainerStatus)
     assert flow[:4] == [ContainerStatus.ZAPOWIEDZIANY, ContainerStatus.W_PRODUKCJI,
                         ContainerStatus.TRANSPORT_WSTEPNY, ContainerStatus.W_TRANSPORCIE]
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     cid = client.post("/api/containers", headers=admin_headers,
-                      json={"container_no": "MSDU0806613", "company_id": borealis}).json()["id"]
+                      json={"container_no": "MSDU0806613", "company_id": beta}).json()["id"]
     for st in ("W_PRODUKCJI", "TRANSPORT_WSTEPNY"):
         r = client.post(f"/api/containers/{cid}/status", headers=admin_headers, json={"status": st})
         assert r.status_code == 200 and r.json()["status"] == st

@@ -14,18 +14,18 @@ VALID_NO = "MSDU0806613"
 
 def _setup(client, admin_headers):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")
     client.post("/api/users", headers=admin_headers, json={
-        "login": "log.borealis", "password": "haslo123", "role": "logistics",
-        "company_id": borealis, "email": "logistyka@borealis.example"})
+        "login": "log.beta", "password": "haslo123", "role": "logistics",
+        "company_id": beta, "email": "logistyka@beta.example"})
     client.post("/api/users", headers=admin_headers, json={
         "login": "sped.spedalfa", "password": "haslo123", "role": "forwarder",
         "forwarder_id": spedalfa["id"]})
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis,
+        "container_no": VALID_NO, "company_id": beta,
         "forwarder_id": spedalfa["id"]}).json()
-    return {"borealis": borealis, "spedalfa": spedalfa, "container": container}
+    return {"beta": beta, "spedalfa": spedalfa, "container": container}
 
 
 def _unread(client, headers):
@@ -34,7 +34,7 @@ def _unread(client, headers):
 
 def test_message_and_order_notifications(client, admin_headers):
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     forwarder = login(client, "sped.spedalfa", "haslo123")
     cid = ctx["container"]["id"]
 
@@ -62,7 +62,7 @@ def test_message_and_order_notifications(client, admin_headers):
 
 def test_demurrage_alert(client, admin_headers):
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     cid = ctx["container"]["id"]
     # ETA 10 dni temu, 12 dni wolnych → deadline za 2 dni (alert przy progu 3)
     eta = today_pl() - datetime.timedelta(days=10)

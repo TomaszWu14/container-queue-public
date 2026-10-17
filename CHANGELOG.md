@@ -65,7 +65,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
   z linkami do dokumentów w repozytorium; w menu użytkownika i na banerze demo.
 - **Ograniczenia widoków kont demo** (US-029): demo nie zmienia danych także przez pobranie szkicu maila do
   agencji i XML SADUE (dotąd ustawiało status „wysłane” / pisało audyt); ukryte i zablokowane w API: dziennik
-  zmian, eksporty i ZIP, wywołania DLT, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się
+  zmian, eksporty i ZIP, wywołania MAG-1, powiadomienia; profil bez ustawień bezpieczeństwa; goście nie widzą się
   w pasku obecności; pogoda bez zapytań zewnętrznych; zapis odcinany w przeglądarce, przyciski wyszarzone.
 - **Demo pokazuje cały proces** (US-027): odprawa zgodna z etapem kontenera (z rewizjami), armatorzy i porty
   docelowe, alerty demurrage, 30 zamówień, dokumenty PDF z celowymi brakami, awizacje we wszystkich stanach.
@@ -129,7 +129,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - **Strażnik izolacji spółek** (US-011, R-01): nowa trasa z identyfikatorem w adresie bez kontroli spółki
   z `deps.py` zatrzymuje testy, chyba że trafi na jawną listę wyjątków z powodem. Decyzja o wymuszeniu w bazie:
   ADR-0006 (do akceptacji).
-- **Publiczne linki chronione jednakowo** (US-005, R-06): link wywołań palet dla magazynu zewnętrznego (DLT) ma
+- **Publiczne linki chronione jednakowo** (US-005, R-06): link wywołań palet dla magazynu zewnętrznego (MAG-1) ma
   ten sam limit żądań i kontrolę pochodzenia co formularz awizacji, a jego adres nie wycieka w nagłówku Referer;
   wolne sloty awizacji można sprawdzić tylko w oknie ± 30 dni.
 - **Spreparowane pliki nie zatrzymują aplikacji** (US-006, R-07): ZIP z plikiem rozpakowującym się ponad 100×

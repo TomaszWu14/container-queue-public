@@ -18,7 +18,7 @@ const base = {
   sent_status: '', is_delayed: false, transport_id: null, order_number: null,
 }
 const CONTAINERS = [
-  { ...base, id: 1, container_no: 'MSDU0806613', warehouse_name: 'DLT' },
+  { ...base, id: 1, container_no: 'MSDU0806613', warehouse_name: 'MAG-1' },
   { ...base, id: 2, container_no: 'TCLU1234568', warehouse_name: 'ACME' },
 ]
 
@@ -34,7 +34,7 @@ vi.mock('./api', () => ({
       if (path.startsWith('/api/containers/transport-conflicts')) {
         return Promise.resolve({ conflicts: [
           { container_id: 1, job_number: 'TJ-1', day: '2026-08-10',
-            warehouses: ['DLT', 'ACME'] },
+            warehouses: ['MAG-1', 'ACME'] },
         ] })
       }
       return Promise.resolve(
@@ -85,6 +85,6 @@ describe('kolejka — kolumna % wypełnienia + kolizje transportowe', () => {
     await waitFor(() => expect(container.querySelector('.conflict-warn')).toBeTruthy())
     const warns = [...container.querySelectorAll('.conflict-warn')]
     expect(warns.length).toBe(1)   // tylko kontener 1
-    expect(warns[0].getAttribute('title')).toContain('DLT / ACME')
+    expect(warns[0].getAttribute('title')).toContain('MAG-1 / ACME')
   })
 })

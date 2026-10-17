@@ -1,10 +1,10 @@
-# Wywołania-DLT Implementation Plan (rev.2 — model per-produkt)
+# Wywołania-MAG-1 Implementation Plan (rev.2 — model per-produkt)
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans / subagent-driven-development. Steps use `- [ ]`.
 
-**Goal:** Panel wywołań palet do DLT — per produkt zestawia stan MAG/DLT (w paletach), zapotrzebowanie i zużycie, wylicza sygnały + sugestię palet do wywołania (ręcznie korygowalną), tworzy wywołanie i wysyła xlsx mailem.
+**Goal:** Panel wywołań palet do MAG-1 — per produkt zestawia stan MAG/MAG-1 (w paletach), zapotrzebowanie i zużycie, wylicza sygnały + sugestię palet do wywołania (ręcznie korygowalną), tworzy wywołanie i wysyła xlsx mailem.
 
-**Architecture:** 4 kostki Power BI (stan+lokalizacja, dostawy, zlecenia, zużycie) → czyste agregacje per produkt (`pallets_analysis.py`) z przeliczeniem przez słownik PAZ (nasza baza) → cache TTL → router FastAPI. Szczegóły: `../specs/2026-08-05-wywolania-dlt-design.md`.
+**Architecture:** 4 kostki Power BI (stan+lokalizacja, dostawy, zlecenia, zużycie) → czyste agregacje per produkt (`pallets_analysis.py`) z przeliczeniem przez słownik PAZ (nasza baza) → cache TTL → router FastAPI. Szczegóły: `../specs/2026-08-05-wywolania-mag1-design.md`.
 
 **Tech Stack:** FastAPI, SQLAlchemy 2.0, Alembic, pydantic-settings, msal (NOWA), httpx+openpyxl (w repo), React/Vite/TS.
 
@@ -16,7 +16,7 @@
 - TDD: test → fail → impl → pass → commit. Testy w `backend/tests/`, fixture `client`/`admin_headers`.
 
 ## Zadania (kolejność zależności)
-1. **Config + `msal` w requirements + `.env.example`** — pola z sekcji Konfiguracja specu; property `vbba_open_statuses_set`, `powerbi_dlt_locations_set`.
+1. **Config + `msal` w requirements + `.env.example`** — pola z sekcji Konfiguracja specu; property `vbba_open_statuses_set`, `powerbi_mag1_locations_set`.
 2. **Modele + enum** — `PowerBIToken`, `PalletStockCache`, `ProductPaz`, `PalletCall`, `PalletCallLine(produkt, krotki_opis, ilosc_pal, data_dostawy, note)`, `PalletCallStatus`.
 3. **Migracja Alembic** — 5 tabel, index `company_id`, unique `(company_id, number)`, unique `ProductPaz.produkt`.
 4. **`powerbi.py`** — `normalize_header`, `parse_execute_queries` (defensywne), `fetch_table` (off/mock/real), kaskada auth + cache MSAL, TLS. Fixture mock z 4 źródłami.
@@ -33,7 +33,7 @@
 
 ```python
 # backend/app/pallets_analysis.py
-"""Analiza per produkt: stan MAG/DLT (palety) vs zapotrzebowanie i zużycie.
+"""Analiza per produkt: stan MAG/MAG-1 (palety) vs zapotrzebowanie i zużycie.
 Każde źródło agregowane do dict[produkt->wartość] PRZED złożeniem (brak kartezjanu).
 """
 from __future__ import annotations
@@ -45,9 +45,9 @@ def _num(v) -> float:
     except (TypeError, ValueError):
         return 0.0
 
-def _is_dlt(row: dict, field: str, dlt_values: set[str]) -> bool:
+def _is_mag1(row: dict, field: str, mag1_values: set[str]) -> bool:
     val = str(row.get(field, ""))
-    return any(val == v or val.startswith(v) for v in dlt_values)
+    return any(val == v or val.startswith(v) for v in mag1_values)
 
 def sum_by_product(rows: list[dict], key: str, qty_field: str,
                    predicate=None) -> dict[str, float]:
@@ -67,25 +67,25 @@ def to_pallets(qty: float, paz: float | None) -> float | None:
     return qty / paz
 
 def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
-               key, location_field, dlt_values, open_statuses,
+               key, location_field, mag1_values, open_statuses,
                target_days, urgent_threshold):
     """Zwraca (rows, discrepancies). rows: list[dict] sygnałów per produkt."""
     mag_szt = sum_by_product(stock, key, "ilosc",
-                             lambda r: not _is_dlt(r, location_field, dlt_values))
-    dlt_szt = sum_by_product(stock, key, "ilosc",
-                             lambda r: _is_dlt(r, location_field, dlt_values))
+                             lambda r: not _is_mag1(r, location_field, mag1_values))
+    mag1_szt = sum_by_product(stock, key, "ilosc",
+                             lambda r: _is_mag1(r, location_field, mag1_values))
     dostawy_szt = sum_by_product(vbba, key, "ilosc",
                                  lambda r: r.get("status_pobrania") in open_statuses)
     zlec_niepotw_szt = sum_by_product(orders, key, "niepotwierdzone")
     zlec_potw_szt = sum_by_product(orders, key, "potw")
     usage_daily = {u.get(key): _num(u.get("zuzycie_dzienne")) for u in usage}
 
-    produkty = set(mag_szt) | set(dlt_szt) | set(dostawy_szt) | set(zlec_niepotw_szt)
+    produkty = set(mag_szt) | set(mag1_szt) | set(dostawy_szt) | set(zlec_niepotw_szt)
     rows, disc = [], []
     for p in sorted(produkty):
         paz = paz_map.get(p)
         mag_pal = to_pallets(mag_szt.get(p, 0), paz)
-        dlt_pal = to_pallets(dlt_szt.get(p, 0), paz)
+        mag1_pal = to_pallets(mag1_szt.get(p, 0), paz)
         dost_pal = to_pallets(dostawy_szt.get(p, 0), paz) or 0
         zn_pal = to_pallets(zlec_niepotw_szt.get(p, 0), paz) or 0
         wywolane = called_map.get(p, 0.0)
@@ -99,9 +99,9 @@ def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
         else:
             need = (zuzycie_pal or 0) * target_days + dost_pal + zn_pal
             raw = math.ceil(need - (mag_pal or 0) - wywolane)
-            sugestia = max(0, min(raw, math.floor(dlt_pal or 0)))
+            sugestia = max(0, min(raw, math.floor(mag1_pal or 0)))
         rows.append({
-            "produkt": p, "stan_mag_pal": mag_pal, "stan_dlt_pal": dlt_pal,
+            "produkt": p, "stan_mag_pal": mag_pal, "stan_mag1_pal": mag1_pal,
             "dostawy_pal": dost_pal, "zlec_niepotw_pal": zn_pal,
             "wywolane_pal": wywolane, "projekcja_mag_pal": projekcja,
             "dni_zapasu": dni, "pilne": pilne, "sugestia_pal": sugestia,
@@ -109,7 +109,7 @@ def build_rows(stock, vbba, orders, usage, paz_map, called_map, *,
     return rows, disc
 ```
 
-Test (`backend/tests/test_pallets_analysis.py`): dwa produkty, jeden z PAZ i jeden bez; assert palety, projekcja, flaga pilne, clamp sugestii do stanu DLT, wpis „brak_paz” w discrepancies.
+Test (`backend/tests/test_pallets_analysis.py`): dwa produkty, jeden z PAZ i jeden bez; assert palety, projekcja, flaga pilne, clamp sugestii do stanu MAG-1, wpis „brak_paz” w discrepancies.
 
 ## Reszta zadań
 Struktura kroków (test→fail→impl→pass→commit) i wzorce (router prefix `/api`, `deps` `Editors/Viewer`, `resolve_company_id`, `send_html_email`) jak w repo — patrz istniejące `routers/quotes.py`, `notifications.py`, `conftest.py`. Nazwy datasetów/kolumn i mapowanie lokalizacji: konfigurowalne, uzupełniane realnymi wartościami.

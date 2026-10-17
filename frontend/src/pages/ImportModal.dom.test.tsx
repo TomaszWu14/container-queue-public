@@ -13,7 +13,7 @@ import ImportModal from './ImportModal'
 afterEach(() => { cleanup(); upload.mockReset() })
 
 const row = (container_no: string, status: string) => ({ container_no, status, note: '', supplier: 'Dostawca',
-  eta: '2026-10-20', notify_date: '', warehouse: 'DLT', forwarder: '', transport: '' })
+  eta: '2026-10-20', notify_date: '', warehouse: 'MAG-1', forwarder: '', transport: '' })
 const PREVIEW = { dry_run: true, counts: { total: 3, new: 1, exists: 1, invalid: 1 },
   rows: [row('MSKU1234565', 'new'), row('TGHU0000001', 'exists'), row('ZLY123', 'invalid')],
   invalid_numbers: ['ZLY123'] }

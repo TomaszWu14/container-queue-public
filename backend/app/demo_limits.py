@@ -5,7 +5,7 @@ patrzy tylko na metodę HTTP. Tu są odczyty (GET), których demo nie dostaje:
 - GET ze skutkiem ubocznym (szkic .eml ustawia obieg WYSLANE, XML SADUE pisze audyt),
 - dziennik zmian i audyt (ruch innych gości wspólnego konta),
 - paczki ZIP i pełne eksporty (obciążenie serwera, wynoszenie całego zestawu),
-- wywołania DLT (linki publiczne dla partnera),
+- wywołania MAG-1 (linki publiczne dla partnera),
 - powiadomienia (wspólna skrzynka wszystkich gości).
 Ekrany chowają te miejsca (`frontend/src/demoLimits.ts`); tutaj jest egzekwowanie."""
 import re

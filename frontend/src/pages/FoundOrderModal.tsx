@@ -9,7 +9,7 @@ import type {
   ContainerType, FxConvert, MainMode, Port, SeaService, Supplier, SupplierContact,
 } from '../types'
 
-// Zakładanie zlecenia (Borealis/Cobalt): jedno zamówienie → N rekordów kontenerów.
+// Zakładanie zlecenia (Beta/Gamma): jedno zamówienie → N rekordów kontenerów.
 // companyId: konkretna spółka (admin) albo null → backend przypisze spółkę użytkownika.
 export default function FoundOrderModal({ companyId, companyCode, onDone, onClose }: {
   companyId: number | null

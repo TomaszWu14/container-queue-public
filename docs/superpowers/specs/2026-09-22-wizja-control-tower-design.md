@@ -4,7 +4,7 @@
 
 ## Kontekst
 
-TIMPORYE to wewnętrzny system grupy (Borealis, Cobalt Sport, Iberia, Acme)
+TIMPORYE to wewnętrzny system grupy (Beta, Gamma, Delta, Acme)
 zastępujący wspólny Excel kolejki kontenerów. Dojrzały (PR-y >#410), FastAPI + React,
 multi-spółka/multi-rola, integracje SAP/Power BI/AIS/SafeCube, deploy Coolify/Hetzner.
 
@@ -84,7 +84,7 @@ braki dokumentów/awizacji → zasila listę „Co dziś" i alerty.
 **B. Autopilot danych** — serce „robi się samo".
 Dane wpadają bez człowieka: tracking→ETA, importy (SAP/PBI/xlsx), faktury→koszty,
 statusy; n8n jako reguły „jeśli X to Y".
-*Jest:* AIS, SafeCube, importy LFA1/EKKO/MARM/DLT, faktury BL, Compare, plan n8n.
+*Jest:* AIS, SafeCube, importy LFA1/EKKO/MARM/MAG-1, faktury BL, Compare, plan n8n.
 *Brak:* orchestracja + reguły + odblokowanie CI/runnera.
 
 **C. Jedno źródło prawdy z pełnymi danymi.**

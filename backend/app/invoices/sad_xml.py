@@ -1,4 +1,4 @@
-"""Draft SAD jako XML z WinSAD (eksport `SADUE`, Delta Brokers) — te same pola co odczyt PDF
+"""Draft SAD jako XML z WinSAD (eksport `SADUE`, Omega Brokers) — te same pola co odczyt PDF
 (`sad_winsad.parse`), ale z nazwanych atrybutów zamiast układu wydruku. Agencja przysyła XML
 zawsze, ale po PDF: dołącza do istniejącej wersji draftu i zastępuje odczyt z PDF.
 

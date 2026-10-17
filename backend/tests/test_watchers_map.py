@@ -43,22 +43,22 @@ def test_map_points_have_watchers_key(client):
 
 
 def test_vessel_watchers_not_leaked_across_companies_on_list(client, db_session):
-    """I3: statek z ładunkiem BOREALIS i ACME, obserwowany przez usera BOREALIS —
+    """I3: statek z ładunkiem BETA i ACME, obserwowany przez usera BETA —
     logistyk ACME (bez view_all_companies) widzi statek na liście, ale watchers=[]."""
     admin = login(client)
     acme = _company_id(client, admin)
-    borealis = _company_id(client, admin, "BOREALIS")
+    beta = _company_id(client, admin, "BETA")
     client.post("/api/containers", headers=admin, json={
         "container_no": "TGBU6784203", "company_id": acme, "vessel": "MV WYCIEK"})
     client.post("/api/containers", headers=admin, json={
-        "container_no": "MSDU0806613", "company_id": borealis, "vessel": "MV WYCIEK"})
+        "container_no": "MSDU0806613", "company_id": beta, "vessel": "MV WYCIEK"})
     v = TrackedVessel(name="MV WYCIEK")
     db_session.add(v)
     db_session.commit()
 
-    borealis_uid = _user("logi-borealis", Role.logistics, borealis)
-    borealis_h = login(client, "logi-borealis", "pass12345")
-    client.post(f"/api/tracking/vessels/{v.id}/watch", headers=borealis_h, json={"reason": "x"})
+    beta_uid = _user("logi-beta", Role.logistics, beta)
+    beta_h = login(client, "logi-beta", "pass12345")
+    client.post(f"/api/tracking/vessels/{v.id}/watch", headers=beta_h, json={"reason": "x"})
 
     _user("logi-acme", Role.logistics, acme)
     acme_h = login(client, "logi-acme", "pass12345")
@@ -68,4 +68,4 @@ def test_vessel_watchers_not_leaked_across_companies_on_list(client, db_session)
 
     vessels_admin = client.get("/api/tracking/vessels", headers=admin).json()
     mine_admin = next(x for x in vessels_admin if x["id"] == v.id)
-    assert [w["user_id"] for w in mine_admin["watchers"]] == [borealis_uid]
+    assert [w["user_id"] for w in mine_admin["watchers"]] == [beta_uid]

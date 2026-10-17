@@ -86,10 +86,10 @@ def test_history_company_isolation(client, admin_headers, two_companies):
 
 def test_history_catalog_isolation(client, admin_headers):
     """Kartoteka (Supplier.client_company_id IS NULL): dostęp jak w deps.supplier_catalog_access
-    — Acme/PT (spółki materiałowe) czytają, spółka bez materiałów (BOREALIS) — nie."""
+    — Acme/Delta (spółki materiałowe) czytają, spółka bez materiałów (BETA) — nie."""
     companies = client.get("/api/companies", headers=admin_headers).json()
     acme = next(c for c in companies if c["code"] == "ACME")
-    borealis = next(c for c in companies if c["code"] == "BOREALIS")
+    beta = next(c for c in companies if c["code"] == "BETA")
     # company_id=ACME → is_material_company → trafia do globalnej kartoteki (client_company_id NULL)
     supplier = client.post("/api/suppliers", headers=admin_headers,
                            json={"name": "Dostawca Kartoteka Audyt",
@@ -100,20 +100,20 @@ def test_history_catalog_isolation(client, admin_headers):
         "login": "log.acme.audyt", "password": "haslo123", "role": "logistics",
         "company_id": acme["id"], "view_all_companies": False})
     client.post("/api/users", headers=admin_headers, json={
-        "login": "log.borealis.audyt", "password": "haslo123", "role": "logistics",
-        "company_id": borealis["id"], "view_all_companies": False})
+        "login": "log.beta.audyt", "password": "haslo123", "role": "logistics",
+        "company_id": beta["id"], "view_all_companies": False})
     log_acme = login(client, "log.acme.audyt", "haslo123")
-    log_borealis = login(client, "log.borealis.audyt", "haslo123")
+    log_beta = login(client, "log.beta.audyt", "haslo123")
 
     assert client.get(f"/api/audit/suppliers/{supplier['id']}",
                       headers=log_acme).status_code == 200
     assert client.get(f"/api/audit/suppliers/{supplier['id']}",
-                      headers=log_borealis).status_code == 404
+                      headers=log_beta).status_code == 404
 
     listing_acme = client.get("/api/audit/suppliers", headers=log_acme).json()
-    listing_borealis = client.get("/api/audit/suppliers", headers=log_borealis).json()
+    listing_beta = client.get("/api/audit/suppliers", headers=log_beta).json()
     assert any(e["entity_id"] == supplier["id"] for e in listing_acme)
-    assert listing_borealis == []
+    assert listing_beta == []
 
     listing_admin = client.get("/api/audit/suppliers", headers=admin_headers).json()
     assert any(e["entity_id"] == supplier["id"] for e in listing_admin)

@@ -125,7 +125,7 @@ def next_transport_id(db: Session, company: Company, year: int) -> str:
     return f"{prefix}{reserve_transport_seqs(db, prefix):04d}"
 
 
-# pola handlowe/wewnętrzne ukrywane przed zewnętrznym magazynem (np. DLT) — widzi
+# pola handlowe/wewnętrzne ukrywane przed zewnętrznym magazynem (np. MAG-1) — widzi
 # tylko dane operacyjne potrzebne do przyjęcia i rozładunku kontenera
 _WAREHOUSE_HIDDEN = {
     "supplier_id": None, "supplier_name": None, "supplier_raw": "",
@@ -246,7 +246,7 @@ def _attach_status_ages(db: Session, items: list[ContainerOut]) -> list[Containe
 
 
 def _notify_new_delivery(db: Session, container: Container, user: User) -> None:
-    """Q66: powiadom magazyn (np. DLT) o dostawie skierowanej do niego — wywoływane
+    """Q66: powiadom magazyn (np. MAG-1) o dostawie skierowanej do niego — wywoływane
     przy utworzeniu kontenera oraz przy (prze)przypisaniu magazynu."""
     if not container.warehouse_id:
         return

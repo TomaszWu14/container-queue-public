@@ -40,9 +40,9 @@ def test_company_scoped(client):
     db = SessionLocal()
     try:
         acme = db.scalar(select(Company).where(Company.code == "ACME"))
-        borealis = db.scalar(select(Company).where(Company.code == "BOREALIS"))
+        beta = db.scalar(select(Company).where(Company.code == "BETA"))
         _seed(db, acme, order_no="Z1")
-        _seed(db, borealis, order_no="T1")
+        _seed(db, beta, order_no="T1")
         db.commit()
     finally:
         db.close()

@@ -32,9 +32,9 @@ def _container_in(client, admin_headers, company_id, no="MSDU0806613"):
 
 @pytest.fixture()
 def setup(client, admin_headers):
-    """A = BOREALIS (zakupowiec pracuje tu), B = COBALT (obca spółka)."""
-    a = _company_id(client, admin_headers, "BOREALIS")
-    b = _company_id(client, admin_headers, "COBALT")
+    """A = BETA (zakupowiec pracuje tu), B = GAMMA (obca spółka)."""
+    a = _company_id(client, admin_headers, "BETA")
+    b = _company_id(client, admin_headers, "GAMMA")
     buyer = _make_user(client, admin_headers, "zakupy.a", "purchasing", a)
     return a, b, buyer
 

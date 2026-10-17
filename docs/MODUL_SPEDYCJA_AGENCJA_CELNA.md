@@ -47,7 +47,7 @@ Agencja celna to **partner zewnętrzny z własnym loginem** (rola `customs`), an
   agencja), gdy odprawa jest `ZLECONA`/`REWIZJA` dłużej niż `CUSTOMS_ALERT_DAYS` (domyślnie 3 dni),
   raz na kontener/dzień.
 - ✅ **Powiadamianie magazynu o danych kierowcy** — `PATCH /driver` powiadamia teraz również magazyn
-  przyjmujący (np. DLT), nie tylko logistykę i spedycję.
+  przyjmujący (np. MAG-1), nie tylko logistykę i spedycję.
 - ✅ **Uzgodnienie agencji z importu** — nowa kolumna `AGENCJA CELNA` w imporcie; nazwa dopasowywana
   do rejestru agencji (`customs_agency_id`), z zachowaniem tekstu źródłowego.
 

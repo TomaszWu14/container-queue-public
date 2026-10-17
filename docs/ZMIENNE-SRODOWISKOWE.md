@@ -96,7 +96,7 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | `SMSAPI_URL` | str | ma bezpieczny domyślny | **nie** |  |
 | `SMS_DAILY_CAP` | int | ma bezpieczny domyślny (`200`) | **nie** | COST-003: globalny limit prób SMS na dobę (czas PL, także nieudanych); ponad → 429 i wstrzymanie auto-SMS do północy, alert adminów przy 80% i 100%; `0` = bez limitu |
 | `SMS_AUTO_MAX_ATTEMPTS` | int | ma bezpieczny domyślny (`2`) | **nie** | COST-003: ile prób auto-przypomnienia na kontener i datę dostawy w dobie (nieudane nie są ponawiane w nieskończoność) |
-| `PUBLIC_LINK_MAX_DAYS` | int | ma bezpieczny domyślny (90) | **nie** | SEC-014: twardy limit ważności KAŻDEGO publicznego linku (udostępnienie kontenera → 410, DLT → jednolite 404) liczony od wystawienia — także gdy link nie ma własnego terminu (DLT bez terminu, kontener „w drodze”). Stare linki działają do dnia wystawienia + limit; po nim wystarczy wygenerować nowy link |
+| `PUBLIC_LINK_MAX_DAYS` | int | ma bezpieczny domyślny (90) | **nie** | SEC-014: twardy limit ważności KAŻDEGO publicznego linku (udostępnienie kontenera → 410, MAG-1 → jednolite 404) liczony od wystawienia — także gdy link nie ma własnego terminu (MAG-1 bez terminu, kontener „w drodze”). Stare linki działają do dnia wystawienia + limit; po nim wystarczy wygenerować nowy link |
 
 ## Tracking / AIS
 
@@ -237,11 +237,11 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 |---|---|---|---|---|
 | `STALE_IMPORT_DAYS` | int | ma bezpieczny domyślny | **nie** | alert „stęchły import" master data: starszy niż N dni (0 nie ma sensu — min. 1) |
 
-## Power BI / wywołania DLT
+## Power BI / wywołania MAG-1
 
 | Zmienna | Typ | Kategoria domyślnej | W compose | Przeznaczenie (z komentarza w kodzie) |
 |---|---|---|---|---|
-| `POWERBI_PROVIDER` | str | ma bezpieczny domyślny | **nie** | --- Wywołania-DLT / Power BI (SAP BW) --- off / mock / real |
+| `POWERBI_PROVIDER` | str | ma bezpieczny domyślny | **nie** | --- Wywołania-MAG-1 / Power BI (SAP BW) --- off / mock / real |
 | `POWERBI_WORKSPACE_ID` | str | puste = funkcja wyłączona / auto | **nie** |  |
 | `POWERBI_DATASET_STOCK` | str | puste = funkcja wyłączona / auto | **nie** |  |
 | `POWERBI_TABLE_STOCK` | str | puste = funkcja wyłączona / auto | **nie** |  |
@@ -256,7 +256,7 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | `POWERBI_ORDERS_CONFIRMED_FIELD` | str | ma bezpieczny domyślny | **nie** | zlecenia sprzedaży (vbbe+likp): kolumny ilości potwierdzonej i niepotwierdzonej. Niepotwierdzone wchodzą w projekcję stanu (jak w arkuszu W). |
 | `POWERBI_ORDERS_UNCONFIRMED_FIELD` | str | ma bezpieczny domyślny | **nie** |  |
 | `POWERBI_LOCATION_FIELD` | str | ma bezpieczny domyślny | **nie** |  |
-| `POWERBI_DLT_LOCATIONS` | str | puste = funkcja wyłączona / auto | **nie** | wartości/prefiksy lokalizacji = DLT (reszta = magazyn) |
+| `POWERBI_MAG1_LOCATIONS` | str | puste = funkcja wyłączona / auto | **nie** | wartości/prefiksy lokalizacji = MAG-1 (reszta = magazyn) |
 | `PALLET_TARGET_DAYS` | int | ma bezpieczny domyślny | **nie** | kalibracja: docelowy zapas w dniach |
 | `PALLET_URGENT_THRESHOLD` | float | ma bezpieczny domyślny | **nie** | kalibracja: próg palet „pilne” |
 | `POWERBI_TENANT_ID` | str | puste = funkcja wyłączona / auto | **nie** |  |
@@ -266,8 +266,8 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | `POWERBI_CA_BUNDLE` | str | puste = funkcja wyłączona / auto | **nie** | ścieżka CA bundle (proxy re-sygnujące TLS) |
 | `POWERBI_SSL_VERIFY` | bool | ma bezpieczny domyślny | **nie** | False tylko dla dev |
 | `POWERBI_CACHE_TTL_MIN` | int | ma bezpieczny domyślny | **nie** |  |
-| `DLT_EMAIL` | str | puste = funkcja wyłączona / auto | **nie** | adresat wywołań palet |
-| `DLT_CALL_EMAILS` | str | puste = funkcja wyłączona / auto | **nie** | lista adresów DLT (CSV) — fallback gdy magazyn DLT bez e-maila |
+| `MAG1_EMAIL` | str | puste = funkcja wyłączona / auto | **nie** | adresat wywołań palet |
+| `MAG1_CALL_EMAILS` | str | puste = funkcja wyłączona / auto | **nie** | lista adresów MAG-1 (CSV) — fallback gdy magazyn MAG-1 bez e-maila |
 | `POWERBI_COLUMN_MAP` | str | puste = funkcja wyłączona / auto | **nie** | JSON {nasza_nazwa: nazwa_w_kostce} — remap kolumn |
 | `PALLET_ALERT_INTERVAL_HOURS` | float | ma bezpieczny domyślny | **nie** | cykl alertów „pilne” |
 | `PALLET_FORECAST_HORIZON_DAYS` | int | ma bezpieczny domyślny | **nie** | horyzont prognozy zapotrzebowania |

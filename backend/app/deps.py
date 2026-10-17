@@ -64,7 +64,7 @@ def scope_containers(query, user: User):
 
     Spedytor widzi kontenery przypisane do jego firmy spedycyjnej (wszystkich
     spółek, które mu zleciły); konto magazynowe z przypisanym magazynem
-    (np. firma zewnętrzna DLT) — tylko kontenery swojego magazynu;
+    (np. firma zewnętrzna MAG-1) — tylko kontenery swojego magazynu;
     pozostali — wg separacji spółek.
     """
     if user.role == Role.forwarder:
@@ -85,7 +85,7 @@ def scope_containers(query, user: User):
         query = query.where(
             Container.warehouse_id.in_([int(i) for i in user.allowed_warehouse_ids]))
     if user.role == Role.warehouse:
-        # fail-closed: konto magazynu (np. zewnętrzny DLT) bez przypisanego magazynu nie
+        # fail-closed: konto magazynu (np. zewnętrzny MAG-1) bez przypisanego magazynu nie
         # może widzieć całej spółki — brak warehouse_id = brak dostępu (jak spedytor bez firmy)
         if user.warehouse_id is None:
             raise HTTPException(status.HTTP_403_FORBIDDEN,
@@ -142,7 +142,7 @@ def check_container_access(user: User, container: Container) -> None:
             raise HTTPException(status.HTTP_404_NOT_FOUND, "Nie znaleziono.")
 
 
-# magazyn (też zewnętrzny DLT) rozładowuje — CMR, packing lista i inne operacyjne tak;
+# magazyn (też zewnętrzny MAG-1) rozładowuje — CMR, packing lista i inne operacyjne tak;
 # faktury z cenami, B/L i SAD niosą dostawcę i wartości (2026-10-05)
 _WAREHOUSE_HIDDEN_TILES = frozenset({"PI", "CI", "BL", "SAD_DRAFT", "SAD_PZ", "SAD_PW"})
 
@@ -301,7 +301,7 @@ INTERNAL_ROLES = tuple(r for r in (*READER_ROLES, Role.sales)
                        if r not in (Role.forwarder, Role.customs))
 InternalReaders = Depends(require_roles(*INTERNAL_ROLES))
 InternalWriters = Depends(require_roles(*(r for r in INTERNAL_ROLES if r != Role.sales)))
-# dane wewnętrzne grupy (wywołania DLT, PAZ, cele zapasu, mapy dostawca↔materiał, obsada
+# dane wewnętrzne grupy (wywołania MAG-1, PAZ, cele zapasu, mapy dostawca↔materiał, obsada
 # magazynu): czytelnicy BEZ partnerów zewnętrznych i bez sprzedaży
 StaffReaders = Depends(require_roles(*(r for r in READER_ROLES if r not in PARTNER_ROLES)))
 # Specjalna troska — podgląd: logistyka/admin + sprzedaż (edycja zostaje Editors)
@@ -329,7 +329,7 @@ ContentsReaders = Depends(require_roles(
 
 
 def can_edit_global_data(user: User) -> bool:
-    """Dane WSPÓLNE grupy (PAZ, cele zapasu, stany DLT, MARM, porty kontenerowe; ACL-003):
+    """Dane WSPÓLNE grupy (PAZ, cele zapasu, stany MAG-1, MARM, porty kontenerowe; ACL-003):
     admin, logistyka grupowa (view_all) albo logistyka spółki-właściciela materiałów
     (SUPPLIER_COMPANY_CODES, np. Acme). Logistyk innej spółki tylko czyta."""
     if user.role == Role.admin:

@@ -9,7 +9,7 @@ VALID_NO = "MSDU0806613"
 OTHER_NO = "TCLU5779674"
 
 
-def _company_id(client, headers, code="BOREALIS"):
+def _company_id(client, headers, code="BETA"):
     companies = client.get("/api/companies", headers=headers).json()
     return next(c["id"] for c in companies if c["code"] == code)
 
@@ -77,8 +77,8 @@ def test_no_risk_when_on_track(client, admin_headers):
 
 
 def test_company_isolation(client, admin_headers):
-    company_a = _company_id(client, admin_headers, "BOREALIS")
-    company_b = _company_id(client, admin_headers, "COBALT")
+    company_a = _company_id(client, admin_headers, "BETA")
+    company_b = _company_id(client, admin_headers, "GAMMA")
     _make_container(client, admin_headers, company_a, container_no=VALID_NO,
                     order_numbers="4500617421")
     _make_container(client, admin_headers, company_b, container_no=OTHER_NO,

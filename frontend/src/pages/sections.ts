@@ -55,7 +55,7 @@ export const SECTIONS: Section[] = [
   sec('md', 'secGroupImports', 'import-po', 'poImportTitle', ADMIN, 'poImport'),
   sec('md', 'secGroupImports', 'import-marm', 'marmImportTitle', ADMIN, 'marmImport'),
   sec('md', 'secGroupImports', 'import-portow', 'cportImportTitle', ADMIN, 'cportImport'),
-  sec('md', 'secGroupImports', 'import-dlt', 'dltImportTitle', ADMIN, 'dltImport'),
+  sec('md', 'secGroupImports', 'import-mag1', 'mag1ImportTitle', ADMIN, 'mag1Import'),
   sec('md', 'secGroupControl', 'jakosc-danych', 'mdQuality', EDITORS, 'quality'),
   sec('md', 'secGroupControl', 'dokumenty', 'docSearchTab', EDITORS, 'docs'),
   sec('md', 'secGroupControl', 'podejrzane-faktury', 'confReportTitle', EDITORS),

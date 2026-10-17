@@ -6,7 +6,7 @@ from app.routers.imports import build_container_fields
 
 
 def _company(db):
-    return db.scalar(__import__("sqlalchemy").select(Company).where(Company.code == "BOREALIS"))
+    return db.scalar(__import__("sqlalchemy").select(Company).where(Company.code == "BETA"))
 
 
 def test_build_container_fields_maps_excel_row(client):
@@ -72,7 +72,7 @@ def _xlsx(rows):
 
 def test_queue_sync_updates_notifies_and_audits(client, admin_headers):
     hdr = admin_headers
-    base = "/api/import/queue-sync?company_code=BOREALIS&dry_run=false"
+    base = "/api/import/queue-sync?company_code=BETA&dry_run=false"
     no = "MSKU7026492"
     # 1. pierwszy snapshot — insert
     f1 = _xlsx([["ACME", "MAERSK", datetime.datetime(2026, 9, 1), "kolej", no, "", ""]])
@@ -88,11 +88,11 @@ def test_queue_sync_updates_notifies_and_audits(client, admin_headers):
     assert r3.json()["changed"] == 0
     # 4. dry_run (domyślnie true) liczy zmianę, ale nie zapisuje
     f4 = _xlsx([["ACME", "MAERSK", datetime.datetime(2026, 9, 20), "kolej", no, "", ""]])
-    rd = client.post("/api/import/queue-sync?company_code=BOREALIS", headers=hdr,
+    rd = client.post("/api/import/queue-sync?company_code=BETA", headers=hdr,
                      files={"file": ("q.xlsx", f4)})
     assert rd.json()["dry_run"] is True and rd.json()["changed"] == 1
     # a realny stan nietknięty — kolejny dry-run nadal widzi tę samą zmianę
-    rd2 = client.post("/api/import/queue-sync?company_code=BOREALIS", headers=hdr,
+    rd2 = client.post("/api/import/queue-sync?company_code=BETA", headers=hdr,
                       files={"file": ("q.xlsx", f4)})
     assert rd2.json()["changed"] == 1
     # audyt zawiera wpis o zmianie eta
@@ -127,10 +127,10 @@ def test_sync_sheet_param_wins_over_company_heuristic(client, admin_headers):
     hdr = admin_headers
     stary, nowy = "MSKU7027586", "MSKU7026595"
     content = _xlsx_sheets({
-        "BOREALIS 2025": [["ACME", "MAERSK", datetime.datetime(2026, 9, 1), "kolej", stary, "", ""]],
+        "BETA 2025": [["ACME", "MAERSK", datetime.datetime(2026, 9, 1), "kolej", stary, "", ""]],
         "2026": [["ACME", "MAERSK", datetime.datetime(2026, 9, 2), "kolej", nowy, "", ""]],
     })
-    r = client.post("/api/import/queue-sync?company_code=BOREALIS&sheet=2026&dry_run=false",
+    r = client.post("/api/import/queue-sync?company_code=BETA&sheet=2026&dry_run=false",
                     headers=hdr, files={"file": ("q.xlsx", content)})
     assert r.status_code == 200, r.text
     assert r.json()["containers"] == 1
@@ -152,9 +152,9 @@ def test_sync_unknown_sheet_falls_back_to_company_heuristic(client, admin_header
     heurystykę po kodzie spółki."""
     no = "MSKU4308321"
     content = _xlsx_sheets({
-        "BOREALIS 2025": [["ACME", "MAERSK", datetime.datetime(2026, 9, 3), "kolej", no, "", ""]],
+        "BETA 2025": [["ACME", "MAERSK", datetime.datetime(2026, 9, 3), "kolej", no, "", ""]],
     })
-    r = client.post("/api/import/queue-sync?company_code=BOREALIS&sheet=NIE-MA-TAKIEJ&dry_run=false",
+    r = client.post("/api/import/queue-sync?company_code=BETA&sheet=NIE-MA-TAKIEJ&dry_run=false",
                     headers=admin_headers, files={"file": ("q.xlsx", content)})
     assert r.status_code == 200, r.text
     assert r.json()["containers"] == 1
@@ -162,13 +162,13 @@ def test_sync_unknown_sheet_falls_back_to_company_heuristic(client, admin_header
 
 def test_queue_sync_requires_auth(client):
     """Bez sesji (rola editor) upload kolejki jest odrzucany — dawny token n8n zniknął."""
-    r = client.post("/api/import/queue-sync?company_code=BOREALIS",
+    r = client.post("/api/import/queue-sync?company_code=BETA",
                     files={"file": ("q.xlsx", b"x")})
     assert r.status_code == 401
 
 
 def test_sync_malformed_upload_is_not_500(client, admin_headers):
-    r = client.post("/api/import/queue-sync?company_code=BOREALIS&dry_run=false",
+    r = client.post("/api/import/queue-sync?company_code=BETA&dry_run=false",
                     headers=admin_headers, files={"file": ("q.xlsx", b"notxlsx")})
     assert r.status_code in (400, 422)
 
@@ -279,7 +279,7 @@ def test_bootstrap_baseline_none_excel_wins(client):
     db = SessionLocal()
     try:
         from app.models import Company
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -294,7 +294,7 @@ def test_app_change_goes_to_pending_not_excel(client):
     db = SessionLocal()
     try:
         from app.models import Company
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -313,7 +313,7 @@ def test_excel_change_adopted_and_baseline_advances(client):
     db = SessionLocal()
     try:
         from app.models import Company
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -331,7 +331,7 @@ def test_conflict_app_newer_wins_writable_field(client):
     from app.models import Company
     db = SessionLocal()
     try:
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -356,7 +356,7 @@ def test_conflict_excel_newer_wins_writable_field(client):
     from app.models import Company
     db = SessionLocal()
     try:
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         reconcile_queue(db, company, [_rawB(no, "AAA")], None); db.flush()
         c = db.scalar(_sel(Container).where(Container.container_no == no,
@@ -379,7 +379,7 @@ def test_nonwritable_status_app_local_accepted(client):
     db = SessionLocal()
     try:
         from app.models import Company
-        company = db.scalar(_sel(Company).where(Company.code == "BOREALIS"))
+        company = db.scalar(_sel(Company).where(Company.code == "BETA"))
         no = "MSKU7026492"
         r1 = reconcile_queue(db, company, [_raw(no, 1)], None)
         db.flush()
@@ -414,7 +414,7 @@ def test_queue_sync_eta_stable_with_typed_date_cell(client, admin_headers):
     """Round-trip stabilny: ta sama eta zapisana raz jako datetime, raz jako date,
     nie generuje różnicy przy ponownym uploadzie."""
     hdr = admin_headers
-    base = "/api/import/queue-sync?company_code=BOREALIS&dry_run=false"
+    base = "/api/import/queue-sync?company_code=BETA&dry_run=false"
     no = "MSKU7026532"
     f1 = _xlsx([["ACME", "MAERSK", datetime.datetime(2026, 9, 1), "kolej", no, "", ""]])
     r1 = client.post(base, headers=hdr, files={"file": ("q.xlsx", f1)})

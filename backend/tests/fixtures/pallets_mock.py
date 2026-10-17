@@ -1,6 +1,6 @@
 """Realistyczny podzbiór kolumn 4 źródeł (SAP BW) do trybu mock i testów.
 
-Lokalizacje: '0099ZONE' = magazyn ACME, '3DLT' = DLT (mapowanie w testach).
+Lokalizacje: '0099ZONE' = magazyn ACME, '3MAG1' = MAG-1 (mapowanie w testach).
 """
 STOCK_HEADER = ["miejsce_skladowania", "produkt", "krotki_opis_produktu", "ilosc",
                 "podst_jedn_miary", "rodzaj_zapasow", "partia", "glowna_hu"]
@@ -9,7 +9,7 @@ STOCK_ROWS = [
      "krotki_opis_produktu": "Strzykawka demo 20ml", "ilosc": 1000,
      "podst_jedn_miary": "OP", "rodzaj_zapasow": "F2", "partia": "1000000101",
      "glowna_hu": "10000601"},
-    {"miejsce_skladowania": "3DLT", "produkt": "DEMO-SKU-020",
+    {"miejsce_skladowania": "3MAG1", "produkt": "DEMO-SKU-020",
      "krotki_opis_produktu": "Strzykawka demo 20ml", "ilosc": 2000,
      "podst_jedn_miary": "OP", "rodzaj_zapasow": "F2", "partia": "1000000101",
      "glowna_hu": "10000777"},

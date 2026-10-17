@@ -13,10 +13,10 @@ VALID = ["MSDU0806613", "CSQU3054383", "TGHU9876537", "CSNU0110266"]
 
 def _setup(client, admin_headers, limit=2):
     companies = client.get("/api/companies", headers=admin_headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "MAG-F2", "company_id": borealis, "default_daily_limit": limit}).json()
-    return borealis, wh
+        "name": "MAG-F2", "company_id": beta, "default_daily_limit": limit}).json()
+    return beta, wh
 
 
 def _container(client, headers, no, company_id, wh_id, notify_date, pallets=None):
@@ -30,11 +30,11 @@ def _container(client, headers, no, company_id, wh_id, notify_date, pallets=None
 
 
 def test_forecast_counts_and_pallet_estimates(client, admin_headers):
-    borealis, wh = _setup(client, admin_headers)
+    beta, wh = _setup(client, admin_headers)
     tomorrow = (today_pl() + datetime.timedelta(days=1)).isoformat()
 
     # historia: zakończony kontener z paletami → średnia dostawcy/globalna = 20
-    hist = _container(client, admin_headers, VALID[0], borealis, wh["id"],
+    hist = _container(client, admin_headers, VALID[0], beta, wh["id"],
                       (today_pl() - datetime.timedelta(days=10)).isoformat(),
                       pallets=20)
     with SessionLocal() as db:
@@ -43,10 +43,10 @@ def test_forecast_counts_and_pallet_estimates(client, admin_headers):
         db.commit()
 
     # przyszłość: jeden z paletami (12), jeden bez (→ szacunek 20)
-    _container(client, admin_headers, VALID[1], borealis, wh["id"], tomorrow, pallets=12)
-    _container(client, admin_headers, VALID[2], borealis, wh["id"], tomorrow)
+    _container(client, admin_headers, VALID[1], beta, wh["id"], tomorrow, pallets=12)
+    _container(client, admin_headers, VALID[2], beta, wh["id"], tomorrow)
 
-    data = client.get("/api/analysis/forecast?company_code=BOREALIS",
+    data = client.get("/api/analysis/forecast?company_code=BETA",
                       headers=admin_headers).json()
     w = next(x for x in data["warehouses"] if x["id"] == wh["id"])
     day = next(d for d in w["days"] if d["date"] == tomorrow)
@@ -57,17 +57,17 @@ def test_forecast_counts_and_pallet_estimates(client, admin_headers):
     # rola magazynu nie ma dostępu do prognozy
     client.post("/api/users", headers=admin_headers, json={
         "login": "mag.f2", "password": "haslo123", "role": "warehouse",
-        "company_id": borealis, "warehouse_id": wh["id"]})
+        "company_id": beta, "warehouse_id": wh["id"]})
     mag = login(client, "mag.f2", "haslo123")
-    assert client.get("/api/analysis/forecast?company_code=BOREALIS",
+    assert client.get("/api/analysis/forecast?company_code=BETA",
                       headers=mag).status_code == 403
 
 
 def test_forecast_overload_alert(client, admin_headers):
-    borealis, wh = _setup(client, admin_headers, limit=1)
+    beta, wh = _setup(client, admin_headers, limit=1)
     tomorrow = (today_pl() + datetime.timedelta(days=1)).isoformat()
-    _container(client, admin_headers, VALID[1], borealis, wh["id"], tomorrow)
-    _container(client, admin_headers, VALID[2], borealis, wh["id"], tomorrow)  # 2 > limit 1
+    _container(client, admin_headers, VALID[1], beta, wh["id"], tomorrow)
+    _container(client, admin_headers, VALID[2], beta, wh["id"], tomorrow)  # 2 > limit 1
 
     assert check_forecast_alerts(db=SessionLocal()) >= 1
     assert check_forecast_alerts(db=SessionLocal()) == 0   # dedup dzienny
@@ -78,8 +78,8 @@ def test_forecast_overload_alert(client, admin_headers):
 
     # w granicach limitu nie alarmuje (świeży magazyn z limitem 5)
     wh2 = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "MAG-OK", "company_id": borealis, "default_daily_limit": 5}).json()
-    _container(client, admin_headers, VALID[3], borealis, wh2["id"], tomorrow)
+        "name": "MAG-OK", "company_id": beta, "default_daily_limit": 5}).json()
+    _container(client, admin_headers, VALID[3], beta, wh2["id"], tomorrow)
     check_forecast_alerts(db=SessionLocal())
     with SessionLocal() as db:
         assert not [a for a in db.scalars(select(Notification).where(
@@ -97,21 +97,21 @@ def test_forecast_limit_per_warehouse_not_per_company_and_skips_transit(
     """Reguła jak w kolejce: limit magazynu liczony łącznie dla wszystkich spółek,
     kontenery tranzytowe (is_transit) nie liczą się do dziennego limitu."""
     from app.models import Company
-    borealis, wh = _setup(client, admin_headers, limit=2)
+    beta, wh = _setup(client, admin_headers, limit=2)
     wh_transit = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "MAG-TRANZYT", "company_id": borealis, "default_daily_limit": 2}).json()
+        "name": "MAG-TRANZYT", "company_id": beta, "default_daily_limit": 2}).json()
     tomorrow = today_pl() + datetime.timedelta(days=1)
     with SessionLocal() as db:
-        other = db.scalars(select(Company).where(Company.id != borealis)).first()
-        # MAG-F2: 1 BOREALIS + 2 innej spółki = 3 > 2 (per spółka żadna grupa nie przekracza)
-        for no, co in (("AAAU1000001", borealis), ("AAAU1000002", other.id),
+        other = db.scalars(select(Company).where(Company.id != beta)).first()
+        # MAG-F2: 1 BETA + 2 innej spółki = 3 > 2 (per spółka żadna grupa nie przekracza)
+        for no, co in (("AAAU1000001", beta), ("AAAU1000002", other.id),
                        ("AAAU1000003", other.id)):
             db.add(Container(container_no=no, company_id=co, warehouse_id=wh["id"],
                              notify_date=tomorrow))
         # MAG-TRANZYT: 2 zwykłe + 1 tranzyt = w limicie
         for no, transit in (("AAAU2000001", False), ("AAAU2000002", False),
                             ("AAAU2000003", True)):
-            db.add(Container(container_no=no, company_id=borealis, notify_date=tomorrow,
+            db.add(Container(container_no=no, company_id=beta, notify_date=tomorrow,
                              warehouse_id=wh_transit["id"], is_transit=transit))
         db.commit()
 

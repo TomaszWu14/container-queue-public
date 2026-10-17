@@ -4,7 +4,7 @@ from app.iso6346 import check_digit, validate
 from app.models import today_pl
 from tests.conftest import forwarder, login
 
-VALID_NO = "MSDU0806613"  # prawdziwy numer z kolejki Borealis
+VALID_NO = "MSDU0806613"  # prawdziwy numer z kolejki Beta
 
 
 def test_iso6346_validation():
@@ -53,19 +53,19 @@ def _make_user(client, headers, login_name, role, company_id, view_all=False,
 
 def test_container_counts(client, admin_headers):
     """Liczniki per spółka na kartach zakładek — i że /counts nie trafia w /{id}."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     client.post("/api/containers", headers=admin_headers,
-                json={"container_no": VALID_NO, "company_id": borealis})
+                json={"container_no": VALID_NO, "company_id": beta})
     counts = client.get("/api/containers/counts", headers=admin_headers).json()
-    assert counts["BOREALIS"] >= 1
+    assert counts["BETA"] >= 1
     assert "ACME" in counts and counts["ACME"] == 0   # zawsze wszystkie spółki
 
 
 def test_change_warehouse_by_name(client, admin_headers):
     """Menu kontekstowe kolejki: zmiana magazynu rozładunku po nazwie."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": "TGBU6784203", "company_id": borealis}).json()
+        "container_no": "TGBU6784203", "company_id": beta}).json()
     assert container["warehouse_name"] is None
 
     # nieistniejący magazyn tworzony w locie pod spółką kontenera
@@ -76,8 +76,8 @@ def test_change_warehouse_by_name(client, admin_headers):
 
     # ponowne przypisanie do innej nazwy (dopasowanie bez względu na wielkość liter)
     again = client.post(f"/api/containers/{container['id']}/warehouse",
-                        headers=admin_headers, json={"name": "borealis"})
-    assert again.json()["warehouse_name"] == "borealis"
+                        headers=admin_headers, json={"name": "beta"})
+    assert again.json()["warehouse_name"] == "beta"
 
     # audyt odnotował zmianę pola „warehouse"
     history = client.get(f"/api/containers/{container['id']}/history",
@@ -86,9 +86,9 @@ def test_change_warehouse_by_name(client, admin_headers):
 
 
 def test_container_crud_status_and_audit(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     response = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "order_number": "2660",
+        "container_no": VALID_NO, "company_id": beta, "order_number": "2660",
         "eta": "2026-06-16", "notify_date": "2026-06-19", "transport_type": "kola"})
     assert response.status_code == 201, response.text
     container = response.json()
@@ -96,7 +96,7 @@ def test_container_crud_status_and_audit(client, admin_headers):
 
     # walidacja blokująca
     bad = client.post("/api/containers", headers=admin_headers,
-                      json={"container_no": "MSDU0806615", "company_id": borealis})
+                      json={"container_no": "MSDU0806615", "company_id": beta})
     assert bad.status_code == 422
 
     # zmiana statusu z komentarzem + edycja pola z powodem
@@ -117,59 +117,59 @@ def test_container_crud_status_and_audit(client, admin_headers):
 
 
 def test_company_separation(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    cobalt = _company_id(client, admin_headers, "COBALT")
+    beta = _company_id(client, admin_headers, "BETA")
+    gamma = _company_id(client, admin_headers, "GAMMA")
     acme = _company_id(client, admin_headers, "ACME")
-    _make_user(client, admin_headers, "log.borealis", "logistics", borealis)
-    _make_user(client, admin_headers, "log.cobalt", "logistics", cobalt)
+    _make_user(client, admin_headers, "log.beta", "logistics", beta)
+    _make_user(client, admin_headers, "log.gamma", "logistics", gamma)
     _make_user(client, admin_headers, "log.acme", "logistics", acme, view_all=True)
 
-    borealis_headers = login(client, "log.borealis", "haslo123")
-    cobalt_headers = login(client, "log.cobalt", "haslo123")
+    beta_headers = login(client, "log.beta", "haslo123")
+    gamma_headers = login(client, "log.gamma", "haslo123")
     acme_headers = login(client, "log.acme", "haslo123")
 
-    created = client.post("/api/containers", headers=borealis_headers,
+    created = client.post("/api/containers", headers=beta_headers,
                           json={"container_no": VALID_NO}).json()
 
-    assert len(client.get("/api/containers", headers=borealis_headers).json()) == 1
-    assert client.get("/api/containers", headers=cobalt_headers).json() == []
+    assert len(client.get("/api/containers", headers=beta_headers).json()) == 1
+    assert client.get("/api/containers", headers=gamma_headers).json() == []
     assert len(client.get("/api/containers", headers=acme_headers).json()) == 1  # Acme widzi wszystko
     assert client.get(f"/api/containers/{created['id']}",
-                      headers=cobalt_headers).status_code == 404
+                      headers=gamma_headers).status_code == 404
     # logistyka nie podszyje się pod inną spółkę
-    assert client.post("/api/containers", headers=cobalt_headers,
+    assert client.post("/api/containers", headers=gamma_headers,
                        json={"container_no": "CSQU3054383",
-                             "company_id": borealis}).status_code == 403
+                             "company_id": beta}).status_code == 403
 
 
 def test_container_fk_cross_company_rejected(client, admin_headers):
     """Nie można doczepić do kontenera dostawcy/magazynu innej spółki (izolacja)."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
-    cobalt = _company_id(client, admin_headers, "COBALT")
+    beta = _company_id(client, admin_headers, "BETA")
+    gamma = _company_id(client, admin_headers, "GAMMA")
     other_wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "MagYellow", "company_id": cobalt, "country": "PL"}).json()
+        "name": "MagYellow", "company_id": gamma, "country": "PL"}).json()
     other_sup = client.post("/api/suppliers", headers=admin_headers, json={
-        "name": "DostawcaYellow", "company_id": cobalt}).json()
-    # kontener Borealis z magazynem/dostawcą Cobalt → 404
+        "name": "DostawcaYellow", "company_id": gamma}).json()
+    # kontener Beta z magazynem/dostawcą Gamma → 404
     assert client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis,
+        "container_no": VALID_NO, "company_id": beta,
         "warehouse_id": other_wh["id"]}).status_code == 404
     assert client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis,
+        "container_no": VALID_NO, "company_id": beta,
         "supplier_id": other_sup["id"]}).status_code == 404
-    # poprawny kontener Borealis, potem próba PATCH na cudzy magazyn → 404
+    # poprawny kontener Beta, potem próba PATCH na cudzy magazyn → 404
     c = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis}).json()
+        "container_no": VALID_NO, "company_id": beta}).json()
     assert client.patch(f"/api/containers/{c['id']}", headers=admin_headers,
                         json={"warehouse_id": other_wh["id"]}).status_code == 404
 
 
 def test_warehouse_role_blocked_from_stats(client, admin_headers):
     """Konto magazynu nie ma dostępu do statystyk/analiz spółki."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "DLT", "company_id": borealis, "country": "PL"}).json()
-    _make_user(client, admin_headers, "mag.lit2", "warehouse", borealis, warehouse_id=wh["id"])
+        "name": "MAG-1", "company_id": beta, "country": "PL"}).json()
+    _make_user(client, admin_headers, "mag.lit2", "warehouse", beta, warehouse_id=wh["id"])
     h = login(client, "mag.lit2", "haslo123")
     assert client.get("/api/stats/monthly", headers=h).status_code == 403
     assert client.get("/api/analysis/unloading", headers=h).status_code == 403
@@ -177,15 +177,15 @@ def test_warehouse_role_blocked_from_stats(client, admin_headers):
 
 
 def test_warehouse_role_limited_to_unload_confirmation(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "Borealis", "company_id": borealis, "country": "PL"}).json()
+        "name": "Beta", "company_id": beta, "country": "PL"}).json()
     # konto magazynu musi mieć przypisany magazyn (fail-closed) i widzi tylko jego kontenery
-    _make_user(client, admin_headers, "mag.borealis", "warehouse", borealis, warehouse_id=wh["id"])
+    _make_user(client, admin_headers, "mag.beta", "warehouse", beta, warehouse_id=wh["id"])
     container = client.post("/api/containers", headers=admin_headers,
-                            json={"container_no": VALID_NO, "company_id": borealis,
+                            json={"container_no": VALID_NO, "company_id": beta,
                                   "warehouse_id": wh["id"]}).json()
-    warehouse_headers = login(client, "mag.borealis", "haslo123")
+    warehouse_headers = login(client, "mag.beta", "haslo123")
     cid = container["id"]
     assert client.post(f"/api/containers/{cid}/status", headers=warehouse_headers,
                        json={"status": "W_PORCIE"}).status_code == 403
@@ -197,17 +197,17 @@ def test_warehouse_role_limited_to_unload_confirmation(client, admin_headers):
 
 
 def test_warehouse_client_view_masks_commercial_fields(client, admin_headers):
-    """Konto zewnętrznego magazynu (DLT): widzi dane operacyjne + szczegóły do rozładunku,
+    """Konto zewnętrznego magazynu (MAG-1): widzi dane operacyjne + szczegóły do rozładunku,
     ale NIE dane handlowe (dostawca, spedytor, zamówienia, notatki) ani zamówień."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     wh = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "DLT", "company_id": borealis, "country": "PL"}).json()
+        "name": "MAG-1", "company_id": beta, "country": "PL"}).json()
     supplier = client.post("/api/suppliers", headers=admin_headers, json={
-        "name": "Dostawca X", "company_id": borealis}).json()
+        "name": "Dostawca X", "company_id": beta}).json()
     fwd = forwarder(client, admin_headers, "SPEDALFA")
-    _make_user(client, admin_headers, "mag.dlt", "warehouse", borealis, warehouse_id=wh["id"])
+    _make_user(client, admin_headers, "mag.mag1", "warehouse", beta, warehouse_id=wh["id"])
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "warehouse_id": wh["id"],
+        "container_no": VALID_NO, "company_id": beta, "warehouse_id": wh["id"],
         "supplier_id": supplier["id"], "forwarder_id": fwd["id"],
         "notes": "notatka wewnętrzna", "purchase_note": "info zakupowe",
         "materials_list": "Palety EUR x10, karton x40", "palletization_note": "Nie piętrować",
@@ -215,7 +215,7 @@ def test_warehouse_client_view_masks_commercial_fields(client, admin_headers):
         "proposed_delivery_date": "2026-07-20"}).json()
     assert container["supplier_name"] == "Dostawca X"  # admin widzi wszystko
 
-    wh_headers = login(client, "mag.dlt", "haslo123")
+    wh_headers = login(client, "mag.mag1", "haslo123")
     view = client.get(f"/api/containers/{container['id']}", headers=wh_headers).json()
     # operacyjne + szczegóły dla magazynu — widoczne
     assert view["container_no"] == container["container_no"]
@@ -243,7 +243,7 @@ def test_warehouse_client_view_masks_commercial_fields(client, admin_headers):
 def test_complaint_by_anyone_with_access(client, admin_headers):
     """Q67: reklamację może zgłosić każdy z dostępem do kontenera (tu: spedytor
     na własnym kontenerze); brak dostępu → 404."""
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     spedalfa = forwarder(client, admin_headers, "SPEDALFA")["id"]
     toll = forwarder(client, admin_headers, "Speddelta")["id"]
     client.post("/api/users", headers=admin_headers, json={
@@ -255,7 +255,7 @@ def test_complaint_by_anyone_with_access(client, admin_headers):
     dsv_h = login(client, "sped.spedalfa", "haslo123")
     toll_h = login(client, "sped.toll", "haslo123")
     container = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "forwarder_id": spedalfa}).json()
+        "container_no": VALID_NO, "company_id": beta, "forwarder_id": spedalfa}).json()
 
     # spedytor przypisany do kontenera może zgłosić reklamację
     r = client.post("/api/complaints", headers=dsv_h, json={
@@ -268,9 +268,9 @@ def test_complaint_by_anyone_with_access(client, admin_headers):
 
 
 def test_queue_limits_and_free_days(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     warehouse = client.post("/api/warehouses", headers=admin_headers, json={
-        "name": "Borealis", "company_id": borealis, "country": "PL",
+        "name": "Beta", "company_id": beta, "country": "PL",
         "default_daily_limit": 1}).json()
 
     # potwierdzać można tylko naprzód, więc data musi być liczona od dziś, nie wpisana
@@ -279,7 +279,7 @@ def test_queue_limits_and_free_days(client, admin_headers):
     numbers = ["MSDU0806613", "CSQU3054383"]
     for number in numbers:
         created = client.post("/api/containers", headers=admin_headers, json={
-            "container_no": number, "company_id": borealis,
+            "container_no": number, "company_id": beta,
             "warehouse_id": warehouse["id"], "notify_date": monday.isoformat()}).json()
         # limit dzienny liczy tylko daty uzgodnione ze spedycją (app/planning.py)
         client.post(f"/api/containers/{created['id']}/plan/confirm", headers=admin_headers,
@@ -314,14 +314,14 @@ def test_queue_limits_and_free_days(client, admin_headers):
 
 
 def test_delayed_flag(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     yesterday = (today_pl() - datetime.timedelta(days=1)).isoformat()
     tomorrow = (today_pl() + datetime.timedelta(days=1)).isoformat()
     late = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis,
+        "container_no": VALID_NO, "company_id": beta,
         "eta": yesterday, "status": "W_TRANSPORCIE"}).json()
     on_time = client.post("/api/containers", headers=admin_headers, json={
-        "container_no": "CSQU3054383", "company_id": borealis,
+        "container_no": "CSQU3054383", "company_id": beta,
         "eta": tomorrow, "status": "W_TRANSPORCIE"}).json()
     assert late["is_delayed"] and not on_time["is_delayed"]
     delayed_only = client.get("/api/containers?delayed=true", headers=admin_headers).json()
@@ -329,12 +329,12 @@ def test_delayed_flag(client, admin_headers):
 
 
 def test_monthly_stats(client, admin_headers):
-    borealis = _company_id(client, admin_headers, "BOREALIS")
+    beta = _company_id(client, admin_headers, "BETA")
     client.post("/api/containers", headers=admin_headers, json={
-        "container_no": VALID_NO, "company_id": borealis, "notify_date": "2026-06-19"})
+        "container_no": VALID_NO, "company_id": beta, "notify_date": "2026-06-19"})
     stats = client.get("/api/stats/monthly", headers=admin_headers).json()
-    assert stats == [{"year": 2026, "month": 6, "company_id": borealis,
-                      "company_name": "Borealis", "count": 1}]
+    assert stats == [{"year": 2026, "month": 6, "company_id": beta,
+                      "company_name": "Beta", "count": 1}]
 
 
 def test_ui_prefs_roundtrip_and_limit(client, admin_headers):

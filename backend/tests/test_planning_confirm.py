@@ -17,7 +17,7 @@ def _d(iso: str) -> str:
 
 def _create(client, headers, container_no, **extra):
     companies = client.get("/api/companies", headers=headers).json()
-    company_id = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    company_id = next(c["id"] for c in companies if c["code"] == "BETA")
     payload = {"container_no": container_no, "company_id": company_id,
                "status": "ZAPOWIEDZIANY", **extra}
     response = client.post("/api/containers", json=payload, headers=headers)
@@ -218,9 +218,9 @@ def test_confirm_over_daily_limit_passes_but_leaves_audit_trace(client):
     """D10: zapis ponad limit dzienny przechodzi (bez blokady), ale zostaje ślad kto."""
     headers = login(client)
     companies = client.get("/api/companies", headers=headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     wh = client.post("/api/warehouses", headers=headers, json={
-        "name": "Limit D10", "company_id": borealis, "country": "PL"}).json()
+        "name": "Limit D10", "company_id": beta, "country": "PL"}).json()
     client.put("/api/limits", headers=headers,
                json={"warehouse_id": wh["id"], "day": _d("2026-10-07"), "limit": 1})
     ids = []
@@ -247,9 +247,9 @@ def test_patch_warehouse_into_full_day_leaves_audit_trace(client):
     (relacja container.warehouse bywa załadowana ze starą wartością)."""
     headers = login(client)
     companies = client.get("/api/companies", headers=headers).json()
-    borealis = next(c["id"] for c in companies if c["code"] == "BOREALIS")
+    beta = next(c["id"] for c in companies if c["code"] == "BETA")
     full, other = (client.post("/api/warehouses", headers=headers, json={
-        "name": name, "company_id": borealis, "country": "PL"}).json()
+        "name": name, "company_id": beta, "country": "PL"}).json()
         for name in ("Pelny D10", "Inny D10"))
     client.put("/api/limits", headers=headers,
                json={"warehouse_id": full["id"], "day": _d("2026-10-07"), "limit": 1})

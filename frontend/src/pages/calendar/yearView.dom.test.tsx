@@ -13,7 +13,7 @@ vi.mock('../../i18n', async () => {
 vi.mock('../../components', () => ({ useDicts: () => ({ warehouses: [] }) }))
 const apiGet = vi.fn((url: string) => Promise.resolve(url.startsWith('/api/calendar/year')
   ? { year: 2026, today: '2026-09-25', days: [
-      { day: '2026-03-02', warehouse: 'DLT', count: 2 }, { day: '2026-03-02', warehouse: null, count: 1 },
+      { day: '2026-03-02', warehouse: 'MAG-1', count: 2 }, { day: '2026-03-02', warehouse: null, count: 1 },
       { day: '2026-03-03', warehouse: 'Acme', count: 6 }] }
   // miesiąc: po jednej awizacji 2026-03-02 i dziś (bez tego siatkę zastępuje komunikat C9)
   : [today(), '2026-03-02'].map(day => ({ day, is_free_day: false, containers: [
@@ -33,7 +33,7 @@ const loc = () => screen.getByTestId('loc').textContent
 describe('kalendarz — widok roczny', () => {
   it('agregat: podział na magazyny, liczby i skala intensywności', async () => {
     setup('/kalendarz?widok=rok&rok=2026')
-    await screen.findByText('DLT')
+    await screen.findByText('MAG-1')
     expect(apiGet).toHaveBeenCalledWith('/api/calendar/year?rok=2026')
     expect(apiGet.mock.calls.some(([u]) => u.startsWith('/api/queue'))).toBe(false)
     const march = document.querySelectorAll('.cal2-ym')[2]
@@ -42,17 +42,17 @@ describe('kalendarz — widok roczny', () => {
     expect(document.querySelectorAll('.cal2-ym')[8].getAttribute('aria-current')).toBe('date')
     expect(document.querySelector('.cal2-ym-day.today')!.getAttribute('title')).toContain('2026-09-25')
     expect(heat(6, 6)).toBe(4); expect(heat(3, 6)).toBe(2); expect(heat(0, 6)).toBe(0)
-    expect(yearIndex({ year: 2026, today: '', days: [{ day: 'd', warehouse: 'Dlt', count: 2 }] }, 'ACME').size).toBe(0)
+    expect(yearIndex({ year: 2026, today: '', days: [{ day: 'd', warehouse: 'Mag1', count: 2 }] }, 'ACME').size).toBe(0)
   })
 
   it('‹ › zmieniają rok w URL; klik kafelka → miesiąc; klik dnia → miesiąc + dzień', async () => {
     setup('/kalendarz?widok=rok&rok=2026')
-    await screen.findByText('DLT')
+    await screen.findByText('MAG-1')
     fireEvent.click(screen.getByLabelText('nextYear'))
     expect(loc()).toBe('?widok=rok&rok=2027')
     await waitFor(() => expect(apiGet).toHaveBeenCalledWith('/api/calendar/year?rok=2027'))
     fireEvent.click(screen.getByLabelText('prevYear'))
-    await screen.findByText('DLT')
+    await screen.findByText('MAG-1')
     fireEvent.click(document.querySelectorAll('.cal2-ym-head')[2])
     expect(loc()).toBe('?widok=miesiac&rok=2026&miesiac=03')
     fireEvent.click(screen.getByText('calViewYear'))

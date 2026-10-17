@@ -21,7 +21,7 @@ def _step(client, headers, order_id, status, reason=""):
 
 def test_logistics_reissues_rejected_order_with_reason(client, admin_headers):
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     forwarder = login(client, "sped.spedalfa", "haslo123")
     order = _order(client, logistics, ctx["container"]["id"])
     assert _step(client, forwarder, order["id"], "ODRZUCONE", "brak aut").status_code == 200
@@ -41,7 +41,7 @@ def test_logistics_reissues_rejected_order_with_reason(client, admin_headers):
 
 def test_logistics_reverts_done_by_mistake(client, admin_headers):
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     forwarder = login(client, "sped.spedalfa", "haslo123")
     order = _order(client, logistics, ctx["container"]["id"])
     for status in ("ZAAKCEPTOWANE", "WYKONANE"):
@@ -56,7 +56,7 @@ def test_logistics_reverts_done_by_mistake(client, admin_headers):
 
 def test_other_backward_moves_still_blocked(client, admin_headers):
     ctx = _setup(client, admin_headers)
-    logistics = login(client, "log.borealis", "haslo123")
+    logistics = login(client, "log.beta", "haslo123")
     order = _order(client, logistics, ctx["container"]["id"])
     # WYSTAWIONE → WYSTAWIONE / W_REALIZACJI bez akceptacji — nie korekta, zwykły obieg
     assert _step(client, logistics, order["id"], "WYSTAWIONE", "x").status_code in (409, 422)

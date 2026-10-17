@@ -1,5 +1,5 @@
 """Ochrona tras publicznych (bez logowania, dostęp po tokenie w ścieżce): awizacja dla spedytora
-i link wywołań palet dla magazynu zewnętrznego (DLT). Jedno miejsce — żadna publiczna trasa nie
+i link wywołań palet dla magazynu zewnętrznego (MAG-1). Jedno miejsce — żadna publiczna trasa nie
 jest słabszym ogniwem (US-005, R-06): limit żądań na IP i dla POST tylko JSON z naszego Origin."""
 from fastapi import Depends, HTTPException, Request, status
 

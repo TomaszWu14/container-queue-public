@@ -18,7 +18,7 @@ def _clean(db):
 def _mock_sources(monkeypatch):
     s = pallets_cache.settings
     monkeypatch.setattr(s, "powerbi_provider", "mock")
-    monkeypatch.setattr(s, "powerbi_dlt_locations", "3DLT")
+    monkeypatch.setattr(s, "powerbi_mag1_locations", "3MAG1")
     monkeypatch.setattr(s, "powerbi_cache_ttl_min", 15)
     # nazwy tabel kierują mock do właściwego źródła
     monkeypatch.setattr(s, "powerbi_table_stock", "stock")
@@ -36,7 +36,7 @@ def test_get_analysis_mock(monkeypatch):
         db.commit()
         rows, disc, _, _ = pallets_cache.get_analysis(db, force=True)
         r = next(x for x in rows if x["produkt"] == "DEMO-SKU-020")
-        assert r["stan_mag_pal"] == 10 and r["stan_dlt_pal"] == 20
+        assert r["stan_mag_pal"] == 10 and r["stan_mag1_pal"] == 20
         assert r["sugestia_pal"] == 10
         # DEMO-SKU-079 bez PAZ -> discrepancy
         assert any(d["powod"] == "brak_paz" for d in disc)

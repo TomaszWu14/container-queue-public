@@ -13,7 +13,7 @@
 - Czysty bursztyn `#f5a623` (`--accent`) NIGDY jako `color:` na jasnym tle — tam zawsze `--accent-ink: #b97509`. Na ciemnym tle (`--chrome`) czysty bursztyn OK.
 - Zero nowych zależności poza trzema pakietami `@fontsource/*`.
 - Bez zmian w komponentach React poza `main.tsx` (importy fontów). Wyjątek: brak.
-- Tła wierszy DLT/ACME to informacja operacyjna — muszą pozostać rozróżnialne (nowy wzór: krawędź 3px + tinta 4%).
+- Tła wierszy MAG-1/ACME to informacja operacyjna — muszą pozostać rozróżnialne (nowy wzór: krawędź 3px + tinta 4%).
 - Wszystkie komendy uruchamiane z `frontend/`: `npm run typecheck`, `npm test`, `npm run build`.
 - Weryfikacja wizualna: `npm run dev` (vite, port 5173) albo zbudowany frontend na :8000 — screenshot po każdym tasku.
 - Commity atomowe per task, prefiks `feat(ux):` lub `style(design):`.
@@ -116,7 +116,7 @@ git commit -m "feat(ux): fonty konsoli — IBM Plex Sans/Mono + Archivo przez @f
   --good: #0e8a6a;
   --danger: #c92a1e;
   /* wiersze wg magazynu: krawędź + tinta (Task 5) */
-  --row-dlt: rgba(214, 36, 122, 0.04);   --row-dlt-border: #d6247a;
+  --row-mag1: rgba(214, 36, 122, 0.04);   --row-mag1-border: #d6247a;
   --row-acme: rgba(18, 161, 80, 0.04);  --row-acme-border: #12a150;
   --banner-bg: #f7f9fb;   --banner-border: #e3e8ef;  --banner-ink: var(--muted);
   --soft: #eceff4;
@@ -227,10 +227,10 @@ git commit -m "feat(ux): KPI jako zwarty pasek konsoli, panele hairline, mono na
 
 ---
 
-### Task 5: Tabele, chipy, przyciski, wiersze DLT/ACME
+### Task 5: Tabele, chipy, przyciski, wiersze MAG-1/ACME
 
 **Files:**
-- Modify: `frontend/src/styles.css` (bloki `table.grid`, `.chip`/badge statusów, `.btn`/przyciski, style wierszy używające `--row-dlt`/`--row-acme`)
+- Modify: `frontend/src/styles.css` (bloki `table.grid`, `.chip`/badge statusów, `.btn`/przyciski, style wierszy używające `--row-mag1`/`--row-acme`)
 
 - [ ] **Step 1: Tabele.** Nagłówki `th`: `font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);`. Komórki danych już mają klasę `.mono` — dziedziczą token z Task 1. Paddingi `td` zmniejsz o ~2px jeśli obecnie >10px.
 
@@ -238,11 +238,11 @@ git commit -m "feat(ux): KPI jako zwarty pasek konsoli, panele hairline, mono na
 
 - [ ] **Step 3: Przyciski.** Primary: `background: var(--accent); color: var(--chrome); border-color: var(--accent); font-weight: 700;`. Secondary/ghost: hairline `--border` na `--panel`, tekst `--text`.
 
-- [ ] **Step 4: Wiersze DLT/ACME — krawędź + tinta.** Tokeny już przemapowane w Task 2. Znajdź selektory używające `var(--row-dlt)`/`var(--row-acme)` (tylko styles.css) i upewnij się, że wzór to:
+- [ ] **Step 4: Wiersze MAG-1/ACME — krawędź + tinta.** Tokeny już przemapowane w Task 2. Znajdź selektory używające `var(--row-mag1)`/`var(--row-acme)` (tylko styles.css) i upewnij się, że wzór to:
 
 ```css
-tr.row-dlt td:first-child { box-shadow: inset 3px 0 0 var(--row-dlt-border); }
-tr.row-dlt { background: var(--row-dlt); }
+tr.row-mag1 td:first-child { box-shadow: inset 3px 0 0 var(--row-mag1-border); }
+tr.row-mag1 { background: var(--row-mag1); }
 tr.row-acme td:first-child { box-shadow: inset 3px 0 0 var(--row-acme-border); }
 tr.row-acme { background: var(--row-acme); }
 ```
@@ -255,7 +255,7 @@ tr.row-acme { background: var(--row-acme); }
 
 ```bash
 git add src/styles.css
-git commit -m "feat(ux): tabele/chipy/przyciski konsoli + wiersze DLT/ACME krawędź+tinta"
+git commit -m "feat(ux): tabele/chipy/przyciski konsoli + wiersze MAG-1/ACME krawędź+tinta"
 ```
 
 ---

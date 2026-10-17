@@ -79,7 +79,7 @@ describe('Do rozstrzygnięcia', () => {
   })
 
   it('kopie bez powiązań: podgląd (liczniki, próbka), potwierdzenie liczbą, usunięcie', async () => {
-    const orphans = { count: 3, by_company: { ACME: 2, PT: 1 },
+    const orphans = { count: 3, by_company: { ACME: 2, DELTA: 1 },
                        sample: [{ id: 10, name: 'Copy A', company_code: 'ACME' }] }
     apiGet.mockImplementation((url: string) =>
       Promise.resolve(url === '/api/suppliers/resolve/orphans' ? orphans
@@ -89,7 +89,7 @@ describe('Do rozstrzygnięcia', () => {
     render(<SupplierResolvePanel suppliers={[]} onChanged={onChanged} />)
     fireEvent.click(await screen.findByText('supResShow'))
     await screen.findByText('supResOrphansTitle')
-    expect(screen.getByText('ACME: 2 · PT: 1')).toBeTruthy()
+    expect(screen.getByText('ACME: 2 · DELTA: 1')).toBeTruthy()
     // próbka ucięta (1 z 3) → „+N więcej”
     expect(screen.getByText(/supResOrphansSample/).textContent).toBe('supResOrphansSample supResOrphansMore')
 

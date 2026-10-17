@@ -15,7 +15,7 @@ export { huInventoryCsv } from './palletcalls/HuInventorySection'
 type AnalysisRow = {
   produkt: string
   stan_mag_pal: number | null
-  stan_dlt_pal: number | null
+  stan_mag1_pal: number | null
   dostawy_pal: number
   zlec_niepotw_pal: number
   zlec_potw_pal: number
@@ -25,7 +25,7 @@ type AnalysisRow = {
   pilne: boolean
   sugestia_pal: number | null
   stan_mag_szt: number
-  stan_dlt_szt: number
+  stan_mag1_szt: number
   zuzycie_szt_dzien: number
   cel_dni: number | null
   hu: { hu: string; ilosc: number }[]
@@ -72,7 +72,7 @@ type Company = { id: number; name: string; code: string }
 type PbiStatus = { provider: string; configured: boolean; delegated: boolean; needs_connect: boolean }
 
 const num = (v: number | null, d = 1) => formatNum(v, d)
-const CALL_STATUSES = ['draft', 'sent', 'confirmed', 'przygotowane', 'wyslane_z_dlt', 'delivered', 'cancelled']
+const CALL_STATUSES = ['draft', 'sent', 'confirmed', 'przygotowane', 'wyslane_z_mag1', 'delivered', 'cancelled']
 
 export default function PalletCallsPage() {
   const user = useUser()
@@ -80,8 +80,8 @@ export default function PalletCallsPage() {
   const { confirm } = useConfirm()
   const { showToast } = useToast()
   const isEditor = user?.role === 'admin' || user?.role === 'logistics'
-  // magazyn DLT (konto warehouse) potwierdza przygotowanie i wysyłkę — bez linku z maila
-  const canConfirmDlt = isEditor || user?.role === 'warehouse'
+  // magazyn MAG-1 (konto warehouse) potwierdza przygotowanie i wysyłkę — bez linku z maila
+  const canConfirmMag1 = isEditor || user?.role === 'warehouse'
   const [page, setPage] = useState<AnalysisPage | null>(null)
   const [firstLoading, setFirstLoading] = useState(true)
   const [q, setQ] = useState('')
@@ -96,11 +96,11 @@ export default function PalletCallsPage() {
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
   const [pbi, setPbi] = useState<PbiStatus | null>(null)
-  // 503 z analizy = Power BI wyłączone i brak importu DLT — jeden baner, bez „spróbuj ponownie” (B19)
+  // 503 z analizy = Power BI wyłączone i brak importu MAG-1 — jeden baner, bez „spróbuj ponownie” (B19)
   const [pbiOff, setPbiOff] = useState(false)
   const [connectCode, setConnectCode] = useState('')
   const [neededBy, setNeededBy] = useState('')
-  const [allowOverDlt, setAllowOverDlt] = useState(false)
+  const [allowOverMag1, setAllowOverMag1] = useState(false)
 
   // ref-seq: przy szybkim pisaniu tylko odpowiedź na NAJNOWSZE zapytanie trafia do stanu
   const analysisSeq = useRef(0)
@@ -168,8 +168,8 @@ export default function PalletCallsPage() {
     for (const produkt of products) {
       const row = rowByProduct[produkt]
       const picked = hus[produkt] ?? []
-      // paz odtworzony ze stanu DLT (szt/pal) — do ułamkowych palet z wybranych HU
-      const paz = row && row.stan_dlt_pal ? row.stan_dlt_szt / row.stan_dlt_pal : null
+      // paz odtworzony ze stanu MAG-1 (szt/pal) — do ułamkowych palet z wybranych HU
+      const paz = row && row.stan_mag1_pal ? row.stan_mag1_szt / row.stan_mag1_pal : null
       let pallets: number | null = null
       if (picked.length && row && paz) {
         const szt = row.hu.filter(h => picked.includes(h.hu))
@@ -202,7 +202,7 @@ export default function PalletCallsPage() {
     }
     setBusy(true)
     try {
-      const body: Record<string, unknown> = { lines: selected, allow_over_dlt: allowOverDlt }
+      const body: Record<string, unknown> = { lines: selected, allow_over_mag1: allowOverMag1 }
       if (neededBy) body.needed_by = neededBy
       if (user?.role === 'admin') body.company_id = companyId || undefined
       const call = await api.post<PalletCall>('/api/pallet-calls', body)
@@ -282,9 +282,9 @@ export default function PalletCallsPage() {
         {isEditor && <button className="btn small secondary" onClick={() => fillSuggestions(true)}>{t('pcOnlyUrgent')}</button>}
         {isEditor && <label>{t('pcDeadline')} <input type="date" value={neededBy}
           onChange={e => setNeededBy(e.target.value)} /></label>}
-        {isEditor && <label title={t('pcOverDltHint')}>
-          <input type="checkbox" checked={allowOverDlt}
-            onChange={e => setAllowOverDlt(e.target.checked)} /> {t('pcOverDlt')}</label>}
+        {isEditor && <label title={t('pcOverMag1Hint')}>
+          <input type="checkbox" checked={allowOverMag1}
+            onChange={e => setAllowOverMag1(e.target.checked)} /> {t('pcOverMag1')}</label>}
         {isEditor && <button className="btn" disabled={busy} onClick={createCall}>
           {t('pcCreateCall')} ({selected.length})</button>}
         {isEditor && selected.length > 0 && (
@@ -304,7 +304,7 @@ export default function PalletCallsPage() {
         <table className="grid" style={{ minWidth: 720 }}>
           <thead>
             <tr>
-              <th>{t('pcProduct')}</th><th>{t('pcStockMag')}</th><th>{t('pcStockDlt')}</th>
+              <th>{t('pcProduct')}</th><th>{t('pcStockMag')}</th><th>{t('pcStockMag1')}</th>
               <th>{t('pcDeliveries')}</th><th>{t('pcUnconfirmed')}</th><th>{t('pcConfirmedOrders')}</th><th>{t('pcProjection')}</th>
               <th>{t('pcUsagePerDay')}</th><th>{t('pcDaysStock')} <ArrowUpIcon size={14} /></th><th>{t('pcTargetDays')}</th>
               <th>{t('pcUrgent')}</th><th>{t('pcSuggestion')}</th><th>{t('pcToCall')}</th><th>{t('pcTruck')}</th>
@@ -315,7 +315,7 @@ export default function PalletCallsPage() {
               <tr key={r.produkt} className={r.pilne ? 'row-urgent' : ''}>
                 <td>{r.produkt}</td>
                 <td title={`${formatNum(r.stan_mag_szt, 0)} szt`}>{num(r.stan_mag_pal)}</td>
-                <td title={`${formatNum(r.stan_dlt_szt, 0)} szt`}>{num(r.stan_dlt_pal)}
+                <td title={`${formatNum(r.stan_mag1_szt, 0)} szt`}>{num(r.stan_mag1_pal)}
                   {page.features?.hu && r.hu.length > 0 && isEditor && (
                     <details style={{ display: 'inline-block', marginLeft: 6 }}>
                       <summary style={{ cursor: 'pointer' }}>HU ({r.hu.length})</summary>
@@ -385,14 +385,14 @@ export default function PalletCallsPage() {
                 <td style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   <button className="btn small secondary" onClick={() => downloadXlsx(c)}>xlsx</button>
                   {isEditor && c.status === 'draft' &&
-                    <button className="btn small" onClick={() => act(c.id, 'send')}>{t('pcSendToDlt')}</button>}
+                    <button className="btn small" onClick={() => act(c.id, 'send')}>{t('pcSendToMag1')}</button>}
                   {isEditor && c.status === 'sent' &&
                     <button className="btn small secondary" onClick={() => act(c.id, 'confirm')}>{t('pcConfirm')}</button>}
-                  {canConfirmDlt && (c.status === 'sent' || c.status === 'confirmed') &&
+                  {canConfirmMag1 && (c.status === 'sent' || c.status === 'confirmed') &&
                     <button className="btn small" onClick={() => act(c.id, 'prepared')}>{t('pcMarkPrepared')}</button>}
-                  {canConfirmDlt && c.status === 'przygotowane' &&
+                  {canConfirmMag1 && c.status === 'przygotowane' &&
                     <button className="btn small" onClick={() => act(c.id, 'shipped')}>{t('pcMarkShipped')}</button>}
-                  {isEditor && ['sent', 'confirmed', 'przygotowane', 'wyslane_z_dlt'].includes(c.status) &&
+                  {isEditor && ['sent', 'confirmed', 'przygotowane', 'wyslane_z_mag1'].includes(c.status) &&
                     <button className="btn small secondary" onClick={() => act(c.id, 'deliver')}>{t('pcDelivered')}</button>}
                   {isEditor && c.status !== 'cancelled' && c.status !== 'delivered' &&
                     <button className="btn small danger" onClick={() => act(c.id, 'cancel')}>{t('cancel')}</button>}

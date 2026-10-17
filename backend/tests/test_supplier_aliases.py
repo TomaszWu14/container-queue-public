@@ -28,13 +28,13 @@ def _xlsx(rows):
 
 
 def _sync(client, hdr, rows):
-    r = client.post("/api/import/queue-sync?company_code=BOREALIS&dry_run=false",
+    r = client.post("/api/import/queue-sync?company_code=BETA&dry_run=false",
                     headers=hdr, files={"file": ("q.xlsx", _xlsx(rows))})
     assert r.status_code == 200, r.text
 
 
-def _borealis(db):
-    return db.scalar(select(Company).where(Company.code == "BOREALIS"))
+def _beta(db):
+    return db.scalar(select(Company).where(Company.code == "BETA"))
 
 
 def _cont(db, no):
@@ -43,7 +43,7 @@ def _cont(db, no):
 
 def _supplier(client, hdr, name):
     with SessionLocal() as db:
-        cid = _borealis(db).id
+        cid = _beta(db).id
     r = client.post("/api/suppliers", headers=hdr, json={"name": name, "company_id": cid})
     assert r.status_code == 201, r.text
     return r.json()["id"]
@@ -132,7 +132,7 @@ def test_merge_moves_aliases_and_adds_source_name(client, admin_headers):
 
 
 def test_other_company_logistics_cannot_map(client, admin_headers):
-    sid = _supplier(client, admin_headers, "Borealis only")
+    sid = _supplier(client, admin_headers, "Beta only")
     _sync(client, admin_headers, [("Tajny", NOS[0])])
     with SessionLocal() as db:
         other = Company(name="Obca", code="OBCA")
@@ -151,7 +151,7 @@ def test_delete_alias_of_other_company_is_404(client, admin_headers):
     (bez enumeracji istnienia cudzego zasobu)."""
     sid = _supplier(client, admin_headers, "Do aliasu")
     alias = client.post(f"/api/suppliers/{sid}/aliases", headers=admin_headers,
-                        json={"alias": "alias-borealis"}).json()["alias"]
+                        json={"alias": "alias-beta"}).json()["alias"]
     with SessionLocal() as db:
         other = Company(name="Obca2", code="OBCA2")
         db.add(other); db.flush()

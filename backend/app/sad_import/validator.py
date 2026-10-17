@@ -1,6 +1,6 @@
 """Walidacja zgłoszenia z podglądu WinSAD: spójność rachunkowa (wartość celna, cło, VAT,
 podsumowanie opłat) i formalna (ISO 6346, NIP, stan AIS, daty). Wzory sprawdzone na
-drafach Delta Brokers (tests/fixtures/sad), zgodność do 1 PLN.
+drafach Omega Brokers (tests/fixtures/sad), zgodność do 1 PLN.
 
 Wartość celna (A00) = wartość fakturowa poz. × kurs + Σ doliczeń AK; CA (transport od
 granicy UE do miejsca przeznaczenia) nie wchodzi do wartości celnej, tylko do podstawy VAT

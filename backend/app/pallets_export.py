@@ -1,4 +1,4 @@
-"""Eksport wywołania palet do xlsx (openpyxl) — załącznik maila do DLT.
+"""Eksport wywołania palet do xlsx (openpyxl) — załącznik maila do MAG-1.
 
 Wywołanie z autami (PalletCallTruck) -> arkusz per auto (miejsce, materiał, HU,
 ilość palet); pozycje bez przydziału trafiają do arkusza „Bez auta".

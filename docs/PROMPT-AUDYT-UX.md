@@ -41,7 +41,7 @@ danych testowych z wieloma kontenerami w różnych statusach, co najmniej 2 spó
 awizacjami, reklamacjami). Użyj Playwright (Chromium jest preinstalowany, `executablePath:
 '/opt/pw-browsers/chromium'` w chmurze; lokalnie `npx playwright` z `frontend/`, izolowany backend :8010 + vite :5181 — nie ruszaj instancji użytkownika) do przejścia każdego widoku jako każda rola: `admin`, `logistics`,
 `purchasing`, `warehouse`, `customs`, viewer bez prawa edycji, oraz strony publiczne z tokenem
-(`/avizo/:token`, `/dostawa/:token`, `/dlt/:token`, `/k/:token`, `/portal/:token`). Dla każdego widoku:
+(`/avizo/:token`, `/dostawa/:token`, `/mag1/:token`, `/k/:token`, `/portal/:token`). Dla każdego widoku:
 zrzut ekranu w motywie jasnym i ciemnym, szerokości 1366, 1920 i 390 px, stan pusty, stan z dużą
 ilością danych (≥300 kontenerów), stan błędu (zablokuj API w Playwright), stan wolnej sieci
 (throttling „Slow 3G"). Nagraj trace/wideo przewijania kolejki.
@@ -103,7 +103,7 @@ pytest) i zrzutem „przed/po" w opisie PR.
   `05-status-pages.css` (`.badge.st-*`, `.badge.cs-*`) **bez wariantów dark mode** — zweryfikuj i
   zaproponuj tokeny `--st-*`/`--cs-*` dla obu motywów. Zinwentaryzuj wszystkie twarde hexy w CSS i TSX
   (w tym Tailwind one-off w `DashboardPage`).
-- Motywy spółek (`.mod-acme`, `.mod-dlt`, `.mod-cobalt`) nadpisują tylko akcent — sprawdź kontrast
+- Motywy spółek (`.mod-acme`, `.mod-mag1`, `.mod-gamma`) nadpisują tylko akcent — sprawdź kontrast
   każdego akcentu na każdym tle i na przyciskach.
 - Kolor jako jedyny nośnik informacji (tła magazynów `--wh-*`, statusy) — czy jest też tekst/ikona?
   Sprawdź symulację daltonizmu (deuteranopia, protanopia).

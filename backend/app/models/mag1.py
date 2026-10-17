@@ -1,4 +1,4 @@
-"""Wywołania-DLT: tokeny Power BI, stany palet, PAZ, wywołania palet i cele stanów."""
+"""Wywołania-MAG-1: tokeny Power BI, stany palet, PAZ, wywołania palet i cele stanów."""
 import datetime
 
 from sqlalchemy import (
@@ -17,7 +17,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..database import Base
 from .enums import PalletCallStatus, utcnow
 
-# --- Wywołania-DLT ---
+# --- Wywołania-MAG-1 ---
 
 class PowerBIToken(Base):
     """Jednorządkowy serializowany cache MSAL (delegated device-code)."""
@@ -81,10 +81,10 @@ class PalletCall(Base):
 
 
 class PalletCallLink(Base):
-    """Publiczny link DLT do potwierdzeń wywołania — token hashowany jak driver_links.
+    """Publiczny link MAG-1 do potwierdzeń wywołania — token hashowany jak driver_links.
 
     Nowa wysyłka wywołania generuje świeży link i wygasza poprzednie;
-    „Wysłane" (wyslane_z_dlt) dezaktywuje link na stałe."""
+    „Wysłane" (wyslane_z_mag1) dezaktywuje link na stałe."""
     __tablename__ = "pallet_call_links"
     id: Mapped[int] = mapped_column(primary_key=True)
     token: Mapped[str] = mapped_column(String(64), unique=True, index=True)  # SHA-256
@@ -124,7 +124,7 @@ class PalletCallLine(Base):
     note: Mapped[str] = mapped_column(Text, default="")
     truck_id: Mapped[int | None] = mapped_column(
         ForeignKey("pallet_call_trucks.id"), nullable=True)
-    hu_numbers: Mapped[str] = mapped_column(Text, default="")   # CSV nr HU z DLT
+    hu_numbers: Mapped[str] = mapped_column(Text, default="")   # CSV nr HU z MAG-1
     pallets: Mapped[float | None] = mapped_column(Numeric(7, 3), nullable=True)  # ułamkowe
     call: Mapped[PalletCall] = relationship(back_populates="lines")
     truck: Mapped[PalletCallTruck | None] = relationship(back_populates="lines")
@@ -134,12 +134,12 @@ class PalletCallLine(Base):
         return self.truck.ordinal if self.truck else None
 
 
-class DltStock(Base):
-    """Ręcznie zaimportowane stany DLT (xlsx) — fallback, gdy Power BI ich nie podaje.
+class Mag1Stock(Base):
+    """Ręcznie zaimportowane stany MAG-1 (xlsx) — fallback, gdy Power BI ich nie podaje.
 
     Snapshot ostatniego importu: każdy import kasuje poprzednie wiersze i wgrywa nowe.
-    Wszystkie wiersze traktowane jako DLT (plik = stany magazynu DLT)."""
-    __tablename__ = "dlt_stock"
+    Wszystkie wiersze traktowane jako MAG-1 (plik = stany magazynu MAG-1)."""
+    __tablename__ = "mag1_stock"
     id: Mapped[int] = mapped_column(primary_key=True)
     produkt: Mapped[str] = mapped_column(String(60), index=True)
     hu: Mapped[str] = mapped_column(String(64), default="")   # nr HU (opcjonalny)

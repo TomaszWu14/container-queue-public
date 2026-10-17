@@ -21,7 +21,7 @@ import { useGroupCollapse } from './useGroupCollapse'
 import type { Container } from '../../types'
 
 const cont = (id: number, planning_status = 'PROPOZYCJA') =>
-  ({ id, container_no: `C${id}`, status: 'W_PORCIE', warehouse_name: 'DLT', customs_status: 'BRAK', planning_status }) as unknown as Container
+  ({ id, container_no: `C${id}`, status: 'W_PORCIE', warehouse_name: 'MAG-1', customs_status: 'BRAK', planning_status }) as unknown as Container
 
 function Harness({ groups, groupBy = 'weekday' }: { groups: { key: string; items: Container[] }[]; groupBy?: string }) {
   // jak useViewPrefs: globalna lista zwiniętych sekcji planowania
@@ -42,7 +42,7 @@ function Harness({ groups, groupBy = 'weekday' }: { groups: { key: string; items
 
 const setup = (groupBy?: string, extra: Container[] = []) => {
   const groups = [
-    { key: groupBy === 'warehouse' ? 'DLT' : '2026-09-28', items: [cont(1), cont(2)] },
+    { key: groupBy === 'warehouse' ? 'MAG-1' : '2026-09-28', items: [cont(1), cont(2)] },
     { key: groupBy === 'warehouse' ? 'ACME' : '2026-09-29', items: [cont(3), ...extra] },
   ]
   const r = render(<Harness groups={groups} groupBy={groupBy} />)

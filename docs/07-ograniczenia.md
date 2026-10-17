@@ -45,7 +45,7 @@ Granice, przez które do systemu wchodzą dane z zewnątrz.
 
 | # | Granica | Obserwacja | Kod |
 |---|---|---|---|
-| T-01 | Publiczny link wywołania palet | brak własnego limitu żądań i kontroli pochodzenia (awizacja je ma) | `routers/dlt.py:71-136` |
+| T-01 | Publiczny link wywołania palet | brak własnego limitu żądań i kontroli pochodzenia (awizacja je ma) | `routers/mag1.py:71-136` |
 | T-02 | Publiczny formularz awizacji | limit żądań w pamięci procesu — przy kilku instancjach mnoży się | `routers/avizo.py:46-55` |
 | T-03 | Wolne sloty z linku awizacji | parametr daty bez zakresu | `routers/avizo.py:217-225` |
 | T-04 | Poczta przychodząca do poczekalni | brak listy zaufanych nadawców | `routers/intake_mail.py:32-45` |

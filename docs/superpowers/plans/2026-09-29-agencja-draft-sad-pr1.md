@@ -803,4 +803,4 @@ git commit -m "feat(agencja): sekcja Agencja pod paczką faktur — potwierdzeni
 2. Odczyt draftu SAD + porównanie ↔ faktury + okno porównania (kolumny `parsed`/`comparison` JSON w `sad_drafts`).
 3. Szkic `.eml` odpowiedzi „Akceptuję” / „Do poprawy” (reużycie `app/eml.py`, adresaci jak `invoice_agency.py`) + stan odprawy na kafelku kolejki („SAD do akceptacji” / „SAD OK”).
 4. Wejście automatu (n8n): endpoint z tokenem automatyzacji → `add_draft(..., source="automation")`; nieznany kontener → 404; draft dla paczki bez wygenerowanego Excela → przyjęty z ostrzeżeniem w odpowiedzi.
-5. Dostrojenie odczytu do przykładowego draftu SAD od Deltaa.
+5. Dostrojenie odczytu do przykładowego draftu SAD od Omegi.

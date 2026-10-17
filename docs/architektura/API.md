@@ -37,7 +37,7 @@ z poprzednim biegiem (wykrywanie niezamierzonych zmian kontraktu).
 Lista jawna w `backend/tests/test_routes_require_auth.py` (`PUBLIC`): logowanie i odzyskiwanie konta,
 `/api/health`, `/api/health/deep` (sam status), branding ekranu logowania, beacon błędów JS, formularz
 awizacji `/api/avizo/{token}…`, formularz kierowcy `/api/avizo/driver/{token}`, wywołania palet
-`/api/dlt/{token}…`. Nowa trasa bez `Depends(get_current_user)` nieobecna na tej liście = czerwony test.
+`/api/mag1/{token}…`. Nowa trasa bez `Depends(get_current_user)` nieobecna na tej liście = czerwony test.
 
 ## Mapa zasobów (prefiksy routerów)
 
@@ -52,7 +52,7 @@ awizacji `/api/avizo/{token}…`, formularz kierowcy `/api/avizo/driver/{token}`
 | `/api/import`, `/api/sad-import`, `/api/paz` | importy Excel/SAP, PAZ | `imports*.py`, `sad_import.py`, `paz.py` |
 | `/api/purchasing`, `/api/purchase-orders` | zakupy, zamówienia | `purchasing.py`, `purchase_orders.py` |
 | `/api/suppliers`, `/api/master-data`, `/api/materials`, `/api/supplier-material-maps` | kartoteka dostawców, master data, materiały | `supplier_*.py`, `materials.py`, `master_quality.py` |
-| `/api/pallet-calls`, `/api/stock-targets`, `/api/dlt` | wywołania palet, cele zapasu, publiczny link DLT | `pallets.py`, `dlt.py` |
+| `/api/pallet-calls`, `/api/stock-targets`, `/api/mag1` | wywołania palet, cele zapasu, publiczny link MAG-1 | `pallets.py`, `mag1.py` |
 | `/api/notifications`, `/api/presence` | powiadomienia, obecność online | `notifications.py`, `presence.py` |
 | `/api/knowledge`, `/api/assistant` | baza wiedzy, asystent (LLM) | `knowledge.py`, `assistant.py` |
 | `/api/analytics`, `/api/search`, `/api/audit`, `/api/inbox` | analityka, wyszukiwarka, dziennik zmian, skrzynka | `analytics.py`, `search.py`, `audit_read.py`, `inbox.py` |

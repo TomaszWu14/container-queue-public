@@ -232,7 +232,7 @@
 }
 
 /* 2026-09-29: pigułki transportu w wierszu — jasne szkło zamiast koloru tła, żeby nie gryzły się
-   z różem (DLT) / miętą (ACME) wiersza; kolor trybu niesie ikona, tekst i cienki obrys */
+   z różem (MAG-1) / miętą (ACME) wiersza; kolor trybu niesie ikona, tekst i cienki obrys */
 .kq-table .tr-badge { background: var(--panel); box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 28%, transparent);
   padding: 1px 8px 1px 5px; font-size: 11px; }
 /* kopiowanie numerów (kontener / zamówienie / dostawa): kompaktowe, widać na najechaniu wiersza */

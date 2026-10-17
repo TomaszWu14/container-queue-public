@@ -19,14 +19,14 @@ const base = {
   sent_status: '', is_delayed: false, transport_id: null, order_number: null,
 }
 const CONTAINERS = [
-  { ...base, id: 1, container_no: 'MSDU0806613', warehouse_name: 'DLT', is_delayed: true },
-  { ...base, id: 2, container_no: 'TCLU1234568', warehouse_name: 'DLT', customs_status: 'ZLECONA' },
-  { ...base, id: 3, container_no: 'HLXU7654324', warehouse_name: 'DLT', demurrage_deadline: '2000-01-01' },
+  { ...base, id: 1, container_no: 'MSDU0806613', warehouse_name: 'MAG-1', is_delayed: true },
+  { ...base, id: 2, container_no: 'TCLU1234568', warehouse_name: 'MAG-1', customs_status: 'ZLECONA' },
+  { ...base, id: 3, container_no: 'HLXU7654324', warehouse_name: 'MAG-1', demurrage_deadline: '2000-01-01' },
   { ...base, id: 4, container_no: 'CAIU4811390', warehouse_name: 'ACME', notify_date: '2026-08-11' },
 ]
 let data: Record<string, unknown>[] = CONTAINERS
 const WAREHOUSES = [
-  { id: 1, name: 'DLT', company_id: 1, country: 'PL', default_daily_limit: 2, is_active: true },
+  { id: 1, name: 'MAG-1', company_id: 1, country: 'PL', default_daily_limit: 2, is_active: true },
   { id: 2, name: 'ACME', company_id: 1, country: 'PL', default_daily_limit: 7, is_active: true },
 ]
 
@@ -36,7 +36,7 @@ vi.mock('./api', () => ({
       path.startsWith('/api/containers?') ? data
         : path.startsWith('/api/containers/counts') ? {}
           : path.startsWith('/api/warehouses') ? WAREHOUSES
-            // wyjątek kalendarza: DLT ma tego dnia limit 4 (zamiast domyślnych 2)
+            // wyjątek kalendarza: MAG-1 ma tego dnia limit 4 (zamiast domyślnych 2)
             : path.startsWith('/api/limits?warehouse_id=1')
               ? [{ warehouse_id: 1, day: '2026-08-10', limit: 4 }]
               : []),
@@ -77,18 +77,18 @@ describe('Kolejka Enterprise', () => {
     await waitFor(() => expect(rowNos()).toEqual(['TCLU1234568']))
   })
 
-  it('nagłówek dnia w jednej linii: liczba kont., limit magazynu z nadpisania (DLT 3/4), Σ, bez chipa opóźnień', async () => {
+  it('nagłówek dnia w jednej linii: liczba kont., limit magazynu z nadpisania (MAG-1 3/4), Σ, bez chipa opóźnień', async () => {
     const { container } = mount()
     await ready()
     await waitFor(() => {
       const chips = [...container.querySelectorAll('.kq-gchip')].map(c => c.textContent)
-      expect(chips).toContain('DLT 3/4')
+      expect(chips).toContain('MAG-1 3/4')
     })
     const head = container.querySelector('.kq-ghead')!
     expect(head.textContent).toContain('3 kont.')
     expect(head.textContent).not.toContain('opóźn.')
-    const dlt = [...head.querySelectorAll('.kq-gchip')].find(c => c.textContent === 'DLT 3/4')!
-    expect(dlt.className).not.toContain('warn')   // 3 z 4 — bez przekroczenia
+    const mag1 = [...head.querySelectorAll('.kq-gchip')].find(c => c.textContent === 'MAG-1 3/4')!
+    expect(mag1.className).not.toContain('warn')   // 3 z 4 — bez przekroczenia
     // suma narastająca tygodnia (pon 10.08: 3, wt 11.08: 3+1)
     const sums = [...container.querySelectorAll('.kq-ghead')].map(h => h.textContent?.match(/Σ \d+/)?.[0])
     expect(sums).toEqual(['Σ 3', 'Σ 4'])
@@ -139,7 +139,7 @@ describe('Kolejka Enterprise', () => {
     await waitFor(() => expect(screen.queryByText('MSDU0806613')).toBeNull())
     fireEvent.click(screen.getByRole('button', { name: 'Magazyn' }))
     await waitFor(() => expect([...document.querySelectorAll('.kq-gtitle')].map(e => e.textContent))
-      .toEqual(['DLT', 'ACME']))
+      .toEqual(['MAG-1', 'ACME']))
     expect(localStorage.getItem('queueGroupBy')).toBe('warehouse')
   })
 

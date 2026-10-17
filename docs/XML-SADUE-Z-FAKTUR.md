@@ -1,6 +1,6 @@
 # XML SADUE z faktur → WinSAD agencji
 
-Decyzje 2026-10-07: format = **SADUE** (ten sam eksport WinSAD, który Delta odsyła z draftem SAD —
+Decyzje 2026-10-07: format = **SADUE** (ten sam eksport WinSAD, który Omega odsyła z draftem SAD —
 `backend/app/invoices/sad_xml.py`, próbka `backend/tests/fixtures/sad/SAD7100005.xml`); pozycje
 grupowane po **CN + kraju pochodzenia**; XML idzie **w mailu do agencji + osobne pobranie**.
 
@@ -35,5 +35,5 @@ korekty, preferencje, procedura.
 
 ## Do potwierdzenia z agencją
 
-Czy WinSAD Delta importuje taki niepełny SADUE (bez GUID-ów i kontekstu `P1Kontekst`). Pierwszy plik
+Czy WinSAD Omega importuje taki niepełny SADUE (bez GUID-ów i kontekstu `P1Kontekst`). Pierwszy plik
 z FICTIVA wysłać do próbnego importu; jeśli odrzucą — dopasować pola wg ich odpowiedzi.

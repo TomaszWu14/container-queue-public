@@ -7,7 +7,7 @@ import type { GateItem } from '../GatePage'
 import GateScanner from './GateScanner'
 
 const base: GateItem = { id: 7, container_no: 'MSDU0806613', truck_no: 'WGM 1234A', trailer_no: '',
-  driver_name: 'Jan Kierowca', warehouse_id: 1, warehouse: 'DLT', notify_date: '2026-10-16', eta: null,
+  driver_name: 'Jan Kierowca', warehouse_id: 1, warehouse: 'MAG-1', notify_date: '2026-10-16', eta: null,
   status: 'AWIZOWANY', driver_arrived_at: null, checked_in_at: null }
 
 afterEach(() => {

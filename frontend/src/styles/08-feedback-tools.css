@@ -247,7 +247,7 @@ label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { cursor: 
 
 /* ===== Refactor spedycji (quotes/forwarding) — nowe klasy utility, dopisane na końcu ===== */
 .m0 { margin: 0; }
-/* tytuł strony publicznej (kierowca, DLT): rozmiar h1 z tokena, ciasny odstęp pod logo */
+/* tytuł strony publicznej (kierowca, MAG-1): rozmiar h1 z tokena, ciasny odstęp pod logo */
 h1.title-token { margin: 4px 0; }
 .mt0 { margin-top: 0; }
 .p0 { padding: 0; }

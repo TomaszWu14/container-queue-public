@@ -33,7 +33,7 @@ describe('kontrast tokenów (WCAG AA 4.5:1)', () => {
 
   it('jasny motyw: tekst/muted/nagłówki/akcent na wszystkich tłach', () => {
     const bad = pairs(light, ['--bg', '--panel', '--soft', '--banner-bg', '--accent-soft',
-      '--wh-dlt-bg', '--wh-acme-bg', '--row-none']).filter(([, r]) => r < 4.5)
+      '--wh-mag1-bg', '--wh-acme-bg', '--row-none']).filter(([, r]) => r < 4.5)
     expect(bad).toEqual([])
   })
 
