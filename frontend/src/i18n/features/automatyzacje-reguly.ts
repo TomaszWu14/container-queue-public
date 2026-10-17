@@ -1,0 +1,44 @@
+import { defineFeature } from '../feature'
+
+// Kreator reguł bez kodu (US-036): „gdy warunek → powiadom”, z podglądem na dzisiejszych danych.
+export default defineFeature({
+  pl: {
+    ruleTitle: 'Reguły bez kodu', ruleIntro: 'Własne alerty: wybierz warunek i liczbę dni — automat sprawdza reguły co godzinę i powiadamia raz dziennie na kontener (dzwonek, e-mail, Teams, n8n).',
+    ruleEmpty: 'Brak reguł.', ruleAdd: 'Dodaj regułę', ruleSave: 'Zapisz reguły', ruleSaved: 'Reguły zapisane.',
+    ruleName: 'Nazwa', ruleCondition: 'Warunek', ruleDays: 'Dni', ruleStatus: 'Etap', ruleNotify: 'Powiadom',
+    ruleEnabled: 'Włączona', ruleDelete: 'Usuń', rulePreview: 'Podgląd',
+    rulePreviewResult: 'Dziś spełnia: {n}', rulePreviewNone: 'Dziś żaden kontener nie spełnia warunku.',
+    ruleReadOnly: 'Reguły zmienia administrator.', ruleLimit: 'Najwyżej {n} reguł.',
+    ruleNotify_watchers: 'obserwujących kontener (logistyka spółki)', ruleNotify_admins: 'administratorów',
+    ruleCond_eta_passed: 'ETA minęło co najmniej {n} dni temu, a kontener nie jest dostarczony',
+    ruleCond_notify_soon_status: 'Awizacja w ciągu {n} dni, a kontener jest jeszcze przed etapem „{s}”',
+    ruleCond_no_driver: 'Awizacja w ciągu {n} dni, a brak danych kierowcy',
+    ruleCond_plan_unconfirmed: 'Plan wysłany do spedycji co najmniej {n} dni temu i nadal niepotwierdzony',
+  },
+  en: {
+    ruleTitle: 'No-code rules', ruleIntro: 'Your own alerts: pick a condition and a number of days — the automation checks rules every hour and notifies once a day per container (bell, e-mail, Teams, n8n).',
+    ruleEmpty: 'No rules.', ruleAdd: 'Add a rule', ruleSave: 'Save rules', ruleSaved: 'Rules saved.',
+    ruleName: 'Name', ruleCondition: 'Condition', ruleDays: 'Days', ruleStatus: 'Stage', ruleNotify: 'Notify',
+    ruleEnabled: 'Enabled', ruleDelete: 'Delete', rulePreview: 'Preview',
+    rulePreviewResult: 'Matching today: {n}', rulePreviewNone: 'No container matches the condition today.',
+    ruleReadOnly: 'Rules are changed by an administrator.', ruleLimit: 'At most {n} rules.',
+    ruleNotify_watchers: 'container watchers (company logistics)', ruleNotify_admins: 'administrators',
+    ruleCond_eta_passed: 'ETA passed at least {n} days ago and the container is not delivered',
+    ruleCond_notify_soon_status: 'Delivery notice within {n} days and the container is still before stage “{s}”',
+    ruleCond_no_driver: 'Delivery notice within {n} days and no driver details',
+    ruleCond_plan_unconfirmed: 'Plan sent to the forwarder at least {n} days ago and still unconfirmed',
+  },
+  pt: {
+    ruleTitle: 'Regras sem código', ruleIntro: 'Alertas próprios: escolha uma condição e um número de dias — a automatização verifica as regras de hora a hora e notifica uma vez por dia por contentor (sino, e-mail, Teams, n8n).',
+    ruleEmpty: 'Sem regras.', ruleAdd: 'Adicionar regra', ruleSave: 'Guardar regras', ruleSaved: 'Regras guardadas.',
+    ruleName: 'Nome', ruleCondition: 'Condição', ruleDays: 'Dias', ruleStatus: 'Etapa', ruleNotify: 'Notificar',
+    ruleEnabled: 'Ativa', ruleDelete: 'Eliminar', rulePreview: 'Pré-visualizar',
+    rulePreviewResult: 'Cumprem hoje: {n}', rulePreviewNone: 'Hoje nenhum contentor cumpre a condição.',
+    ruleReadOnly: 'As regras são alteradas pelo administrador.', ruleLimit: 'No máximo {n} regras.',
+    ruleNotify_watchers: 'quem segue o contentor (logística da empresa)', ruleNotify_admins: 'administradores',
+    ruleCond_eta_passed: 'O ETA passou há pelo menos {n} dias e o contentor não foi entregue',
+    ruleCond_notify_soon_status: 'Aviso de entrega dentro de {n} dias e o contentor ainda antes da etapa «{s}»',
+    ruleCond_no_driver: 'Aviso de entrega dentro de {n} dias e sem dados do motorista',
+    ruleCond_plan_unconfirmed: 'Plano enviado ao transitário há pelo menos {n} dias e ainda sem confirmação',
+  },
+})

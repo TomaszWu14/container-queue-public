@@ -15,3 +15,8 @@
     content: attr(data-label) ": "; color: var(--muted); font-size: 12px;
   }
 }
+/* Kreator reguł (US-036): każda reguła to osobny blok z formularzem i podglądem pod spodem */
+.auto-rule-list { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 10px; }
+.auto-rule { border: 1px solid var(--border); border-radius: var(--r-md, 10px); padding: 10px 12px; background: var(--panel); }
+.auto-rule label { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: var(--muted); }
+.auto-rule label.row { flex-direction: row; align-items: center; color: inherit; }

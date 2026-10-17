@@ -18,6 +18,7 @@ from ..models import (
     BlockedIP,
     ClientError,
     Container,
+    JobRun,
     PurchaseOrder,
     RefreshToken,
     Role,
@@ -161,6 +162,9 @@ def integrations_status(db: Session = Depends(get_db), user: User = admin_only):
              settings.smtp_host or "—"),
         item("mail_avizo", "Poczta awizacji (spedycja)", mail_ready, mail_detail, mail_last),
         item("teams", "MS Teams", bool(teams_url), teams_detail, teams_last),
+        item("n8n_events", "Zdarzenia do n8n (webhook)", bool(settings.automation_webhook_url.strip()),
+             "podpis HMAC" if settings.automation_webhook_secret else "BEZ podpisu HMAC",
+             _safe_scalar(db, select(func.max(JobRun.started_at)).where(JobRun.job == "n8n_events"))),
     ]}
 
 

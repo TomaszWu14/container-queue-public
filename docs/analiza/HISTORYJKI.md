@@ -359,15 +359,41 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      każda zmiana trafia do dziennika zmian; logistyka dostaje 403.
 - **[SEC]:** zapis tylko admin (`PUT /api/automations/minutes`, wpis w `tests/permissions.yaml`), ustawienie globalne
   bez danych spółek, audyt każdej zmiany.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #38.
 
 ### US-035 · [DEV][SEC] Zdarzenia do n8n / Power Automate / Make widoczne i testowalne (pomysł 9)
-- **Rozmiar:** S · Webhook z podpisem HMAC już istnieje (`notifications.notify_n8n`). Do zrobienia: licznik
-  wysłanych zdarzeń i błędów, przycisk „Wyślij zdarzenie testowe”, opis formatu zdarzenia w dokumentacji.
+- **Rozmiar:** S · Webhook z podpisem HMAC już istniał (`notifications.send_automation_event`).
+- **Jako** citizen developer **chcę** wiedzieć, czy zdarzenia z aplikacji docierają do mojego workflow, i móc
+  wysłać próbne, **aby** zbudować automatyzację bez proszenia IT o logi.
+- **Kryteria akceptacji** (testy `test_automations.py` — część US-035, `test_automation.py`, `AutomationsPage.dom.test.tsx`)
+  1. Zdarzenie ma `id` (deduplikacja), `version`, `source`; podpis HMAC liczony z wysłanych bajtów.
+  2. Wynik każdej wysyłki (kod HTTP spoza 2xx i błąd sieci = błąd) zapisany w dzienniku zadań; ekran Automatyzacje
+     liczy zdarzenia i błędy z 7 dni; nieudana wysyłka zapala dzwonek admina.
+  3. Admin wysyła „zdarzenie testowe” z ekranu i widzi kod odpowiedzi; bez skonfigurowanego adresu → 409; odpowiedź
+     nie zawiera adresu webhooka; każde wysłanie w dzienniku zmian (kto, kiedy, wynik); logistyka → 403.
+  4. Panel Integracje pokazuje kanał n8n, podpis (włączony/brak) i ostatnią wysyłkę. Format w `docs/ZDARZENIA-N8N.md`.
+- **[SEC]:** adres webhooka (bywa sekretem) nie wraca do przeglądarki; treść zdarzeń bez danych osobowych kierowców
+  (GDPR-001, bez zmian); zdarzenie testowe tylko admin.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-036 · [BA][DEV][SEC] Kreator reguł bez kodu (pomysł 8)
-- **Rozmiar:** L · Reguły „gdy warunek przez N dni → powiadom rolę/kanał” ustawiane w panelu admina, z podglądem,
-  ile kontenerów spełnia regułę dziś; dziś progi i wagi są w kodzie (`signals.SIGNAL_WEIGHTS`).
+- **Rozmiar:** L · **Założenie:** Z-026
+- **Jako** kierownik logistyki **chcę** sam ustawiać alerty „gdy warunek przez N dni → powiadom”, **aby** nie czekać
+  na programistę przy każdej nowej potrzebie (praca w duchu *citizen developer*).
+- **Kryteria akceptacji** (testy `backend/tests/test_automation_rules.py`, `AutomationRulesPanel.dom.test.tsx`)
+  1. Zamknięty katalog 4 warunków z parametrami (dni 0–60, etap): ETA minęło N dni; awizacja w ciągu N dni, a kontener
+     przed wybranym etapem; awizacja w ciągu N dni bez danych kierowcy; plan wysłany N dni temu bez potwierdzenia.
+     Tylko otwarte, niedostarczone kontenery.
+  2. Podgląd: ile kontenerów spełnia regułę dziś i które (do 10) — w zakresie spółek użytkownika.
+  3. Pętla tła co godzinę: włączona reguła → powiadomienie (dzwonek, e-mail, Teams, n8n) do obserwujących kontener
+     albo adminów; jedno na regułę, kontener i dzień; reguła wyłączona nic nie wysyła.
+  4. Zapis całej listy tylko admin (najwyżej 20 reguł; zły warunek, brak etapu, dni > 60 → 422); każda dodana,
+     zmieniona i usunięta reguła w dzienniku zmian; logistyka widzi reguły i podgląd, bez edycji.
+  5. Automat „Reguły własne” na ekranie Automatyzacje (liczniki, stan, oszczędność 5 min/powiadomienie — Z-024).
+- **[SEC]:** warunki to stała lista w kodzie — bez wolnego tekstu wykonywanego jako zapytanie; parametry walidowane
+  (pydantic); podgląd przez `scope_containers`; bezpiecznik 200 kontenerów na regułę na przebieg; reguły w
+  ustawieniach aplikacji (bez nowej tabeli i migracji); uszkodzony wpis pomijany, pozostałe działają.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-037 · [DEV] Pewność odczytu AI i trafność w czasie (pomysł 14)
 - **Rozmiar:** M · Każdy odczytany dokument z oceną pewności; niepewne trafiają do człowieka; wykres poprawek

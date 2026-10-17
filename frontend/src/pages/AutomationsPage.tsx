@@ -8,6 +8,7 @@ import { LangContext, useT } from '../i18n'
 import { PageHeader } from '../PageHeader'
 import { useUser } from '../userContext'
 import AutomationMinutesModal from './AutomationMinutesModal'
+import AutomationRulesPanel from './AutomationRulesPanel'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -50,6 +51,7 @@ export default function AutomationsPage() {
   const [category, setCategory] = useState<Category | ''>('')
   const [onlyAttention, setOnlyAttention] = useState(false)
   const [editMinutes, setEditMinutes] = useState(false)
+  const [testMsg, setTestMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const isAdmin = useUser()?.role === 'admin'
 
   const load = () => {
@@ -64,6 +66,21 @@ export default function AutomationsPage() {
     (!category || i.category === category) && (!onlyAttention || ATTENTION.includes(i.status))),
   [data, category, onlyAttention])
 
+  // US-035: zdarzenie testowe do n8n — wynik od razu, potem odświeżony licznik zdarzeń
+  const sendTest = async () => {
+    setTestMsg(null)
+    try {
+      const r = await api.post<{ ok: boolean; status_code: number | null; error: string; signed?: boolean }>(
+        '/api/automations/test-event', {})
+      setTestMsg(r.ok
+        ? { ok: true, text: fill('autoTestEventOk', { code: r.status_code ?? '' }) + (r.signed ? '' : ` ${t('autoTestEventUnsigned')}`) }
+        : { ok: false, text: fill('autoTestEventFail', { error: r.status_code ? `HTTP ${r.status_code}` : r.error }) })
+      load()
+    } catch (err) {
+      setTestMsg({ ok: false, text: errorMessage(err) })
+    }
+  }
+
   const cadence = (i: AutomationItem) => {
     if (i.kind === 'event') return t('autoOnEvent')
     const s = i.interval_s
@@ -77,8 +94,12 @@ export default function AutomationsPage() {
   return (
     <main className="page automations">
       <PageHeader title={t('autoTitle')} actions={isAdmin && data ? (
-        <button className="btn secondary small" onClick={() => setEditMinutes(true)}>{t('autoMinutesBtn')}</button>
+        <>
+          <button className="btn secondary small" onClick={sendTest}>{t('autoTestEventBtn')}</button>
+          <button className="btn secondary small" onClick={() => setEditMinutes(true)}>{t('autoMinutesBtn')}</button>
+        </>
       ) : undefined} />
+      {testMsg && <p className={testMsg.ok ? 'muted' : 'error'} role="status">{testMsg.text}</p>}
       <p className="muted" style={{ maxWidth: 820 }}>{t('autoIntro')}</p>
       {error && <p className="error">{error}</p>}
       {data && (
@@ -149,6 +170,7 @@ export default function AutomationsPage() {
           )}
         </>
       )}
+      {data && <AutomationRulesPanel canEdit={isAdmin} />}
       {editMinutes && data && (
         <AutomationMinutesModal items={data.items} onClose={() => setEditMinutes(false)}
                                 onSaved={() => { setEditMinutes(false); load() }} />
