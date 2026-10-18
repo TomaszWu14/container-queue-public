@@ -13,6 +13,7 @@ Nic nie jest wysyłane ani zapisywane — wynik to opis tego, co automaty zrobi�
 from __future__ import annotations
 
 import json
+import secrets
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -23,7 +24,6 @@ from .models import Container, InvoiceBatch, InvoiceItem, InvoiceJob, InvoiceMat
 from .models.enums import ContainerStatus as S
 
 PREFERRED = (S.W_PORCIE, S.ODPRAWA, S.W_TRANSPORCIE, S.AWIZOWANY)
-DEMO_SECRET = "demo-symulacja"     # tylko do pokazania podpisu; prawdziwy sekret nie opuszcza serwera
 
 
 def _pick(db: Session, user: User) -> Container | None:
@@ -73,7 +73,8 @@ def simulate(db: Session, user: User) -> dict:
     event = automation_events.envelope("container_in_port", f"Kontener {container.container_no} w porcie",
                                        container_no=container.container_no)
     body = json.dumps(event, ensure_ascii=False, separators=(",", ":")).encode()
-    signature = automation_events.sign_payload(body, DEMO_SECRET)
+    # jednorazowy sekret tylko do pokazania podpisu — prawdziwy AUTOMATION_WEBHOOK_SECRET nie opuszcza serwera
+    signature = automation_events.sign_payload(body, secrets.token_urlsafe(16))
 
     saved = {"mail": minutes["mail_intake"] if found else 0,
              "invoice": minutes["invoice_ingest"] if invoice else 0,
