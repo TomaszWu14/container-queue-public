@@ -459,8 +459,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **Stan:** wdrożone w PR #47.
 
 ### US-041 · [DEV][SEC] Akceptacja z poziomu Teams (pomysł 18)
-- **Rozmiar:** M · Karta w Teams z przyciskiem prowadzącym do akcji w aplikacji (zatwierdzenie po zalogowaniu —
-  bez akcji wykonywanych anonimowo z czatu).
+- **Rozmiar:** S
+- **Jako** logistyk **chcę** z karty w Teams jednym kliknięciem przejść do kontenera, którego dotyczy powiadomienie,
+  **aby** zareagować od razu, bez szukania go w aplikacji.
+- **Kryteria akceptacji** (testy `test_teams_mail_status.py`, `test_notifications_w4.py`)
+  1. Powiadomienie dotyczące kontenera wysłane do Teams ma przycisk „Otwórz w aplikacji” (Adaptive Card,
+     `Action.OpenUrl`) prowadzący do karty kontenera (`PUBLIC_BASE_URL/kontenery/{id}`).
+  2. Powiadomienie bez kontenera albo instancja bez `PUBLIC_BASE_URL` — karta bez przycisku (jak dotąd).
+  3. Przycisk niczego nie zatwierdza sam: decyzję podejmuje zalogowany użytkownik z własnymi uprawnieniami.
+- **[SEC]:** w karcie tylko link (bez tokenu, bez akcji z czatu) — kanał Teams widzi więcej osób niż uprawnionych
+  do kontenera, więc wszystko za logowaniem; adres z konfiguracji, nie z danych użytkownika.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-042 · [DEV] Konektor Power Automate (pomysł 10)
 - **Rozmiar:** S · Plik konektora (OpenAPI 2.0) dla odczytu kolejki i zdarzeń + przykładowy przepływ.
@@ -476,24 +485,24 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 
 ### US-046 · [BA] Mapa procesu „przed i po” (pomysł 2)
 - **Rozmiar:** S · Rysunek z `docs/bpmn/timporye-proces.bpmn`, kroki przejęte przez automaty zaznaczone.
-- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/OBIEG-DOKUMENTU-PRZED-PO.md`.
+- **Stan:** wdrożone w PR #48 — `docs/dla-rekrutera/OBIEG-DOKUMENTU-PRZED-PO.md`.
 
 ### US-047 · [BA] Studium przypadku na jedną stronę (pomysł 4)
 - **Rozmiar:** XS · Problem → miara → rozwiązanie → wynik; do CV i LinkedIn.
-- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/STUDIUM-PRZYPADKU.md`.
+- **Stan:** wdrożone w PR #48 — `docs/dla-rekrutera/STUDIUM-PRZYPADKU.md`.
 
 ### US-048 · [BA] README po angielsku (pomysł 7)
 - **Rozmiar:** S · `README.en.md` z sekcją „Automations in numbers”.
-- **Stan:** zrealizowane, czeka na merge — `README.en.md`.
+- **Stan:** wdrożone w PR #48 — `README.en.md`.
 
 ### US-049 · [BA] „Jak wybieram, co automatyzować” (pomysł 19)
 - **Rozmiar:** S · Macierz liczba spraw × czas × ryzyko błędu na pomysłach z `docs/pomysly-automatyzacje.md`.
-- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/MACIERZ-AUTOMATYZACJI.md`.
+- **Stan:** wdrożone w PR #48 — `docs/dla-rekrutera/MACIERZ-AUTOMATYZACJI.md`.
 
 ### US-050 · [BA] Mierniki przed i po wdrożeniu (pomysł 20)
 - **Rozmiar:** S · **Założenie:** Z-025 · Czas zaplanowania dostawy, liczba maili, liczba błędów — wartości
   „przed” od PO albo jawne założenia.
-- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/MIERNIKI-PRZED-PO.md`.
+- **Stan:** wdrożone w PR #48 — `docs/dla-rekrutera/MIERNIKI-PRZED-PO.md`.
 
 ### US-051 · [DEV] Nagranie obiegu z poczty (pomysł 5)
 - **Rozmiar:** S · Wideo z testu przeglądarkowego: mail → n8n → poczekalnia → „Potwierdź”.

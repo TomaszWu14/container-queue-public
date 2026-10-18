@@ -231,16 +231,22 @@ def send_user_invite(email: str, full_name: str, login: str,
     send_html_email([email], subject, html, channel="invite")
 
 
-def _teams_post(url: str, title: str, body: str) -> None:
+def _teams_post(url: str, title: str, body: str, link: str = "") -> None:
     # Adaptive Card (Workflows + stary webhook); wynik trafia do panelu Integracje
-    teams.post(url, title, body)
+    teams.post(url, title, body, link)
 
 
-def _send_teams(title: str, body: str) -> None:
+def container_link(container_id: int | None) -> str:
+    """US-041: adres karty kontenera do przycisku w Teams (pusty bez PUBLIC_BASE_URL albo kontenera)."""
+    base = settings.public_base_url.rstrip("/")
+    return f"{base}/kontenery/{container_id}" if base and container_id else ""
+
+
+def _send_teams(title: str, body: str, link: str = "") -> None:
     if not settings.teams_webhook_url:
         return
     # wysyłka w tle — nie blokuje żądania; błędy trafiają do logów w _run
-    _submit(_teams_post, settings.teams_webhook_url, title, body)
+    _submit(_teams_post, settings.teams_webhook_url, title, body, link)
 
 
 # US-035: koperta, podpis, kontrola odpowiedzi i zapis w dzienniku — app/automation_events.py
@@ -313,7 +319,8 @@ def notify(db: Session, users: list[User], *, kind: str, title: str, body: str =
         _after_commit(db, lambda: _send_email(emails, title, body))
     if count and broadcast:
         if enabled("*", "teams"):
-            _after_commit(db, lambda: _send_teams(title, body))
+            link = container_link(container_id)
+            _after_commit(db, lambda: _send_teams(title, body, link))
         _after_commit(db, lambda: send_automation_event(
             kind, title, body, container_id=container_id, recipients=count))
     return count
