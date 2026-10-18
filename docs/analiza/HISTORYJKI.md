@@ -644,7 +644,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Lista przesuniętych kontenerów (link do kontenera, data przed → po) — tylko kontenery w zakresie użytkownika.
   3. Nic nie jest zapisywane; plan awizacji zostaje bez zmian (Z-031).
 - **[SEC]:** odczyt (GET), `scope_containers`; obciążenie innych spółek tylko jako liczba; wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #63.
 
 ### US-063 · [DEV] Kreator reguł z wyborem kanałów (druga lista PO, pkt 5)
 - **Rozmiar:** S
