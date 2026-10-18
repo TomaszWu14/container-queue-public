@@ -1,0 +1,3 @@
+# strona logowania i demo mogą być indeksowane; API nie
+User-agent: *
+Disallow: /api/
