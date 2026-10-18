@@ -550,7 +550,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Poza oknem i drugi raz tego samego dnia — nic.
 - **[SEC]:** raport per użytkownik z jego zakresem (obiegi z poczty liczone przez `scope_containers`); bez kanałów
   wspólnych (Teams/n8n), żeby liczby jednej spółki nie trafiły do innych.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #54.
 
 ### US-055 · [DEV] Język startowy z przeglądarki (druga lista PO, pkt 2)
 - **Rozmiar:** XS
