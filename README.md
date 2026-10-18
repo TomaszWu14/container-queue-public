@@ -3,6 +3,8 @@
 [![ci-backend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml) [![ci-frontend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml) [![security](https://github.com/TomaszWu14/container-queue-public/actions/workflows/security.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/security.yml) [![migracje](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-migrations.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-migrations.yml)
 ![pokrycie](https://img.shields.io/badge/pokrycie_backendu-%E2%89%A592%25_wymuszone_w_CI-brightgreen) ![testy](https://img.shields.io/badge/testy-3000%2B-brightgreen) ![stack](https://img.shields.io/badge/FastAPI_%C2%B7_PostgreSQL_%C2%B7_React_%C2%B7_TypeScript-informational) ![jezyki](https://img.shields.io/badge/UI-PL_%C2%B7_EN_%C2%B7_PT-informational) [![demo](https://img.shields.io/badge/demo-online-blue)](https://container.queue.twapp.pl/demo)
 
+*[English version](README.en.md)*
+
 **Jeden wspólny obraz dostaw kontenerowych dla logistyki kilku spółek, magazynów, spedytorów i agencji
 celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
@@ -69,6 +71,11 @@ Odprawa celna — osobny status:
 | [07. Ograniczenia](docs/07-ograniczenia.md) | znane problemy, miejsca bez walidacji, rozjazdy dokumentacji z kodem, co dalej |
 
 Szczegóły techniczne (wdrożenie, integracje, moduły poboczne): [`docs/TECHNICZNE.md`](docs/TECHNICZNE.md).
+
+**Dla rekrutera — automatyzacja w pigułce:** [studium przypadku](docs/dla-rekrutera/STUDIUM-PRZYPADKU.md) ·
+[macierz automatyzacji](docs/dla-rekrutera/MACIERZ-AUTOMATYZACJI.md) ·
+[obieg dokumentu przed i po](docs/dla-rekrutera/OBIEG-DOKUMENTU-PRZED-PO.md) ·
+[mierniki przed i po](docs/dla-rekrutera/MIERNIKI-PRZED-PO.md). W demo: ekran **Automatyzacje** → „Symuluj dzień”.
 
 ## Proces zespołowy i stan projektu
 

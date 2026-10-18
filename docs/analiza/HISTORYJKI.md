@@ -456,7 +456,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Tylko kontenery w zakresie użytkownika; brak kontenerów → komunikat.
 - **[SEC]:** trasa `GET /api/automations/simulate-day` (Editors, `scope_containers`), bez wyjątku w blokadzie zapisu
   konta demo; podpis liczony sekretem pokazowym, prawdziwy sekret nie opuszcza serwera.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #47.
 
 ### US-041 · [DEV][SEC] Akceptacja z poziomu Teams (pomysł 18)
 - **Rozmiar:** M · Karta w Teams z przyciskiem prowadzącym do akcji w aplikacji (zatwierdzenie po zalogowaniu —
@@ -476,19 +476,24 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 
 ### US-046 · [BA] Mapa procesu „przed i po” (pomysł 2)
 - **Rozmiar:** S · Rysunek z `docs/bpmn/timporye-proces.bpmn`, kroki przejęte przez automaty zaznaczone.
+- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/OBIEG-DOKUMENTU-PRZED-PO.md`.
 
 ### US-047 · [BA] Studium przypadku na jedną stronę (pomysł 4)
 - **Rozmiar:** XS · Problem → miara → rozwiązanie → wynik; do CV i LinkedIn.
+- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/STUDIUM-PRZYPADKU.md`.
 
 ### US-048 · [BA] README po angielsku (pomysł 7)
 - **Rozmiar:** S · `README.en.md` z sekcją „Automations in numbers”.
+- **Stan:** zrealizowane, czeka na merge — `README.en.md`.
 
 ### US-049 · [BA] „Jak wybieram, co automatyzować” (pomysł 19)
 - **Rozmiar:** S · Macierz liczba spraw × czas × ryzyko błędu na pomysłach z `docs/pomysly-automatyzacje.md`.
+- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/MACIERZ-AUTOMATYZACJI.md`.
 
 ### US-050 · [BA] Mierniki przed i po wdrożeniu (pomysł 20)
 - **Rozmiar:** S · **Założenie:** Z-025 · Czas zaplanowania dostawy, liczba maili, liczba błędów — wartości
   „przed” od PO albo jawne założenia.
+- **Stan:** zrealizowane, czeka na merge — `docs/dla-rekrutera/MIERNIKI-PRZED-PO.md`.
 
 ### US-051 · [DEV] Nagranie obiegu z poczty (pomysł 5)
 - **Rozmiar:** S · Wideo z testu przeglądarkowego: mail → n8n → poczekalnia → „Potwierdź”.
