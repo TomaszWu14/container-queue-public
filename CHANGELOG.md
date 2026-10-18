@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Przycisk „Otwórz w aplikacji” w karcie Teams** (US-041): powiadomienie o kontenerze prowadzi jednym kliknięciem
+  do jego karty; decyzja zostaje w aplikacji, po zalogowaniu.
 - **Dokumenty dla rekrutera i README po angielsku** (US-046…050): studium przypadku, macierz automatyzacji (co
   automat, co człowiek i dlaczego), obieg dokumentu przed i po (Mermaid), mierniki przed i po z jawnymi założeniami
   — `docs/dla-rekrutera/`; `README.en.md`.

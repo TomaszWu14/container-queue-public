@@ -102,7 +102,7 @@ def test_send_teams_offloads(monkeypatch):
     box: dict[str, str] = {}
     monkeypatch.setattr(N.settings, "teams_webhook_url", "https://hook.example.com")
 
-    def fake_post(url, title, body):
+    def fake_post(url, title, body, link=""):
         box["thread"] = threading.current_thread().name
         done.set()
 

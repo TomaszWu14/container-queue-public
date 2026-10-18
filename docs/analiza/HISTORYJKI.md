@@ -459,8 +459,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **Stan:** wdrożone w PR #47.
 
 ### US-041 · [DEV][SEC] Akceptacja z poziomu Teams (pomysł 18)
-- **Rozmiar:** M · Karta w Teams z przyciskiem prowadzącym do akcji w aplikacji (zatwierdzenie po zalogowaniu —
-  bez akcji wykonywanych anonimowo z czatu).
+- **Rozmiar:** S
+- **Jako** logistyk **chcę** z karty w Teams jednym kliknięciem przejść do kontenera, którego dotyczy powiadomienie,
+  **aby** zareagować od razu, bez szukania go w aplikacji.
+- **Kryteria akceptacji** (testy `test_teams_mail_status.py`, `test_notifications_w4.py`)
+  1. Powiadomienie dotyczące kontenera wysłane do Teams ma przycisk „Otwórz w aplikacji” (Adaptive Card,
+     `Action.OpenUrl`) prowadzący do karty kontenera (`PUBLIC_BASE_URL/kontenery/{id}`).
+  2. Powiadomienie bez kontenera albo instancja bez `PUBLIC_BASE_URL` — karta bez przycisku (jak dotąd).
+  3. Przycisk niczego nie zatwierdza sam: decyzję podejmuje zalogowany użytkownik z własnymi uprawnieniami.
+- **[SEC]:** w karcie tylko link (bez tokenu, bez akcji z czatu) — kanał Teams widzi więcej osób niż uprawnionych
+  do kontenera, więc wszystko za logowaniem; adres z konfiguracji, nie z danych użytkownika.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-042 · [DEV] Konektor Power Automate (pomysł 10)
 - **Rozmiar:** S · Plik konektora (OpenAPI 2.0) dla odczytu kolejki i zdarzeń + przykładowy przepływ.

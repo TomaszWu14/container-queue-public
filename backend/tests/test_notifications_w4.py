@@ -3,7 +3,7 @@ import datetime
 
 from tests.conftest import login
 
-from app.models import Notification, NotificationRule, User, today_pl
+from app.models import Container, Notification, NotificationRule, User, today_pl
 
 
 def _company_id(client, headers, code="ACME"):
@@ -115,12 +115,23 @@ def test_teams_card_sent_and_gated(client, db_session, monkeypatch):
     card = posts[0][1]["json"]
     content = card["attachments"][0]["content"]
     assert content["type"] == "AdaptiveCard" and "Tytuł" in content["body"][0]["text"]
+    assert "actions" not in content          # bez kontenera — bez przycisku
+    # US-041: powiadomienie o kontenerze → przycisk do jego karty (adres z PUBLIC_BASE_URL)
+    monkeypatch.setattr(n.settings, "public_base_url", "https://app.example/")
+    c = Container(container_no="TEAM1234565", company_id=cid)
+    db_session.add(c)
+    db_session.commit()
+    n.notify(db_session, [user], kind="k3", title="Kontener", container_id=c.id)
+    db_session.commit()
+    action = posts[-1][1]["json"]["attachments"][0]["content"]["actions"][0]
+    assert action["url"] == f"https://app.example/kontenery/{c.id}" and action["type"] == "Action.OpenUrl"
+    posts.clear()
     # kolumna Teams wyłączona dla kindu → brak wysyłki
     db_session.add(NotificationRule(kind="k4", role="*", channel="teams", enabled=False))
     db_session.commit()
     n.notify(db_session, [user], kind="k4", title="X")
     db_session.commit()
-    assert len(posts) == 1
+    assert posts == []
 
 
 # --- poranny digest ---

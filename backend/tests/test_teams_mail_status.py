@@ -16,6 +16,15 @@ def test_card_is_adaptive_in_message_envelope():
     assert [b["text"] for b in att["content"]["body"]] == ["[TIMPORYE] Tytuł", "Treść"]
 
 
+def test_card_button_opens_the_app_only_with_link():
+    """US-041: przycisk prowadzi do karty kontenera w aplikacji (logowanie i uprawnienia jak zwykle);
+    bez adresu — karta bez przycisku."""
+    content = teams.card("Tytuł", "Treść", "https://app.example/kontenery/7")["attachments"][0]["content"]
+    assert content["actions"] == [{"type": "Action.OpenUrl", "title": "Otwórz w aplikacji",
+                                   "url": "https://app.example/kontenery/7"}]
+    assert "actions" not in teams.card("Tytuł", "Treść")["attachments"][0]["content"]
+
+
 def test_post_records_ok_and_http_error(monkeypatch):
     url = "https://prod.westeurope.logic.azure.com/workflows/abc"
     monkeypatch.setattr(teams.httpx, "post", lambda *a, **kw: _resp(202))

@@ -18,8 +18,13 @@ _lock = threading.Lock()
 _last: dict = {"at": None, "error": ""}
 
 
-def card(title: str, body: str) -> dict:
-    return {
+LINK_LABEL = "Otwórz w aplikacji"   # US-041: akcja w aplikacji po zalogowaniu, nie z czatu
+
+
+def card(title: str, body: str, link: str = "") -> dict:
+    """Karta; `link` = przycisk „Otwórz w aplikacji” (Action.OpenUrl). Sam przycisk niczego nie
+    zatwierdza — prowadzi do ekranu, gdzie decyzję podejmuje zalogowany użytkownik z jego uprawnieniami."""
+    out = {
         "type": "message",
         "attachments": [{
             "contentType": "application/vnd.microsoft.card.adaptive",
@@ -36,6 +41,10 @@ def card(title: str, body: str) -> dict:
             },
         }],
     }
+    if link:
+        out["attachments"][0]["content"]["actions"] = [
+            {"type": "Action.OpenUrl", "title": LINK_LABEL, "url": link}]
+    return out
 
 
 def _record(error: str) -> None:
@@ -44,9 +53,9 @@ def _record(error: str) -> None:
         _last["error"] = error
 
 
-def post(url: str, title: str, body: str) -> None:
+def post(url: str, title: str, body: str, link: str = "") -> None:
     try:
-        response = httpx.post(url, json=card(title, body), timeout=15)
+        response = httpx.post(url, json=card(title, body, link), timeout=15)
         response.raise_for_status()
         # stary webhook odpowiada 200 z treścią „1”; inna treść przy 200 = odrzucona karta
         if LEGACY_HOST in url and response.text.strip() not in ("", "1"):
