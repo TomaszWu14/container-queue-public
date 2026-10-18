@@ -560,7 +560,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Żaden obsługiwany → angielski. Zapamiętany wybór użytkownika zawsze wygrywa.
   3. Testy (vitest, Playwright) ustawiają polską przeglądarkę — sprawdzają polskie teksty jak dotąd.
 - **[SEC]:** bez zmian (tylko wybór słownika w przeglądarce).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #55.
 
 ### US-056 · [DEV] Test przeglądarkowy ekranu Automatyzacje w demo (druga lista PO, pkt 3)
 - **Rozmiar:** XS
