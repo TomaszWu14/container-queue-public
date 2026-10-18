@@ -95,3 +95,16 @@ def test_empty_is_not_an_error(client):
     body = client.get("/api/automations/process", headers=login(client, "logi-prm4", "pass12345")).json()
     assert body["transitions_total"] == 0 and body["backward_pct"] is None and body["stuck_total"] == 0
     assert all(s["median_days"] is None for s in body["stages"])
+
+
+def test_delivered_containers_are_not_stuck(client):
+    """Po dostawie na magazyn czekanie na rozliczenie nie trafia na listę „do sprawdzenia” (Z-027)."""
+    cid = _company("PRM5")
+    _user("logi-prm5", cid)
+    for i, days in enumerate((1, 2, 2, 3, 3)):      # p90 etapu DOSTARCZONY ≈ 3 dni
+        _container(cid, f"PRMU500000{i}", 30, [(20, S.W_DOSTAWIE, S.DOSTARCZONY),
+                                               (20 - days, S.DOSTARCZONY, S.ZREALIZOWANY)], S.ZREALIZOWANY)
+    _container(cid, "PRMU5000009", 30, [(25, S.W_DOSTAWIE, S.DOSTARCZONY)], S.DOSTARCZONY)   # 25 dni po dostawie
+    body = client.get("/api/automations/process", headers=login(client, "logi-prm5", "pass12345")).json()
+    assert next(s for s in body["stages"] if s["status"] == "DOSTARCZONY")["count"] == 5
+    assert body["stuck"] == [] and body["stuck_total"] == 0

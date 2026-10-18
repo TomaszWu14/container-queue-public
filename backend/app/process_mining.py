@@ -6,7 +6,7 @@ Wynik:
 - czas w etapie: liczba przejść, mediana i 90. percentyl (dni) dla pobytów zakończonych w oknie,
 - cofnięcia statusu (powroty do wcześniejszego etapu = poprawki w procesie),
 - najczęstsze przejścia,
-- kontenery „utknięte”: otwarte, w obecnym etapie dłużej niż 90. percentyl tego etapu
+- kontenery „utknięte”: w obiegu (przed dostawą na magazyn), w obecnym etapie dłużej niż 90. percentyl etapu
   (liczone dopiero przy MIN_SAMPLES zakończonych pobytach — mniej to szum).
 
 Zakres danych: kontenery widoczne dla użytkownika (scope_containers)."""
@@ -22,6 +22,9 @@ from .models import AuditLog, Container, ContainerStatus, utcnow
 
 FLOW = [s.value for s in ContainerStatus]
 TERMINAL = ContainerStatus.ZREALIZOWANY.value
+# po dostawie na magazyn towar fizycznie dotarł; oczekiwanie na rozliczenie to nie „utknięcie” w procesie
+# dostaw (inaczej lista „do sprawdzenia” zapełnia się dostarczonymi kontenerami) — Z-027
+NOT_STUCK = {ContainerStatus.DOSTARCZONY.value, TERMINAL}
 MIN_SAMPLES = 5
 STUCK_LIMIT = 10
 TOP_TRANSITIONS = 8
@@ -86,7 +89,7 @@ def analyze(db: Session, user, days: int = 90, now: datetime.datetime | None = N
     stuck = []
     for cid, (no, status, _created) in containers.items():
         stage = getattr(status, "value", status)
-        if stage in p90:
+        if stage in p90 and stage not in NOT_STUCK:
             in_stage = _days(now - entered[cid])
             if in_stage > p90[stage]:
                 stuck.append({"id": cid, "container_no": no, "status": stage,
