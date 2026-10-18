@@ -57,6 +57,7 @@ Full matrix (what is automated, what stays with a person, and why):
 | [Process](docs/02-proces.md) · [BPMN model](docs/bpmn/timporye-proces.bpmn) | whole process before and after, 5 lanes |
 | [Requirements](docs/05-wymagania.md) · [Decisions](docs/06-decyzje.md) | 28 requirements with tests, 12 decisions with options considered |
 | [Backlog](docs/analiza/HISTORYJKI.md) · [Assumptions](docs/analiza/ZALOZENIA.md) | user stories with acceptance criteria, assumptions awaiting the product owner |
+| [Excel, Power BI, Power Automate](docs/MICROSOFT-365.md) · [n8n in 15 min](docs/WLASNA-AUTOMATYZACJA-15-MIN.md) | Power Query on the queue export, DAX measures, two flows; importable n8n workflow |
 | [Threat model](docs/bezpieczenstwo/THREAT_MODEL.md) · [Risks](docs/bezpieczenstwo/RYZYKA.md) | STRIDE, risk register, GDPR |
 
 ## How the work is run

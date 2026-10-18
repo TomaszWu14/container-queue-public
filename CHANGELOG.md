@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Instrukcje Excel / Power BI / Power Automate** (US-042…044): zapytanie Power Query na eksporcie kolejki
+  (najnowszy plik z folderu SharePoint), miary DAX i układ raportu Power BI, dwa przepływy Power Automate
+  (zdarzenie z aplikacji → Planner/Teams, nowy eksport → odświeżenie raportu) — `docs/MICROSOFT-365.md`.
 - **Poradnik „Własna automatyzacja w n8n w 15 minut”** (US-045): gotowy workflow do importu — zdarzenie z aplikacji
   (podpis HMAC sprawdzony) → dane kontenera tokenem serwisowym → karta w kanale Teams z przyciskiem do aplikacji.
 - **Przycisk „Otwórz w aplikacji” w karcie Teams** (US-041): powiadomienie o kontenerze prowadzi jednym kliknięciem
