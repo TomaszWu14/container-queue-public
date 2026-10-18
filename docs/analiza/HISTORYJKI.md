@@ -537,7 +537,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Jedno powiadomienie na automat na dobę polską; automaty w normie nie wysyłają nic.
   3. Strażnik sam jest w katalogu automatów (widać, czy działa).
 - **[SEC]:** tylko odczyt dziennika zadań; odbiorcy = aktywni admini.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #53.
 
 ### US-054 · [DEV] Tygodniowy raport automatów (druga lista PO, pkt 9)
 - **Rozmiar:** S
