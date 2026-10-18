@@ -22,7 +22,7 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-024 | Minuty pracy ręcznej na efekt automatu (np. faktura 15, alert 5) | **podać własne wartości** — to najsłabszy punkt licznika oszczędności | zostają wartości zespołu | ekran Automatyzacje → „Założenia minut” |
 | Z-025 | Mierniki „przed” jako założenia, oznaczone wprost | tak, do czasu danych PO | dane z okresu przed aplikacją | [MIERNIKI-PRZED-PO](../dla-rekrutera/MIERNIKI-PRZED-PO.md) |
 | Z-026 | Kreator reguł: 4 warunki, sprawdzanie co godzinę, zmienia tylko admin | tak | więcej warunków / zmiany także przez logistykę | [ZALOZENIA](ZALOZENIA.md) |
-| Z-027 | „Dłużej niż zwykle” = powyżej 90. percentyla etapu z 90 dni, dni kalendarzowe | tak | mediana × 2, dni robocze | panel „Przebieg procesu” |
+| Z-027 | „Dłużej niż zwykle” = powyżej 90. percentyla etapu z 90 dni, dni kalendarzowe; kontenery po dostawie na magazyn pomijane | tak | mediana × 2, dni robocze | panel „Przebieg procesu” |
 | Z-028 | Asystent bez modelu AI odpowiada z szablonu po polsku, także po awarii modelu | tak | szablon tylko w demo, wersje EN/PT | [ZALOZENIA](ZALOZENIA.md) |
 | Z-029 | „Symuluj dzień” nic nie zapisuje — pokazuje kroki w oknie | tak (bezpieczniej dla demo) | zapis w „piaskownicy” demo (ADR-0005) | [ZALOZENIA](ZALOZENIA.md) |
 

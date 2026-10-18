@@ -572,7 +572,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. „Symuluj dzień” pokazuje 5 kroków z odczytanym numerem kontenera; strona nie przewija się w bok, przyciski
      mają nazwy.
   4. Przeglądarka po angielsku → demo od razu po angielsku (US-055).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #56.
 
 ## Could
 
