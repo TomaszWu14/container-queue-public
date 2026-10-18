@@ -87,7 +87,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-056 E2E ekranu Automatyzacje w demo | US-032…040, US-055 | `e2e/demo/recruiter.spec.ts` (2 nowe × 2 urządzenia) | #56 | wdrożone |
 | US-057 Lighthouse w CI | — | workflow `lighthouse.yml` (progi w `lighthouse-assert.mjs`) | #58 | wdrożone |
 | US-058 zrzuty w README, realistyczna historia demo | US-038, US-052 | `test_seed_demo_automation.py` (1 nowy), zrzuty z `e2e/demo/recruiter.spec.ts` | #59 | wdrożone |
-| US-059 włącz / wyłącz automat | Z-030 | `test_automation_switch.py` (2), `AutomationsPage.dom.test.tsx` (2) | — | czeka na merge |
+| US-059 włącz / wyłącz automat | Z-030 | `test_automation_switch.py` (2), `AutomationsPage.dom.test.tsx` (2) | #60 | wdrożone |
 | US-060 pomyłki modelu do przeglądu | FR-015 | `test_ai_quality.py` (1), `AiMistakesTable.dom.test.tsx` (2) | — | czeka na merge |
 
 ## Zasady utrzymania

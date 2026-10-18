@@ -609,7 +609,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Automatów chroniących dane i bezpieczeństwo (usuwanie danych kierowców, retencja, osierocone pliki, test kopii,
      strażnik) nie da się wyłączyć — brak przycisku, API → 422. Obiegów z n8n też nie (wyłącza się je w n8n).
 - **[SEC]:** tylko admin; lista chroniona w kodzie (`automation_switch.LOCKED`), nie w ustawieniach.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #60.
 
 ### US-060 · [DEV] Pomyłki modelu do przeglądu (druga lista PO, pkt 8)
 - **Rozmiar:** S
