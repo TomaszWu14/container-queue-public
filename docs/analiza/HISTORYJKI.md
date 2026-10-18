@@ -609,7 +609,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Automatów chroniących dane i bezpieczeństwo (usuwanie danych kierowców, retencja, osierocone pliki, test kopii,
      strażnik) nie da się wyłączyć — brak przycisku, API → 422. Obiegów z n8n też nie (wyłącza się je w n8n).
 - **[SEC]:** tylko admin; lista chroniona w kodzie (`automation_switch.LOCKED`), nie w ustawieniach.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #60.
+
+### US-060 · [DEV] Pomyłki modelu do przeglądu (druga lista PO, pkt 8)
+- **Rozmiar:** S
+- **Jako** kierownik logistyki **chcę** widzieć pozycje faktur, w których człowiek poprawił podpowiedź modelu,
+  **aby** poprawić regułę albo kartotekę tam, gdzie model myli się najczęściej.
+- **Kryteria akceptacji** (testy `test_ai_quality.py`, `AiMistakesTable.dom.test.tsx`)
+  1. Panel „Odczyt faktur” pokazuje listę: kontener (link) i faktura, pozycja, podpowiedź modelu, wybór człowieka,
+     pewność; najpierw pomyłki z pewnością od progu (oznaczone „automat” — tam automat ustawiłby błąd sam).
+  2. Trafienia i pozycje bez decyzji nie trafiają na listę; tylko kontenery w zakresie użytkownika.
+- **[SEC]:** odczyt, `scope_containers`; wpis w `tests/permissions.yaml`.
+- **Stan:** zrealizowane, czeka na merge. Przegląd bez osobnego „odhaczania”: każda poprawka i tak uczy model.
 
 ## Could
 

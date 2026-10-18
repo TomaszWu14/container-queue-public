@@ -82,3 +82,29 @@ def quality(db: Session, user, weeks: int = 8, now: datetime.datetime | None = N
         "buckets": [{"bucket": k, **v, "hit_pct": round(100 * v["hits"] / v["decided"]) if v["decided"] else None}
                     for k, v in buckets.items()],
     }
+
+
+def mistakes(db: Session, user, limit: int = 15) -> list[dict]:
+    """Druga lista PO, pkt 8: pozycje, w których człowiek wybrał inny materiał niż podpowiedź modelu —
+    najnowsze, najpierw te z najwyższą pewnością (najgroźniejsze: przy ≥ progu automat ustawiłby je sam).
+    Te same pozycje uczą model (RefModel bierze historię zatwierdzeń), lista służy do przeglądu reguł."""
+    from .deps import scope_containers
+    visible = scope_containers(select(Container.id), user)
+    rows = db.execute(
+        select(Container.id, Container.container_no, InvoiceJob.invoice_number, InvoiceJob.created_at,
+               InvoiceItem.line_no, InvoiceItem.raw_ref, InvoiceItem.descr, InvoiceItem.ml_suggestion,
+               InvoiceItem.master_ref, InvoiceItem.ml_confidence)
+        .join(InvoiceJob, InvoiceJob.id == InvoiceItem.job_id)
+        .join(InvoiceBatch, InvoiceBatch.id == InvoiceJob.batch_id)
+        .join(Container, Container.id == InvoiceBatch.container_id)
+        .where(InvoiceBatch.container_id.in_(visible), InvoiceItem.skipped.is_(False),
+               InvoiceItem.match_status == InvoiceMatchStatus.matched, InvoiceItem.ml_suggestion != "",
+               InvoiceItem.master_ref != InvoiceItem.ml_suggestion, InvoiceItem.ml_confidence.is_not(None))
+        .order_by(InvoiceJob.created_at.desc(), InvoiceItem.ml_confidence.desc())
+        .limit(limit)).all()
+    threshold = float(settings.ml_auto_apply_threshold)
+    out = [{"container_id": cid, "container_no": no, "invoice_number": inv, "at": at.isoformat(),
+            "line_no": line, "raw_ref": raw, "descr": descr, "suggestion": sugg, "chosen": chosen,
+            "confidence": round(float(conf or 0), 2), "auto": float(conf or 0) >= threshold}
+           for cid, no, inv, at, line, raw, descr, sugg, chosen, conf in rows]
+    return sorted(out, key=lambda m: (-m["auto"], -m["confidence"]))
