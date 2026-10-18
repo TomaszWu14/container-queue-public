@@ -583,7 +583,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      poniżej progu — czerwone CI. Tabela wyników w podsumowaniu joba, raport HTML w artefaktach, odznaka w README.
   3. Poprawki znalezione pomiarem: przyciski języka w stopce logowania ≥ 28 px (dotyk), opis strony, ikona,
      `robots.txt` (bez indeksowania `/api/`).
-- **Stan:** zrealizowane, czeka na merge. Pomiar lokalny: szybkość 88, dostępność 100, dobre praktyki 96, SEO 100.
+- **Stan:** wdrożone w PR #58. Pomiar lokalny: szybkość 88, dostępność 100, dobre praktyki 96, SEO 100.
 
 ### US-058 · [DEV] Nowe zrzuty w README i realistyczna historia demo (druga lista PO, pkt 1)
 - **Rozmiar:** S
