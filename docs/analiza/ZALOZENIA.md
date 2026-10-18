@@ -4,6 +4,8 @@ Rejestr założeń [BA]. Każde założenie przyjęto, bo Product Owner nie odpo
 (`docs/AUDYT.md` §7) i polecił kontynuować. Założenie obowiązuje do czasu potwierdzenia albo odrzucenia
 przez PO; odrzucone założenie = zmiana w dokumentach, które się na nie powołują (kolumna „Dotyka”).
 
+Skrót wszystkich otwartych decyzji z rekomendacją zespołu: [`DECYZJE-DO-PODJECIA.md`](DECYZJE-DO-PODJECIA.md).
+
 Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w zamian).
 
 | ID | Założenie | Pytanie | Status | Skutek, jeśli błędne | Dotyka |
