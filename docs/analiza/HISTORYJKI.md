@@ -440,7 +440,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      materiał tylko dla ról z kartoteką); klik wysyła pytanie.
 - **[SEC]:** szablon używa tylko faktów już przefiltrowanych (`scope_containers`, `hidden_fields`); przykłady przez
   `scope_containers`; nowa trasa `GET /api/assistant/examples` w `tests/permissions.yaml`. Z-028.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #45.
 
 ### US-040 · [BA][DEV] „Symuluj dzień” w demo (pomysł 6)
 - **Rozmiar:** M · Jeden przycisk puszcza na fikcyjnych danych napływ maila, odczyt dokumentu i alert; wynik
@@ -480,6 +480,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 
 ### US-051 · [DEV] Nagranie obiegu z poczty (pomysł 5)
 - **Rozmiar:** S · Wideo z testu przeglądarkowego: mail → n8n → poczekalnia → „Potwierdź”.
+
+### US-052 · [DEV] Demo z danymi na ekranie „Automatyzacje” (top 15 PO, pkt 1)
+- **Rozmiar:** S
+- **Jako** rekruter w demo **chcę** zobaczyć działające automaty, reguły i jakość odczytu faktur, **aby** nie trafić
+  na pusty ekran („Brak faktur”, brak reguł, automaty „bez przebiegów”).
+- **Kryteria akceptacji** (test `backend/tests/test_seed_demo_automation.py`)
+  1. Dziennik zadań z 7 dni: każdy włączony automat ma przebiegi i stan „działa”, część z efektem; jedna dawna awaria
+     śledzenia (licznik błędów 1, stan dalej „działa”); zdarzenia do n8n.
+  2. 3 przykładowe reguły z kreatora (US-036).
+  3. Faktury z 8 tygodni: reguły / model ML / człowiek / do decyzji, trafność rośnie z pewnością modelu.
+- **[SEC]:** tylko skrypt `seed_demo` (instancja demo, osłony `check_guards`); dane zmyślone, pliki PDF pokazowe.
+- **Stan:** zrealizowane, czeka na merge.
 
 ## Could
 

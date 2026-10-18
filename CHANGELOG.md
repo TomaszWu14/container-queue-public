@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Demo: ekran Automatyzacje z danymi** (US-052): po starcie demo automaty mają historię przebiegów z ostatniego
+  tygodnia (z efektami i jedną dawną awarią), są 3 przykładowe reguły i faktury z 8 tygodni dla panelu jakości
+  odczytu AI — żaden panel nie jest pusty.
 - **Asystent odpowiada także bez modelu AI** (US-039): na serwerze bez modelu (np. demo) asystent składa odpowiedź
   z danych według szablonu, wyraźnie to oznacza i podpowiada przykładowe pytania z kontenerów widocznych dla
   użytkownika — klik i jest odpowiedź.
