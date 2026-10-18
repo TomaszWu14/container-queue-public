@@ -120,3 +120,23 @@ def invoices(db, containers: list[Container], author_id: int, now: dt.datetime) 
                                ml_confidence=round(rnd.uniform(*conf), 2) if conf else None))
             items += 1
     return items
+
+
+def rework(db, containers: list[Container], author_id: int, limit: int = 4) -> int:
+    """Kilka cofnięć statusu (odprawa → port → odprawa, np. brak dokumentu u agencji) — analiza przebiegu
+    procesu i wykres przepływu pokazują poprawki w procesie, jak w prawdziwych danych."""
+    from app.models import AuditLog
+    db.flush()
+    picked = [c for c in containers if c.status in (S.AWIZOWANY, S.W_DOSTAWIE)][::7][:limit]
+    for c in picked:
+        rows = (db.query(AuditLog).filter_by(entity_type="containers", entity_id=c.id, field="status")
+                .order_by(AuditLog.created_at).all())
+        at = next((i for i, r in enumerate(rows) if r.new_value == S.ODPRAWA.value), None)
+        if at is None or at + 1 >= len(rows):
+            continue
+        t1, t2 = rows[at].created_at, rows[at + 1].created_at
+        for k, (old, new) in enumerate(((S.ODPRAWA, S.W_PORCIE), (S.W_PORCIE, S.ODPRAWA)), start=1):
+            db.add(AuditLog(entity_type="containers", entity_id=c.id, field="status", old_value=old.value,
+                            new_value=new.value, user_id=author_id, created_at=t1 + (t2 - t1) * k / 3,
+                            note="Agencja: brak świadectwa pochodzenia — powrót do portu, uzupełnione"))
+    return len(picked)

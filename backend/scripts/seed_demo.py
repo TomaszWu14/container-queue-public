@@ -140,6 +140,7 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     automation.job_runs(db, now)
     automation.rules(db)
     automation.invoices(db, containers, author.id, now)
+    automation.rework(db, containers, author.id)
     db.commit()
     count = db.query(Container).count()
     db.close()
