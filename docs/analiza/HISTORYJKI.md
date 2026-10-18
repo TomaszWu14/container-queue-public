@@ -482,6 +482,8 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 
 ### US-045 · [BA] Poradnik „Własna automatyzacja w 15 minut” (pomysł 13)
 - **Rozmiar:** S · n8n + token serwisowy, krok po kroku, z gotowym workflow do zaimportowania.
+- **Stan:** zrealizowane, czeka na merge — `docs/WLASNA-AUTOMATYZACJA-15-MIN.md`, `deploy/n8n/zdarzenie-do-teams.json`
+  (test `backend/tests/test_n8n_workflows.py`: połączenia między node'ami, podpis HMAC przed akcją).
 
 ### US-046 · [BA] Mapa procesu „przed i po” (pomysł 2)
 - **Rozmiar:** S · Rysunek z `docs/bpmn/timporye-proces.bpmn`, kroki przejęte przez automaty zaznaczone.

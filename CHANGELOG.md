@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Poradnik „Własna automatyzacja w n8n w 15 minut”** (US-045): gotowy workflow do importu — zdarzenie z aplikacji
+  (podpis HMAC sprawdzony) → dane kontenera tokenem serwisowym → karta w kanale Teams z przyciskiem do aplikacji.
 - **Przycisk „Otwórz w aplikacji” w karcie Teams** (US-041): powiadomienie o kontenerze prowadzi jednym kliknięciem
   do jego karty; decyzja zostaje w aplikacji, po zalogowaniu.
 - **Dokumenty dla rekrutera i README po angielsku** (US-046…050): studium przypadku, macierz automatyzacji (co

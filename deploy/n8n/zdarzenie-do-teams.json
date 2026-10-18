@@ -1,0 +1,184 @@
+{
+  "name": "TIMPORYE — kara za przestój i braki dokumentów → kanał Teams (poradnik 15 min)",
+  "nodes": [
+    {
+      "id": "b1",
+      "name": "Zdarzenie z TIMPORYE",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "timporye-zdarzenia",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "timporye-zdarzenia",
+        "responseMode": "onReceived",
+        "options": {
+          "rawBody": true
+        }
+      }
+    },
+    {
+      "id": "b2",
+      "name": "Sprawdź podpis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Krok 2: podpis HMAC — odrzuć żądanie, które nie przyszło z TIMPORYE (docs/ZDARZENIA-N8N.md)\nconst crypto = require('crypto');\nconst secret = $env.TIMPORYE_WEBHOOK_SECRET;            // ten sam co AUTOMATION_WEBHOOK_SECRET w aplikacji\nconst body = Buffer.from($input.first().binary.data.data, 'base64');\nconst expected = Buffer.from('sha256=' + crypto.createHmac('sha256', secret).update(body).digest('hex'));\nconst got = Buffer.from($input.first().json.headers['x-timporye-signature'] || '');\nif (got.length !== expected.length || !crypto.timingSafeEqual(expected, got)) {\n  throw new Error('Zły podpis — żądanie nie pochodzi z TIMPORYE');\n}\nreturn [{ json: JSON.parse(body.toString('utf8')) }];"
+      }
+    },
+    {
+      "id": "b3",
+      "name": "Tylko kara i braki dokumentów",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ ['demurrage', 'docs-missing'].includes($json.event) && !!$json.container_id }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "b4",
+      "name": "Pobierz kontener",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        -80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "TIMPORYE token"
+        }
+      },
+      "parameters": {
+        "url": "=http://gateway/api/containers/{{ $json.container_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      }
+    },
+    {
+      "id": "b5",
+      "name": "Złóż kartę Teams",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -80
+      ],
+      "parameters": {
+        "jsCode": "// Krok 5: karta do kanału Teams (Workflows „Post to a channel when a webhook request is received”)\nconst e = $('Sprawdź podpis').first().json;\nconst c = $input.first().json;\nconst panel = $env.TIMPORYE_PANEL_URL;                   // np. https://container.queue.twapp.pl\nreturn [{ json: {\n  type: 'message',\n  attachments: [{\n    contentType: 'application/vnd.microsoft.card.adaptive',\n    content: {\n      $schema: 'http://adaptivecards.io/schemas/adaptive-card.json', type: 'AdaptiveCard', version: '1.4',\n      body: [\n        { type: 'TextBlock', text: e.title, weight: 'Bolder', wrap: true },\n        { type: 'FactSet', facts: [\n          { title: 'Statek', value: c.vessel || '—' },\n          { title: 'ETA', value: c.eta || '—' },\n          { title: 'Magazyn', value: c.warehouse_name || '—' },\n        ] },\n      ],\n      actions: [{ type: 'Action.OpenUrl', title: 'Otwórz w aplikacji', url: `${panel}/kontenery/${e.container_id}` }],\n    },\n  }],\n} }];"
+      }
+    },
+    {
+      "id": "b6",
+      "name": "Wyślij do kanału Teams",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        -80
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.TEAMS_WORKFLOW_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Zdarzenie z TIMPORYE": {
+      "main": [
+        [
+          {
+            "node": "Sprawdź podpis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sprawdź podpis": {
+      "main": [
+        [
+          {
+            "node": "Tylko kara i braki dokumentów",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tylko kara i braki dokumentów": {
+      "main": [
+        [
+          {
+            "node": "Pobierz kontener",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Pobierz kontener": {
+      "main": [
+        [
+          {
+            "node": "Złóż kartę Teams",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Złóż kartę Teams": {
+      "main": [
+        [
+          {
+            "node": "Wyślij do kanału Teams",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

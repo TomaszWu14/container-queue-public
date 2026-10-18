@@ -63,6 +63,7 @@ Rozbieżności z kodem są wypisane w [07](07-ograniczenia.md#dokumentacja-niezg
 [JEDNA-INSTANCJA.md](JEDNA-INSTANCJA.md),
 [N8N.md](N8N.md),
 [ZDARZENIA-N8N.md](ZDARZENIA-N8N.md),
+[WLASNA-AUTOMATYZACJA-15-MIN.md](WLASNA-AUTOMATYZACJA-15-MIN.md),
 [CLAUDE-GITHUB.md](CLAUDE-GITHUB.md),
 [testy/](testy/E2E.md).
 
