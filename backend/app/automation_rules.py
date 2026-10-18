@@ -6,8 +6,9 @@ Warunki to zamknięty katalog (`CONDITIONS`) z parametrami: dni i ewentualnie st
 żadnego wolnego tekstu wykonywanego jako kod, żadnych pól wybieranych z bazy po nazwie.
 
 Pętla tła `automation_rules` (co godzinę) sprawdza włączone reguły na otwartych kontenerach
-i wysyła powiadomienie (dzwonek, e-mail, Teams, n8n — jak pozostałe alerty) obserwującym
-kontener albo adminom; jedno powiadomienie na regułę, kontener i dzień.
+i wysyła powiadomienie obserwującym kontener albo adminom; jedno na regułę, kontener i dzień.
+Kanały wybiera reguła (`channels`, US-063): dzwonek, e-mail, karta w Teams, zdarzenie do n8n —
+domyślnie wszystkie, jak pozostałe alerty; matryca kanałów per rola nadal obowiązuje.
 """
 from __future__ import annotations
 
@@ -33,6 +34,8 @@ Condition = Literal["eta_passed", "notify_soon_status", "no_driver", "plan_uncon
 CONDITIONS: tuple[str, ...] = ("eta_passed", "notify_soon_status", "no_driver", "plan_unconfirmed")
 FLOW = list(ContainerStatus)
 DONE = (ContainerStatus.DOSTARCZONY, ContainerStatus.ZREALIZOWANY)
+Channel = Literal["bell", "email", "teams", "n8n"]
+CHANNELS: tuple[Channel, ...] = ("bell", "email", "teams", "n8n")
 
 
 class Rule(BaseModel):
@@ -43,6 +46,7 @@ class Rule(BaseModel):
     days: int = Field(ge=0, le=60)
     status: ContainerStatus | None = None     # tylko notify_soon_status: „wciąż przed tym etapem”
     notify: Literal["watchers", "admins"] = "watchers"
+    channels: list[Channel] = Field(default_factory=lambda: list(CHANNELS))
 
     @field_validator("name")
     @classmethod
@@ -51,6 +55,13 @@ class Rule(BaseModel):
         if not v:
             raise ValueError("nazwa nie może być pusta")
         return v
+
+    @field_validator("channels")
+    @classmethod
+    def _channels(cls, v: list[Channel]) -> list[Channel]:
+        if not v:
+            raise ValueError("wybierz co najmniej jeden kanał")
+        return [c for c in CHANNELS if c in v]          # bez powtórzeń, stała kolejność
 
     @model_validator(mode="after")
     def _status_needed(self) -> Rule:
@@ -139,6 +150,7 @@ def run_rules(db: Session, today: datetime.date | None = None) -> int:
                 users = admins
             else:
                 users = container_watchers(db, container)
-            sent += notify(db, users, kind=NOTIFY_KIND, title=text, container_id=container.id)
+            sent += notify(db, users, kind=NOTIFY_KIND, title=text, container_id=container.id,
+                           channels=rule.channels)
     db.commit()
     return sent

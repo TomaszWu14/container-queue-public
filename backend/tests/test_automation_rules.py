@@ -131,3 +131,30 @@ def test_broken_setting_does_not_stop_other_rules():
                                  '[{"name": "ok", "condition": "no_driver", "days": 1}, {"name": "zły"}]')
         db.commit()
         assert [r.name for r in R.load(db)] == ["ok"]
+
+
+def test_rule_channels_choose_where_alert_goes(client, admin_headers, monkeypatch):
+    """US-063: reguła wybiera kanały — tu tylko zdarzenie do n8n: bez e-maila i Teams, rekord przeczytany
+    (ślad dla deduplikacji); pusty wybór kanałów odrzucony."""
+    from app import notifications
+    sent: list[str] = []
+    monkeypatch.setattr(notifications, "_send_email", lambda r, *a: sent.append("email") if r else None)
+    monkeypatch.setattr(notifications, "_send_teams", lambda *a: sent.append("teams"))
+    monkeypatch.setattr(notifications, "send_automation_event", lambda *a, **k: sent.append("n8n"))
+    a, _ = _companies()
+    cid = _container("RULU3000002", a, status=S.AWIZOWANY, notify_date=TODAY + dt.timedelta(days=1))
+    with SessionLocal() as db:
+        db.query(User).filter_by(login="admin").update({"email": "admin@example.com"})
+        db.commit()
+    r = client.put("/api/automations/rules", headers=admin_headers, json={"rules": [
+        _rule(name="Tylko n8n", notify="admins", channels=["n8n", "n8n"])]})
+    assert r.status_code == 200 and r.json()["rules"][0]["channels"] == ["n8n"]
+    assert r.json()["channels"] == ["bell", "email", "teams", "n8n"]
+    with SessionLocal() as db:
+        assert R.run_rules(db, today=TODAY) > 0
+        rows = db.query(Notification).filter_by(container_id=cid, kind="rule").all()
+        assert rows and all(n.is_read for n in rows)
+    assert sent == ["n8n"]
+    assert R.Rule.model_validate(_rule()).channels == ["bell", "email", "teams", "n8n"]   # domyślnie wszystkie
+    r = client.put("/api/automations/rules", headers=admin_headers, json={"rules": [_rule(channels=[])]})
+    assert r.status_code == 422

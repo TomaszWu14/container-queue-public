@@ -3,7 +3,8 @@ import { defineFeature } from '../feature'
 // Kreator reguł bez kodu (US-036): „gdy warunek → powiadom”, z podglądem na dzisiejszych danych.
 export default defineFeature({
   pl: {
-    ruleTitle: 'Reguły bez kodu', ruleIntro: 'Własne alerty: wybierz warunek i liczbę dni — automat sprawdza reguły co godzinę i powiadamia raz dziennie na kontener (dzwonek, e-mail, Teams, n8n).',
+    ruleChannels: 'Kanały', ruleChannel_bell: 'dzwonek', ruleChannel_email: 'e-mail', ruleChannel_teams: 'Teams', ruleChannel_n8n: 'n8n',
+    ruleTitle: 'Reguły bez kodu', ruleIntro: 'Własne alerty: wybierz warunek i liczbę dni — automat sprawdza reguły co godzinę i powiadamia raz dziennie na kontener wybranymi kanałami.',
     ruleEmpty: 'Brak reguł.', ruleAdd: 'Dodaj regułę', ruleSave: 'Zapisz reguły', ruleSaved: 'Reguły zapisane.',
     ruleName: 'Nazwa', ruleCondition: 'Warunek', ruleDays: 'Dni', ruleStatus: 'Etap', ruleNotify: 'Powiadom',
     ruleEnabled: 'Włączona', ruleDelete: 'Usuń', rulePreview: 'Podgląd',
@@ -16,7 +17,8 @@ export default defineFeature({
     ruleCond_plan_unconfirmed: 'Plan wysłany do spedycji co najmniej {n} dni temu i nadal niepotwierdzony',
   },
   en: {
-    ruleTitle: 'No-code rules', ruleIntro: 'Your own alerts: pick a condition and a number of days — the automation checks rules every hour and notifies once a day per container (bell, e-mail, Teams, n8n).',
+    ruleChannels: 'Channels', ruleChannel_bell: 'bell', ruleChannel_email: 'e-mail', ruleChannel_teams: 'Teams', ruleChannel_n8n: 'n8n',
+    ruleTitle: 'No-code rules', ruleIntro: 'Your own alerts: pick a condition and a number of days — the automation checks rules every hour and notifies once a day per container through the chosen channels.',
     ruleEmpty: 'No rules.', ruleAdd: 'Add a rule', ruleSave: 'Save rules', ruleSaved: 'Rules saved.',
     ruleName: 'Name', ruleCondition: 'Condition', ruleDays: 'Days', ruleStatus: 'Stage', ruleNotify: 'Notify',
     ruleEnabled: 'Enabled', ruleDelete: 'Delete', rulePreview: 'Preview',
@@ -29,7 +31,8 @@ export default defineFeature({
     ruleCond_plan_unconfirmed: 'Plan sent to the forwarder at least {n} days ago and still unconfirmed',
   },
   pt: {
-    ruleTitle: 'Regras sem código', ruleIntro: 'Alertas próprios: escolha uma condição e um número de dias — a automatização verifica as regras de hora a hora e notifica uma vez por dia por contentor (sino, e-mail, Teams, n8n).',
+    ruleChannels: 'Canais', ruleChannel_bell: 'sino', ruleChannel_email: 'e-mail', ruleChannel_teams: 'Teams', ruleChannel_n8n: 'n8n',
+    ruleTitle: 'Regras sem código', ruleIntro: 'Alertas próprios: escolha uma condição e um número de dias — a automatização verifica as regras de hora a hora e notifica uma vez por dia por contentor pelos canais escolhidos.',
     ruleEmpty: 'Sem regras.', ruleAdd: 'Adicionar regra', ruleSave: 'Guardar regras', ruleSaved: 'Regras guardadas.',
     ruleName: 'Nome', ruleCondition: 'Condição', ruleDays: 'Dias', ruleStatus: 'Etapa', ruleNotify: 'Notificar',
     ruleEnabled: 'Ativa', ruleDelete: 'Eliminar', rulePreview: 'Pré-visualizar',

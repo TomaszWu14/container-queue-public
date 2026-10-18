@@ -48,6 +48,22 @@ describe('kreator reguł', () => {
     expect(sent[1]).toMatchObject({ name: 'Za wolno do awizacji', condition: 'notify_soon_status', days: 4, status: 'ODPRAWA' })
   })
 
+  it('kanały reguły: wybór, ostatni kanał zostaje, zapis (US-063)', async () => {
+    get.mockResolvedValue({ ...response([existing]), channels: ['bell', 'email', 'teams', 'n8n'] })
+    put.mockImplementation((_url: string, body: { rules: AutomationRule[] }) => Promise.resolve(response(body.rules)))
+    render(<AutomationRulesPanel canEdit />)
+    const rule = within(await screen.findByTestId('auto-rule'))
+    expect(rule.getByText(/\(dzwonek, e-mail, Teams, n8n\)/)).toBeTruthy()      // stara reguła = wszystkie kanały
+    for (const name of ['dzwonek', 'e-mail', 'Teams']) fireEvent.click(rule.getByLabelText(name))
+    const n8n = rule.getByLabelText('n8n') as HTMLInputElement
+    expect(n8n.checked && n8n.disabled).toBe(true)
+    expect(rule.getByText(/\(n8n\)/)).toBeTruthy()
+    fireEvent.click(rule.getByLabelText('Teams'))
+    fireEvent.click(screen.getByRole('button', { name: 'Zapisz reguły' }))
+    expect(await screen.findByText('Reguły zapisane.')).toBeTruthy()
+    expect(put.mock.calls[0][1].rules[0].channels).toEqual(['teams', 'n8n'])
+  })
+
   it('odmowa zapisu widoczna; usunięcie reguły', async () => {
     get.mockResolvedValue(response([existing]))
     put.mockRejectedValue(new Error('najwyżej 20 reguł'))

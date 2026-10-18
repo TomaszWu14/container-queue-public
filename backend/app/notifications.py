@@ -7,6 +7,7 @@ import atexit
 import datetime
 import logging
 import smtplib
+from collections.abc import Collection
 from concurrent.futures import ThreadPoolExecutor
 from email import encoders
 from email.message import Message as MIMEMessage
@@ -271,7 +272,8 @@ def send_automation_event(kind: str, title: str, body: str = "", **fields) -> No
 
 def notify(db: Session, users: list[User], *, kind: str, title: str, body: str = "",
            container_id: int | None = None, exclude_user_id: int | None = None,
-           ignore_watch_only: bool = False, broadcast: bool = True) -> int:
+           ignore_watch_only: bool = False, broadcast: bool = True,
+           channels: Collection[str] | None = None) -> int:
     """Tworzy powiadomienia in-app i wysyła kanały zewnętrzne (po commicie sesji, rollback
     = brak wysyłki). Zwraca liczbę odbiorców.
 
@@ -279,11 +281,13 @@ def notify(db: Session, users: list[User], *, kind: str, title: str, body: str =
     Dzwonek wyłączony, e-mail włączony → rekord Notification powstaje jako
     przeczytany (bez badge'a), żeby deduplikacja alertów dziennych nie pękła.
     ignore_watch_only=True (np. @wzmianka) pomija filtr „tylko obserwowane".
-    broadcast=False: bez Teams/n8n (wariant per user tego samego zdarzenia — kanał wspólny raz)."""
+    broadcast=False: bez Teams/n8n (wariant per user tego samego zdarzenia — kanał wspólny raz).
+    channels: tylko te kanały (reguła z kreatora, US-063); rekord bez dzwonka i e-maila powstaje
+    jako przeczytany — ślad dla deduplikacji, gdy reguła wysyła tylko do Teams / n8n."""
     rules = kind_rules(db, kind)
 
     def enabled(role: str, channel: str) -> bool:
-        return rules.get((role, channel), True)
+        return rules.get((role, channel), True) and (channels is None or channel in channels)
 
     recipients = [u for u in users
                   if u.is_active and u.id != exclude_user_id]
@@ -308,7 +312,7 @@ def notify(db: Session, users: list[User], *, kind: str, title: str, body: str =
         seen.add(user.id)
         bell = enabled(user.role.value, "bell")
         mail = bool(user.email) and enabled(user.role.value, "email")
-        if not bell and not mail:
+        if not bell and not mail and channels is None:
             continue  # oba kanały wyłączone dla tej roli — pomijamy odbiorcę
         db.add(Notification(user_id=user.id, kind=kind, title=title, body=body,
                             container_id=container_id, is_read=not bell))
@@ -321,8 +325,9 @@ def notify(db: Session, users: list[User], *, kind: str, title: str, body: str =
         if enabled("*", "teams"):
             link = container_link(container_id)
             _after_commit(db, lambda: _send_teams(title, body, link))
-        _after_commit(db, lambda: send_automation_event(
-            kind, title, body, container_id=container_id, recipients=count))
+        if channels is None or "n8n" in channels:
+            _after_commit(db, lambda: send_automation_event(
+                kind, title, body, container_id=container_id, recipients=count))
     return count
 
 

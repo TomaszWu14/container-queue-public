@@ -5,15 +5,19 @@ import { api, errorMessage } from '../api'
 import { useT } from '../i18n'
 
 type Condition = 'eta_passed' | 'notify_soon_status' | 'no_driver' | 'plan_unconfirmed'
+export type RuleChannel = 'bell' | 'email' | 'teams' | 'n8n'
+const ALL_CHANNELS: RuleChannel[] = ['bell', 'email', 'teams', 'n8n']
 export interface AutomationRule {
   id: string; name: string; enabled: boolean; condition: Condition; days: number
-  status: string | null; notify: 'watchers' | 'admins'
+  status: string | null; notify: 'watchers' | 'admins'; channels?: RuleChannel[]
 }
-interface RulesResponse { rules: AutomationRule[]; conditions: Condition[]; statuses: string[]; max_rules: number }
+interface RulesResponse {
+  rules: AutomationRule[]; conditions: Condition[]; statuses: string[]; max_rules: number; channels?: RuleChannel[]
+}
 interface Preview { count: number; sample: { id: number; container_no: string }[] }
 
 const NEW_RULE: AutomationRule = {
-  id: '', name: '', enabled: true, condition: 'no_driver', days: 2, status: null, notify: 'watchers',
+  id: '', name: '', enabled: true, condition: 'no_driver', days: 2, status: null, notify: 'watchers', channels: ALL_CHANNELS,
 }
 
 export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) {
@@ -34,6 +38,12 @@ export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) 
     Object.entries(vars).reduce((s, [k, v]) => s.replace(`{${k}}`, String(v)), t(key))
   const describe = (r: AutomationRule) =>
     fill(`ruleCond_${r.condition}`, { n: r.days, s: r.status ? t(`st_${r.status}`) : '…' })
+  const channelsOf = (r: AutomationRule) => r.channels ?? ALL_CHANNELS
+  const toggleChannel = (i: number, c: RuleChannel, on: boolean) => {
+    const now = channelsOf(rules[i])
+    const next = (data.channels ?? ALL_CHANNELS).filter(x => (x === c ? on : now.includes(x)))
+    if (next.length) update(i, { channels: next })
+  }
   const update = (i: number, patch: Partial<AutomationRule>) => {
     setRules(rs => rs.map((r, j) => {
       if (j !== i) return r
@@ -104,6 +114,18 @@ export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) 
                       <option value="watchers">{t('ruleNotify_watchers')}</option>
                       <option value="admins">{t('ruleNotify_admins')}</option>
                     </select></label>
+                  <fieldset className="auto-rule-channels">
+                    <legend>{t('ruleChannels')}</legend>
+                    {(data.channels ?? ALL_CHANNELS).map(c => {
+                      const on = channelsOf(r).includes(c)
+                      return (
+                        <label key={c} className="row" style={{ gap: 4 }}>
+                          <input type="checkbox" checked={on} disabled={on && channelsOf(r).length === 1}
+                                 onChange={e => toggleChannel(i, c, e.target.checked)} />
+                          {t(`ruleChannel_${c}`)}</label>
+                      )
+                    })}
+                  </fieldset>
                   <label className="row" style={{ gap: 6 }}>
                     <input type="checkbox" checked={r.enabled} onChange={e => update(i, { enabled: e.target.checked })} />
                     {t('ruleEnabled')}</label>
@@ -114,7 +136,8 @@ export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) 
                 <b>{r.name}{r.enabled ? '' : ` (${t('autoStatus_off')})`}</b>
               )}
               <div className="row" style={{ gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-                <span className="muted">{describe(r)} → {t(`ruleNotify_${r.notify}`)}</span>
+                <span className="muted">{describe(r)} → {t(`ruleNotify_${r.notify}`)}
+                  {' '}({channelsOf(r).map(c => t(`ruleChannel_${c}`)).join(', ')})</span>
                 <button type="button" className="btn secondary small" onClick={() => preview(i)}>{t('rulePreview')}</button>
                 {typeof p === 'string' && <span className="error">{p}</span>}
                 {p && typeof p !== 'string' && (
