@@ -632,7 +632,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Dostępny opis bez wykresu (opis obrazka z liczbami) i lista „Najczęstsze przejścia” jako widok tabelaryczny;
      podpowiedź po najechaniu; na telefonie wykres przewija się w swoim polu, strona nie.
   3. API zwraca wszystkie przejścia; demo ma kilka realistycznych cofnięć (odprawa → port → odprawa).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #62.
 
 ### US-062 · [DEV] Co jeśli statek się spóźni (druga lista PO, pkt 10)
 - **Rozmiar:** S
