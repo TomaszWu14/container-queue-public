@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Język startowy z przeglądarki** (US-055): przy pierwszej wizycie aplikacja wybiera polski, angielski albo
+  portugalski wg przeglądarki; inny język przeglądarki → angielski. Zapamiętany wybór wygrywa.
 - **Tygodniowy raport automatów** (US-054): w poniedziałek o 8:00 admin i logistyka dostają podsumowanie —
   zaoszczędzone godziny, przebiegi, automaty wymagające uwagi i najlepsze automaty tygodnia.
 - **Strażnik automatów** (US-053): automat, który przestał działać po cichu (brak udanego przebiegu dłużej niż

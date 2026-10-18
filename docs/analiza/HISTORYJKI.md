@@ -552,6 +552,16 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   wspólnych (Teams/n8n), żeby liczby jednej spółki nie trafiły do innych.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-055 · [DEV] Język startowy z przeglądarki (druga lista PO, pkt 2)
+- **Rozmiar:** XS
+- **Jako** rekruter z zagranicy **chcę** zobaczyć aplikację od razu po angielsku, **aby** nie szukać przełącznika języka.
+- **Kryteria akceptacji** (test `frontend/src/i18n.detect.test.ts`)
+  1. Pierwsza wizyta: pierwszy obsługiwany język przeglądarki (pl / en / pt, także z regionem, np. `pt-BR`).
+  2. Żaden obsługiwany → angielski. Zapamiętany wybór użytkownika zawsze wygrywa.
+  3. Testy (vitest, Playwright) ustawiają polską przeglądarkę — sprawdzają polskie teksty jak dotąd.
+- **[SEC]:** bez zmian (tylko wybór słownika w przeglądarce).
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

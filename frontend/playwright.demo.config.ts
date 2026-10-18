@@ -18,6 +18,7 @@ export default defineConfig({
   reporter: process.env.CI ? [['list'], ['html', { open: 'never', outputFolder: 'playwright-report-demo' }]] : 'list',
   outputDir: 'test-results-demo',
   use: {
+    locale: 'pl-PL',   // testy czytają polskie teksty; język startowy zależy od przeglądarki (detectLang)
     baseURL: `http://localhost:${WEB_PORT}`, video: 'on', trace: 'retain-on-failure',
     // PW_CHROMIUM: przeglądarka spoza Playwrighta (np. inna wersja w kontenerze); puste = wbudowana
     // PW_SLOWMO (ms): wolniejsze klikanie do nagrania filmu do README (scripts/record_demo_video.sh)

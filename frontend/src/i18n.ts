@@ -13,6 +13,17 @@ export const LANGS: Lang[] = ['pl', 'en', 'pt']
 const LOCALES: Record<string, string> = { pl: 'pl-PL', en: 'en-GB', pt: 'pt-PT' }
 export const localeFor = (lang: string) => LOCALES[lang] ?? 'pl-PL'
 
+// język na start: zapamiętany wybór > pierwszy obsługiwany język przeglądarki > angielski
+// (gość z zagranicy — np. rekruter — od razu widzi EN; przeglądarka PL/PT — swój język)
+export function detectLang(stored: string | null, browser: readonly string[]): Lang {
+  if (stored && (LANGS as string[]).includes(stored)) return stored as Lang
+  for (const tag of browser) {
+    const base = tag.toLowerCase().split('-')[0]
+    if ((LANGS as string[]).includes(base)) return base as Lang
+  }
+  return 'en'
+}
+
 type Dict = Record<string, string>
 
 // pl jest źródłem prawdy: TKey = jego klucze; en/pt muszą mieć ten sam kształt
