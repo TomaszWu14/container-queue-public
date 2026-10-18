@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 import httpx
 
+from .. import what_if
 from .. import ai_quality, automation_catalog, automation_switch, automation_events, automation_savings, demo_simulation, process_mining
 from ..config import settings
 from ..audit import record
@@ -47,6 +48,15 @@ def simulate_day(db: Session = Depends(get_db), user: User = editors) -> dict:
     """US-040: „Symuluj dzień” — prawdziwe funkcje automatów na danych użytkownika, BEZ zapisu
     (GET; konto demo pozostaje tylko do odczytu)."""
     return demo_simulation.simulate(db, user)
+
+
+@router.get("/automations/what-if")
+def what_if_delay(vessel: str = Query("", max_length=120), delay: int = Query(3, ge=1, le=what_if.MAX_DELAY),
+                  db: Session = Depends(get_db), user: User = editors) -> dict:
+    """Druga lista PO, pkt 10: „co jeśli statek spóźni się N dni” — bez zapisu. Bez statku: lista statków."""
+    if not vessel:
+        return {"vessels": what_if.vessels(db, user)}
+    return what_if.simulate(db, user, vessel, delay)
 
 
 @router.get("/automations/process")
