@@ -1,0 +1,47 @@
+import { defineFeature } from '../feature'
+
+// „Symuluj dzień” (US-040): obieg automatów krok po kroku na danych demo, bez zapisu.
+export default defineFeature({
+  pl: {
+    simTitle: 'Symuluj dzień', simRun: 'Uruchom symulację', simRunning: 'Liczę…',
+    simIntro: 'Jedno kliknięcie przechodzi obieg automatów na danych demo: mail od spedytora, odczyt numeru kontenera, faktura, reguły, zdarzenie do n8n i zaoszczędzony czas. Każdy krok to prawdziwa funkcja aplikacji.',
+    simContainer: 'Kontener z symulacji:',
+    simStepMail: '1. Mail od spedytora', simMailFound: 'Automat odczytał z treści numer {no} (cyfra kontrolna poprawna) i przypisał dokumenty do kontenera.',
+    simMailNotFound: 'Automat nie znalazł numeru kontenera — mail trafiłby do „poczty bez dopasowania”.',
+    simStepInvoice: '2. Odczyt faktury', simInvoice: 'Faktura {nr}: {n} pozycji — reguły {r}, model ML {m}, człowiek {u}, do decyzji {o}.',
+    simInvoiceNone: 'Ten kontener nie ma jeszcze faktury.',
+    simStepRules: '3. Reguły z kreatora', simRule: '„{name}” — {n} kontenerów dziś → powiadomienie', simRulesNone: 'Brak włączonych reguł.',
+    simStepEvent: '4. Zdarzenie do n8n', simEvent: 'Zdarzenie „{kind}” ({b} bajtów) podpisane HMAC:',
+    simStepSaved: '5. Zaoszczędzony czas', simSaved: 'Ok. {total} min pracy ręcznej (mail {mail}, faktura {inv}, reguły {rules}) — wg założeń minut z licznika oszczędności.',
+    simNoWrite: 'Symulacja niczego nie zapisuje ani nie wysyła — pokazuje, co automaty zrobiłyby z tymi danymi.',
+    simUnavailable: 'Brak kontenerów do symulacji.',
+  },
+  en: {
+    simTitle: 'Simulate a day', simRun: 'Run simulation', simRunning: 'Working…',
+    simIntro: 'One click walks the automation flow on demo data: a forwarder’s email, reading the container number, the invoice, rules, an event to n8n and the time saved. Each step is a real function of the app.',
+    simContainer: 'Container in the simulation:',
+    simStepMail: '1. Email from the forwarder', simMailFound: 'The automation read number {no} from the text (check digit valid) and assigned the documents to the container.',
+    simMailNotFound: 'No container number found — the email would go to “unmatched mail”.',
+    simStepInvoice: '2. Invoice reading', simInvoice: 'Invoice {nr}: {n} lines — rules {r}, ML model {m}, person {u}, pending {o}.',
+    simInvoiceNone: 'This container has no invoice yet.',
+    simStepRules: '3. Rule builder', simRule: '“{name}” — {n} containers today → notification', simRulesNone: 'No rules enabled.',
+    simStepEvent: '4. Event to n8n', simEvent: 'Event “{kind}” ({b} bytes) signed with HMAC:',
+    simStepSaved: '5. Time saved', simSaved: 'About {total} min of manual work (email {mail}, invoice {inv}, rules {rules}) — based on the savings counter’s minute assumptions.',
+    simNoWrite: 'The simulation saves and sends nothing — it shows what the automations would do with this data.',
+    simUnavailable: 'No containers to simulate.',
+  },
+  pt: {
+    simTitle: 'Simular um dia', simRun: 'Executar simulação', simRunning: 'A calcular…',
+    simIntro: 'Um clique percorre o fluxo de automatizações com dados de demonstração: email do transitário, leitura do número do contentor, fatura, regras, evento para o n8n e tempo poupado. Cada passo é uma função real da aplicação.',
+    simContainer: 'Contentor da simulação:',
+    simStepMail: '1. Email do transitário', simMailFound: 'A automatização leu o número {no} do texto (dígito de controlo válido) e associou os documentos ao contentor.',
+    simMailNotFound: 'Número de contentor não encontrado — o email iria para “correio sem correspondência”.',
+    simStepInvoice: '2. Leitura da fatura', simInvoice: 'Fatura {nr}: {n} linhas — regras {r}, modelo ML {m}, pessoa {u}, por decidir {o}.',
+    simInvoiceNone: 'Este contentor ainda não tem fatura.',
+    simStepRules: '3. Regras do construtor', simRule: '“{name}” — {n} contentores hoje → notificação', simRulesNone: 'Sem regras ativas.',
+    simStepEvent: '4. Evento para o n8n', simEvent: 'Evento “{kind}” ({b} bytes) assinado com HMAC:',
+    simStepSaved: '5. Tempo poupado', simSaved: 'Cerca de {total} min de trabalho manual (email {mail}, fatura {inv}, regras {rules}) — segundo os minutos assumidos no contador de poupança.',
+    simNoWrite: 'A simulação não grava nem envia nada — mostra o que as automatizações fariam com estes dados.',
+    simUnavailable: 'Sem contentores para simular.',
+  },
+})

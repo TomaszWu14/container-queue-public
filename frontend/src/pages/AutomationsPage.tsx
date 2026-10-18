@@ -11,6 +11,7 @@ import AutomationMinutesModal from './AutomationMinutesModal'
 import AutomationRulesPanel from './AutomationRulesPanel'
 import AiQualityPanel from './AiQualityPanel'
 import ProcessFlowPanel from './ProcessFlowPanel'
+import SimulateDayPanel from './SimulateDayPanel'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -54,7 +55,8 @@ export default function AutomationsPage() {
   const [onlyAttention, setOnlyAttention] = useState(false)
   const [editMinutes, setEditMinutes] = useState(false)
   const [testMsg, setTestMsg] = useState<{ ok: boolean; text: string } | null>(null)
-  const isAdmin = useUser()?.role === 'admin'
+  const me = useUser()
+  const isAdmin = me?.role === 'admin'
 
   const load = () => {
     api.get<AutomationCatalog>('/api/automations').then(setData).catch(err => setError(errorMessage(err)))
@@ -172,6 +174,7 @@ export default function AutomationsPage() {
           )}
         </>
       )}
+      {data && me?.is_demo && <SimulateDayPanel />}
       {data && <ProcessFlowPanel />}
       {data && <AiQualityPanel />}
       {data && <AutomationRulesPanel canEdit={isAdmin} />}

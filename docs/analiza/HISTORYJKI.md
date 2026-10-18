@@ -443,8 +443,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **Stan:** wdrożone w PR #45.
 
 ### US-040 · [BA][DEV] „Symuluj dzień” w demo (pomysł 6)
-- **Rozmiar:** M · Jeden przycisk puszcza na fikcyjnych danych napływ maila, odczyt dokumentu i alert; wynik
-  widać na ekranie „Automatyzacje”. Tylko instancja demo.
+- **Rozmiar:** M
+- **Jako** rekruter w demo **chcę** jednym przyciskiem zobaczyć obieg automatów od maila do zaoszczędzonego czasu,
+  **aby** zrozumieć, co aplikacja robi sama, bez czytania dokumentacji.
+- **Kryteria akceptacji** (testy `backend/tests/test_demo_simulation.py`, `SimulateDayPanel.dom.test.tsx`)
+  1. Przycisk „Symuluj dzień” na ekranie Automatyzacje (konto demo) pokazuje 5 kroków na kontenerze z danych demo:
+     mail od spedytora → numer kontenera odczytany z treści (cyfra kontrolna), faktura (reguły / ML / człowiek /
+     do decyzji), reguły z kreatora (ile kontenerów dziś), zdarzenie do n8n z podpisem HMAC, zaoszczędzone minuty.
+  2. Każdy krok woła prawdziwą funkcję aplikacji; link prowadzi do karty kontenera.
+  3. **Bez zapisu i wysyłki** — konto demo zostaje tylko do odczytu (Z-029); liczba wpisów w dzienniku, przebiegów
+     i powiadomień po symulacji bez zmian.
+  4. Tylko kontenery w zakresie użytkownika; brak kontenerów → komunikat.
+- **[SEC]:** trasa `GET /api/automations/simulate-day` (Editors, `scope_containers`), bez wyjątku w blokadzie zapisu
+  konta demo; podpis liczony sekretem pokazowym, prawdziwy sekret nie opuszcza serwera.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-041 · [DEV][SEC] Akceptacja z poziomu Teams (pomysł 18)
 - **Rozmiar:** M · Karta w Teams z przyciskiem prowadzącym do akcji w aplikacji (zatwierdzenie po zalogowaniu —
@@ -491,7 +503,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. 3 przykładowe reguły z kreatora (US-036).
   3. Faktury z 8 tygodni: reguły / model ML / człowiek / do decyzji, trafność rośnie z pewnością modelu.
 - **[SEC]:** tylko skrypt `seed_demo` (instancja demo, osłony `check_guards`); dane zmyślone, pliki PDF pokazowe.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #46.
 
 ## Could
 
