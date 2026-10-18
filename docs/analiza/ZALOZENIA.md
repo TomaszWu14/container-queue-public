@@ -41,6 +41,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-029 | „Symuluj dzień” (US-040) nie zapisuje danych: pokazuje wynik prawdziwych funkcji na danych demo w oknie kroków, zamiast dopisywać przebiegi do ekranu Automatyzacje — bez wyjątku w blokadzie zapisu konta demo. Przycisk tylko dla kont demo. | — | do potwierdzenia | zapis do osobnej „piaskownicy” demo, przycisk także dla admina | `backend/app/demo_simulation.py` |
 | Z-030 | Przełącznik automatów (US-059): wyłączać może tylko admin; nie da się wyłączyć z ekranu: usuwania danych kierowców (RODO), retencji dzienników, osieroconych plików, testu kopii i strażnika automatów. | — | do potwierdzenia | także logistyka; inna lista chroniona | `backend/app/automation_switch.py` |
 | Z-031 | „Co jeśli statek się spóźni” (US-062): opóźnienie 1–21 dni, okno 28 dni; obciążenie dnia liczone jak prognoza przeciążenia (limit magazynu wspólny dla wszystkich spółek, pokazywany tylko jako liczba), przesuwamy tylko kontenery w zakresie użytkownika; nic nie zapisujemy. | — | do potwierdzenia | zapis nowego planu po akceptacji; dłuższe opóźnienia | `backend/app/what_if.py` |
+| Z-032 | Kanały reguły z kreatora (US-063): dzwonek, e-mail, Teams, n8n — domyślnie wszystkie (stare reguły działają jak dotąd); matryca kanałów per rola nadal obowiązuje; reguła tylko na Teams / n8n zostawia odbiorcom przeczytany wpis (ślad i deduplikacja). | — | do potwierdzenia | osobny adres Teams na regułę; e-mail na dowolny adres | `backend/app/automation_rules.py` |
 
 ## Jak potwierdzić
 

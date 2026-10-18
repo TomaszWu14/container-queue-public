@@ -646,6 +646,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** odczyt (GET), `scope_containers`; obciążenie innych spółek tylko jako liczba; wpis w `tests/permissions.yaml`.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-063 · [DEV] Kreator reguł z wyborem kanałów (druga lista PO, pkt 5)
+- **Rozmiar:** S
+- **Jako** administrator **chcę** dla każdej reguły wybrać, dokąd idzie alert — dzwonek, e-mail, karta w Teams,
+  zdarzenie do n8n — **aby** np. regułę dla zespołu wysyłać tylko na kanał Teams, a regułę dla integracji tylko do n8n.
+- **Kryteria akceptacji** (testy `test_automation_rules.py`, `AutomationRulesPanel.dom.test.tsx`)
+  1. Przy regule pola wyboru kanałów; co najmniej jeden zostaje zaznaczony; opis reguły pokazuje wybrane kanały.
+  2. Stare reguły bez wyboru działają jak dotąd (wszystkie kanały); matryca kanałów per rola dalej obowiązuje.
+  3. Reguła bez dzwonka i e-maila zostawia przeczytany wpis — jedno powiadomienie na kontener i dzień nadal pilnowane.
+  4. Demo: jedna przykładowa reguła tylko na e-mail i Teams.
+- **[SEC]:** zmiana nadal tylko przez admina z audytem; zamknięta lista kanałów (bez wolnych adresów URL i e-mail).
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

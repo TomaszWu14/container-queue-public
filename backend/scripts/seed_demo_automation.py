@@ -3,7 +3,7 @@
 - dziennik zadań z ostatnich 7 dni: każdy automat z harmonogramu „działał” (co najwyżej raz na godzinę,
   ostatnio przed chwilą), część przebiegów z efektem (np. 2 powiadomienia), jedna dawna awaria śledzenia,
   zdarzenia do n8n — licznik oszczędności i stan automatów mają co pokazać,
-- 3 przykładowe reguły z kreatora (US-036),
+- 3 przykładowe reguły z kreatora (US-036), jedna tylko na e-mail i Teams (kanały, US-063),
 - paczki faktur z pozycjami z ostatnich 8 tygodni: reguły / model ML / człowiek / do decyzji z pewnością
   modelu — panel „Odczyt faktur” (US-037) pokazuje udział automatu i trafność w przedziałach pewności.
 
@@ -36,7 +36,7 @@ EXAMPLE_RULES = [
     {"name": "Awizacja za 2 dni, a kontener jeszcze przed odprawą", "condition": "notify_soon_status",
      "days": 2, "status": "ODPRAWA", "notify": "watchers"},
     {"name": "ETA minęło ponad 3 dni temu — sprawdź u armatora", "condition": "eta_passed", "days": 3,
-     "notify": "admins"},
+     "notify": "admins", "channels": ["email", "teams"]},
     {"name": "Awizacja jutro, brak kierowcy", "condition": "no_driver", "days": 1, "notify": "watchers"},
 ]
 

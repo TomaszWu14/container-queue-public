@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Kanały reguły w kreatorze** (US-063): każda reguła wybiera, dokąd idzie alert — dzwonek, e-mail, Teams,
+  n8n (domyślnie wszystkie).
 - **Co jeśli statek się spóźni** (US-062): ekran Automatyzacje liczy, w które dni magazyn przekroczy limit,
   gdy wybrany statek spóźni się o 1–21 dni — bez zmiany planu.
 - **Wykres przepływu procesu** (US-061): panel „Przebieg procesu” rysuje przejścia między etapami (grubość wg liczby

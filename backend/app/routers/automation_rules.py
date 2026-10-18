@@ -23,7 +23,7 @@ class RulesIn(BaseModel):
 
 def _out(rules: list[rules_engine.Rule]) -> dict:
     return {"rules": [r.model_dump(mode="json") for r in rules],
-            "conditions": list(rules_engine.CONDITIONS),
+            "conditions": list(rules_engine.CONDITIONS), "channels": list(rules_engine.CHANNELS),
             "statuses": [s.value for s in ContainerStatus], "max_rules": rules_engine.MAX_RULES}
 
 

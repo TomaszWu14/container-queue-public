@@ -19,6 +19,9 @@
 .auto-rule-list { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 10px; }
 .auto-rule { border: 1px solid var(--border); border-radius: var(--r-md, 10px); padding: 10px 12px; background: var(--panel); }
 .auto-rule label { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: var(--muted); }
+.auto-rule-channels { display: flex; flex-wrap: wrap; gap: 4px 10px; border: 0; margin: 0; padding: 0; }
+.auto-rule-channels legend { font-size: 13px; color: var(--muted); padding: 0; width: 100%; }
+.auto-rule .auto-rule-channels label { flex-direction: row; align-items: center; color: var(--text); }
 .auto-rule label.row { flex-direction: row; align-items: center; color: inherit; }
 /* Jakość odczytu faktur (US-037): słupki 100% tydzień po tygodniu — kolory serii z palety pulpitu
    (--viz-*, 25-pulpit-analityczny.css), 2 px odstępu między segmentami, zaokrąglony koniec u góry */

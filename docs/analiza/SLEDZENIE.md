@@ -91,6 +91,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-060 pomyłki modelu do przeglądu | FR-015 | `test_ai_quality.py` (1), `AiMistakesTable.dom.test.tsx` (2) | #61 | wdrożone |
 | US-061 wykres przepływu procesu | US-038 | `ProcessFlowChart.dom.test.tsx` (2), `test_process_mining.py` (rozszerzony), `test_seed_demo_automation.py` (1) | #62 | wdrożone |
 | US-062 co jeśli statek się spóźni | Z-031 | `test_what_if.py` (2), `WhatIfPanel.dom.test.tsx` (2) | — | czeka na merge |
+| US-063 kanały reguły w kreatorze | US-036, Z-032 | `test_automation_rules.py` (1), `AutomationRulesPanel.dom.test.tsx` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 
