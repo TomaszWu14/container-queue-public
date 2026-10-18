@@ -122,4 +122,32 @@ describe('ekran Automatyzacje', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Wyślij zdarzenie testowe' }))
     await vi.waitFor(() => expect(screen.getByRole('status').textContent).toMatch(/nie przyjął zdarzenia: HTTP 404/))
   })
+
+  it('admin wyłącza i włącza automat; chronionego nie da się wyłączyć (bez przycisku)', async () => {
+    const data: AutomationCatalog = { ...catalog, items: [
+      item({ can_disable: true }),
+      item({ key: 'congestion', category: 'integrations', status: 'off', switched_off: true, can_disable: true }),
+      item({ key: 'retention', category: 'data', can_disable: false }),
+    ] }
+    mockGet(data)
+    put.mockResolvedValue({})
+    render(
+      <UserContext.Provider value={{ user: { role: 'admin' } as User, reload: () => {} }}>
+        <AutomationsPage />
+      </UserContext.Provider>)
+    await screen.findByText('Ostrzeżenie o karze za przestój')
+    fireEvent.click(screen.getByRole('button', { name: 'Wyłącz: Ostrzeżenie o karze za przestój' }))
+    expect(put).toHaveBeenCalledWith('/api/automations/demurrage/enabled', { enabled: false })
+    fireEvent.click(screen.getByRole('button', { name: /^Włącz: / }))
+    expect(put).toHaveBeenCalledWith('/api/automations/congestion/enabled', { enabled: true })
+    expect(within(rows()[1]).getByText('Wyłączony').getAttribute('title')).toMatch(/przez administratora/)
+    expect(within(rows()[2]).queryByRole('button')).toBeNull()
+  })
+
+  it('bez roli admina — bez przełączników', async () => {
+    mockGet({ ...catalog, items: [item({ can_disable: true })] })
+    render(<AutomationsPage />)
+    await screen.findByText('Ostrzeżenie o karze za przestój')
+    expect(screen.queryByRole('button', { name: /^Wyłącz: / })).toBeNull()
+  })
 })

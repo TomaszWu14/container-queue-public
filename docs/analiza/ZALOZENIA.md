@@ -39,6 +39,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-027 | Przebieg procesu (US-038): „dłużej niż zwykle” = powyżej 90. percentyla czasu w etapie z ostatnich 90 dni, liczone dopiero przy ≥ 5 zakończonych pobytach etapu; czas w dniach kalendarzowych (z weekendami). Po dostawie na magazyn (DOSTARCZONY) czekanie na rozliczenie nie jest „utknięciem”. | — | do potwierdzenia | inny próg (np. mediana × 2), dni robocze, okno 30/180 dni | `backend/app/process_mining.py` |
 | Z-028 | Asystent bez modelu AI (US-039): odpowiedź z szablonu po polsku (jak odpowiedzi modelu), także po awarii modelu — nie tylko w demo; przykładowe pytania: 2 najbliższe kontenery wg ETA + 1 materiał. | — | do potwierdzenia | szablon tylko w demo, inne pytania przykładowe, wersje EN/PT | `backend/app/assistant_template.py` |
 | Z-029 | „Symuluj dzień” (US-040) nie zapisuje danych: pokazuje wynik prawdziwych funkcji na danych demo w oknie kroków, zamiast dopisywać przebiegi do ekranu Automatyzacje — bez wyjątku w blokadzie zapisu konta demo. Przycisk tylko dla kont demo. | — | do potwierdzenia | zapis do osobnej „piaskownicy” demo, przycisk także dla admina | `backend/app/demo_simulation.py` |
+| Z-030 | Przełącznik automatów (US-059): wyłączać może tylko admin; nie da się wyłączyć z ekranu: usuwania danych kierowców (RODO), retencji dzienników, osieroconych plików, testu kopii i strażnika automatów. | — | do potwierdzenia | także logistyka; inna lista chroniona | `backend/app/automation_switch.py` |
 
 ## Jak potwierdzić
 

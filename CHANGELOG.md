@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Włącz / wyłącz automat** (US-059): admin wyłącza automat z harmonogramu jednym przyciskiem na ekranie Automatyzacje,
+  z wpisem w historii zmian; automatów chroniących dane (RODO, retencja, kopia, strażnik) nie da się wyłączyć.
 - **Zrzuty Automatyzacji w README** (US-058): ekran Automatyzacje, „Symuluj dzień”, odczyt faktur AI i przebieg procesu
   w `README.md` i `README.en.md`, generowane testem ścieżki rekrutera; dane demo z realistyczną historią statusów.
 - **Lighthouse w CI** (US-057): strona logowania mierzona przy każdej zmianie frontendu (progi: dostępność 95,

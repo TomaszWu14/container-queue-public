@@ -595,6 +595,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Dane demo realistyczne (test `backend/tests/test_seed_demo_automation.py`): kontenery w obiegu weszły w obecny
      etap niedawno, „utworzono” = początek historii — panel przebiegu pokazuje kilka kontenerów „dłużej niż zwykle”,
      nie 120; model ML przy pewności ≥ 90% trafia w ok. 90%.
+- **Stan:** wdrożone w PR #59.
+
+### US-059 · [DEV][SEC] Włącz / wyłącz automat jednym przełącznikiem (druga lista PO, pkt 6)
+- **Rozmiar:** S · **Założenie:** Z-030
+- **Jako** administrator **chcę** wyłączyć automat, który w danej chwili przeszkadza (np. prognoza przy przebudowie
+  magazynu), **aby** nie zmieniać konfiguracji wdrożenia ani nie prosić programisty.
+- **Kryteria akceptacji** (testy `backend/tests/test_automation_switch.py`, `AutomationsPage.dom.test.tsx`)
+  1. Przy automacie z harmonogramu admin widzi „Wyłącz” / „Włącz”; inne role nie widzą przycisku, API → 403.
+  2. Wyłączony automat: pętla zadań go pomija (bez wpisu w dzienniku), katalog pokazuje „Wyłączony” z dopiskiem
+     „przez administratora”; włączenie przywraca pracę.
+  3. Każda zmiana w dzienniku zmian (było → jest, kto).
+  4. Automatów chroniących dane i bezpieczeństwo (usuwanie danych kierowców, retencja, osierocone pliki, test kopii,
+     strażnik) nie da się wyłączyć — brak przycisku, API → 422. Obiegów z n8n też nie (wyłącza się je w n8n).
+- **[SEC]:** tylko admin; lista chroniona w kodzie (`automation_switch.LOCKED`), nie w ustawieniach.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

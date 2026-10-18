@@ -46,6 +46,7 @@ class Job(NamedTuple):
 # zadania z pamięcią procesu — każdy worker musi je robić sam (bez blokady w bazie)
 PER_PROCESS_JOBS = {"monitor_sample"}
 SKIPPED = object()   # _run: zadanie trwa w innym procesie/instancji — ten przebieg pominięty
+DISABLED = object()  # _run: automat wyłączony przez admina na ekranie Automatyzacje (automation_switch)
 # OBS-009: pętle uruchomione w TYM procesie: nazwa → (interwał s, nazwy funkcji, start pętli).
 # Głęboki health check (routers/health.py) porównuje je z ostatnim udanym job_runs.
 STARTED: dict[str, tuple[float, tuple[str, ...], datetime.datetime]] = {}
@@ -98,6 +99,9 @@ def _run_fn(fn: Callable):
     # zapomni o commicie (np. pallet_urgent), gubiło powiadomienia in-app, a kanały
     # zewnętrzne leciały co cykl (dedup po nieistniejących rekordach niemożliwy)
     with SessionLocal() as db:
+        from .automation_switch import fn_disabled
+        if fn_disabled(db, fn.__name__):
+            return DISABLED
         result = fn(db)
         db.commit()
         return result
@@ -115,6 +119,8 @@ async def job_loop(job: Job) -> None:
                 if result is SKIPPED:
                     logger.info("Zadanie %s/%s pominięte — trwa w innym procesie",
                                 job.name, fn.__name__)
+                    continue
+                if result is DISABLED:   # wyłączony przez admina — bez wpisu w dzienniku zadań
                     continue
                 if result:
                     logger.info("Zadanie %s/%s: %s", job.name, fn.__name__, result)
