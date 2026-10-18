@@ -70,7 +70,7 @@ const STYLE = `
 .kl2-admin-help{margin-top:6px;font-size:13px;line-height:1.45;color:#536276}
 .kl2-foot{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',ui-monospace,monospace;
   font-size:12px;color:#536276}
-.kl2-foot button{background:none;border:none;padding:0;font:inherit;color:#536276;cursor:pointer}
+.kl2-foot button{background:none;border:none;padding:0 6px;min-width:28px;min-height:28px;font:inherit;color:#536276;cursor:pointer}
 .kl2-foot button.active,.kl2-foot button:hover{color:#0b5fff}
 @media(max-width:900px){.kl2-card{grid-template-columns:1fr}.kl2-aside{padding:28px 22px}
   .kl2-aside h1{font-size:22px}.kl2{padding:12px}}

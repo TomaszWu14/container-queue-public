@@ -574,6 +574,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Przeglądarka po angielsku → demo od razu po angielsku (US-055).
 - **Stan:** wdrożone w PR #56.
 
+### US-057 · [DEV] Lighthouse w CI (druga lista PO, pkt 14)
+- **Rozmiar:** S
+- **Jako** rekruter techniczny **chcę** widzieć zmierzoną jakość strony, **aby** nie oceniać jej „na oko”.
+- **Kryteria akceptacji** (workflow `.github/workflows/lighthouse.yml`, progi `frontend/scripts/lighthouse-assert.mjs`)
+  1. Każdy PR zmieniający frontend mierzy stronę logowania (backend serwuje zbudowany panel — jak produkcja).
+  2. Progi: dostępność ≥ 95, dobre praktyki ≥ 95, SEO ≥ 90, szybkość ≥ 70 (zapas na zmienność maszyn CI);
+     poniżej progu — czerwone CI. Tabela wyników w podsumowaniu joba, raport HTML w artefaktach, odznaka w README.
+  3. Poprawki znalezione pomiarem: przyciski języka w stopce logowania ≥ 28 px (dotyk), opis strony, ikona,
+     `robots.txt` (bez indeksowania `/api/`).
+- **Stan:** zrealizowane, czeka na merge. Poprawka listy „do sprawdzenia” (Z-027) — PR #57. Pomiar lokalny: szybkość 88, dostępność 100, dobre praktyki 96, SEO 100.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

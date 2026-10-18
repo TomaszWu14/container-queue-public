@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Lighthouse w CI** (US-057): strona logowania mierzona przy każdej zmianie frontendu (progi: dostępność 95,
+  dobre praktyki 95, SEO 90, szybkość 70) — odznaka w README; przy okazji większe przyciski języka, opis strony,
+  ikona i `robots.txt`.
 - **E2E ekranu Automatyzacje w demo** (US-056): ścieżka rekrutera w CI sprawdza katalog automatów, panele z danymi
   i „Symuluj dzień” na komputerze i telefonie oraz start po angielsku dla zagranicznej przeglądarki.
 - **Język startowy z przeglądarki** (US-055): przy pierwszej wizycie aplikacja wybiera polski, angielski albo

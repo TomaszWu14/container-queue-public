@@ -83,8 +83,14 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-042…044 Excel, Power BI, Power Automate (instrukcje) | ADR-0004 (bez zmian) | `test_m365_docs.py` (1) | #51 | wdrożone |
 | US-053 strażnik automatów | OBS-009 | `test_automation_watchdog.py` (2) | #53 | wdrożone |
 | US-054 tygodniowy raport automatów | Z-023, Z-024 | `test_automation_report.py` (2) | #54 | wdrożone |
+<<<<<<< HEAD
 | US-055 język startowy z przeglądarki | — | `i18n.detect.test.ts` (3) | #55 | wdrożone |
 | US-056 E2E ekranu Automatyzacje w demo | US-032…040, US-055 | `e2e/demo/recruiter.spec.ts` (2 nowe × 2 urządzenia) | #56 | wdrożone |
+=======
+| US-055 język startowy z przeglądarki | — | `i18n.detect.test.ts` (3) | — | czeka na merge |
+| US-056 E2E ekranu Automatyzacje w demo | US-032…040, US-055 | `e2e/demo/recruiter.spec.ts` (2 nowe × 2 urządzenia) | — | czeka na merge |
+| US-057 Lighthouse w CI | — | workflow `lighthouse.yml` (progi w `lighthouse-assert.mjs`) | — | czeka na merge |
+>>>>>>> 2e52e3e (ci: Lighthouse on the login page with thresholds and README badge; fixes it found (US-057))
 
 ## Zasady utrzymania
 
