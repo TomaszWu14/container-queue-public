@@ -14,13 +14,13 @@ from pydantic import BaseModel, Field
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session, selectinload
 
-from .. import llm
+from .. import assistant_template, llm
 from ..config import settings
 from ..database import get_db
 from ..deps import Viewer as viewer
 from ..deps import scope_containers
 from ..invoices.uom import normalize_ref
-from ..models import Container, Material, Role, User
+from ..models import Container, Material, User
 from ..rate_limit import ApiRateLimiter
 from .containers_common import hidden_fields
 
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/assistant", tags=["asystent"])
 ask_limiter = ApiRateLimiter()   # audyt AI-002: pytania per użytkownik na minutę
 
-MATERIAL_ROLES = (Role.admin, Role.logistics, Role.purchasing)   # jak GET /api/materials
+MATERIAL_ROLES = assistant_template.MATERIAL_ROLES
 MAX_HITS = 5
 _CONTAINER_NO = re.compile(r"\b([A-Z]{4})\s?(\d{7})\b")
 _SYSTEM = ("Jesteś asystentem systemu logistycznego TIMPORYE. Odpowiadasz po polsku, krótko, "
@@ -113,14 +113,25 @@ def ask(body: AskIn, db: Session = Depends(get_db), user: User = viewer) -> dict
         raise HTTPException(429, "Za dużo pytań do asystenta — spróbuj za chwilę.",
                             headers={"Retry-After": str(int(retry))})
     facts = gather_facts(db, user, body.question)
-    answer = None
+    answer, source = None, None
     if llm.is_configured() and (facts["kontenery"] or facts["materialy"]):
         prompt = f"FAKTY:\n{json.dumps(facts, ensure_ascii=False)}\n\nPYTANIE: {body.question}"
         try:
             answer = llm.chat(settings.assistant_model, prompt, system=_SYSTEM,
                               purpose="assistant").strip() or None
+            source = "ai" if answer else None
         except llm.LLMBusy as exc:   # slot zajęty → szybka odmowa zamiast wątku w kolejce
             raise HTTPException(503, llm.BUSY_MSG) from exc
         except Exception as exc:  # noqa: BLE001 — model padł/timeout: fakty i tak zwracamy
             logger.warning("asystent: %s", exc)
-    return {"answer": answer, "facts": facts, "ai": llm.is_configured()}
+    if answer is None:
+        # US-039: bez modelu (demo) albo po jego awarii — zdania z szablonu, wprost oznaczone
+        answer = assistant_template.answer(facts)
+        source = "template" if answer else None
+    return {"answer": answer, "answer_source": source, "facts": facts, "ai": llm.is_configured()}
+
+
+@router.get("/examples")
+def examples(db: Session = Depends(get_db), user: User = viewer) -> dict:
+    """US-039: przykładowe pytania z danych widocznych dla użytkownika (klik = gotowa odpowiedź)."""
+    return {"questions": assistant_template.examples(db, user)}

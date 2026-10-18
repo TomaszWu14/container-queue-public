@@ -56,6 +56,7 @@ routes:
   "POST /api/analytics/upload": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
 
   # --- assistant ---
+  "GET /api/assistant/examples": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 200, customs: 200, purchasing: 200, sales: 403}  # scoping: scope_containers (przykładowe pytania, US-039)
   "POST /api/assistant/ask": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: '2xx', customs: '2xx', purchasing: '2xx', sales: 403}
 
   # --- audit_read ---

@@ -1,12 +1,13 @@
 import { BotIcon } from 'lucide-react'
 // Asystent wiedzy (#38): pytanie → fakty z bazy (kontenery/materiały) → odpowiedź
-// lokalnego modelu (Ollama na własnym serwerze). Bez modelu pokazujemy same fakty.
-import { Fragment, useState } from 'react'
+// lokalnego modelu (Ollama na własnym serwerze). Bez modelu (np. demo, US-039) odpowiedź z szablonu,
+// wprost oznaczona, i przykładowe pytania z danych widocznych dla użytkownika.
+import { Fragment, useEffect, useState } from 'react'
 import { api, errorMessage } from './api'
 import { useT } from './i18n'
 
 type Facts = { kontenery: Record<string, unknown>[]; materialy: Record<string, unknown>[] }
-type AskOut = { answer: string | null; facts: Facts; ai: boolean }
+type AskOut = { answer: string | null; answer_source?: 'ai' | 'template' | null; facts: Facts; ai: boolean }
 
 function FactList({ title, rows }: { title: string; rows: Record<string, unknown>[] }) {
   if (!rows.length) return null
@@ -34,19 +35,25 @@ export default function AssistantBox() {
   const [busy, setBusy] = useState(false)
   const [out, setOut] = useState<AskOut | null>(null)
   const [error, setError] = useState('')
+  const [examples, setExamples] = useState<string[]>([])
+  useEffect(() => {
+    api.get<{ questions: string[] }>('/api/assistant/examples')
+      .then(r => setExamples(Array.isArray(r?.questions) ? r.questions : [])).catch(() => setExamples([]))
+  }, [])
 
-  const ask = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (question.trim().length < 2 || busy) return
+  const send = async (q: string) => {
+    if (q.trim().length < 2 || busy) return
     setBusy(true); setError('')
     try {
-      setOut(await api.post<AskOut>('/api/assistant/ask', { question: question.trim() }))
+      setOut(await api.post<AskOut>('/api/assistant/ask', { question: q.trim() }))
     } catch (err) {
       setError(errorMessage(err))
     } finally {
       setBusy(false)
     }
   }
+  const ask = (e: React.FormEvent) => { e.preventDefault(); void send(question) }
+  const pick = (q: string) => { setQuestion(q); void send(q) }
 
   const empty = out && !out.facts.kontenery.length && !out.facts.materialy.length
   return (
@@ -57,13 +64,23 @@ export default function AssistantBox() {
                placeholder={t('asPlaceholder')} aria-label={t('asTitle')} style={{ flex: 1 }} />
         <button className="btn small" disabled={busy}>{t('asAsk')}</button>
       </form>
+      {examples.length > 0 && (
+        <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginTop: 6 }} aria-label={t('asExamples')}>
+          <span className="muted" style={{ fontSize: 12 }}>{t('asExamples')}:</span>
+          {examples.map(q => (
+            <button key={q} type="button" className="btn secondary small" onClick={() => pick(q)}>{q}</button>
+          ))}
+        </div>
+      )}
       {busy && <p className="muted" style={{ fontSize: 13 }}>{t('asThinking')}</p>}
       {error && <p role="alert" style={{ color: 'var(--danger, #b42318)', fontSize: 13 }}>{error}</p>}
       {out && !busy && (
         <div aria-live="polite">
           {out.answer && <p style={{ margin: '8px 0', whiteSpace: 'pre-wrap' }}>{out.answer}</p>}
           {empty && <p className="muted" style={{ fontSize: 13 }}>{t('asNoFacts')}</p>}
-          {!out.ai && !empty && <p className="muted" style={{ fontSize: 12 }}>{t('asNoAi')}</p>}
+          {out.answer_source === 'template'
+            ? <p className="muted" style={{ fontSize: 12 }} data-testid="as-template">{t('asTemplateNote')}</p>
+            : !out.ai && !empty && <p className="muted" style={{ fontSize: 12 }}>{t('asNoAi')}</p>}
           <FactList title={t('asContainers')} rows={out.facts.kontenery} />
           <FactList title={t('asMaterials')} rows={out.facts.materialy} />
         </div>
