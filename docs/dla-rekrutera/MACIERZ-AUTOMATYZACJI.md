@@ -47,6 +47,7 @@ domyślnie 90%); panel „Odczyt faktur” na ekranie Automatyzacje pokazuje, cz
 | SMS do kierowcy | dzień przed dostawą, godzina z panelu | Pełna | — | 3 |
 | Poranny przegląd dnia | codziennie o ustalonej godzinie | Pełna | — | 15 |
 | Tydzień dla zakupów | poniedziałek 8:00 | Pełna | — | 10 |
+| Tygodniowy raport automatów | poniedziałek 8:00 | Pełna | reakcja na automaty wymagające uwagi | 15 |
 | Przypomnienie o reklamacji | brak odpowiedzi po 15 / 30 dniach | Wspiera decyzję | ponaglenie dostawcy | 3 |
 | Zdarzenia do n8n | każde powiadomienie systemu | Pełna | dalsze kroki w n8n / Power Automate / Make | 0 |
 

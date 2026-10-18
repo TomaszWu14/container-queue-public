@@ -56,4 +56,4 @@ flowchart LR
 | Faktury | przepisywanie pozycji | odczyt OCR + reguły + model ML z progiem pewności |
 | Awizacja | korespondencja mailowa | jednorazowy link dla spedytora, bez zakładania konta |
 | Partnerzy | kopie arkusza | własny widok: każdy widzi tylko swoje kontenery |
-| Pilnowanie terminów | pamięć logistyka | 22 automaty z harmonogramu + 3 obiegi z n8n |
+| Pilnowanie terminów | pamięć logistyka | 23 automaty z harmonogramu + 3 obiegi z n8n |

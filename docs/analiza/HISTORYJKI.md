@@ -539,6 +539,19 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** tylko odczyt dziennika zadań; odbiorcy = aktywni admini.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-054 · [DEV] Tygodniowy raport automatów (druga lista PO, pkt 9)
+- **Rozmiar:** S
+- **Jako** kierownik logistyki **chcę** w poniedziałek rano dostać krótkie podsumowanie pracy automatów, **aby** bez
+  wchodzenia na ekran wiedzieć, ile czasu zaoszczędziły i czy coś wymaga uwagi.
+- **Kryteria akceptacji** (test `backend/tests/test_automation_report.py`)
+  1. Poniedziałek 8:00–9:00 (czas PL): admin i logistyka dostają jedno powiadomienie (dzwonek + e-mail wg matrycy).
+  2. Treść: zaoszczędzone godziny (z założeniem minut), przebiegi i efekty, automaty w stanie błąd/spóźniony,
+     trzy automaty, które oszczędziły najwięcej — liczby z katalogu w zakresie danego użytkownika.
+  3. Poza oknem i drugi raz tego samego dnia — nic.
+- **[SEC]:** raport per użytkownik z jego zakresem (obiegi z poczty liczone przez `scope_containers`); bez kanałów
+  wspólnych (Teams/n8n), żeby liczby jednej spółki nie trafiły do innych.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

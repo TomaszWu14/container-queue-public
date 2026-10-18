@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Tygodniowy raport automatów** (US-054): w poniedziałek o 8:00 admin i logistyka dostają podsumowanie —
+  zaoszczędzone godziny, przebiegi, automaty wymagające uwagi i najlepsze automaty tygodnia.
 - **Strażnik automatów** (US-053): automat, który przestał działać po cichu (brak udanego przebiegu dłużej niż
   zwykle), zapala dzwonek adminów raz dziennie — z datą ostatniego udanego przebiegu.
 - **Lista decyzji do podjęcia przez PO** (`docs/analiza/DECYZJE-DO-PODJECIA.md`): ADR-y i założenia czekające na
