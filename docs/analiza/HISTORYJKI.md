@@ -473,16 +473,22 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 
 ### US-042 · [DEV] Konektor Power Automate (pomysł 10)
 - **Rozmiar:** S · Plik konektora (OpenAPI 2.0) dla odczytu kolejki i zdarzeń + przykładowy przepływ.
+- **Stan:** decyzja PO 2026-10-18 — „tylko instrukcje” na eksporcie do Excela, bez nowego dostępu do API;
+  zrealizowane, czeka na merge — `docs/MICROSOFT-365.md` (test `test_m365_docs.py`: kolumny eksportu = instrukcja).
 
 ### US-043 · [BA] Szablon Excela z Power Query (pomysł 11)
 - **Rozmiar:** S · Excel pobierający kolejkę z API tokenem tylko do odczytu; instrukcja krok po kroku.
+- **Stan:** decyzja PO 2026-10-18 — „tylko instrukcje” na eksporcie do Excela, bez nowego dostępu do API;
+  zrealizowane, czeka na merge — `docs/MICROSOFT-365.md` (test `test_m365_docs.py`: kolumny eksportu = instrukcja).
 
 ### US-044 · [BA] Raport Power BI na danych aplikacji (pomysł 12)
 - **Rozmiar:** M · Model danych i zapytania Power Query (M) + instrukcja zbudowania raportu.
+- **Stan:** decyzja PO 2026-10-18 — „tylko instrukcje” na eksporcie do Excela, bez nowego dostępu do API;
+  zrealizowane, czeka na merge — `docs/MICROSOFT-365.md` (test `test_m365_docs.py`: kolumny eksportu = instrukcja).
 
 ### US-045 · [BA] Poradnik „Własna automatyzacja w 15 minut” (pomysł 13)
 - **Rozmiar:** S · n8n + token serwisowy, krok po kroku, z gotowym workflow do zaimportowania.
-- **Stan:** zrealizowane, czeka na merge — `docs/WLASNA-AUTOMATYZACJA-15-MIN.md`, `deploy/n8n/zdarzenie-do-teams.json`
+- **Stan:** wdrożone w PR #50 — `docs/WLASNA-AUTOMATYZACJA-15-MIN.md`, `deploy/n8n/zdarzenie-do-teams.json`
   (test `backend/tests/test_n8n_workflows.py`: połączenia między node'ami, podpis HMAC przed akcją).
 
 ### US-046 · [BA] Mapa procesu „przed i po” (pomysł 2)

@@ -79,7 +79,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-040 Symuluj dzień | Z-024, Z-029 | `test_demo_simulation.py` (2), `SimulateDayPanel.dom.test.tsx` (2) | #47 | wdrożone |
 | US-046…050 dokumenty dla rekrutera, README EN | Z-020, Z-024, Z-025 | brak testu (dokumentacja; linki sprawdzone ręcznie) | #48 | wdrożone |
 | US-041 przycisk w karcie Teams | FR-015 | `test_teams_mail_status.py` (1), `test_notifications_w4.py` (1 rozszerzony) | #49 | wdrożone |
-| US-045 poradnik n8n w 15 minut | FR-020 | `test_n8n_workflows.py` (5) | — | czeka na merge |
+| US-045 poradnik n8n w 15 minut | FR-020 | `test_n8n_workflows.py` (5) | #50 | wdrożone |
+| US-042…044 Excel, Power BI, Power Automate (instrukcje) | ADR-0004 (bez zmian) | `test_m365_docs.py` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 
