@@ -5,6 +5,9 @@ Stan na żywo (czy automat działa, ile razy, z jakim efektem): ekran **Automaty
 (`backend/app/automation_catalog.py`). Minuty na efekt to założenia Z-024 (do potwierdzenia przez PO),
 zmieniane przez admina na tym samym ekranie.
 
+Admin może wyłączyć automat jednym przełącznikiem (z wpisem w historii zmian); automatów chroniących dane —
+usuwania danych kierowców, retencji, osieroconych plików, testu kopii i strażnika — nie da się wyłączyć z ekranu.
+
 **Poziomy:**
 - **Pełna** — automat działa i kończy sprawę sam (człowiek tylko widzi wynik).
 - **Z człowiekiem** — automat przygotowuje, człowiek zatwierdza jednym kliknięciem.

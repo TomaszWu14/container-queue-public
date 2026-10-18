@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 import httpx
 
-from .. import ai_quality, automation_catalog, automation_events, automation_savings, demo_simulation, process_mining
+from .. import ai_quality, automation_catalog, automation_switch, automation_events, automation_savings, demo_simulation, process_mining
 from ..config import settings
 from ..audit import record
 from ..database import get_db
@@ -19,6 +19,10 @@ from ..deps import Editors as editors
 from ..models import User
 
 router = APIRouter(prefix="/api", tags=["automations"])
+
+
+class EnabledIn(BaseModel):
+    enabled: bool
 
 
 class MinutesIn(BaseModel):
@@ -96,3 +100,19 @@ def send_test_event(db: Session = Depends(get_db), user: User = admin_only) -> d
            user=user, note=payload["id"])
     db.commit()
     return result
+
+
+@router.put("/automations/{key}/enabled")
+def set_automation_enabled(key: str, body: EnabledIn, db: Session = Depends(get_db),
+                           user: User = admin_only) -> dict:
+    """Druga lista PO, pkt 6: admin włącza / wyłącza automat z harmonogramu; zmiana w dzienniku zmian.
+    Automatów chroniących dane (RODO, retencja, kopia, strażnik) nie da się wyłączyć — 422."""
+    try:
+        was = automation_switch.set_enabled(db, key, body.enabled)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    if was != body.enabled:
+        record(db, entity_type="automation", entity_id=0, field=f"enabled.{key}",
+               old_value="tak" if was else "nie", new_value="tak" if body.enabled else "nie", user=user)
+    db.commit()
+    return {"key": key, "enabled": body.enabled}

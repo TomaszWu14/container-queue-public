@@ -29,6 +29,8 @@ export interface AutomationItem {
   effects: number | null
   minutes_per_effect: number
   minutes_saved: number
+  switched_off?: boolean
+  can_disable?: boolean
 }
 
 export interface AutomationCatalog {
@@ -79,6 +81,17 @@ export default function AutomationsPage() {
       setTestMsg(r.ok
         ? { ok: true, text: fill('autoTestEventOk', { code: r.status_code ?? '' }) + (r.signed ? '' : ` ${t('autoTestEventUnsigned')}`) }
         : { ok: false, text: fill('autoTestEventFail', { error: r.status_code ? `HTTP ${r.status_code}` : r.error }) })
+      load()
+    } catch (err) {
+      setTestMsg({ ok: false, text: errorMessage(err) })
+    }
+  }
+
+  // druga lista PO, pkt 6: admin włącza / wyłącza automat (serwer pilnuje automatów chronionych)
+  const toggle = async (i: AutomationItem) => {
+    setTestMsg(null)
+    try {
+      await api.put(`/api/automations/${i.key}/enabled`, { enabled: !!i.switched_off })
       load()
     } catch (err) {
       setTestMsg({ ok: false, text: errorMessage(err) })
@@ -157,8 +170,14 @@ export default function AutomationsPage() {
                       <td data-label={t('autoColTrigger')}>{t(`autoTrigger_${i.key}`)}</td>
                       <td data-label={t('autoColAction')}>{t(`autoAction_${i.key}`)}</td>
                       <td data-label={t('autoColStatus')}><span className={`badge ${STATUS_CLASS[i.status]}`}
-                                title={i.status === 'ok' ? undefined : t(`autoStatusHint_${i.status}`)}>
-                        {t(`autoStatus_${i.status}`)}</span></td>
+                                title={i.switched_off ? t('autoSwitchedOffHint')
+                                  : i.status === 'ok' ? undefined : t(`autoStatusHint_${i.status}`)}>
+                        {t(`autoStatus_${i.status}`)}</span>
+                        {isAdmin && i.can_disable && (
+                          <button className="btn secondary small auto-switch" onClick={() => toggle(i)}
+                                  aria-label={`${t(i.switched_off ? 'autoSwitchOn' : 'autoSwitchOff')}: ${t(`autoName_${i.key}`)}`}>
+                            {t(i.switched_off ? 'autoSwitchOn' : 'autoSwitchOff')}</button>
+                        )}</td>
                       <td data-label={t('autoColLast')}>{i.last_run_at ? relTime(i.last_run_at, lang) : t('autoNever')}</td>
                       <td data-label={t('autoColRuns')}>{num(i.runs)}</td>
                       <td data-label={t('autoColErrors')}>{num(i.errors)}</td>

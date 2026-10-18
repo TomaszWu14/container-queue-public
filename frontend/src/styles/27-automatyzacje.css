@@ -53,3 +53,6 @@
 .sim-rules { margin: 4px 0 0; padding-left: 18px; }
 @keyframes sim-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .sim-step { animation: none; } }
+
+/* przełącznik automatu (admin, druga lista PO pkt 6) */
+.auto-switch { margin-left: 8px; padding: 2px 8px; }

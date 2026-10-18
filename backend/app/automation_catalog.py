@@ -125,9 +125,11 @@ def _scheduled_rows(db: Session, now: datetime.datetime) -> list[dict]:
         JobRun.job.in_(jobs_used), JobRun.started_at.in_(list(latest_at.values()) or [now])))
         if latest_at.get((r.job, r.fn)) == r.started_at}
 
+    from .automation_switch import LOCKED, disabled
+    switched_off = disabled(db)
     rows = []
     for spec in SCHEDULED:
-        enabled = spec.job in intervals
+        enabled = spec.job in intervals and spec.key not in switched_off
         statuses, last_runs, oks = [], [], []
         runs_n = errors_n = effects_n = 0
         for fn in spec.fns:
@@ -144,7 +146,9 @@ def _scheduled_rows(db: Session, now: datetime.datetime) -> list[dict]:
         rows.append({
             "key": spec.key, "category": spec.category, "kind": "schedule",
             "status": _worst(statuses),
-            "interval_s": round(intervals[spec.job]) if enabled else None,
+            "interval_s": round(intervals[spec.job]) if spec.job in intervals else None,
+            "switched_off": spec.key in switched_off,
+            "can_disable": spec.job in intervals and spec.key not in LOCKED,
             "last_run_at": max(last_runs).isoformat() if last_runs else None,
             "last_ok_at": max(oks).isoformat() if oks else None,
             "runs": runs_n, "errors": errors_n, "effects": effects_n,
@@ -190,7 +194,7 @@ def _event_rows(db: Session, user, now: datetime.datetime) -> list[dict]:
         rows.append({
             "key": spec.key, "category": spec.category, "kind": "event",
             "status": ("ok" if count or last_at else "unknown") if enabled else "off",
-            "interval_s": None,
+            "interval_s": None, "switched_off": False, "can_disable": False,
             "last_run_at": last_at.isoformat() if last_at else None,
             "last_ok_at": last_at.isoformat() if last_at else None,
             "runs": count, "errors": None, "effects": None,
@@ -215,7 +219,8 @@ def _outbound_row(db: Session, spec: Event, since: datetime.datetime) -> dict:
     else:
         status = "ok" if last.ok else "error"
     return {"key": spec.key, "category": spec.category, "kind": "event", "status": status,
-            "interval_s": None, "last_run_at": last.started_at.isoformat() if last else None,
+            "interval_s": None, "switched_off": False, "can_disable": False,
+            "last_run_at": last.started_at.isoformat() if last else None,
             "last_ok_at": last_ok.isoformat() if last_ok else None,
             "runs": runs, "errors": errors, "effects": None}
 

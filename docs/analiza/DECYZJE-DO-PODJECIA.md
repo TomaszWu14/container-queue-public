@@ -24,6 +24,7 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-026 | Kreator reguł: 4 warunki, sprawdzanie co godzinę, zmienia tylko admin | tak | więcej warunków / zmiany także przez logistykę | [ZALOZENIA](ZALOZENIA.md) |
 | Z-027 | „Dłużej niż zwykle” = powyżej 90. percentyla etapu z 90 dni, dni kalendarzowe; kontenery po dostawie na magazyn pomijane | tak | mediana × 2, dni robocze | panel „Przebieg procesu” |
 | Z-028 | Asystent bez modelu AI odpowiada z szablonu po polsku, także po awarii modelu | tak | szablon tylko w demo, wersje EN/PT | [ZALOZENIA](ZALOZENIA.md) |
+| Z-030 | Automat włącza / wyłącza tylko admin; RODO, retencja, pliki, kopia i strażnik chronione | tak | także logistyka | [ZALOZENIA](ZALOZENIA.md) |
 | Z-029 | „Symuluj dzień” nic nie zapisuje — pokazuje kroki w oknie | tak (bezpieczniej dla demo) | zapis w „piaskownicy” demo (ADR-0005) | [ZALOZENIA](ZALOZENIA.md) |
 
 ## Proces i bezpieczeństwo — starsze, wciąż otwarte
