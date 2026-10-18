@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 import httpx
 
-from .. import ai_quality, automation_catalog, automation_events, automation_savings, process_mining
+from .. import ai_quality, automation_catalog, automation_events, automation_savings, demo_simulation, process_mining
 from ..config import settings
 from ..audit import record
 from ..database import get_db
@@ -36,6 +36,13 @@ def ai_reading_quality(weeks: int = Query(8, ge=2, le=26), db: Session = Depends
     """US-037: odczyt faktur — reguły / ML / człowiek tydzień po tygodniu i trafność podpowiedzi
     modelu wg pewności; tylko paczki kontenerów w zakresie użytkownika."""
     return ai_quality.quality(db, user, weeks=weeks)
+
+
+@router.get("/automations/simulate-day")
+def simulate_day(db: Session = Depends(get_db), user: User = editors) -> dict:
+    """US-040: „Symuluj dzień” — prawdziwe funkcje automatów na danych użytkownika, BEZ zapisu
+    (GET; konto demo pozostaje tylko do odczytu)."""
+    return demo_simulation.simulate(db, user)
 
 
 @router.get("/automations/process")

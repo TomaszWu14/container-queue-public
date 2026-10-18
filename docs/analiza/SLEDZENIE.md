@@ -75,7 +75,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-037 jakość odczytu faktur przez AI | FR-015 | `test_ai_quality.py` (3), `AiQualityPanel.dom.test.tsx` (2) | #40 | wdrożone |
 | US-038 przebieg procesu z historii statusów | FR-015, Z-027 | `test_process_mining.py` (4), `ProcessFlowPanel.dom.test.tsx` (3) | #42 | wdrożone |
 | US-039 asystent bez modelu AI (demo) | FR-015, Z-028 | `test_assistant.py` (2 nowe + 4 zmienione), `assistant.dom.test.tsx` (1) | #45 | wdrożone |
-| US-052 demo z danymi na ekranie Automatyzacje | US-032…037 | `test_seed_demo_automation.py` (2) | — | czeka na merge |
+| US-052 demo z danymi na ekranie Automatyzacje | US-032…037 | `test_seed_demo_automation.py` (2) | #46 | wdrożone |
+| US-040 Symuluj dzień | Z-024, Z-029 | `test_demo_simulation.py` (2), `SimulateDayPanel.dom.test.tsx` (2) | — | czeka na merge |
 
 ## Zasady utrzymania
 

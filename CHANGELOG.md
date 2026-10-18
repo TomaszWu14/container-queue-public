@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **„Symuluj dzień” w demo** (US-040): przycisk na ekranie Automatyzacje przechodzi obieg automatów krok po kroku —
+  mail od spedytora, odczyt numeru kontenera, faktura, reguły, zdarzenie do n8n z podpisem i zaoszczędzone minuty.
+  Prawdziwe funkcje aplikacji, bez zapisu: konto demo dalej tylko czyta.
 - **Demo: ekran Automatyzacje z danymi** (US-052): po starcie demo automaty mają historię przebiegów z ostatniego
   tygodnia (z efektami i jedną dawną awarią), są 3 przykładowe reguły i faktury z 8 tygodni dla panelu jakości
   odczytu AI — żaden panel nie jest pusty.
