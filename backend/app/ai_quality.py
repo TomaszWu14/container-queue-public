@@ -105,6 +105,6 @@ def mistakes(db: Session, user, limit: int = 15) -> list[dict]:
     threshold = float(settings.ml_auto_apply_threshold)
     out = [{"container_id": cid, "container_no": no, "invoice_number": inv, "at": at.isoformat(),
             "line_no": line, "raw_ref": raw, "descr": descr, "suggestion": sugg, "chosen": chosen,
-            "confidence": round(float(conf), 2), "auto": float(conf) >= threshold}
+            "confidence": round(float(conf or 0), 2), "auto": float(conf or 0) >= threshold}
            for cid, no, inv, at, line, raw, descr, sugg, chosen, conf in rows]
     return sorted(out, key=lambda m: (-m["auto"], -m["confidence"]))
