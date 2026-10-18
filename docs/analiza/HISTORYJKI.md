@@ -469,7 +469,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Przycisk niczego nie zatwierdza sam: decyzję podejmuje zalogowany użytkownik z własnymi uprawnieniami.
 - **[SEC]:** w karcie tylko link (bez tokenu, bez akcji z czatu) — kanał Teams widzi więcej osób niż uprawnionych
   do kontenera, więc wszystko za logowaniem; adres z konfiguracji, nie z danych użytkownika.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #49.
 
 ### US-042 · [DEV] Konektor Power Automate (pomysł 10)
 - **Rozmiar:** S · Plik konektora (OpenAPI 2.0) dla odczytu kolejki i zdarzeń + przykładowy przepływ.
