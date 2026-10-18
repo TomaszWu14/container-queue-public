@@ -27,7 +27,7 @@ tygodniowo**.
 
 - **Jeden stan kontenera** dla logistyki, magazynów, spedytorów i agencji celnej — każdy widzi tylko swoje.
 - **Historia każdej zmiany** (kto, kiedy, było → jest, powód) i walidacja numeru kontenera (ISO 6346).
-- **21 automatów z harmonogramu i 3 obiegi z n8n**, m.in.:
+- **22 automaty z harmonogramu i 3 obiegi z n8n**, m.in.:
   - poczta → poczekalnia dokumentów: numer kontenera z treści maila, człowiek klika „Potwierdź”,
   - odczyt faktur: OCR + reguły + model ML uczony na decyzjach operatorów, z progiem pewności,
   - alerty: kara za przestój, braki dokumentów przed ETA, przeciążenie magazynu, opóźnienia statków (AIS),

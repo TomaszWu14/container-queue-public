@@ -59,6 +59,7 @@ domyślnie 90%); panel „Odczyt faktur” na ekranie Automatyzacje pokazuje, cz
 | Retencja dzienników | raz na dobę | Pełna | — | 0 |
 | Osierocone pliki | raz na dobę | Pełna | przegląd kwarantanny | 0 |
 | Test kopii zapasowej | raz w tygodniu | Pełna | reakcja na raport z błędem | 0 |
+| Strażnik automatów | co godzinę: automat bez udanego przebiegu dłużej niż zwykle | Wspiera decyzję | naprawa automatu | 0 |
 | Synchronizacja z SharePointem | plik kolejki się zmienił | Pełna | — | 10 |
 
 Automaty porządkowe mają 0 minut: chronią dane i spełniają RODO, ale nie zastępują pracy człowieka 1:1,

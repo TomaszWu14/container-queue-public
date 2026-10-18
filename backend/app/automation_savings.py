@@ -36,7 +36,7 @@ DEFAULT_MINUTES: dict[str, int] = {
     "daily_digest": 15,        # poranne zebranie dostaw, opóźnień i braków w mail
     "weekly_digest": 10,
     "avizo_maintenance": 0, "driver_data_purge": 2, "retention": 0, "orphan_files": 0,
-    "verify_backup": 0, "sharepoint_sync": 10, "congestion": 5,
+    "verify_backup": 0, "watchdog": 0, "sharepoint_sync": 10, "congestion": 5,
     "mail_intake": 5,          # zapisanie załączników z maila i przypisanie do kontenera
     "sad_from_mail": 10,       # wgranie draftu SAD i porównanie z fakturami
     "outbound_events": 0,
