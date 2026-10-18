@@ -8,6 +8,7 @@ i trafia do `status_detail()`, żeby nieudana wysyłka nie była cicha.
 """
 import datetime
 import threading
+from typing import Any
 
 import httpx
 
@@ -24,7 +25,7 @@ LINK_LABEL = "Otwórz w aplikacji"   # US-041: akcja w aplikacji po zalogowaniu,
 def card(title: str, body: str, link: str = "") -> dict:
     """Karta; `link` = przycisk „Otwórz w aplikacji” (Action.OpenUrl). Sam przycisk niczego nie
     zatwierdza — prowadzi do ekranu, gdzie decyzję podejmuje zalogowany użytkownik z jego uprawnieniami."""
-    out = {
+    out: dict[str, Any] = {
         "type": "message",
         "attachments": [{
             "contentType": "application/vnd.microsoft.card.adaptive",
