@@ -28,3 +28,12 @@ def test_rules_and_ai_quality_have_data(seeded, client):  # noqa: F811
     assert 40 <= q["automated_pct"] <= 90 and q["totals"]["open"] > 0
     b = {x["bucket"]: x for x in q["buckets"]}
     assert b["auto"]["hit_pct"] > b["high"]["hit_pct"] > b["low"]["hit_pct"]   # kalibracja czytelna
+
+
+def test_process_flow_is_realistic(seeded, client):  # noqa: F811
+    """Historia statusów demo: kontenery w obiegu weszły w obecny etap niedawno, więc „dłużej niż zwykle”
+    to wyjątki, a pierwszy etap liczy się od prawdziwego utworzenia (nie od chwili wgrania demo)."""
+    body = client.get("/api/automations/process", headers=login(client, "demo", PW)).json()
+    first = next(s for s in body["stages"] if s["status"] == "ZAPOWIEDZIANY")
+    assert first["median_days"] and first["median_days"] > 0
+    assert body["stuck_total"] <= 25 and body["transitions_total"] > 500

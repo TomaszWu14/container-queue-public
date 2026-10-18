@@ -14,6 +14,27 @@ freight forwarders and the customs agency — replacing an Excel sheet sent arou
 account with 150 fictional containers. The app opens in English for browsers outside Poland and Portugal (language switch in the sidebar or on the login screen).
 Try the **Automations** screen and press **“Simulate a day”**.
 
+<table>
+  <tr>
+    <td><img src="docs/screenshots/automatyzacje.png" alt="Automations screen: catalog with status, runs, effects and time saved"></td>
+    <td><img src="docs/screenshots/symuluj-dzien.png" alt="Simulate a day: email, container number, invoice, rules, n8n event and minutes saved"></td>
+  </tr>
+  <tr>
+    <td align="center">Automations: what runs on its own, whether it works, time saved</td>
+    <td align="center">“Simulate a day”: the automation flow step by step on demo data</td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/odczyt-faktur-ai.png" alt="Invoice reading: rules, ML model and people, and model accuracy by confidence"></td>
+    <td><img src="docs/screenshots/przebieg-procesu.png" alt="Process flow: time per stage and containers stuck longer than usual"></td>
+  </tr>
+  <tr>
+    <td align="center">AI invoice reading: who matched the lines, how accurate the model is</td>
+    <td align="center">Process mining from the status history</td>
+  </tr>
+</table>
+
+*Screenshots show the Polish UI; the app switches to English for English-language browsers.*
+
 > **Portfolio project.** Company names are fictional, demo and test data are synthetic.
 > The code is shared for review, all rights reserved — [`LICENSE`](LICENSE).
 

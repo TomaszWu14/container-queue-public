@@ -41,7 +41,7 @@ EXAMPLE_RULES = [
 ]
 
 # (źródło, status, czy podpowiedź trafiona, pewność) — rozkład bliski realnemu po kilku tygodniach nauki
-_ITEM_MIX = ([("rules", True, None, None)] * 9 + [("ml", True, True, (0.91, 0.99))] * 6
+_ITEM_MIX = ([("rules", True, None, None)] * 9 + [("ml", True, True, (0.91, 0.99))] * 12
              + [("user", True, False, (0.90, 0.95))] * 1 + [("user", True, True, (0.70, 0.89))] * 4
              + [("user", True, False, (0.70, 0.89))] * 1 + [("user", True, True, (0.40, 0.69))] * 1
              + [("user", True, False, (0.35, 0.69))] * 2 + [("", False, None, (0.40, 0.85))] * 1)

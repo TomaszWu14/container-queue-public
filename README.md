@@ -38,6 +38,22 @@ Napisz: tomasz.wierzbowski@op.pl. Lokalnie uruchomisz to samo trzema komendami �
     <td align="center">Karta kontenera: etap procesu i historia każdej zmiany</td>
     <td align="center">Śledzenie: kontenery na trasie Chiny → Europa</td>
   </tr>
+  <tr>
+    <td><img src="docs/screenshots/automatyzacje.png" alt="Ekran Automatyzacje: katalog automatów ze stanem, przebiegami, efektami i zaoszczędzonym czasem"></td>
+    <td><img src="docs/screenshots/symuluj-dzien.png" alt="Symuluj dzień: mail, numer kontenera, faktura, reguły, zdarzenie do n8n i zaoszczędzone minuty"></td>
+  </tr>
+  <tr>
+    <td align="center">Automatyzacje: co aplikacja robi sama, czy działa i ile czasu oszczędza</td>
+    <td align="center">„Symuluj dzień”: obieg automatów krok po kroku na danych demo</td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/odczyt-faktur-ai.png" alt="Odczyt faktur: udział reguł, modelu ML i człowieka oraz trafność modelu wg pewności"></td>
+    <td><img src="docs/screenshots/przebieg-procesu.png" alt="Przebieg procesu: czas w etapach i kontenery stojące dłużej niż zwykle"></td>
+  </tr>
+  <tr>
+    <td align="center">Odczyt faktur przez AI: kto dopasował pozycje i jak trafny jest model</td>
+    <td align="center">Przebieg procesu z historii statusów (process mining)</td>
+  </tr>
 </table>
 
 > **Projekt portfolio.** Nazwy firm są zamienione na fikcyjne, dane demo i testowe są syntetyczne.

@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Zrzuty Automatyzacji w README** (US-058): ekran Automatyzacje, „Symuluj dzień”, odczyt faktur AI i przebieg procesu
+  w `README.md` i `README.en.md`, generowane testem ścieżki rekrutera; dane demo z realistyczną historią statusów.
 - **Lighthouse w CI** (US-057): strona logowania mierzona przy każdej zmianie frontendu (progi: dostępność 95,
   dobre praktyki 95, SEO 90, szybkość 70) — odznaka w README; przy okazji większe przyciski języka, opis strony,
   ikona i `robots.txt`.
