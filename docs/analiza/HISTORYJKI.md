@@ -620,7 +620,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      pewność; najpierw pomyłki z pewnością od progu (oznaczone „automat” — tam automat ustawiłby błąd sam).
   2. Trafienia i pozycje bez decyzji nie trafiają na listę; tylko kontenery w zakresie użytkownika.
 - **[SEC]:** odczyt, `scope_containers`; wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge. Przegląd bez osobnego „odhaczania”: każda poprawka i tak uczy model.
+- **Stan:** wdrożone w PR #61. Przegląd bez osobnego „odhaczania”: każda poprawka i tak uczy model.
 
 ### US-061 · [DEV] Wykres przepływu procesu (druga lista PO, pkt 4)
 - **Rozmiar:** S
