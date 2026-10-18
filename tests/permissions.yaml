@@ -208,6 +208,7 @@ routes:
   "PUT /api/automations/{key}/enabled": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # włącz/wyłącz automat (druga lista PO, pkt 6), z audytem
   "PUT /api/automations/minutes": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # założenia minut licznika oszczędności (US-034), ustawienie globalne
   "POST /api/automations/test-event": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # zdarzenie testowe do n8n (US-035); bez URL webhooka → 409
+  "GET /api/automations/ai-quality/mistakes": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (pomyłki modelu do przeglądu)
   "GET /api/automations/ai-quality": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (jakość odczytu faktur, US-037)
   "GET /api/automations/simulate-day": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (Symuluj dzień, US-040, bez zapisu)
   "GET /api/automations/process": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (czas etapów procesu, US-038)

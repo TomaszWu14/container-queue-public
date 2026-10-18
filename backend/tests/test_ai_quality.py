@@ -76,3 +76,25 @@ def test_scoped_to_user_companies(client, admin_headers):
 def test_empty_is_not_an_error(client, admin_headers):
     body = client.get("/api/automations/ai-quality?weeks=4", headers=admin_headers).json()
     assert len(body["weeks"]) == 4 and body["automated_pct"] in (None, *range(101))
+
+
+def test_mistakes_list_corrections_scoped_and_ordered(client, admin_headers):
+    """Druga lista PO, pkt 8: poprawki człowieka wobec podpowiedzi modelu — najpierw te, które automat
+    ustawiłby sam (≥ progu); trafienia, pozycje bez decyzji i cudza spółka poza listą."""
+    a, b = _companies()
+    _items(a, "AIQU3000001", [
+        (M, "user", "R1", "R9", 0.6),      # pomyłka, niska pewność
+        (M, "user", "R2", "R8", 0.95),     # pomyłka, automat by ją ustawił
+        (M, "ml", "R3", "R3", 0.97),       # trafienie — nie na liście
+        (U, "", "", "R4", 0.9),            # bez decyzji — nie na liście
+    ])
+    _items(b, "AIQU3000002", [(M, "user", "R5", "R7", 0.99)])
+    with SessionLocal() as db:
+        db.add(User(login="logi-mis", hashed_password=hash_password("pass12345"), role=Role.logistics,
+                    company_id=a))
+        db.commit()
+    mine = client.get("/api/automations/ai-quality/mistakes", headers=login(client, "logi-mis", "pass12345")).json()
+    ours = [m for m in mine if m["container_no"] == "AIQU3000001"]
+    assert [(m["suggestion"], m["chosen"], m["auto"]) for m in ours] == [("R8", "R2", True), ("R9", "R1", False)]
+    assert not any(m["container_no"] == "AIQU3000002" for m in mine)
+    assert client.get("/api/automations/ai-quality/mistakes?limit=99", headers=admin_headers).status_code == 422

@@ -57,6 +57,13 @@ def process_flow(days: int = Query(90, ge=14, le=365), db: Session = Depends(get
     return process_mining.analyze(db, user, days=days)
 
 
+@router.get("/automations/ai-quality/mistakes")
+def ai_mistakes(limit: int = Query(15, ge=1, le=50), db: Session = Depends(get_db),
+                user: User = editors) -> list[dict]:
+    """Druga lista PO, pkt 8: pozycje faktur, w których człowiek poprawił podpowiedź modelu (zakres spółek)."""
+    return ai_quality.mistakes(db, user, limit=limit)
+
+
 @router.put("/automations/minutes")
 def set_minutes(body: MinutesIn, db: Session = Depends(get_db), user: User = admin_only) -> dict:
     bad = [k for k, v in body.minutes.items() if not 0 <= v <= automation_savings.MAX_MINUTES]

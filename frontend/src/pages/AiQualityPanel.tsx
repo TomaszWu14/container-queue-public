@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { api } from '../api'
 import { formatDate } from '../dates'
 import { useT } from '../i18n'
+import AiMistakesTable from './AiMistakesTable'
 
 type Source = 'rules' | 'ml' | 'user' | 'open'
 const SOURCES: Source[] = ['rules', 'ml', 'user', 'open']
@@ -85,6 +86,7 @@ export default function AiQualityPanel() {
               </tbody>
             </table>
           </div>
+          <AiMistakesTable />
         </>
       )}
     </section>
