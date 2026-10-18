@@ -98,7 +98,18 @@ test('ekran Automatyzacje w demo: katalog, oszczędność, panele z danymi i „
   await sim.getByRole('button', { name: 'Uruchom symulację' }).click()
   await expect(sim.locator('.sim-step')).toHaveCount(5)
   await expect(sim.getByText(/odczytał z treści numer/)).toBeVisible()
-  if (process.env.PW_SHOT) await page.screenshot({ path: `${process.env.PW_SHOT}-automatyzacje-${test.info().project.name}.png`, fullPage: true })
+  if (process.env.PW_SHOT) {
+    // zrzuty do README: kroki symulacji pojawiają się z animacją — czekamy na ostatni
+    await expect(sim.locator('.sim-step').last()).toHaveCSS('opacity', '1')
+    const shot = `${process.env.PW_SHOT}-${test.info().project.name}`
+    await page.addStyleTag({ content: '[data-testid="demo-banner"]{display:none!important}.topnav{position:static!important}' })   // baner zasłania panele
+    await page.evaluate(() => window.scrollTo(0, 0))
+    await page.screenshot({ path: `${shot}-automatyzacje.png` })
+    await sim.screenshot({ path: `${shot}-symulacja.png` })
+    await page.getByRole('region', { name: 'Odczyt faktur: automat i człowiek' }).screenshot({ path: `${shot}-odczyt-ai.png` })
+    await page.getByRole('region', { name: 'Przebieg procesu: gdzie kontenery stoją najdłużej' })
+      .screenshot({ path: `${shot}-przebieg.png` })
+  }
   await linger(page)
   await noSideScroll(page)
   await namedButtons(page)

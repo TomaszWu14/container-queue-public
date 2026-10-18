@@ -585,6 +585,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      `robots.txt` (bez indeksowania `/api/`).
 - **Stan:** zrealizowane, czeka na merge. Pomiar lokalny: szybkość 88, dostępność 100, dobre praktyki 96, SEO 100.
 
+### US-058 · [DEV] Nowe zrzuty w README i realistyczna historia demo (druga lista PO, pkt 1)
+- **Rozmiar:** S
+- **Jako** rekruter na GitHubie **chcę** zobaczyć w README najmocniejsze ekrany (Automatyzacje, „Symuluj dzień”,
+  odczyt faktur AI, przebieg procesu), **aby** ocenić projekt bez uruchamiania demo.
+- **Kryteria akceptacji**
+  1. Cztery nowe zrzuty w `README.md` i `README.en.md`, generowane testem ścieżki rekrutera (`PW_SHOT`), więc
+     odświeżenie to jedna komenda (`docs/screenshots/README.md`).
+  2. Dane demo realistyczne (test `backend/tests/test_seed_demo_automation.py`): kontenery w obiegu weszły w obecny
+     etap niedawno, „utworzono” = początek historii — panel przebiegu pokazuje kilka kontenerów „dłużej niż zwykle”,
+     nie 120; model ML przy pewności ≥ 90% trafia w ok. 90%.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

@@ -150,12 +150,21 @@ def _history(db, container: Container, statuses: list, author: User, today: dt.d
     """Historia kontenera: utworzenie + kolejne zmiany statusu do bieżącego (rosnące daty)."""
     reached = statuses.index(container.status)
     start = dt.datetime.combine(min(container.eta, today) - dt.timedelta(days=50), dt.time(9))
-    end = dt.datetime.combine(min(container.eta + dt.timedelta(days=5), today), dt.time(15))
+    in_flow = container.status not in (ContainerStatus.DOSTARCZONY, ContainerStatus.ZREALIZOWANY)
+    # kontener w obiegu: ostatnia zmiana niedawno (inaczej analiza przebiegu procesu widziałaby niemal
+    # każdy kontener jako „dłużej niż zwykle”); dostarczone kończą historię kilka dni po ETA
+    end = dt.datetime.combine(today if in_flow else min(container.eta + dt.timedelta(days=5), today),
+                              dt.time(15))
+    if in_flow and reached == 0:   # zapowiedziany: zamówienie złożone kilka–kilkanaście dni temu
+        start = end - dt.timedelta(days=4 + container.id % 18)
     step = (end - start) / (reached + 1)
+    container.created_at = start   # „utworzono” = początek historii (oś czasu i czas pierwszego etapu)
     rows = [("created", None, container.container_no)] + [
         ("status", statuses[k - 1].value, statuses[k].value) for k in range(1, reached + 1)]
     for k, (field, old, new) in enumerate(rows):
         at = start + step * k   # dzień z osi czasu, godzina w czasie pracy biura (8–16)
+        if in_flow and k == reached and k:   # wejście w obecny etap: 20–80% typowego pobytu temu
+            at = end - step * (((container.id % 4) + 1) / 5)
         db.add(AuditLog(entity_type="containers", entity_id=container.id, field=field,
                         old_value=old, new_value=new, user_id=author.id,
                         created_at=at.replace(hour=8 + (container.id + k) % 9, minute=(k * 17) % 60,
