@@ -21,8 +21,9 @@ from app.main import bootstrap  # przez app.main: kolejność importów omija cy
 from app.iso6346 import check_digit
 from app.models import (AuditLog, Company, Container, CustomsAgency, Forwarder, TrackingEvent, User,
                         Warehouse)
-from app.models.enums import ContainerStatus, Role, today_pl
+from app.models.enums import ContainerStatus, Role, today_pl, utcnow
 from app.security import hash_password, validate_password_policy
+from scripts import seed_demo_automation as automation
 from scripts import seed_demo_process as process
 from scripts import seed_demo_story as story
 
@@ -134,6 +135,11 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     story.history(db, containers, agency.name, author.id)
     story.showcase(db, containers)
     story.warnings(db, containers, author.id, today)
+    # top 15 PO, pkt 1: ekran „Automatyzacje” z danymi — przebiegi automatów, reguły, faktury dla panelu AI
+    now = utcnow()
+    automation.job_runs(db, now)
+    automation.rules(db)
+    automation.invoices(db, containers, author.id, now)
     db.commit()
     count = db.query(Container).count()
     db.close()
