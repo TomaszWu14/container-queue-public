@@ -469,7 +469,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Przycisk niczego nie zatwierdza sam: decyzję podejmuje zalogowany użytkownik z własnymi uprawnieniami.
 - **[SEC]:** w karcie tylko link (bez tokenu, bez akcji z czatu) — kanał Teams widzi więcej osób niż uprawnionych
   do kontenera, więc wszystko za logowaniem; adres z konfiguracji, nie z danych użytkownika.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #49.
 
 ### US-042 · [DEV] Konektor Power Automate (pomysł 10)
 - **Rozmiar:** S · Plik konektora (OpenAPI 2.0) dla odczytu kolejki i zdarzeń + przykładowy przepływ.
@@ -482,6 +482,8 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 
 ### US-045 · [BA] Poradnik „Własna automatyzacja w 15 minut” (pomysł 13)
 - **Rozmiar:** S · n8n + token serwisowy, krok po kroku, z gotowym workflow do zaimportowania.
+- **Stan:** zrealizowane, czeka na merge — `docs/WLASNA-AUTOMATYZACJA-15-MIN.md`, `deploy/n8n/zdarzenie-do-teams.json`
+  (test `backend/tests/test_n8n_workflows.py`: połączenia między node'ami, podpis HMAC przed akcją).
 
 ### US-046 · [BA] Mapa procesu „przed i po” (pomysł 2)
 - **Rozmiar:** S · Rysunek z `docs/bpmn/timporye-proces.bpmn`, kroki przejęte przez automaty zaznaczone.
