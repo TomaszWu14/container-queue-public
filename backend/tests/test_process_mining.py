@@ -70,6 +70,8 @@ def test_stage_times_backward_and_stuck(client):
     assert port["median_days"] == 4.0 and port["p90_days"] == 7.6
     assert body["backward"] == 1 and body["transitions_total"] == 15
     assert {"from": "W_PORCIE", "to": "ODPRAWA", "count": 7} in body["top_transitions"]
+    assert {"from": "ODPRAWA", "to": "W_PORCIE", "count": 1} in body["transitions"]          # cofnięcie też
+    assert sum(t["count"] for t in body["transitions"]) == body["transitions_total"]
     assert [s["container_no"] for s in body["stuck"]] == ["PRMU3000001"]
     assert body["stuck"][0]["days_in_stage"] == 12.0
     assert all(s["status"] != "ZREALIZOWANY" for s in body["stages"])

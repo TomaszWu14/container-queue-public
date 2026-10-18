@@ -622,6 +622,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** odczyt, `scope_containers`; wpis w `tests/permissions.yaml`.
 - **Stan:** zrealizowane, czeka na merge. Przegląd bez osobnego „odhaczania”: każda poprawka i tak uczy model.
 
+### US-061 · [DEV] Wykres przepływu procesu (druga lista PO, pkt 4)
+- **Rozmiar:** S
+- **Jako** kierownik logistyki **chcę** zobaczyć przepływ kontenerów między etapami na jednym obrazku, **aby** od
+  razu widzieć, gdzie proces się zwęża i gdzie wraca (poprawki).
+- **Kryteria akceptacji** (testy `ProcessFlowChart.dom.test.tsx`, `test_process_mining.py`, `test_seed_demo_automation.py`)
+  1. Panel „Przebieg procesu”: etapy w kolejności procesu, pasmo na każde przejście (grubość ∝ liczba kontenerów),
+     przejścia w przód nad osią, cofnięcia statusu pod osią innym kolorem; legenda i liczby przy pasmach.
+  2. Dostępny opis bez wykresu (opis obrazka z liczbami) i lista „Najczęstsze przejścia” jako widok tabelaryczny;
+     podpowiedź po najechaniu; na telefonie wykres przewija się w swoim polu, strona nie.
+  3. API zwraca wszystkie przejścia; demo ma kilka realistycznych cofnięć (odprawa → port → odprawa).
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

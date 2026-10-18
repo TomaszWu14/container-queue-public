@@ -106,6 +106,8 @@ def analyze(db: Session, user, days: int = 90, now: datetime.datetime | None = N
         "stages": stages,
         "top_transitions": [{"from": a, "to": b, "count": n}
                             for (a, b), n in transitions.most_common(TOP_TRANSITIONS)],
+        # wszystkie przejścia — wykres przepływu (druga lista PO, pkt 4)
+        "transitions": [{"from": a, "to": b, "count": n} for (a, b), n in sorted(transitions.items())],
         "stuck_total": len(stuck),
         "stuck": stuck[:STUCK_LIMIT],
     }

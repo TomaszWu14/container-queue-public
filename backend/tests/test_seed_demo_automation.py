@@ -37,3 +37,10 @@ def test_process_flow_is_realistic(seeded, client):  # noqa: F811
     first = next(s for s in body["stages"] if s["status"] == "ZAPOWIEDZIANY")
     assert first["median_days"] and first["median_days"] > 0
     assert body["stuck_total"] <= 25 and body["transitions_total"] > 500
+
+
+def test_demo_has_some_rework(seeded, client):  # noqa: F811
+    """Wykres przepływu procesu (druga lista PO, pkt 4) ma co pokazać: kilka cofnięć odprawa → port."""
+    body = client.get("/api/automations/process", headers=login(client, "demo", PW)).json()
+    assert body["backward"] >= 2
+    assert any(t["from"] == "ODPRAWA" and t["to"] == "W_PORCIE" for t in body["transitions"])

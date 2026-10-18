@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
 import { useT } from '../i18n'
+import ProcessFlowChart, { type Transition } from './ProcessFlowChart'
 
 interface Stage { status: string; count: number; median_days: number | null; p90_days: number | null }
 interface Stuck { id: number; container_no: string; status: string; days_in_stage: number; p90_days: number }
@@ -15,7 +16,8 @@ export interface ProcessFlow {
   backward: number
   backward_pct: number | null
   stages: Stage[]
-  top_transitions: { from: string; to: string; count: number }[]
+  top_transitions: Transition[]
+  transitions?: Transition[]
   stuck_total: number
   stuck: Stuck[]
 }
@@ -78,6 +80,12 @@ export default function ProcessFlowPanel() {
           </div>
           <p className="muted" style={{ fontSize: 12, margin: '6px 0 0' }}>{t('procLegend')}</p>
 
+          {(p.transitions?.length ?? 0) > 0 && (
+            <>
+              <h3 className="aiq-sub">{t('procFlowTitle')}</h3>
+              <ProcessFlowChart transitions={p.transitions ?? []} order={p.stages.map(s => s.status).concat('ZREALIZOWANY')} />
+            </>
+          )}
           {p.top_transitions.length > 0 && (
             <>
               <h3 className="aiq-sub">{t('procTop')}</h3>

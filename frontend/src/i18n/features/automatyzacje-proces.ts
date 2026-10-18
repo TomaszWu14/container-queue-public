@@ -11,6 +11,7 @@ export default defineFeature({
     procColContainer: 'Kontener', procColInStage: 'W etapie',
     procStuckNone: 'Brak — albo etap ma mniej niż {n} zakończonych pobytów (za mało, by ocenić „zwykle”).',
     procEmpty: 'Brak zmian statusu w tym okresie.',
+    procFlowTitle: 'Przepływ między etapami', procFlowForward: 'Przejście w przód', procFlowBack: 'Cofnięcie statusu',
   },
   en: {
     procTitle: 'Process flow: where containers wait longest', procIntro: 'Calculated from the status change history — no manual reporting. The median is the typical time in a stage, the 90th percentile is the “longer than usual” line: a container past it goes on the list to check.',
@@ -21,6 +22,7 @@ export default defineFeature({
     procColContainer: 'Container', procColInStage: 'In stage',
     procStuckNone: 'None — or the stage has fewer than {n} completed stays (too few to judge “usual”).',
     procEmpty: 'No status changes in this period.',
+    procFlowTitle: 'Flow between stages', procFlowForward: 'Forward transition', procFlowBack: 'Status rollback',
   },
   pt: {
     procTitle: 'Fluxo do processo: onde os contentores esperam mais', procIntro: 'Calculado a partir do histórico de mudanças de estado — sem relatórios manuais. A mediana é o tempo típico numa etapa, o percentil 90 é a linha de “mais do que o habitual”: um contentor que a ultrapassa entra na lista a verificar.',
@@ -31,5 +33,6 @@ export default defineFeature({
     procColContainer: 'Contentor', procColInStage: 'Na etapa',
     procStuckNone: 'Nenhum — ou a etapa tem menos de {n} estadias concluídas (poucas para avaliar o “habitual”).',
     procEmpty: 'Sem mudanças de estado neste período.',
+    procFlowTitle: 'Fluxo entre etapas', procFlowForward: 'Transição para a frente', procFlowBack: 'Retrocesso de estado',
   },
 })

@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Wykres przepływu procesu** (US-061): panel „Przebieg procesu” rysuje przejścia między etapami (grubość wg liczby
+  kontenerów) i cofnięcia statusu pod osią; demo ma kilka realistycznych cofnięć.
 - **Pomyłki modelu do przeglądu** (US-060): panel „Odczyt faktur” pokazuje pozycje, w których człowiek poprawił
   podpowiedź modelu — najpierw te, które automat ustawiłby sam.
 - **Włącz / wyłącz automat** (US-059): admin wyłącza automat z harmonogramu jednym przyciskiem na ekranie Automatyzacje,

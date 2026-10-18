@@ -56,3 +56,15 @@
 
 /* przełącznik automatu (admin, druga lista PO pkt 6) */
 .auto-switch { margin-left: 8px; padding: 2px 8px; }
+
+/* Wykres przepływu procesu (druga lista PO, pkt 4): w przód --viz-1, cofnięcia --viz-2 */
+.proc-flow svg { display: block; font-size: 12px; }
+.proc-flow-node rect { fill: var(--panel); stroke: var(--border); stroke-width: 1.5; }
+.proc-flow-node text { fill: var(--text); }
+.proc-flow-node .proc-flow-num { fill: var(--muted); font-size: 10px; }
+.proc-flow-fwd line, .proc-flow-fwd path { stroke: var(--viz-1); stroke-linecap: round; opacity: .85; }
+.proc-flow-back path { stroke: var(--viz-2); stroke-linecap: round; opacity: .9; }
+.proc-flow text { fill: var(--muted); }
+.proc-flow g:hover line, .proc-flow g:hover path { opacity: 1; }
+.proc-flow-sw-fwd { background: var(--viz-1); }
+.proc-flow-sw-back { background: var(--viz-2); }

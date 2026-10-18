@@ -89,6 +89,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-058 zrzuty w README, realistyczna historia demo | US-038, US-052 | `test_seed_demo_automation.py` (1 nowy), zrzuty z `e2e/demo/recruiter.spec.ts` | #59 | wdrożone |
 | US-059 włącz / wyłącz automat | Z-030 | `test_automation_switch.py` (2), `AutomationsPage.dom.test.tsx` (2) | #60 | wdrożone |
 | US-060 pomyłki modelu do przeglądu | FR-015 | `test_ai_quality.py` (1), `AiMistakesTable.dom.test.tsx` (2) | — | czeka na merge |
+| US-061 wykres przepływu procesu | US-038 | `ProcessFlowChart.dom.test.tsx` (2), `test_process_mining.py` (rozszerzony), `test_seed_demo_automation.py` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 
