@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Strażnik automatów** (US-053): automat, który przestał działać po cichu (brak udanego przebiegu dłużej niż
+  zwykle), zapala dzwonek adminów raz dziennie — z datą ostatniego udanego przebiegu.
 - **Lista decyzji do podjęcia przez PO** (`docs/analiza/DECYZJE-DO-PODJECIA.md`): ADR-y i założenia czekające na
   „tak / nie”, z rekomendacją zespołu i skutkiem odmowy w jednej tabeli.
 - **Instrukcje Excel / Power BI / Power Automate** (US-042…044): zapytanie Power Query na eksporcie kolejki

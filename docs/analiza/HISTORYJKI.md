@@ -527,6 +527,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** tylko skrypt `seed_demo` (instancja demo, osłony `check_guards`); dane zmyślone, pliki PDF pokazowe.
 - **Stan:** wdrożone w PR #46.
 
+### US-053 · [DEV] Strażnik automatów (druga lista PO, pkt 7)
+- **Rozmiar:** S
+- **Jako** administrator **chcę** dostać powiadomienie, gdy automat przestaje działać po cichu, **aby** nie dowiedzieć
+  się o tym dopiero od użytkownika („dlaczego nie dostałem alertu o karze?”).
+- **Kryteria akceptacji** (test `backend/tests/test_automation_watchdog.py`)
+  1. Co godzinę: automat z harmonogramu w stanie „spóźniony” (brak udanego przebiegu dłużej niż interwał + 1 h)
+     → dzwonek adminów z datą ostatniego udanego przebiegu.
+  2. Jedno powiadomienie na automat na dobę polską; automaty w normie nie wysyłają nic.
+  3. Strażnik sam jest w katalogu automatów (widać, czy działa).
+- **[SEC]:** tylko odczyt dziennika zadań; odbiorcy = aktywni admini.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

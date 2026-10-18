@@ -153,6 +153,7 @@ def _verify_backup_fn() -> Callable:
 
 def build_jobs(with_ais: bool = False) -> list[Job]:
     from .automation_rules import run_rules
+    from .automation_watchdog import check_late_automations
     from .avizo_workflow import purge_driver_id_no, run_maintenance
     from .invoices.ingest import process_pending as process_pending_invoices
     from .orphan_files import quarantine_orphans
@@ -173,6 +174,7 @@ def build_jobs(with_ais: bool = False) -> list[Job]:
         Job("complaints", 6 * HOUR, (check_complaint_reminders, check_complaint_auto_drafts)),
         # US-036: reguły „gdy warunek → powiadom” z kreatora w panelu (dedup per reguła/kontener/dzień)
         Job("automation_rules", HOUR, (run_rules,)),
+        Job("automation_watchdog", HOUR, (check_late_automations,)),   # spóźnione automaty → dzwonek admina
         Job("pallet_urgent", settings.pallet_alert_interval_hours * HOUR,
             (check_pallet_urgent_alerts,)),
         # okno poniedziałek 6-7 UTC i dedup per user/dzień siedzą w funkcji — poll co 20 min

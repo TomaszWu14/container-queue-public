@@ -62,6 +62,7 @@ SCHEDULED: tuple[Scheduled, ...] = (
                "purge_client_errors", "purge_login_failures", "purge_read_notifications")),
     Scheduled("orphan_files", "data", "orphan_files", ("quarantine_orphans",)),
     Scheduled("verify_backup", "data", "verify_backup", ("verify_backup_weekly",)),
+    Scheduled("watchdog", "data", "automation_watchdog", ("check_late_automations",)),
     Scheduled("sharepoint_sync", "integrations", "sharepoint_queue", ("sharepoint_queue_sync",)),
     Scheduled("congestion", "integrations", "congestion",
               ("record_port_congestion", "check_congestion_alerts")),
