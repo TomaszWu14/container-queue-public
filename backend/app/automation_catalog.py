@@ -55,6 +55,7 @@ SCHEDULED: tuple[Scheduled, ...] = (
     Scheduled("sms_reminders", "communication", "sms_reminders", ("send_tomorrow_sms",)),
     Scheduled("daily_digest", "communication", "daily_digest", ("check_daily_digest_alerts",)),
     Scheduled("weekly_digest", "communication", "weekly_digest", ("check_weekly_digest_alerts",)),
+    Scheduled("automation_report", "communication", "weekly_digest", ("check_automation_weekly_report",)),
     Scheduled("avizo_maintenance", "data", "avizo_maintenance", ("run_maintenance",)),
     Scheduled("driver_data_purge", "data", "avizo_maintenance", ("purge_driver_id_no",)),
     Scheduled("retention", "data", "applog_retention",

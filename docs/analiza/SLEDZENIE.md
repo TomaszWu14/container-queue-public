@@ -81,7 +81,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-041 przycisk w karcie Teams | FR-015 | `test_teams_mail_status.py` (1), `test_notifications_w4.py` (1 rozszerzony) | #49 | wdrożone |
 | US-045 poradnik n8n w 15 minut | FR-020 | `test_n8n_workflows.py` (5) | #50 | wdrożone |
 | US-042…044 Excel, Power BI, Power Automate (instrukcje) | ADR-0004 (bez zmian) | `test_m365_docs.py` (1) | #51 | wdrożone |
-| US-053 strażnik automatów | OBS-009 | `test_automation_watchdog.py` (2) | — | czeka na merge |
+| US-053 strażnik automatów | OBS-009 | `test_automation_watchdog.py` (2) | #53 | wdrożone |
+| US-054 tygodniowy raport automatów | Z-023, Z-024 | `test_automation_report.py` (2) | — | czeka na merge |
 
 ## Zasady utrzymania
 
