@@ -76,6 +76,8 @@ def fetch_weather(db: Session) -> list[dict]:
         # plan zapytania: pozycja statku + punkty trasy, jeden płaski batch
         plan: list[tuple[int, str, float, float]] = []   # (vessel_id, rodzaj, lat, lon)
         for vid, lat, lon, dest in vessels:
+            if lat is None or lon is None:     # bez pełnej pozycji nie ma o co pytać prognozy
+                continue
             plan.append((vid, "current", lat, lon))
             coords = locate_destination(dest)
             if coords:
@@ -106,7 +108,7 @@ def fetch_weather(db: Session) -> list[dict]:
                           "wind_dir": cur.get("wind_direction_10m"),
                           "wave_m": mar.get("wave_height")}
                 if kind == "current":
-                    entry = {"vessel_id": vid, **sample, "route": []}
+                    entry: dict = {"vessel_id": vid, **sample, "route": []}
                     by_vessel[vid] = entry
                     out.append(entry)
                 elif vid in by_vessel:

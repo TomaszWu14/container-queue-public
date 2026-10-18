@@ -139,6 +139,8 @@ def _ingest_queued(db: Session, batch: InvoiceBatch, uploads: pathlib.Path) -> N
     user = db.get(User, batch.created_by_id) if batch.created_by_id else None
     written: list[pathlib.Path] = []
     try:
+        if container is None:
+            raise LookupError(f"paczka {batch.id}: brak kontenera {batch.container_id}")
         ingest_files(db, batch, container, files, uploads, user, written)
     except BaseException:
         db.rollback()

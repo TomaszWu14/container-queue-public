@@ -28,6 +28,34 @@ def test_verify_rejects_stale_dump(tmp_path, monkeypatch):
     assert out["status"] == "error" and "limit 194 h" in out["detail"]
 
 
+def test_verify_feeds_psql_plain_sql(tmp_path, monkeypatch):
+    """psql dostaje rozpakowany SQL — GzipFile jako stdin podałby skompresowane bajty (wykrył mypy)."""
+    import gzip
+    import types
+    dump = tmp_path / "timporye-20261018-020000.sql.gz"
+    with gzip.open(dump, "wb") as fh:
+        fh.write(b"CREATE TABLE x (id int);\n")
+    monkeypatch.setattr(settings, "database_url", "postgresql://u:p@127.0.0.1:1/baza")
+    monkeypatch.setattr(settings, "backup_dir", str(tmp_path))
+
+    class _Conn:
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def execute(self, *a): return None
+    fake_engine = types.SimpleNamespace(connect=_Conn, dispose=lambda: None)
+    monkeypatch.setattr(backup_verify, "create_engine", lambda *a, **k: fake_engine)
+    monkeypatch.setattr(backup_verify, "_count_rows", lambda url, tables: dict.fromkeys(tables, 5))
+    seen = {}
+
+    def fake_run(args, **kw):
+        seen.update(kw)
+        return types.SimpleNamespace(returncode=0, stderr=b"")
+    monkeypatch.setattr(backup_verify.subprocess, "run", fake_run)
+    out = backup_verify.verify_backup()
+    assert out["status"] == "ok", out
+    assert seen["input"] == b"CREATE TABLE x (id int);\n" and "stdin" not in seen
+
+
 def test_verify_restore_stops_on_sql_error():
     assert "ON_ERROR_STOP=1" in inspect.getsource(backup_verify.verify_backup)
 

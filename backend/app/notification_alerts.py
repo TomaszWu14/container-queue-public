@@ -43,7 +43,7 @@ def _arrival_map(db: Session, container_ids: list[int]) -> dict[int, datetime.da
                TrackingEvent.is_estimated.is_(False),
                TrackingEvent.occurred_at.is_not(None))
         .group_by(TrackingEvent.container_id)).all()
-    return {cid: occurred for cid, occurred in rows}
+    return {cid: occurred for cid, occurred in rows if occurred is not None}
 
 
 def _free_days(container: Container, carrier_days: dict[int, int | None]) -> int:
@@ -198,6 +198,8 @@ def check_tracking_alerts(db: Session, today: datetime.date | None = None) -> in
             TrackedVessel.near_port_since.is_not(None),
             TrackedVessel.near_port_since <= stuck_cutoff,
             TrackedVessel.last_seen >= seen_cutoff)).all():
+        if vessel.near_port_since is None:     # wykluczone w zapytaniu — zawężenie dla mypy
+            continue
         hours = int((utcnow() - vessel.near_port_since).total_seconds() // 3600)
         sent += notify_aboard(
             db, aboard_by_vessel.get(vessel.name, []), kind="vessel_stuck", since=midnight,
@@ -240,6 +242,8 @@ def check_customs_alerts(db: Session, today: datetime.date | None = None) -> int
         Container.customs_status.in_((CustomsStatus.ZLECONA, CustomsStatus.REWIZJA)),
         Container.customs_assigned_at.is_not(None))).all()
     for container in pending:
+        if container.customs_assigned_at is None:     # wykluczone w zapytaniu
+            continue
         days = (today - container.customs_assigned_at.date()).days
         if days < threshold:
             continue
@@ -275,11 +279,11 @@ def check_docs_alerts(db: Session, today: datetime.date | None = None) -> int:
     except ValueError:
         days = settings.docs_eta_days
     horizon = today + datetime.timedelta(days=days)
-    candidates = db.scalars(select(Container).where(
+    candidates = list(db.scalars(select(Container).where(
         Container.eta.is_not(None), Container.eta <= horizon,
         Container.document_status != DocumentStatus.WYSLANE,
         (Container.customs_agency_id.is_not(None))
-        | (Container.customs_status != CustomsStatus.BRAK))).all()
+        | (Container.customs_status != CustomsStatus.BRAK))))
     gaps = missing_document_types_batch(db, candidates)
     sent = 0
     for container in candidates:

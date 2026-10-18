@@ -4,6 +4,7 @@ Czysta funkcja — bez DB. Dane wejściowe: kontenery (ze scope), słownik termi
 demurrage (container_id -> date|None) i 'dziś'. Wagi/progi w SIGNAL_WEIGHTS = pokrętło
 strojenia (docelowo panel admina, na razie stałe)."""
 
+import datetime
 from typing import NamedTuple
 
 from .models import Container, ContainerStatus, DocumentStatus
@@ -38,10 +39,10 @@ def _delay_days(c, today):
 
 class _Ctx(NamedTuple):
     """Dane jednej oceny kontenera wspólne dla reguł sygnałów."""
-    today: object
+    today: datetime.date
     weights: dict
     delay_days: int
-    deadline: object
+    deadline: datetime.date | None
     order: dict | None
     care: dict | None
 

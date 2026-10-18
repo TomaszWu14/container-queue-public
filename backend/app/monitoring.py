@@ -112,8 +112,9 @@ def disks() -> list[dict]:
 
 def database(db: Session) -> dict:
     """Rozmiar bazy, największe tabele i połączenia (Postgres); SQLite = rozmiar pliku."""
+    bind = db.get_bind()
     try:
-        if db.bind.dialect.name == "postgresql":
+        if bind.dialect.name == "postgresql":
             size = db.scalar(text("SELECT pg_database_size(current_database())"))
             tables = db.execute(text(
                 "SELECT c.relname, pg_total_relation_size(c.oid), c.reltuples::bigint "
@@ -125,13 +126,13 @@ def database(db: Session) -> dict:
             return {"engine": "postgresql", "size_mb": round(size / 1_048_576, 1), "connections": conns,
                     "tables": [{"name": n, "size_mb": round(s / 1_048_576, 2), "rows": max(r, 0)}
                                for n, s, r in tables]}
-        path = db.bind.url.database or ""
+        path = bind.engine.url.database or ""
         size = os.path.getsize(path) if path and os.path.exists(path) else 0
-        return {"engine": db.bind.dialect.name, "size_mb": round(size / 1_048_576, 1),
+        return {"engine": bind.dialect.name, "size_mb": round(size / 1_048_576, 1),
                 "connections": None, "tables": []}
     except Exception as exc:  # noqa: BLE001 — metryka pomocnicza nie wywala panelu
         logger.warning("monitor: metryki bazy niedostępne", exc_info=True)
-        return {"engine": db.bind.dialect.name, "error": str(exc)[:200]}
+        return {"engine": bind.dialect.name, "error": str(exc)[:200]}
 
 
 def sample(_db=None) -> None:

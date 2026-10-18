@@ -14,8 +14,10 @@ from email.message import Message as MIMEMessage
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import cast
 
 from sqlalchemy import delete, event, select
+from sqlalchemy.engine import CursorResult
 from sqlalchemy.orm import Session
 
 from . import automation_events, teams
@@ -457,8 +459,8 @@ def purge_read_notifications(db: Session) -> int:
     """OBS-011: przeczytane powiadomienia starsze niż NOTIFICATION_RETENTION_DAYS.
     Nieprzeczytane zostają bez względu na wiek (user jeszcze ich nie widział)."""
     cutoff = utcnow() - datetime.timedelta(days=settings.notification_retention_days)
-    n = db.execute(delete(Notification).where(
-        Notification.is_read.is_(True), Notification.created_at < cutoff)).rowcount or 0
+    n = cast(CursorResult, db.execute(delete(Notification).where(
+        Notification.is_read.is_(True), Notification.created_at < cutoff))).rowcount or 0
     db.commit()
     return n
 

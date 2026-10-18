@@ -5,6 +5,7 @@ dostawcy (`Supplier.column_map`: "ref=Item No.; qty=Q'ty; net=Amount"). Skan bez
 tekstu daje pustą listę pozycji — router zamienia to na czytelny błąd dokumentu.
 """
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 
@@ -143,7 +144,7 @@ def _alias_score(header: str, target: str) -> float:
     return 0.0
 
 
-def apply_column_map(header_row: list, column_map: dict[str, str | list[str]]) -> dict | None:
+def apply_column_map(header_row: list, column_map: Mapping[str, str | list[str]]) -> dict | None:
     """Dopasowuje mapę dostawcy do nagłówka; None, gdy nie ma ref + (qty|net). Rola może
     mieć kilka aliasów nagłówka (profil dokumentów) — wygrywa najlepiej pasujący."""
     if not column_map:

@@ -61,6 +61,8 @@ def check_forecast_alerts(db: Session, today: datetime.date | None = None) -> in
                DailyLimit.day >= today, DailyLimit.day <= horizon)).all()}
     sent = 0
     for wid, day, count in rows:
+        if wid is None or day is None:     # wykluczone w zapytaniu
+            continue
         warehouse = warehouses.get(wid)
         if not warehouse:
             continue

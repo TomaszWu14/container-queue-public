@@ -43,7 +43,7 @@ def check_complaint_auto_drafts(db: Session, today: datetime.date | None = None)
     prefix = get_setting(db, "complaint_prefix") or "REK"
     created = 0
     for container in overdue:
-        if container.id in drafted:
+        if container.id in drafted or container.eta is None:     # eta: wykluczone w zapytaniu
             continue
         days = (today - container.eta).days
         timeline = "\n".join(_timeline_lines(db, container))
@@ -93,6 +93,8 @@ def check_complaint_reminders(db: Session, now: datetime.datetime | None = None)
         Complaint.sent_at.is_not(None))).all() if thresholds else []
     sent = 0
     for complaint in pending:
+        if complaint.sent_at is None:     # wykluczone w zapytaniu
+            continue
         age = (now - complaint.sent_at).days
         done = {int(x) for x in complaint.reminders_sent.split(",") if x.strip().isdigit()}
         due = [t for t in thresholds if age >= t and t not in done]

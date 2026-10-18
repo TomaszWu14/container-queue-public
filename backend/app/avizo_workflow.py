@@ -93,7 +93,7 @@ def revoke_tokens(db: Session, req: AvizoRequest, stage: int | None = None) -> i
              .values(revoked_at=utcnow()))
     if stage is not None:
         query = query.where(AvizoFormToken.stage == stage)
-    return db.execute(query).rowcount
+    return cast(CursorResult, db.execute(query)).rowcount
 
 
 def issue_token(db: Session, req: AvizoRequest, stage: int) -> str:
@@ -151,10 +151,10 @@ def claim_token(db: Session, tok: AvizoFormToken) -> datetime.datetime:
     used_at w lookup_token tego nie gwarantuje)."""
     db.flush()
     now = utcnow()
-    res = db.execute(update(AvizoFormToken)
+    res = cast(CursorResult, db.execute(update(AvizoFormToken)
                      .where(AvizoFormToken.id == tok.id, AvizoFormToken.used_at.is_(None))
                      .values(used_at=now)
-                     .execution_options(synchronize_session=False))
+                     .execution_options(synchronize_session=False)))
     if res.rowcount != 1:   # ten sam kod co lookup_token — front pokaże „już odpowiedziano” (US-009)
         raise HTTPException(status.HTTP_409_CONFLICT, {"code": "already_submitted",
                                                       "message": "Formularz już wysłany."})

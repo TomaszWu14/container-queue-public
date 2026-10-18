@@ -30,6 +30,7 @@ import pathlib
 import threading
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from typing import Any
 
 from ..config import settings
 from .uom import normalize_ref
@@ -59,8 +60,8 @@ class RefModel:
     def __init__(self) -> None:
         self.history: dict[tuple[int | None, str], Counter] = {}
         self.refs: list[str] = []
-        self.vectorizer = None
-        self.matrix = None
+        self.vectorizer: Any = None      # sklearn TfidfVectorizer (import leniwy — bez typów w stubach)
+        self.matrix: Any = None
         self.trained_at: str = ""
         self.n_examples = 0
         self.n_materials = 0
@@ -135,7 +136,7 @@ class DocKindModel:
     gdy model nie jest wytrenowany."""
 
     def __init__(self) -> None:
-        self.pipeline = None
+        self.pipeline: Any = None        # sklearn Pipeline
         self.classes: list[str] = []
         self.n_examples = 0
         self.trained_at: str = ""
