@@ -2,6 +2,7 @@
 
 Nowe maile i pisma: szablony Jinja2 z autoescape (html_templates.render, ARCH-008)."""
 import html
+from typing import Any
 
 from .date_pl import date_pl
 from .html_templates import env, render
@@ -16,7 +17,7 @@ def esc(value, empty: str = "") -> str:
 # --- klocki firmowych maili z tabelą kontenerów (awizacja, kolejka dnia, reklamacja) ---
 
 # jedyne źródło: makra w templates/mail/_parts.html (szablony wołają je same, bez Markup)
-_PARTS = env.get_template("mail/_parts.html").module
+_PARTS: Any = env.get_template("mail/_parts.html").module  # makra Jinja — atrybuty dynamiczne
 TABLE_OPEN = str(_PARTS.table_open())
 HEAD_ROW = str(_PARTS.head_row())
 SIGNATURE = str(_PARTS.signature())

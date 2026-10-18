@@ -10,6 +10,7 @@ import logging
 import pathlib
 import subprocess  # nosec B404 — psql z obrazu, argumenty stałe
 import time
+from typing import Any
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
@@ -54,7 +55,7 @@ def verify_backup() -> dict:
     """Przebieg weryfikacji; wynik do loga + notyfikacja adminów przy błędzie."""
     global last_result
     started = datetime.datetime.now(datetime.UTC).isoformat()
-    result = {"started_at": started, "status": "error", "detail": ""}
+    result: dict[str, Any] = {"started_at": started, "status": "error", "detail": ""}
     try:
         url = make_url(settings.database_url)
         if not url.drivername.startswith("postgresql"):
@@ -92,11 +93,14 @@ def verify_backup() -> dict:
         admin_eng.dispose()
         temp_url = url.set(database=temp_db, drivername="postgresql")
         try:
+            # psql czyta stdin z deskryptora pliku — GzipFile jako stdin dałby mu skompresowane bajty,
+            # więc rozpakowany SQL podajemy przez `input` (kopia bazy tej skali to megabajty)
             with gzip.open(dump, "rb") as fh:
-                proc = subprocess.run(  # nosec B603 B607 — psql z obrazu, URL z configu
-                    ["psql", "--quiet", "--no-psqlrc", "-v", "ON_ERROR_STOP=1",
-                     temp_url.render_as_string(hide_password=False)],
-                    stdin=fh, capture_output=True, timeout=1800)
+                sql = fh.read()
+            proc = subprocess.run(  # nosec B603 B607 — psql z obrazu, URL z configu
+                ["psql", "--quiet", "--no-psqlrc", "-v", "ON_ERROR_STOP=1",
+                 temp_url.render_as_string(hide_password=False)],
+                input=sql, capture_output=True, timeout=1800)
             if proc.returncode != 0:
                 raise RuntimeError(f"psql restore rc={proc.returncode}: "
                                    f"{proc.stderr[-500:].decode(errors='replace')}")
@@ -107,13 +111,13 @@ def verify_backup() -> dict:
             with admin_eng.connect() as conn:
                 conn.execute(text(f'DROP DATABASE IF EXISTS "{temp_db}"'))  # nosemgrep: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
             admin_eng.dispose()
-        mismatched = [t for t in KEY_TABLES
-                      if restored.get(t) is None
-                      or original.get(t) is None
-                      # kopia jest starsza od bazy — dopuszczamy, że baza urosła,
-                      # ale odtworzone nie może być większe ani puste przy niepustym oryginale
-                      or restored[t] > original[t]
-                      or (original[t] > 0 and restored[t] == 0)]
+        def _mismatch(table: str) -> bool:
+            got, want = restored.get(table), original.get(table)
+            # kopia jest starsza od bazy — dopuszczamy, że baza urosła,
+            # ale odtworzone nie może być większe ani puste przy niepustym oryginale
+            return got is None or want is None or got > want or (want > 0 and got == 0)
+
+        mismatched = [t for t in KEY_TABLES if _mismatch(t)]
         result.update(status="ok" if not mismatched else "error",
                       dump=dump.name, tables={t: {"original": original.get(t),
                                                   "restored": restored.get(t)}
@@ -139,8 +143,8 @@ def _notify_admins_failure(detail: str) -> None:
         from .models import Role, User
         from .notifications import notify
         with SessionLocal() as db:
-            admins = db.scalars(select(User).where(
-                User.role == Role.admin, User.is_active.is_(True))).all()
+            admins = list(db.scalars(select(User).where(
+                User.role == Role.admin, User.is_active.is_(True))))
             notify(db, admins, kind="backup_verify_failed",
                    title="Weryfikacja backupu NIE powiodła się",
                    body=detail[:500])

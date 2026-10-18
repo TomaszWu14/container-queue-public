@@ -656,6 +656,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Reguła bez dzwonka i e-maila zostawia przeczytany wpis — jedno powiadomienie na kontener i dzień nadal pilnowane.
   4. Demo: jedna przykładowa reguła tylko na e-mail i Teams.
 - **[SEC]:** zmiana nadal tylko przez admina z audytem; zamknięta lista kanałów (bez wolnych adresów URL i e-mail).
+- **Stan:** wdrożone w PR #64.
+
+### US-064 · [DEV] Zero znanych błędów typów w modułach automatów (druga lista PO, pkt 13)
+- **Rozmiar:** M
+- **Jako** zespół **chcemy**, żeby moduły uruchamiane przez automaty (alerty, raporty, faktury w tle, kopia,
+  lider pętli, monitoring, prognoza pogody) przechodziły mypy bez wyjątków, **aby** błąd typu nie wychodził
+  dopiero w nocnym przebiegu.
+- **Kryteria akceptacji**
+  1. Lista znanych błędów mypy bez wpisów z tych modułów (189 → 145); CI blokuje nowe.
+  2. Zachowanie bez zmian — poza błędem wykrytym przy okazji: weryfikacja kopii na PostgreSQL podawała do `psql`
+     skompresowany plik (gzip) zamiast SQL, więc na produkcji kończyłaby się błędem; teraz dostaje rozpakowany SQL
+     (test `test_verify_feeds_psql_plain_sql`).
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

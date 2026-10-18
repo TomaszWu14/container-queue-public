@@ -139,6 +139,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- **Weryfikacja kopii zapasowej** (US-064): `psql` dostawał skompresowany plik zamiast SQL — próbne odtworzenie
+  na PostgreSQL zawsze kończyło się błędem.
 - **Przebieg procesu: lista „do sprawdzenia”** pomija kontenery po dostawie na magazyn — czekanie na rozliczenie
   to nie utknięcie w dostawie (w demo lista miała 135 pozycji, prawie wszystkie dostarczone).
 - **Portugalia: SMS do kierowcy i kraj magazynu** (US-016, P-05, P-06): numer kierowcy bez kierunkowego dostaje

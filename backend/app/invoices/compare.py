@@ -71,9 +71,9 @@ def _order_items(db: Session, container: Container) -> list[OrderItem]:
     numbers = container_order_numbers(container)
     if not numbers:
         return []
-    return db.scalars(select(OrderItem)
-                      .where(OrderItem.company_id == container.company_id,
-                             OrderItem.order_number.in_(numbers))).all()
+    return list(db.scalars(select(OrderItem)
+                           .where(OrderItem.company_id == container.company_id,
+                                  OrderItem.order_number.in_(numbers))))
 
 
 def packing_list_report(db: Session, job: InvoiceJob, container: Container,

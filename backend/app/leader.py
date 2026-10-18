@@ -15,7 +15,7 @@ import asyncio
 import logging
 from collections.abc import Callable
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import Connection, Engine, create_engine, text
 from sqlalchemy.pool import NullPool
 
 from .config import settings
@@ -32,8 +32,8 @@ class Leadership:
 
     def __init__(self, url: str | None = None) -> None:
         self._url = url or settings.database_url
-        self._engine = None
-        self._conn = None
+        self._engine: Engine | None = None
+        self._conn: Connection | None = None
 
     def _is_postgres(self) -> bool:
         return self._url.startswith("postgresql")
@@ -44,9 +44,12 @@ class Leadership:
         return self._engine.connect()
 
     def _alive(self) -> bool:
+        conn = self._conn
+        if conn is None:
+            return False
         try:
-            self._conn.execute(text("SELECT 1"))
-            self._conn.commit()
+            conn.execute(text("SELECT 1"))
+            conn.commit()
             return True
         except Exception:  # noqa: BLE001 — zerwane połączenie = lock już zwolniony przez PG
             logger.warning("Połączenie lidera pętli tła zerwane — oddaję rolę")
@@ -55,7 +58,8 @@ class Leadership:
 
     def _close(self) -> None:
         try:
-            self._conn.close()
+            if self._conn is not None:
+                self._conn.close()
         except Exception:  # noqa: BLE001 — zamykamy martwe połączenie
             logger.debug("Zamknięcie połączenia lidera nie powiodło się", exc_info=True)
         self._conn = None

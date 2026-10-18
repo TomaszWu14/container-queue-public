@@ -118,8 +118,9 @@ def _group_row(key: str, g: dict, material, pl_qty: dict, order: list, conversio
     base_uom = material.base_uom if material else ""
     qty_base = None if g["no_factor"] else g["qty_base"]
     factor = material.suppl_factor if material else None
-    pl = [pl_qty[r] for r in g["raw_refs"] if pl_qty.get(r) is not None]
+    pl = [q for q in (pl_qty.get(r) for r in g["raw_refs"]) if q is not None]
     order_base = [_to_base(q, u, base_uom, key, conversions) for q, u in order]
+    order_known = [q for q in order_base if q is not None]     # komplet tylko, gdy żadna nie jest None
     missing = [name for name, flag in (
         ("cn", not g["item"].tariff_cn), ("name_pl", not g["item"].name_pl),
         ("weight", g["no_weight"]), ("unit", g["no_factor"])) if flag]
@@ -132,8 +133,8 @@ def _group_row(key: str, g: dict, material, pl_qty: dict, order: list, conversio
         if qty_base else "",
         "weight_net": "" if g["no_weight"] else _s(g["weight_net"]),
         "ci_pl": _cmp(g["qty"], sum(pl, Decimal(0)) if pl else None, tol_qty),
-        "ci_order": _cmp(qty_base, sum(order_base, Decimal(0))
-                         if order_base and None not in order_base else None, tol_qty),
+        "ci_order": _cmp(qty_base, sum(order_known, Decimal(0))
+                         if order_base and len(order_known) == len(order_base) else None, tol_qty),
         "missing": missing,
     }
 
