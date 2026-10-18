@@ -656,7 +656,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Reguła bez dzwonka i e-maila zostawia przeczytany wpis — jedno powiadomienie na kontener i dzień nadal pilnowane.
   4. Demo: jedna przykładowa reguła tylko na e-mail i Teams.
 - **[SEC]:** zmiana nadal tylko przez admina z audytem; zamknięta lista kanałów (bez wolnych adresów URL i e-mail).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #64.
 
 ### US-064 · [DEV] Zero znanych błędów typów w modułach automatów (druga lista PO, pkt 13)
 - **Rozmiar:** M
