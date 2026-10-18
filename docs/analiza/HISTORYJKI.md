@@ -562,6 +562,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** bez zmian (tylko wybór słownika w przeglądarce).
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-056 · [DEV] Test przeglądarkowy ekranu Automatyzacje w demo (druga lista PO, pkt 3)
+- **Rozmiar:** XS
+- **Jako** właściciel portfolio **chcę**, żeby CI sprawdzało ekran Automatyzacje w demo, **aby** pokaz dla rekrutera
+  nie zepsuł się po cichu.
+- **Kryteria akceptacji** (test `frontend/e2e/demo/recruiter.spec.ts`, komputer i telefon)
+  1. Katalog ma ponad 20 automatów, żaden w stanie „błąd”; widać zaoszczędzony czas.
+  2. Panele reguł, odczytu faktur (bez „Brak faktur”) i przebiegu procesu mają dane z seeda demo.
+  3. „Symuluj dzień” pokazuje 5 kroków z odczytanym numerem kontenera; strona nie przewija się w bok, przyciski
+     mają nazwy.
+  4. Przeglądarka po angielsku → demo od razu po angielsku (US-055).
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **E2E ekranu Automatyzacje w demo** (US-056): ścieżka rekrutera w CI sprawdza katalog automatów, panele z danymi
+  i „Symuluj dzień” na komputerze i telefonie oraz start po angielsku dla zagranicznej przeglądarki.
 - **Język startowy z przeglądarki** (US-055): przy pierwszej wizycie aplikacja wybiera polski, angielski albo
   portugalski wg przeglądarki; inny język przeglądarki → angielski. Zapamiętany wybór wygrywa.
 - **Tygodniowy raport automatów** (US-054): w poniedziałek o 8:00 admin i logistyka dostają podsumowanie —
