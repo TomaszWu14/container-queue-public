@@ -550,6 +550,16 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Poza oknem i drugi raz tego samego dnia — nic.
 - **[SEC]:** raport per użytkownik z jego zakresem (obiegi z poczty liczone przez `scope_containers`); bez kanałów
   wspólnych (Teams/n8n), żeby liczby jednej spółki nie trafiły do innych.
+- **Stan:** wdrożone w PR #54.
+
+### US-055 · [DEV] Język startowy z przeglądarki (druga lista PO, pkt 2)
+- **Rozmiar:** XS
+- **Jako** rekruter z zagranicy **chcę** zobaczyć aplikację od razu po angielsku, **aby** nie szukać przełącznika języka.
+- **Kryteria akceptacji** (test `frontend/src/i18n.detect.test.ts`)
+  1. Pierwsza wizyta: pierwszy obsługiwany język przeglądarki (pl / en / pt, także z regionem, np. `pt-BR`).
+  2. Żaden obsługiwany → angielski. Zapamiętany wybór użytkownika zawsze wygrywa.
+  3. Testy (vitest, Playwright) ustawiają polską przeglądarkę — sprawdzają polskie teksty jak dotąd.
+- **[SEC]:** bez zmian (tylko wybór słownika w przeglądarce).
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

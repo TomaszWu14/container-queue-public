@@ -12,6 +12,7 @@ export default defineConfig({
   globalSetup: './e2e/global-setup.ts',
   outputDir: 'test-results',
   use: {
+    locale: 'pl-PL',   // testy czytają polskie teksty; język startowy zależy od przeglądarki (detectLang)
     baseURL: WEB,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',

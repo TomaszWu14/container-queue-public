@@ -12,7 +12,7 @@ import Onboarding from './Onboarding'
 import DemoMode from './DemoMode'
 import { hiddenInDemo, setDemoSession } from './demoLimits'
 import Sidebar from './Sidebar'
-import { Lang, LangContext, useT } from './i18n'
+import { detectLang, Lang, LangContext, useT } from './i18n'
 import { AppSkeleton, Skeleton, ToastProvider } from './feedback'
 import { ConfirmProvider } from './ConfirmDialog'
 import { ChangePasswordPage, ForgotPasswordPage, ResetPasswordPage } from './pages/AuthPages'
@@ -112,7 +112,8 @@ function Home({ role }: { role: User['role'] }) {
 }
 
 export default function App() {
-  const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('timporye_lang') as Lang) || 'pl')
+  const [lang, setLang] = useState<Lang>(() =>
+    detectLang(localStorage.getItem('timporye_lang'), navigator.languages ?? [navigator.language]))
   const [user, setUser] = useState<User | null>(null)
   const [checked, setChecked] = useState(false)
   const navigate = useNavigate()

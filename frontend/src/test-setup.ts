@@ -12,6 +12,12 @@ import { afterEach } from 'vitest'
 // { timeout } rozrzuconych po testach.
 configure({ defaultHidden: true, asyncUtilTimeout: 5000 })
 
+// język startowy aplikacji zależy od przeglądarki (detectLang); testy czytają polskie teksty, a jsdom
+// udaje en-US — ustawiamy polską przeglądarkę jak u typowego użytkownika (Playwright: locale pl-PL)
+if (typeof navigator !== 'undefined') {
+  Object.defineProperty(navigator, 'languages', { value: ['pl'], configurable: true })
+}
+
 // setPref() odkłada zapis profilu o 1,2 s — gdy plik testów kończył się wcześniej, timer odpalał
 // po zniszczeniu jsdom („localStorage is not defined” = nieobsłużony błąd, czerwone CI na #698).
 // Import dynamiczny: statyczny ładowałby prefs (i api) przed vi.mock('./api') w plikach testów.

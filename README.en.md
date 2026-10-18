@@ -11,7 +11,7 @@ freight forwarders and the customs agency — replacing an Excel sheet sent arou
 🎬 [Recruiter path — 20 s](docs/video/sciezka-rekrutera.mp4)
 
 🌐 **Live demo, no sign-up: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** — read-only
-account with 150 fictional containers. The UI is available in English (language switch in the sidebar or on the login screen).
+account with 150 fictional containers. The app opens in English for browsers outside Poland and Portugal (language switch in the sidebar or on the login screen).
 Try the **Automations** screen and press **“Simulate a day”**.
 
 > **Portfolio project.** Company names are fictional, demo and test data are synthetic.
