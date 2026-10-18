@@ -632,6 +632,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Dostępny opis bez wykresu (opis obrazka z liczbami) i lista „Najczęstsze przejścia” jako widok tabelaryczny;
      podpowiedź po najechaniu; na telefonie wykres przewija się w swoim polu, strona nie.
   3. API zwraca wszystkie przejścia; demo ma kilka realistycznych cofnięć (odprawa → port → odprawa).
+- **Stan:** wdrożone w PR #62.
+
+### US-062 · [DEV] Co jeśli statek się spóźni (druga lista PO, pkt 10)
+- **Rozmiar:** S
+- **Jako** planista logistyki **chcę** sprawdzić, co stanie się z magazynem, gdy statek spóźni się N dni, **aby**
+  zawczasu przesunąć awizacje albo uprzedzić magazyn.
+- **Kryteria akceptacji** (testy `test_what_if.py`, `WhatIfPanel.dom.test.tsx`)
+  1. Ekran Automatyzacje: wybór statku (z zaplanowanymi awizacjami) i opóźnienia 1–21 dni → podsumowanie (ile
+     kontenerów, nowe i znikające przekroczenia limitu) oraz tabela dni, w których zmienia się obciążenie magazynu.
+  2. Lista przesuniętych kontenerów (link do kontenera, data przed → po) — tylko kontenery w zakresie użytkownika.
+  3. Nic nie jest zapisywane; plan awizacji zostaje bez zmian (Z-031).
+- **[SEC]:** odczyt (GET), `scope_containers`; obciążenie innych spółek tylko jako liczba; wpis w `tests/permissions.yaml`.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

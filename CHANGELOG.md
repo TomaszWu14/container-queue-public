@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Co jeśli statek się spóźni** (US-062): ekran Automatyzacje liczy, w które dni magazyn przekroczy limit,
+  gdy wybrany statek spóźni się o 1–21 dni — bez zmiany planu.
 - **Wykres przepływu procesu** (US-061): panel „Przebieg procesu” rysuje przejścia między etapami (grubość wg liczby
   kontenerów) i cofnięcia statusu pod osią; demo ma kilka realistycznych cofnięć.
 - **Pomyłki modelu do przeglądu** (US-060): panel „Odczyt faktur” pokazuje pozycje, w których człowiek poprawił

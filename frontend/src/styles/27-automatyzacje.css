@@ -68,3 +68,8 @@
 .proc-flow g:hover line, .proc-flow g:hover path { opacity: 1; }
 .proc-flow-sw-fwd { background: var(--viz-1); }
 .proc-flow-sw-back { background: var(--viz-2); }
+
+/* „Co jeśli statek się spóźni” (US-062) */
+.whatif-over { color: var(--danger-ink); font-size: 12px; font-weight: 600; margin-left: 4px; }
+.whatif-new td { background: var(--danger-bg); }
+.whatif-moved { margin: 6px 0 0; padding-left: 18px; columns: 2 320px; }
