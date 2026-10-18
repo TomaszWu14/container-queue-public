@@ -456,7 +456,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Tylko kontenery w zakresie użytkownika; brak kontenerów → komunikat.
 - **[SEC]:** trasa `GET /api/automations/simulate-day` (Editors, `scope_containers`), bez wyjątku w blokadzie zapisu
   konta demo; podpis liczony sekretem pokazowym, prawdziwy sekret nie opuszcza serwera.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #47.
 
 ### US-041 · [DEV][SEC] Akceptacja z poziomu Teams (pomysł 18)
 - **Rozmiar:** M · Karta w Teams z przyciskiem prowadzącym do akcji w aplikacji (zatwierdzenie po zalogowaniu —
