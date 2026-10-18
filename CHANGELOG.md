@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Lista decyzji do podjęcia przez PO** (`docs/analiza/DECYZJE-DO-PODJECIA.md`): ADR-y i założenia czekające na
+  „tak / nie”, z rekomendacją zespołu i skutkiem odmowy w jednej tabeli.
 - **Instrukcje Excel / Power BI / Power Automate** (US-042…044): zapytanie Power Query na eksporcie kolejki
   (najnowszy plik z folderu SharePoint), miary DAX i układ raportu Power BI, dwa przepływy Power Automate
   (zdarzenie z aplikacji → Planner/Teams, nowy eksport → odświeżenie raportu) — `docs/MICROSOFT-365.md`.
