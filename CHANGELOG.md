@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Asystent odpowiada także bez modelu AI** (US-039): na serwerze bez modelu (np. demo) asystent składa odpowiedź
+  z danych według szablonu, wyraźnie to oznacza i podpowiada przykładowe pytania z kontenerów widocznych dla
+  użytkownika — klik i jest odpowiedź.
 - **Przebieg procesu z historii statusów** (US-038): ekran Automatyzacje pokazuje, ile dni kontenery zwykle
   stoją w każdym etapie (mediana i 90. percentyl), ile było cofnięć statusu, najczęstsze przejścia i listę
   kontenerów stojących dłużej niż zwykle — wyliczone z dziennika zmian, bez ręcznego raportu.

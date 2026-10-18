@@ -35,6 +35,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-025 | Mierniki „przed wdrożeniem” (US-050): bez danych PO pokazujemy je jako założenia, oznaczone wprost na ekranie i w dokumentach. | — | do potwierdzenia | dane PO z okresu przed aplikacją | US-050 |
 | Z-026 | Kreator reguł (US-036): 4 warunki na start (ETA minęło, awizacja blisko a kontener przed etapem, awizacja bez kierowcy, plan bez potwierdzenia), sprawdzanie co godzinę, jedno powiadomienie na regułę/kontener/dzień, odbiorcy: obserwujący kontener albo admini. Zmienia tylko admin. | — | do potwierdzenia | inne warunki / częstotliwość / zmiany także przez logistykę | `backend/app/automation_rules.py` |
 | Z-027 | Przebieg procesu (US-038): „dłużej niż zwykle” = powyżej 90. percentyla czasu w etapie z ostatnich 90 dni, liczone dopiero przy ≥ 5 zakończonych pobytach etapu; czas w dniach kalendarzowych (z weekendami). | — | do potwierdzenia | inny próg (np. mediana × 2), dni robocze, okno 30/180 dni | `backend/app/process_mining.py` |
+| Z-028 | Asystent bez modelu AI (US-039): odpowiedź z szablonu po polsku (jak odpowiedzi modelu), także po awarii modelu — nie tylko w demo; przykładowe pytania: 2 najbliższe kontenery wg ETA + 1 materiał. | — | do potwierdzenia | szablon tylko w demo, inne pytania przykładowe, wersje EN/PT | `backend/app/assistant_template.py` |
 
 ## Jak potwierdzić
 

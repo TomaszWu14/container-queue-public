@@ -23,7 +23,9 @@ def test_facts_without_model(client, db_session, monkeypatch):
     monkeypatch.setattr(settings, "ollama_url", "")
     r = client.post("/api/assistant/ask", headers=login(client),
                     json={"question": "Gdzie jest MSCU 1234567 i co to NL753-S-40?"}).json()
-    assert r["answer"] is None and r["ai"] is False
+    assert r["ai"] is False and r["answer_source"] == "template"   # US-039: szablon zamiast modelu
+    assert "Kontener MSCU1234567" in r["answer"] and "statek MV DEMO BOREAS" in r["answer"]
+    assert "Materiał NL753-S-40: Cewnik Nelaton" in r["answer"]
     assert r["facts"]["kontenery"][0]["statek"] == "MV DEMO BOREAS"
     assert r["facts"]["materialy"][0]["nazwa_pl"] == "Cewnik Nelaton"
     by_name = client.post("/api/assistant/ask", headers=login(client),
@@ -40,6 +42,7 @@ def test_model_answers_from_facts_and_failure_keeps_facts(client, db_session, mo
     r = client.post("/api/assistant/ask", headers=login(client),
                     json={"question": "status MSCU1234567"}).json()
     assert r["answer"] == "Kontener płynie statkiem MV DEMO BOREAS." and r["ai"] is True
+    assert r["answer_source"] == "ai"
     assert seen["model"] == settings.assistant_model and "MV DEMO BOREAS" in seen["prompt"]
     assert seen["purpose"] == "assistant"     # AI-004: etykieta metryki wywołania
 
@@ -48,14 +51,15 @@ def test_model_answers_from_facts_and_failure_keeps_facts(client, db_session, mo
     monkeypatch.setattr(llm, "chat", boom)
     r = client.post("/api/assistant/ask", headers=login(client),
                     json={"question": "status MSCU1234567"}).json()
-    assert r["answer"] is None and r["facts"]["kontenery"]
+    assert r["answer_source"] == "template" and r["facts"]["kontenery"]   # awaria modelu → szablon
 
 
 def test_no_facts_means_no_model_call(client, db_session, monkeypatch):
     monkeypatch.setattr(settings, "ollama_url", "http://ollama:11434")
     monkeypatch.setattr(llm, "chat", lambda *a, **k: (_ for _ in ()).throw(AssertionError))
     r = client.post("/api/assistant/ask", headers=login(client), json={"question": "hej"}).json()
-    assert r["answer"] is None and r["facts"] == {"kontenery": [], "materialy": []}
+    assert r["answer"] is None and r["answer_source"] is None
+    assert r["facts"] == {"kontenery": [], "materialy": []}
 
 
 def test_isolation_forwarder_sees_neither_foreign_container_nor_materials(client, db_session):
@@ -110,3 +114,34 @@ def test_fact_fields_exist_in_container_out():
     from app.routers.assistant import _FACT_FIELD
     from app.schemas import ContainerOut
     assert set(_FACT_FIELD.values()) <= set(ContainerOut.model_fields)
+
+
+def test_template_sentence_fields():
+    from app import assistant_template as T
+    text = T.answer({"kontenery": [{"kontener": "ABCU1234567", "status": "ODPRAWA", "eta": "2026-10-20",
+                                    "awizacja": None, "odprawa": "ZLECONA"}], "materialy": []})
+    assert text == ("Kontener ABCU1234567, etap 8 · Odprawa celna, ETA 2026-10-20, bez awizacji, "
+                    "odprawa: zlecona agencji.")
+    assert T.answer({"kontenery": [], "materialy": []}) is None
+
+
+def test_examples_scoped_and_answerable(client, db_session, monkeypatch):
+    from app.database import SessionLocal
+    from app.security import hash_password
+    monkeypatch.setattr(settings, "ollama_url", "")
+    with SessionLocal() as db:
+        own = Company(name="Asyst A", code="ASA")
+        other = Company(name="Asyst B", code="ASB")
+        db.add_all([own, other])
+        db.flush()
+        db.add_all([Container(company_id=own.id, container_no="ASXU1000001"),
+                    Container(company_id=other.id, container_no="ASXU2000002"),
+                    User(login="as-lg", hashed_password=hash_password("pass12345"), role=Role.logistics,
+                         company_id=own.id)])
+        db.commit()
+    headers = login(client, "as-lg", "pass12345")
+    qs = client.get("/api/assistant/examples", headers=headers).json()["questions"]
+    assert qs[0] == "Jaki jest status ASXU1000001?"            # tylko kontenery swojej spółki
+    assert not any("ASXU2000002" in q for q in qs) and len(qs) <= 3
+    r = client.post("/api/assistant/ask", headers=headers, json={"question": qs[0]}).json()
+    assert r["answer_source"] == "template" and "ASXU1000001" in r["answer"]

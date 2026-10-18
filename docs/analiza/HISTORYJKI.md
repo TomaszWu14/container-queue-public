@@ -425,10 +425,22 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   5. Tylko kontenery w zakresie użytkownika; admin i logistyka.
 - **[SEC]:** tylko odczyt zliczeń i numerów kontenerów już widocznych dla użytkownika; zakres przez
   `scope_containers`; bez danych osobowych z dziennika (kto zmienił — nie jest zwracane); wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #42.
 
 ### US-039 · [DEV] Asystent widoczny w demo (pomysł 15)
-- **Rozmiar:** S · W demo bez serwera AI — odpowiedzi przygotowane na kilka przykładowych pytań, wprost oznaczone.
+- **Rozmiar:** S
+- **Jako** rekruter oglądający demo **chcę** zadać asystentowi pytanie i dostać odpowiedź, **aby** zobaczyć, jak
+  działa, choć na serwerze demo nie ma modelu AI.
+- **Kryteria akceptacji** (testy `backend/tests/test_assistant.py`, `frontend/src/assistant.dom.test.tsx`)
+  1. Bez modelu AI (albo po jego awarii) asystent odpowiada zdaniami z szablonu złożonymi z faktów z bazy
+     (etap, statek, ETA, awizacja, odprawa, magazyn; materiał: nazwa, JM, CN).
+  2. Odpowiedź z szablonu jest wprost oznaczona („na tym serwerze nie działa model AI”, `answer_source="template"`);
+     odpowiedź modelu ma `answer_source="ai"`. Brak faktów → brak odpowiedzi (jak dotąd).
+  3. Pod polem pytania do 3 przykładowych pytań z danych widocznych dla użytkownika (kontenery w zakresie spółki,
+     materiał tylko dla ról z kartoteką); klik wysyła pytanie.
+- **[SEC]:** szablon używa tylko faktów już przefiltrowanych (`scope_containers`, `hidden_fields`); przykłady przez
+  `scope_containers`; nowa trasa `GET /api/assistant/examples` w `tests/permissions.yaml`. Z-028.
+- **Stan:** zrealizowane, czeka na merge.
 
 ### US-040 · [BA][DEV] „Symuluj dzień” w demo (pomysł 6)
 - **Rozmiar:** M · Jeden przycisk puszcza na fikcyjnych danych napływ maila, odczyt dokumentu i alert; wynik
