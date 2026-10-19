@@ -852,7 +852,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. `python scripts/export_api_docs.py` odświeża oba pliki; generowane na żądanie, nie w każdym PR-ze.
 - **[SEC]:** produkcja dalej nie publikuje `/docs` ani `/openapi.json`; plik opisuje kod, który i tak jest jawny w
   repozytorium — nie zawiera sekretów ani danych.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #88.
 
 ### US-078 · [DEV] Aplikacja „na ekran telefonu” (PWA) (czwarta lista PO, pkt 1)
 - **Rozmiar:** S
