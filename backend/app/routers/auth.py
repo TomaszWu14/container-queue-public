@@ -30,6 +30,7 @@ from ..schemas import (
     TwoFAVerifyIn,
     UserOut,
 )
+from ..backup_codes import generate_backup_codes, hash_backup_code, match_backup_code
 from ..security import (
     ACCESS_COOKIE,
     ALGORITHM,
@@ -41,11 +42,8 @@ from ..security import (
     create_pending_2fa_token,
     dummy_verify,
     ensure_ip_not_blocked,
-    generate_backup_codes,
     generate_totp_secret,
     get_current_user,
-    hash_backup_code,
-    match_backup_code,
     hash_password,
     is_demo_login,
     issue_refresh_token,

@@ -3,7 +3,7 @@ import hashlib
 import json
 import re
 
-from app.security import generate_backup_codes, hash_backup_code, match_backup_code
+from app.backup_codes import generate_backup_codes, hash_backup_code, match_backup_code
 
 
 def test_codes_are_long_unambiguous_and_unique():
