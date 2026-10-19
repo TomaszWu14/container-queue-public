@@ -999,6 +999,19 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** luka ❌ z weryfikacji ASVS L2 (US-025) zamknięta; bez wpływu na działanie aplikacji.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-088 · [SEC] Mocniejsze kody zapasowe 2FA (ASVS 2.6.2, 2.6.3)
+- **Rozmiar:** S
+- **Jako** administrator **chcę**, żeby kody zapasowe 2FA nie dały się odgadnąć po ewentualnym wycieku bazy,
+  **aby** kopia bazy w złych rękach nie otwierała kont z włączonym 2FA.
+- **Kryteria akceptacji** (testy `test_backup_codes.py`, `test_w14_security.py`)
+  1. Nowe kody mają postać `XXXX-XXXX-XXXX` (12 znaków bez mylących 0/O, 1/I — 60 bitów); wpisane z myślnikami
+     lub bez, małymi lub wielkimi literami działają tak samo i tylko raz.
+  2. W bazie każdy kod ma własną sól i wolny hash (scrypt) — ten sam kod daje za każdym razem inny zapis.
+  3. Kody wydane wcześniej działają dalej, aż użytkownik wygeneruje nowe (bez zmiany danych w bazie).
+- **[SEC]:** dwie luki ❌ z weryfikacji ASVS L2 (US-025) zamknięte; bez migracji. Zalecenie dla adminów:
+  ponownie włączyć 2FA (nowe kody), żeby stare, słabsze kody przestały istnieć.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2). Zrobione — patrz US-020 wyżej.

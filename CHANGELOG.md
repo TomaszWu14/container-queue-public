@@ -211,6 +211,7 @@ Jedna reguła „ETA + N dni” (ustawienie admina) przy zakładaniu kontenera i
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- Kody zapasowe 2FA: 12 znaków (60 bitów), w bazie scrypt z solą na kod; stare kody działają do ponownego wygenerowania (US-088, ASVS 2.6.2/2.6.3).
 - Odpowiedzi API z `Cache-Control: no-store` — dane nie zostają w pamięci przeglądarki ani proxy (US-087, ASVS 8.2.1).
 - **Pełna weryfikacja OWASP ASVS L2 wymaganie po wymaganiu** (US-025): `docs/bezpieczenstwo/ASVS-L2-WERYFIKACJA.md`
   — 257 wymagań L1+L2 ze statusem i dowodem w kodzie; `CHECKLISTA_ASVS.md` to odtąd podsumowanie.

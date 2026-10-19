@@ -45,6 +45,7 @@ from ..security import (
     generate_totp_secret,
     get_current_user,
     hash_backup_code,
+    match_backup_code,
     hash_password,
     is_demo_login,
     issue_refresh_token,
@@ -155,10 +156,10 @@ def _consume_backup_code(user: User, code: str) -> bool:
         hashes = json.loads(user.totp_backup_codes or "[]")
     except ValueError:
         return False
-    hashed = hash_backup_code(code)
-    if hashed not in hashes:
+    matched = match_backup_code(code, [str(h) for h in hashes])
+    if matched is None:
         return False
-    hashes.remove(hashed)
+    hashes.remove(matched)
     user.totp_backup_codes = json.dumps(hashes)
     return True
 
