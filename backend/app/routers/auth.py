@@ -48,6 +48,7 @@ from ..security import (
     is_demo_login,
     issue_refresh_token,
     login_limiter,
+    refresh_session_start,
     revoke_user_refresh_tokens,
     user_id_from_token_lenient,
     validate_password_policy,
@@ -74,7 +75,7 @@ def _set_auth_cookies(response: Response, access: str, refresh: str) -> None:
     common: dict[str, Any] = {"httponly": True, "samesite": "lax", "secure": settings.secure_cookies}
     _set_access_cookie(response, access)
     response.set_cookie(REFRESH_COOKIE, refresh, path="/api/auth",
-                        max_age=settings.refresh_token_days * 86400, **common)
+                        max_age=settings.session_max_hours * 3600, **common)
 
 
 def clear_auth_cookies(response: Response) -> None:
@@ -306,16 +307,17 @@ def refresh(request: Request, response: Response,
     if not raw:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Brak refresh tokenu.")
     user_id, rotated = consume_refresh_token(db, raw)
+    started = refresh_session_start(raw)      # limit 12 h od zalogowania (session_limits)
     user = db.get(User, user_id)
     if not user or not user.is_active:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Konto nieaktywne lub nie istnieje.")
-    access = create_access_token(user)
+    access = create_access_token(user, started)
     if not rotated:
         # okno łaski (wyścig kart, SEC-010): sam access; cookie refresh zostaje z rotacji
         # drugiej karty — zużyty token nie wydaje nowego refresh tokenu
         _set_access_cookie(response, access)
         return Token(access_token=access, refresh_token=None)
-    new_refresh = issue_refresh_token(db, user.id)
+    new_refresh = issue_refresh_token(db, user.id, started)
     _set_auth_cookies(response, access, new_refresh)
     return Token(access_token=access, refresh_token=new_refresh)
 

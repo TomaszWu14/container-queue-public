@@ -1035,6 +1035,21 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Miernik tylko podpowiada — reguły przyjęcia hasła na serwerze bez zmian.
 - **[SEC]:** dwie luki ❌ z weryfikacji ASVS L2 (US-025) zamknięte. Etykieta stoi obok pola (nie wokół), żeby
   przycisk nie psuł powiązania etykiety z polem dla czytników ekranu.
+- **Stan:** wdrożone w PR #104.
+
+### US-091 · [SEC] Wylogowanie po 30 min bezczynności i po 12 h od zalogowania (ASVS 3.3.2)
+- **Rozmiar:** S
+- **Jako** właściciel danych **chcę**, żeby zostawiony bez opieki komputer sam się wylogował, a sesja nie żyła
+  bez końca, **aby** obca osoba nie weszła na cudze konto (decyzja PO 2026-10-19).
+- **Kryteria akceptacji** (testy `test_session_limits.py`, `idleLogout.dom.test.tsx`)
+  1. Po 30 min bez ruchu myszy, klawiatury i dotyku panel wylogowuje i na ekranie logowania mówi dlaczego.
+     Kilka kart liczy wspólny czas.
+  2. Serwer niezależnie od panelu: refresh token ważny 30 min od ostatniego odświeżenia, access token 15 min.
+  3. Zawsze najpóźniej 12 h po zalogowaniu trzeba zalogować się ponownie (czas zalogowania przenoszony przy
+     rotacji tokenu).
+  4. Progi w zmiennych `SESSION_IDLE_MINUTES`, `SESSION_MAX_HOURS`; `REFRESH_TOKEN_DAYS` usunięte.
+- **[SEC]:** zamyka lukę ❌ 3.3.2 z weryfikacji ASVS L2. Bez migracji. Starsze tokeny bez czasu zalogowania liczą
+  od chwili wystawienia, więc po wdrożeniu nikt nie zostaje wylogowany natychmiast.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could
