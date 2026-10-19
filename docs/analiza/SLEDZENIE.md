@@ -105,7 +105,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-024 archiwum notatek z pomysłami | AUDYT §2.6 pkt 8 | przegląd linków | #78 | wdrożone |
 | US-070 mniej błędów typów (145 → 75) | CODE-003 | `mypy_baseline.py` (CI) | #79 | wdrożone |
 | US-067 koszt kar w „co jeśli” | US-062, Z-035 | `test_what_if.py` (rozszerzony), `WhatIfPanel.dom.test.tsx` (rozszerzony) | — | czeka na merge |
-| US-071 punktualność armatorów i realne ETA | Z-038 | `test_eta_reliability.py` (2), `EtaReliabilityPanel.dom.test.tsx` (2), `test_seed_demo_automation.py` (1) | — | czeka na merge |
+| US-071 punktualność armatorów i realne ETA | Z-038 | `test_eta_reliability.py` (2), `EtaReliabilityPanel.dom.test.tsx` (2), `test_seed_demo_automation.py` (1) | #80 | wdrożone |
 | US-022 ponawianie wysyłek | P-11, P-12, Z-036 | `test_delivery_retry.py` (4), `DeliveryRetryPanel.dom.test.tsx` (2) | — | czeka na merge |
 | US-072 dostępność stron po zalogowaniu | WCAG 2.1 AA | `e2e/demo/a11y.spec.ts` (4 × 2 urządzenia), `queue-row-warehouse.test.ts` (1) | — | czeka na merge |
 

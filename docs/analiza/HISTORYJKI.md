@@ -778,7 +778,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. „Realne ETA” = ETA + mediana pary armator–port (bez pary: sam armator) dla kontenerów w drodze; tylko podpowiedź.
   4. Demo ma historię przypłynięć (trzech armatorów o różnej punktualności).
 - **[SEC]:** odczyt, `scope_containers` (obca spółka nie zmienia wyniku); wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #80.
 
 ### US-072 · [DEV] Dostępność stron po zalogowaniu (trzecia lista PO, pkt 11)
 - **Rozmiar:** M
