@@ -892,6 +892,19 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Liczby z repozytorium (`python3 scripts/project_metrics.py`), bez sieci i bazy; generowane na żądanie.
   3. Testy liczone jako funkcje testowe — strona mówi to wprost (warianty parametryzowane liczą się raz).
 - **[SEC]:** plik statyczny w paczce frontendu, bez danych i bez wywołań API.
+- **Stan:** wdrożone w PR #91.
+
+### US-081 · [DEV] Interaktywny przewodnik po demo (czwarta lista PO, pkt 14)
+- **Rozmiar:** S
+- **Jako** rekruter w demo **chcę** być poprowadzony krok po kroku przez najważniejsze ekrany z jednym zdaniem
+  wyjaśnienia, **aby** w 2 minuty zrozumieć, co robi aplikacja, bez szukania po menu.
+- **Kryteria akceptacji** (test `DemoGuide.dom.test.tsx`, E2E demo)
+  1. Baner demo → „Przewodnik” albo ekran powitalny → „Przewodnik krok po kroku”: kolejka, pulpit, kalendarz,
+     śledzenie, Automatyzacje i „Symuluj dzień” (tylko konta, które widzą ten ekran), „Jak to zbudowano”.
+  2. Każdy krok przechodzi na ekran, podświetla miejsce i pokazuje kartę „Krok n z N” z „Wstecz / Dalej / Zakończ”;
+     Escape zamyka. Karta na dole ekranu, mieści się na telefonie.
+  3. Teksty PL/EN/PT; szanuje „ogranicz ruch” w systemie.
+- **[SEC]:** tylko nawigacja po stronie klienta, bez zapisu i bez nowych wywołań API.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could
