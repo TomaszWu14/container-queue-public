@@ -757,7 +757,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **Kryteria akceptacji**
   1. `docs/pomysly-automatyzacje*.md` w `docs/archiwum/` z krótkim README (co to i gdzie jest to, co weszło do systemu).
   2. Mapa dokumentacji i odwołania (07-ograniczenia, HISTORYJKI, AUDYT) wskazują nowe miejsce; brak martwych linków.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #78.
 
 ### US-070 · [DEV] Mniej znanych błędów typów: 145 → 75 (trzecia lista PO, pkt 12)
 - **Rozmiar:** M
