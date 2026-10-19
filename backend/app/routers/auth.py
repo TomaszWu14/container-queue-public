@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from .. import login_devices
+from .. import login_devices, totp_store
 from ..audit import record
 from ..automation_policy import is_service_login
 from ..config import settings
@@ -182,7 +182,8 @@ def verify_2fa(request: Request, response: Response, body: TwoFAVerifyIn,
     # limit per konto obok per IP: rotacja IP nie daje nieograniczonych prób na 10^6 kodów
     user_key = f"2fa:user:{user.id}"
     login_limiter.check(user_key)
-    step = totp_matched_step(user.totp_secret, body.code)
+    plain = totp_store.secret_of(user)
+    step = totp_matched_step(plain, body.code) if plain else None
     # anty-replay: kod z już zaakceptowanego (lub starszego) kroku czasowego odrzucamy
     if step is not None and (user.totp_last_step is None or step > user.totp_last_step):
         user.totp_last_step = step
@@ -197,6 +198,8 @@ def verify_2fa(request: Request, response: Response, body: TwoFAVerifyIn,
         db.commit()
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Nieprawidłowy kod 2FA.")
     login_limiter.reset(key, user_key)
+    if plain:
+        totp_store.reseal_if_plain(user, plain)   # jawny wpis sprzed migracji → szyfrowany
     record(db, entity_type="auth", entity_id=user.id, field="login",
            old_value=None, new_value=user.login, user=user, note=f"logowanie (2FA) z {ip}")
     login_devices.check_login(db, user, request.headers.get("user-agent", ""), ip)
@@ -230,7 +233,7 @@ def enable_2fa(body: TwoFAEnableIn, user: User = Depends(get_current_user),
         raise HTTPException(status.HTTP_400_BAD_REQUEST,
                             "Nieprawidłowy kod — zeskanuj QR i spróbuj ponownie.")
     codes = generate_backup_codes()
-    user.totp_secret = body.secret
+    user.totp_secret = totp_store.seal(body.secret)   # w bazie szyfrogram (US-092)
     user.totp_backup_codes = json.dumps([hash_backup_code(c) for c in codes])
     record(db, entity_type="auth", entity_id=user.id, field="2fa_enabled",
            old_value=None, new_value=user.login, user=user, note="włączenie 2FA")
