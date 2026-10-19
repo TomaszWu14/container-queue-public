@@ -9,6 +9,7 @@ import { formatDateTime } from './dates'
 import type { Notification } from './types'
 import { useVisibleInterval } from './useVisibleInterval'
 import { Bell } from 'lucide-react'
+import NotificationMute, { type AlertMute } from './NotificationMute'
 
 type DropdownPos = { left: number; width: number; maxH: number; top?: number; bottom?: number }
 
@@ -46,6 +47,7 @@ export default function NotificationsBell() {
   const [count, setCount] = useState(0)
   const [open, setOpen] = useState(false)
   const [items, setItems] = useState<Notification[]>([])
+  const [mutes, setMutes] = useState<Record<number, AlertMute>>({})
   const wrapRef = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState<DropdownPos | null>(null)
 
@@ -81,8 +83,12 @@ export default function NotificationsBell() {
   const toggle = async () => {
     if (!open) {
       place()
-      const list = await api.get<Notification[]>('/api/notifications?limit=10').catch(() => [])
+      const [list, muted] = await Promise.all([
+        api.get<Notification[]>('/api/notifications?limit=10').catch(() => []),
+        api.get<AlertMute[]>('/api/notifications/mutes').catch(() => [] as AlertMute[]),
+      ])
       setItems(list)
+      setMutes(Object.fromEntries((Array.isArray(muted) ? muted : []).map(m => [m.container_id, m])))
     }
     setOpen(o => !o)
   }
@@ -159,6 +165,13 @@ export default function NotificationsBell() {
               <div style={{ color: 'var(--muted)', fontSize: 12 }}>
                 {formatDateTime(notification.created_at)}
               </div>
+              {notification.container_id && (
+                <NotificationMute containerId={notification.container_id} mute={mutes[notification.container_id]}
+                                  onChange={(cid, m) => setMutes(all => {
+                                    const { [cid]: _old, ...rest } = all
+                                    return m ? { ...rest, [cid]: m } : rest
+                                  })} />
+              )}
             </div>
           ))}
           {hasNews && (

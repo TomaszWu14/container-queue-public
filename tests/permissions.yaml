@@ -464,6 +464,9 @@ routes:
   "GET /api/notifications/unread-count": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 200, customs: 200, purchasing: 200, sales: 200}
   "GET /api/notifications/feed": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 200, customs: 200, purchasing: 200, sales: 200}
   "GET /api/notifications/{notification_id}/thread": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 200, customs: 200, purchasing: 200, sales: 200}
+  "GET /api/notifications/mutes": {anon: 401, admin: 200, logistics: 200, warehouse: 200, forwarder: 200, customs: 200, purchasing: 200, sales: 200}  # scoping: scope_containers
+  "POST /api/notifications/mutes": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: '2xx', customs: '2xx', purchasing: '2xx', sales: '2xx'}  # scoping: get_scoped
+  "DELETE /api/notifications/mutes/{container_id}": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: '2xx', customs: '2xx', purchasing: '2xx', sales: '2xx'}  # scoping: get_scoped
   "POST /api/notifications/unread": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: '2xx', forwarder: '2xx', customs: '2xx', purchasing: '2xx', sales: '2xx'}
 
   # --- pallets ---

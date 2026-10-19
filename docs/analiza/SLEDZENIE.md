@@ -94,6 +94,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-063 kanały reguły w kreatorze | US-036, Z-032 | `test_automation_rules.py` (1), `AutomationRulesPanel.dom.test.tsx` (1) | #64 | wdrożone |
 | US-064 zero znanych błędów typów w modułach automatów | CODE-003 | `mypy_baseline.py` (CI), `test_backup_scripts.py` (1) | #65 | wdrożone |
 | US-026 awaria integracji = komunikat | R-19, Z-033 | `test_integration_errors.py` (9) | — | czeka na merge |
+| US-065 „nie przypominaj” w dzwonku | Z-034 | `test_alert_mutes.py` (1), `notificationsBell.dom.test.tsx` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 

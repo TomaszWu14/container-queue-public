@@ -683,6 +683,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** zamyka ryzyko R-19.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-065 · [DEV] „Nie przypominaj” — osobiste wyciszenie alertów kontenera (trzecia lista PO, pkt 3)
+- **Rozmiar:** S
+- **Jako** logistyk **chcę** jednym kliknięciem w dzwonku wyciszyć alerty o kontenerze, który już załatwiam,
+  **aby** nie dostawać tego samego przypomnienia codziennie.
+- **Kryteria akceptacji** (testy `test_alert_mutes.py`, `notificationsBell.dom.test.tsx`)
+  1. Przy powiadomieniu o kontenerze: „Nie przypominaj” → 1 / 3 / 7 dni; widać „Wyciszone do …” i „Cofnij”.
+  2. Wyciszenie dotyczy tylko tej osoby i tego kontenera; inni odbiorcy dostają alert; wzmianki (@) przychodzą zawsze.
+  3. Po terminie alerty wracają same; kontener spoza zakresu → 404.
+- **[SEC]:** `get_scoped` przy wyciszeniu, lista tylko w zakresie (`scope_containers`), wpis w audycie; zapis
+  w ustawieniach (bez migracji bazy).
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

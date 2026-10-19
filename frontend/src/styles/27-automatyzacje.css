@@ -76,3 +76,7 @@
 .whatif-over { color: var(--danger-ink); font-size: 12px; font-weight: 600; margin-left: 4px; }
 .whatif-new td { background: var(--danger-bg); }
 .whatif-moved { margin: 6px 0 0; padding-left: 18px; columns: 2 320px; }
+
+/* Dzwonek: „Nie przypominaj” (trzecia lista PO, pkt 3) */
+.notif-mute { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-top: 4px; font-size: 12px; color: var(--muted); }
+.notif-mute .btn.small { min-height: 24px; padding: 2px 8px; font-size: 12px; }

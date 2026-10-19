@@ -12,7 +12,9 @@ vi.mock('./routing', () => ({ canAccess: (r: string) => r !== 'warehouse' }))
 vi.mock('./pages/news/NewsFeed', () => ({ NEWS_CHANGED: 'news:changed' }))
 const get = vi.fn()
 const post = vi.fn()
-vi.mock('./api', () => ({ api: { get: (p: string) => get(p), post: (p: string, b: unknown) => post(p, b) } }))
+const del = vi.fn()
+vi.mock('./api', () => ({ api: { get: (p: string) => get(p), post: (p: string, b: unknown) => post(p, b), del: (p: string) => del(p) } }))
+vi.mock('./dates', () => ({ formatDateTime: (v: string) => v, formatDate: (v: string) => v }))
 
 import NotificationsBell from './NotificationsBell'
 
@@ -22,7 +24,7 @@ function Where() {
 }
 
 const mount = () => {
-  get.mockImplementation((p: string) => Promise.resolve(p.includes('unread-count') ? { count: 1 }
+  get.mockImplementation((p: string) => Promise.resolve(p.includes('unread-count') ? { count: 1 } : p.includes('mutes') ? []
     : [{ id: 7, kind: 'customs', title: 'Odprawa zlecona', body: '', container_id: 3, is_read: false, created_at: '2026-10-01T08:00:00' }]))
   post.mockResolvedValue({ ok: true })
   return render(<MemoryRouter initialEntries={['/kolejka']}>
@@ -54,5 +56,21 @@ describe('NotificationsBell', () => {
     fireEvent.click(await screen.findByText('Odprawa zlecona'))
     await waitFor(() => expect(screen.getByTestId('where').textContent).toBe('/kontenery/3'))
     expect(screen.queryByText('newsSeeAll')).toBeNull()
+  })
+
+  it('„Nie przypominaj” wycisza kontener bez otwierania wiadomości i daje się cofnąć', async () => {
+    mount()
+    post.mockImplementation((p: string) => Promise.resolve(p.includes('mutes')
+      ? { container_id: 3, container_no: 'MSKU1', until: '2026-10-22' } : { ok: true }))
+    del.mockResolvedValue({ ok: true })
+    fireEvent.click(screen.getByRole('button', { name: 'notifications' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'muteAction' }))
+    fireEvent.click(screen.getByRole('button', { name: 'muteDays3' }))
+    expect(await screen.findByText('muteUntil')).toBeTruthy()
+    expect(post).toHaveBeenCalledWith('/api/notifications/mutes', { container_id: 3, days: 3 })
+    expect(screen.getByTestId('where').textContent).toBe('/kolejka')     // klik nie otworzył wiadomości
+    fireEvent.click(screen.getByRole('button', { name: 'muteUndo' }))
+    expect(await screen.findByRole('button', { name: 'muteAction' })).toBeTruthy()
+    expect(del).toHaveBeenCalledWith('/api/notifications/mutes/3')
   })
 })

@@ -11,8 +11,9 @@ from ..audit import record
 from ..database import get_db
 from ..deps import AdminOnly as admin_only
 from ..deps import ViewerOrSales as viewer_or_sales
-from ..deps import scope_containers
+from ..deps import get_scoped, scope_containers
 from ..models import Container, Notification, NotificationRule, Role, User
+from .. import alert_mutes
 from .. import notification_feed as feed
 from ..notifications import NOTIFY_CHANNELS, NOTIFY_KINDS
 from ..schemas import NotificationOut
@@ -186,3 +187,47 @@ def notification_thread(notification_id: int, db: Session = Depends(get_db),
         query = query.where(Notification.id == n.id)
     rows = list(db.scalars(query.order_by(Notification.id.desc()).limit(50)))
     return {"thread_key": key, "items": _feed_items(db, user, rows)}
+
+
+class MuteIn(BaseModel):
+    container_id: int
+    days: int
+
+
+@router.get("/mutes")
+def list_mutes(db: Session = Depends(get_db), user: User = viewer_or_sales):
+    """Moje wyciszone kontenery (do kiedy) — tylko w zakresie użytkownika."""
+    mutes = alert_mutes.load(db, user.id)
+    if not mutes:
+        return []
+    try:
+        found = {c.id: c.container_no for c in db.scalars(scope_containers(
+            select(Container).where(Container.id.in_(sorted(mutes))), user))}
+    except HTTPException:
+        found = {}
+    return [{"container_id": cid, "container_no": found[cid], "until": day.isoformat()}
+            for cid, day in sorted(mutes.items(), key=lambda kv: kv[1]) if cid in found]
+
+
+@router.post("/mutes")
+def add_mute(body: MuteIn, db: Session = Depends(get_db), user: User = viewer_or_sales):
+    """„Nie przypominaj przez 1 / 3 / 7 dni” — tylko własne powiadomienia, tylko kontener w zakresie."""
+    container = get_scoped(db, Container, body.container_id, user)
+    try:
+        until = alert_mutes.mute(db, user.id, container.id, body.days)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    record(db, entity_type="users", entity_id=user.id, field=f"alert_mute.{container.id}",
+           old_value="", new_value=until.isoformat(), user=user, note="wyciszenie alertów kontenera")
+    db.commit()
+    return {"container_id": container.id, "container_no": container.container_no, "until": until.isoformat()}
+
+
+@router.delete("/mutes/{container_id}")
+def remove_mute(container_id: int, db: Session = Depends(get_db), user: User = viewer_or_sales):
+    get_scoped(db, Container, container_id, user)   # kontener spoza zakresu → 404 (bez enumeracji)
+    if alert_mutes.unmute(db, user.id, container_id):
+        record(db, entity_type="users", entity_id=user.id, field=f"alert_mute.{container_id}",
+               old_value="wyciszone", new_value="", user=user, note="cofnięcie wyciszenia alertów")
+    db.commit()
+    return {"ok": True}
