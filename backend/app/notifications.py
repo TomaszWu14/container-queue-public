@@ -293,6 +293,11 @@ def notify(db: Session, users: list[User], *, kind: str, title: str, body: str =
 
     recipients = [u for u in users
                   if u.is_active and u.id != exclude_user_id]
+    # osobiste wyciszenie kontenera (dzwonek „nie przypominaj”); wzmianki (@) przechodzą zawsze
+    if container_id is not None and not ignore_watch_only and recipients:
+        from .alert_mutes import muted_users
+        muted = muted_users(db, (u.id for u in recipients), container_id)
+        recipients = [u for u in recipients if u.id not in muted]
     # tryb "tylko obserwowane": user z flagą dostaje powiadomienie o kontenerze
     # tylko jeśli go obserwuje (gwiazdka); powiadomienia bez container_id (np. digest)
     # przechodzą zawsze.
