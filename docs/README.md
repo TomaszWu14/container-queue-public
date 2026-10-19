@@ -75,6 +75,5 @@ z listą ryzyk i pytaniami do Product Ownera.
 
 [audyt-nielsen-kolejka.md](audyt-nielsen-kolejka.md),
 [audyt-tracking-przeplywy-2026-09-15.md](audyt-tracking-przeplywy-2026-09-15.md),
-[PROMPT-AUDYT-UX.md](PROMPT-AUDYT-UX.md),
-[pomysly-automatyzacje.md](pomysly-automatyzacje.md),
-[pomysly-automatyzacje-2000.md](pomysly-automatyzacje-2000.md).
+[PROMPT-AUDYT-UX.md](PROMPT-AUDYT-UX.md).
+Listy pomysłów na automatyzację (materiał roboczy): [archiwum/](archiwum/README.md).

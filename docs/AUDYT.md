@@ -248,7 +248,7 @@ contents: read`, concurrency z osobną grupą dla draftów. **Brakuje w tym repo
    wyjścia.
 7. **Obsługa integracji zewnętrznych:** T-08…T-12 (SharePoint, serwis paletyzacji, AIS, pogoda, NBP) — odpowiedź
    w nieoczekiwanym formacie kończy się 500.
-8. **Pliki `pomysly-automatyzacje*.md`** (340 KB) w `docs/` — szum dla czytelnika; kandydat do archiwum.
+8. ~~**Pliki `pomysly-automatyzacje*.md`** (340 KB) w `docs/` — szum dla czytelnika; kandydat do archiwum.~~ — przeniesione do `docs/archiwum/` (US-024).
 
 ### 2.7 Dokumentacja — ocena
 
