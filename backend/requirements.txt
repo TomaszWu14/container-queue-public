@@ -472,9 +472,9 @@ extract-msg==0.56.1 \
     --hash=sha256:3690ee28cbc5a8affa9c07d5e902464743949fcf2033f24b926d7c08485b42a9 \
     --hash=sha256:de94121cf5503377d932d503280293837baf630cd51ce36de901936b3172c43a
     # via -r requirements.in
-fastapi==0.143.0 \
-    --hash=sha256:1acffe48206a80917cf7dac21992b5c44b25384e8902bf745c1fd9dabcf6c51f \
-    --hash=sha256:3e9395fd35276425b61b516a31fdd7c77fe2af83e41b4da22e30696fb1304c5d
+fastapi==0.143.2 \
+    --hash=sha256:da2fe9893b7392ebce76d8c8511e3fa43e5a25f5852103aa2eee7cff3ab80b75 \
+    --hash=sha256:e9e6d97018dcfd748da7d9e7c61cedefbe9eb91b1a3288e45b13fbae76df2d54
     # via
     #   -r requirements.in
     #   sentry-sdk
@@ -1167,9 +1167,9 @@ pydantic-core==2.50.1 \
     --hash=sha256:f77ac30b19221cd9bd3fcfa3d4614eff93140d0572ab730cded17b64adca05f3 \
     --hash=sha256:fe90228920fd8ff2be62622b6bb8a2b11acd65046d50c6b130614b5879605a20
     # via pydantic
-pydantic-settings==2.15.0 \
-    --hash=sha256:0ba092c291c94baceb5eff768aa0d56400a457585bc0175925a5a5510303da42 \
-    --hash=sha256:694b793e84f766ba76a90ebdefc01d0a9a045dab0382bee70393da93712ad117
+pydantic-settings==2.16.0 \
+    --hash=sha256:5b6c578049ede4db0e2ef3b4eaa4ad4069cfa9211f83fb38df899dfade50a614 \
+    --hash=sha256:7e73acf7f61936a15e5a3b6eedaea29f133357faf7272f2607ba479b049dd7f2
     # via -r requirements.in
 pyjwt[crypto]==2.15.1 \
     --hash=sha256:42d59d631f7768a1028a64c7ff581a9bf7519804daf91fc5b6c56e30eec5e193 \
@@ -1520,6 +1520,7 @@ typing-extensions==4.16.0 \
     #   opentelemetry-api
     #   pydantic
     #   pydantic-core
+    #   pydantic-settings
     #   sqlalchemy
     #   typing-inspection
 typing-inspection==0.4.4 \
