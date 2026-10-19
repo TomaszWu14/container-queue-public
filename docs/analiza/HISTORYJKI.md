@@ -1021,7 +1021,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      czytają je bez zmian.
   2. Pobierania plików (Excel, PDF, ZIP) zachowują własną nazwę pliku; panel bez zmian.
 - **[SEC]:** luka ❌ z weryfikacji ASVS L2 (US-025) zamknięta; uzupełnia `X-Content-Type-Options: nosniff`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #103.
 
 ### US-090 · [SEC] „Pokaż hasło” i miernik siły hasła (ASVS 2.1.8, 2.1.12)
 - **Rozmiar:** S
