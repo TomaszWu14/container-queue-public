@@ -267,6 +267,8 @@ def push_subscribe(body: PushIn, db: Session = Depends(get_db), user: User = vie
 def push_unsubscribe(body: PushIn, db: Session = Depends(get_db), user: User = viewer_or_sales):
     """Wyłączenie push na tym urządzeniu."""
     web_push.unsubscribe(db, user.id, body.endpoint)
+    record(db, entity_type="users", entity_id=user.id, field="push_device",
+           old_value=urlsplit(body.endpoint).hostname or "", new_value="", user=user, note="wyłączenie powiadomień push")
     db.commit()
     return {"ok": True}
 
@@ -279,4 +281,7 @@ def push_test(db: Session = Depends(get_db), user: User = viewer_or_sales):
         raise HTTPException(409, "Najpierw włącz powiadomienia push na tym urządzeniu.")
     sent = sum(1 for s in subs if 200 <= web_push.send(s, {"title": "Kolejka: test powiadomienia",
                                                           "url": "/", "tag": "push-test"}) < 300)
+    record(db, entity_type="users", entity_id=user.id, field="push_test", old_value="", new_value=str(sent),
+           user=user, note="próbne powiadomienie push")
+    db.commit()
     return {"devices": len(subs), "sent": sent}

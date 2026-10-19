@@ -12,6 +12,7 @@ vi.mock('../api', () => ({
 }))
 vi.mock('../App', () => ({ useUser: () => ({ id: 1, role: 'logistics' }) }))
 vi.mock('./profile/AvatarSection', () => ({ default: () => null }))
+vi.mock('./profile/PushSection', () => ({ default: () => null }))
 
 import ProfilePage from './ProfilePage'
 
