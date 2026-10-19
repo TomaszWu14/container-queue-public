@@ -396,7 +396,7 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | Rozdział | ✅ | ⚠️ | ❌ | n/d | ❓ | Razem |
 |---|---|---|---|---|---|---|
 | V1 Architektura, projekt i model zagrożeń | 24 | 13 | 1 | 0 | 0 | 38 |
-| V2 Uwierzytelnianie | 22 | 10 | 8 | 12 | 0 | 52 |
+| V2 Uwierzytelnianie | 24 | 10 | 6 | 12 | 0 | 52 |
 | V3 Zarządzanie sesją | 12 | 3 | 2 | 1 | 0 | 18 |
 | V4 Kontrola dostępu | 7 | 1 | 1 | 0 | 0 | 9 |
 | V5 Walidacja, sanityzacja i kodowanie | 18 | 6 | 0 | 6 | 0 | 30 |
@@ -409,9 +409,9 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V12 Pliki i zasoby | 11 | 2 | 2 | 0 | 0 | 15 |
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
 | V14 Konfiguracja | 17 | 4 | 0 | 2 | 0 | 23 |
-| **Razem** | **145** | **60** | **17** | **29** | **6** | **257** |
+| **Razem** | **147** | **60** | **15** | **29** | **6** | **257** |
 
-Spełnione 145 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 65 % (po US-087, US-088 i US-089; wcześniej 140, 63 %).
+Spełnione 147 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 66 % (po US-087…US-090; wcześniej 140, 63 %).
 
 ### Luki ❌ — proponowane działania
 
