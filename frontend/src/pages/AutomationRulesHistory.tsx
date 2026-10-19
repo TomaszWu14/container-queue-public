@@ -2,6 +2,7 @@
 // zmiany” dla jednej reguły (tylko admin; przywrócenie też trafia do historii).
 import { useEffect, useState } from 'react'
 import { api, errorMessage } from '../api'
+import { useConfirm } from '../ConfirmDialog'
 import { formatDateTime } from '../dates'
 import { useT } from '../i18n'
 
@@ -14,6 +15,7 @@ export default function AutomationRulesHistory({ canEdit, refreshKey, onRestored
   canEdit: boolean; refreshKey: number; onRestored: (rules: unknown) => void
 }) {
   const t = useT()
+  const { confirm } = useConfirm()
   const [open, setOpen] = useState(false)
   const [items, setItems] = useState<RuleHistoryEntry[] | null>(null)
   const [error, setError] = useState('')
@@ -26,7 +28,7 @@ export default function AutomationRulesHistory({ canEdit, refreshKey, onRestored
   }, [open, refreshKey])
 
   const restore = async (entry: RuleHistoryEntry) => {
-    if (!window.confirm(t('ruleHistRestoreConfirm').replace('{name}', entry.name))) return
+    if (!await confirm(t('ruleHistRestoreConfirm').replace('{name}', entry.name))) return
     setBusy(entry.id); setError('')
     try {
       onRestored(await api.post(`/api/automations/rules/history/${entry.id}/restore`, {}))
