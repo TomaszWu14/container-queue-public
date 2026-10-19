@@ -2,8 +2,7 @@
 import datetime
 import enum
 
-from sqlalchemy import (Boolean, CheckConstraint, Date, DateTime, Enum, ForeignKey, Integer, String, Text,
-                        UniqueConstraint, text)
+from sqlalchemy import Boolean, Date, DateTime, Enum, ForeignKey, Integer, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..database import Base
@@ -59,8 +58,6 @@ class AvizoRequest(Base):
 
 class AvizoItem(Base):
     __tablename__ = "avizo_items"
-    # jeden kontener raz w awizacji (US-021, migracja uniq001)
-    __table_args__ = (UniqueConstraint("request_id", "container_id", name="uq_avizo_items_request_container"),)
     id: Mapped[int] = mapped_column(primary_key=True)
     request_id: Mapped[int] = mapped_column(ForeignKey("avizo_requests.id"), index=True)
     container_id: Mapped[int] = mapped_column(ForeignKey("containers.id"), index=True)
@@ -87,11 +84,6 @@ class AvizoFormToken(Base):
 class DeliveryConfirmation(Base):
     """Odpowiedź spedycji z etapu 1 per kontener — stosowana dopiero po zatwierdzeniu."""
     __tablename__ = "avizo_delivery_confirmations"
-    # tylko dozwolone decyzje (US-021, migracja uniq001); bez unikalności — po odrzuceniu spedycja
-    # odpowiada ponownie na tę samą awizację, więc kilka odpowiedzi na kontener to poprawny przebieg
-    __table_args__ = (
-        CheckConstraint("decision IN ('confirmed', 'date_change', 'problem')", name="ck_avizo_delivery_decision"),
-    )
     id: Mapped[int] = mapped_column(primary_key=True)
     request_id: Mapped[int] = mapped_column(ForeignKey("avizo_requests.id"), index=True)
     container_id: Mapped[int] = mapped_column(ForeignKey("containers.id"), index=True)
