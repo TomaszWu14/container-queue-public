@@ -918,7 +918,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Zmiana ETA przelicza datę tylko nietkniętej propozycji (stan PROPOZYCJA, data nie wpisana ręcznie) — z wpisem
      w historii. Plan wysłany / potwierdzony i ręczna data zostają (D2: tylko alert, decyduje człowiek).
 - **[SEC]:** bez zmian uprawnień; zmiana daty idzie przez audyt.
-- **Stan:** zrealizowane, czeka na merge. Domyślne N = 3 zamiast dawnych 4 przy zakładaniu — założenie Z-043.
+- **Stan:** wdrożone w PR #93. Domyślne N = 3 zamiast dawnych 4 przy zakładaniu — założenie Z-043.
 
 ### US-083 · [DEV] Film „Przewodnik po demo” ~1 min z napisami PL/EN (czwarta lista PO, pkt 11)
 - **Rozmiar:** S
