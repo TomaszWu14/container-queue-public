@@ -21,7 +21,6 @@ Status: otwarte · w realizacji · zaakceptowane (wyjątek E-xx) · zamknięte (
 | R-08 | Łańcuch dostaw: Trivy nie bramkuje, brak Semgrep, rozjazd wersji pre-commit/CI; `dependabot.yml` dopiero od PR #18 | niskie | średni | Ś | ograniczone (Trivy i Semgrep bramkują PR, Trivy także obraz co tydzień, pre-commit = CI; zostaje: joby nie są w REQUIRED — decyzja PO w ustawieniach repo) | brak | SEC | US-007 | 2026-11-15 |
 | R-09 | RODO bez dokumentacji: brak rejestru czynności, podstaw prawnych, analizy powierzeń; scrubbing Sentry nie łapie imion | średnie | wysoki | Ś | otwarte | czeka (Z-009) | SEC/BA | US-012 | 2026-11-15 |
 | R-10 | Ciągłość: jedna instancja, kopia raz w tygodniu na tym samym serwerze, brak procedury incydentu/odtworzenia, brak stagingu | niskie | wysoki | Ś | w realizacji: kopia poza serwer gotowa w kodzie (US-013), czeka na włączenie w Coolify; RPO zaakceptowane: E-02 | E-02 | OPS | US-013 | 2026-11-15 |
-| R-11 | 2FA administratorów nieobowiązkowe | niskie | wysoki | Ś | zaakceptowane | E-01 | PO | US-019 | 2027-01-15 |
 | R-12 | Konta demo publiczne, współdzielone, jedno hasło w README (4 role od US-028) | średnie | niski | N | zaakceptowane | E-05 | PO | — | 2027-01-15 |
 | R-13 | `csv_safe` nie neutralizuje `\t` i `\r` (B-002) | niskie | niski | N | otwarte | brak | DEV | US-008 | 2026-11-15 |
 | R-14 | Token n8n statyczny; CIDR i termin ważności opcjonalne | niskie | średni | N | otwarte | brak | OPS | RUNBOOK (ustawić na prod) | 2026-11-15 |
@@ -39,7 +38,6 @@ Po dacie przeglądu wyjątek bez odnowienia wraca do statusu „otwarte”.
 
 | ID | Wyjątek | Uzasadnienie | Akceptuje | Data | Przegląd | Warunki |
 |---|---|---|---|---|---|---|
-| E-01 | `REQUIRE_2FA_ADMIN=false` | decyzja właściciela 2026-09-29; 2FA dobrowolne działa; admini bez telefonu służbowego | właściciel (do potwierdzenia jako PO, Z-008) | 2026-09-29 | 2027-01-15 | rekomendacja `true` na produkcji (US-019); wyjątek nie dotyczy kont z `view_all_companies` po wejściu partnerów |
 | E-02 | Backup raz w tygodniu (RPO ≤ 7 dni), kopie lokalne | decyzja właściciela 2026-09-28 (`REGULY-PROCESU.md`) | właściciel | 2026-09-28 | 2026-12-31 | po wyjściu z Excela ponowna decyzja; kopia off-site (US-013) niezależnie od RPO |
 | E-03 | Adnotacje `nosec` (14) i `dangerouslySetInnerHTML` dla statycznego markupu | każda adnotacja ma uzasadnienie w linii; markup nie zawiera danych użytkownika | SEC | 2026-10-16 | 2027-01-15 | nowa adnotacja = przegląd SEC w PR |
 | E-04 | Globalny limiter API w pamięci procesu (per instancja, zerowany restartem) | kontrakt jednej instancji; limiter logowań jest w bazie | SEC | 2026-10-16 | 2027-01-15 | przy > 1 instancji — limiter w bazie/Redis |
@@ -56,3 +54,4 @@ Po dacie przeglądu wyjątek bez odnowienia wraca do statusu „otwarte”.
 |---|---|---|---|
 | B-001 | Raport błędów importu SAP bez ochrony przed formułami | przed 2026-10-13 (repo prywatne) | `exports.append_row` w `imports_master.py` |
 | B-003 | Import PAZ i analityki bez limitu rozmiaru | przed 2026-10-13 (repo prywatne) | `read_upload_capped` |
+| R-11 / E-01 | 2FA administratorów nieobowiązkowe | 2026-10-19 (decyzja PO) | `REQUIRE_2FA_ADMIN` domyślnie `true`, US-019 |

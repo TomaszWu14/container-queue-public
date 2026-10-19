@@ -1,7 +1,7 @@
 # Decyzje do podjęcia przez PO
 
 Jedna lista wszystkiego, co czeka na „tak / nie” Product Ownera. Szczegóły i uzasadnienia: kolumna „Gdzie”.
-Pełny rejestr założeń (36 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (35 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
 
 Jak odpowiedzieć: wystarczy numer i decyzja, np. „Z-027 tak, ADR-0004 nie”. [BA] przepisze odpowiedź do
 rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje dokumenty, które się na nią powołują.
@@ -11,6 +11,8 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 2026-10-19 — PO potwierdził obecne działanie: Z-031 (co jeśli = tylko podgląd), Z-035 (150 EUR/dzień),
 Z-039 (raport z ostatnich 30 dni, PDF), Z-041 (90 dni, blokuje admin), Z-042 (24 h zegarowe), Z-043 (ETA + 3),
 Z-044 (faktury B/L, próg 90%), Z-045 (push tylko dla pilnych alertów). Kod bez zmian.
+Tego samego dnia PO odrzucił Z-008 — 2FA administratorów obowiązkowe (US-019); zatwierdził też wylogowanie
+po bezczynności (US-091), szyfrowanie sekretu 2FA (US-092) i migrację awizacji (US-021).
 
 ## Architektura (ADR) — zmieniają zakres systemu
 
@@ -44,6 +46,5 @@ Z-044 (faktury B/L, próg 90%), Z-045 (push tylko dla pilnych alertów). Kod bez
 | Nr | Założenie | Dlaczego ważne | Gdzie |
 |---|---|---|---|
 | Z-007 | Fail-fast produkcji dla `DATABASE_URL` i `DATA_ENCRYPTION_KEY` — merge po potwierdzeniu zmiennych w Coolify | bez tego zła konfiguracja uruchamia się po cichu | [ZALOZENIA](ZALOZENIA.md), US-001/US-002 |
-| Z-008 | 2FA administratorów nieobowiązkowe | ryzyko przejęcia konta admina | [RYZYKA](../bezpieczenstwo/RYZYKA.md) |
 | Z-009 | Administrator danych osobowych i kontakt RODO nieznani | wymagane przez RODO | [RODO](../bezpieczenstwo/RODO.md) |
 | Z-010 | Demo publiczne, nigdy z danymi rzeczywistymi | podstawa bezpieczeństwa portfolio | [ZALOZENIA](ZALOZENIA.md) |

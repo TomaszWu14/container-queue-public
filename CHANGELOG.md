@@ -211,6 +211,7 @@ Jedna reguła „ETA + N dni” (ustawienie admina) przy zakładaniu kontenera i
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- 2FA obowiązkowe dla administratorów: `REQUIRE_2FA_ADMIN` domyślnie `true` (US-019, ASVS 4.3.1).
 - Sekret 2FA (TOTP) zaszyfrowany w bazie; migracja `totpenc001` szyfruje istniejące (US-092, ASVS 2.8.2).
 - Wylogowanie po 30 min bezczynności i zawsze po 12 h od zalogowania (US-091, ASVS 3.3.2).
 - Pola hasła z przyciskiem „pokaż / ukryj” i miernikiem siły przy ustawianiu hasła (US-090, ASVS 2.1.8/2.1.12).
