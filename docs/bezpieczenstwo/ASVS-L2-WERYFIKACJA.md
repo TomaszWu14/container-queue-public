@@ -133,7 +133,7 @@ Pominięte (L3): 2.2.4–2.2.7, 2.8.7.
 | 2.7.5 | Weryfikator OOB trzyma tylko skrót | n/d | jw. | — |
 | 2.7.6 | Kod OOB min. 20 bitów entropii | n/d | jw. | — |
 | 2.8.1 | Kody TOTP mają określony czas życia | ✅ | `security.py` `totp_matched_step` (krok 30 s, okno ±1); `test_w14_security.py` | — |
-| 2.8.2 | Klucze TOTP chronione | ❌ | `backend/app/models/dictionaries.py` `totp_secret` (String(64), jawnie) | szyfrować `crypto.encrypt` (Fernet, `DATA_ENCRYPTION_KEY`) |
+| 2.8.2 | Klucze TOTP chronione | ✅ | `backend/app/totp_store.py` (Fernet, `DATA_ENCRYPTION_KEY`), migracja `totpenc001`; `test_totp_encrypted.py` | US-092 (decyzja PO 2026-10-19) |
 | 2.8.3 | Zatwierdzone algorytmy OTP | ✅ | `security.py` `hotp`/`totp` (RFC 6238, HMAC-SHA1); `test_w14_security.py` `test_totp_rfc6238_vectors` | — |
 | 2.8.4 | Kod TOTP użyty tylko raz | ✅ | `auth.py` `verify_2fa` (`totp_last_step`, odrzuca stary krok) | — |
 | 2.8.5 | Ponowne użycie kodu zapisane i zgłoszone | ⚠️ | `auth.py` `verify_2fa` (audyt `login_failed` „błędny kod 2FA”) | brak powiadomienia właściciela konta |
@@ -396,7 +396,7 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | Rozdział | ✅ | ⚠️ | ❌ | n/d | ❓ | Razem |
 |---|---|---|---|---|---|---|
 | V1 Architektura, projekt i model zagrożeń | 24 | 13 | 1 | 0 | 0 | 38 |
-| V2 Uwierzytelnianie | 24 | 10 | 6 | 12 | 0 | 52 |
+| V2 Uwierzytelnianie | 25 | 10 | 5 | 12 | 0 | 52 |
 | V3 Zarządzanie sesją | 13 | 3 | 1 | 1 | 0 | 18 |
 | V4 Kontrola dostępu | 7 | 1 | 1 | 0 | 0 | 9 |
 | V5 Walidacja, sanityzacja i kodowanie | 18 | 6 | 0 | 6 | 0 | 30 |
@@ -409,9 +409,9 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V12 Pliki i zasoby | 11 | 2 | 2 | 0 | 0 | 15 |
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
 | V14 Konfiguracja | 17 | 4 | 0 | 2 | 0 | 23 |
-| **Razem** | **148** | **60** | **14** | **29** | **6** | **257** |
+| **Razem** | **149** | **60** | **13** | **29** | **6** | **257** |
 
-Spełnione 148 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 67 % (po US-087…US-091; wcześniej 140, 63 %).
+Spełnione 149 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 67 % (po US-087…US-092; wcześniej 140, 63 %).
 
 ### Luki ❌ — proponowane działania
 
@@ -422,7 +422,7 @@ Spełnione 148 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 67 
 | 2.1.7, 2.1.8, 2.1.9, 2.1.12 | Brak listy wyciekłych haseł i miernika siły, reguła „litera + cyfra”, brak „pokaż hasło” | jedna historyjka „polityka haseł wg ASVS”: lista zakazanych offline, wskaźnik, przełącznik, usunięcie reguły składu | nowe |
 | 2.3.2 | Brak kluczy sprzętowych (WebAuthn) | WebAuthn przynajmniej dla adminów | E-01, US-019 |
 | 2.6.2, 2.6.3 | ~~Kody zapasowe 2FA: 40 bitów, SHA-256 bez soli~~ | zrobione: 60 bitów + scrypt z solą (US-088); stare kody do ponownego wygenerowania | zamknięte |
-| 2.8.2 | Sekret TOTP jawnie w bazie | szyfrowanie `crypto.encrypt` + migracja | R-05 / US-002 (ten sam klucz danych) |
+| 2.8.2 | ~~Sekret TOTP jawnie w bazie~~ | zrobione: szyfrowanie `crypto.encrypt` + migracja `totpenc001` (US-092) | zamknięte |
 | 3.3.2 | ~~Sesja bez limitu bezwzględnego i bezczynności~~ | zrobione: 30 min bezczynności, 12 h od zalogowania (US-091) | zamknięte |
 | 3.4.4 | Brak prefiksu `__Host-` | `__Host-` dla cookie access | E-07 |
 | 4.3.1 | MFA adminów nieobowiązkowe | `REQUIRE_2FA_ADMIN=true` na produkcji | E-01, R-11, US-019 |

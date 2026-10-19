@@ -192,7 +192,7 @@ def ensure_new_columns() -> None:
                   'watch_only_notifications': "BOOLEAN DEFAULT 0 NOT NULL",
                   'ui_prefs': "TEXT DEFAULT '' NOT NULL",
                   # W14: 2FA + uprawnienia per magazyn
-                  'totp_secret': "VARCHAR(64)",  # nosec B105 — DDL, nie sekret
+                  'totp_secret': "VARCHAR(255)",  # nosec B105 — DDL, nie sekret
                   'totp_backup_codes': "TEXT DEFAULT '' NOT NULL",  # nosec B105
                   'totp_last_step': "INTEGER",
                   'allowed_warehouse_ids': "JSON"},

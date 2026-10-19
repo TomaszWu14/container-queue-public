@@ -211,6 +211,7 @@ Jedna reguła „ETA + N dni” (ustawienie admina) przy zakładaniu kontenera i
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- Sekret 2FA (TOTP) zaszyfrowany w bazie; migracja `totpenc001` szyfruje istniejące (US-092, ASVS 2.8.2).
 - Wylogowanie po 30 min bezczynności i zawsze po 12 h od zalogowania (US-091, ASVS 3.3.2).
 - Pola hasła z przyciskiem „pokaż / ukryj” i miernikiem siły przy ustawianiu hasła (US-090, ASVS 2.1.8/2.1.12).
 - JSON z `/api/*` z `Content-Disposition: attachment` — nie otwiera się w karcie jako strona (US-089, ASVS 14.4.2).

@@ -69,7 +69,8 @@ class User(Base):
     # widoki kolejki) — podąża za kontem między przeglądarkami/urządzeniami
     ui_prefs: Mapped[str] = mapped_column(Text, default="", server_default=text("''"))
     # 2FA TOTP (RFC 6238): sekret base32; NULL = 2FA wyłączone
-    totp_secret: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # szyfrogram Fernet z prefiksem enc: (totp_store.py, US-092)
+    totp_secret: Mapped[str | None] = mapped_column(String(255), nullable=True)
     # anty-replay TOTP: ostatni zaakceptowany krok czasowy (30 s); kod z kroku <= nie przejdzie
     totp_last_step: Mapped[int | None] = mapped_column(Integer, nullable=True)
     # kody zapasowe 2FA: JSON-lista hashy SHA-256 (zużyty kod jest usuwany z listy)

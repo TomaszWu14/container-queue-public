@@ -40,3 +40,7 @@ def decrypt(value: str) -> str:
     if not value or not value.startswith(_PREFIX):
         return value                      # zgodność wstecz z plaintext
     return _fernet().decrypt(value[len(_PREFIX):].encode()).decode()
+
+
+def is_encrypted(value: str | None) -> bool:
+    return bool(value) and str(value).startswith(_PREFIX)
