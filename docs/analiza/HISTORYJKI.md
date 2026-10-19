@@ -504,7 +504,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **Stan:** wdrożone w PR #48 — `README.en.md`.
 
 ### US-049 · [BA] „Jak wybieram, co automatyzować” (pomysł 19)
-- **Rozmiar:** S · Macierz liczba spraw × czas × ryzyko błędu na pomysłach z `docs/pomysly-automatyzacje.md`.
+- **Rozmiar:** S · Macierz liczba spraw × czas × ryzyko błędu na pomysłach z `docs/archiwum/pomysly-automatyzacje.md`.
 - **Stan:** wdrożone w PR #48 — `docs/dla-rekrutera/MACIERZ-AUTOMATYZACJI.md`.
 
 ### US-050 · [BA] Mierniki przed i po wdrożeniu (pomysł 20)
@@ -748,7 +748,16 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      przebieg procesu, „co jeśli statek się spóźni”) → `docs/video/automatyzacje.mp4` i GIF w README.
   2. Ten sam test biegnie w CI przy każdym PR (wideo w artefaktach) — nagranie łatwo odświeżyć po zmianach.
   3. Test E2E sprawdza też „co jeśli” (przycisk „Policz” i wynik).
-- **Stan:** zrealizowane, czeka na merge. Nagranie ma ok. 15 s (tyle trwa test), nie 60 s.
+- **Stan:** wdrożone w PR #77. Nagranie ma ok. 15 s (tyle trwa test), nie 60 s.
+
+### US-024 · [DEV] Archiwum notatek z pomysłami (trzecia lista PO, pkt 15)
+- **Rozmiar:** S
+- **Jako** czytelnik dokumentacji **chcę**, żeby robocze listy pomysłów (340 KB) nie mieszały się z opisem systemu,
+  **aby** szybciej znaleźć to, co obowiązuje.
+- **Kryteria akceptacji**
+  1. `docs/pomysly-automatyzacje*.md` w `docs/archiwum/` z krótkim README (co to i gdzie jest to, co weszło do systemu).
+  2. Mapa dokumentacji i odwołania (07-ograniczenia, HISTORYJKI, AUDYT) wskazują nowe miejsce; brak martwych linków.
+- **Stan:** zrealizowane, czeka na merge.
 
 ## Could
 
@@ -756,7 +765,6 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **US-021** [DEV] Spłata długu modelu danych: UNIQUE w `AvizoItem`/`DeliveryConfirmation`, CHECK dla statusów
   tekstowych, decyzja o dwóch statusach odprawy (`04-model-danych.md` §„Znane niespójności”).
 - **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
-- **US-024** [DEV] Archiwizacja `docs/pomysly-automatyzacje*.md` (340 KB) poza główną mapą dokumentacji.
 - **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna).
 
 ## Won't (na teraz)

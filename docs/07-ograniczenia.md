@@ -87,4 +87,4 @@ Stan: aplikacja jest w fazie testów z użytkownikami.
 3. Kandydaci z analizy kodu: jedna reguła „ETA + N” (P-02, P-03), kraj magazynu zamiast stałego PL
    (P-06), poprawka fałszywego sukcesu przy awizacji (P-01), limit żądań na linku palet (T-01).
 
-Lista pomysłów na automatyzację: [`pomysly-automatyzacje.md`](pomysly-automatyzacje.md).
+Lista pomysłów na automatyzację: [`archiwum/pomysly-automatyzacje.md`](archiwum/pomysly-automatyzacje.md).

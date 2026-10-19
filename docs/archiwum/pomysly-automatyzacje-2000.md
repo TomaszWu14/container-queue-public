@@ -1,6 +1,6 @@
 # TIMPORYE — 2000 pomysłów na automatyzacje i feature'y
 
-> Rozszerzenie `docs/pomysly-automatyzacje.md`. Format pozycji:
+> Rozszerzenie `docs/archiwum/pomysly-automatyzacje.md`. Format pozycji:
 > `- [✅|🔲] **[tag]** Tytuł — co robi / wyzwalacz→akcja.`
 > Legenda: **✅ = już zaimplementowane w repo TIMPORYE** (potwierdzone w routerach/modelach/ekranach/pętlach tła),
 > **🔲 = backlog (do zrobienia)**. Tagi: [Python][n8n][Excel][SharePoint][PowerBI][OCR][Teams][API][Feature].
