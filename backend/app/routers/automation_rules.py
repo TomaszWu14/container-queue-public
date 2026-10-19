@@ -1,17 +1,20 @@
 """Kreator reguł bez kodu (US-036): lista reguł, zapis (admin, z audytem) i podgląd „ile kontenerów
 spełnia regułę dziś” w zakresie użytkownika. Logika warunków: `app/automation_rules.py`."""
+import json
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ValidationError
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import automation_rules as rules_engine
+from .. import automation_rules_history as rules_history
 from ..audit import record
 from ..database import get_db
 from ..deps import AdminOnly as admin_only
 from ..deps import Editors as editors
 from ..deps import scope_containers
-from ..models import Container, ContainerStatus, User, today_pl, utcnow
+from ..models import AuditLog, Container, ContainerStatus, User, today_pl, utcnow
 
 router = APIRouter(prefix="/api", tags=["automations"])
 PREVIEW_SAMPLE = 10
@@ -48,6 +51,31 @@ def save_rules(body: RulesIn, db: Session = Depends(get_db), user: User = admin_
         record(db, entity_type="automation_rule", entity_id=0, field=f"rule.{rule_id}",
                old_value=old.model_dump_json() if old else None,
                new_value=new.model_dump_json() if new else None, user=user)
+    db.commit()
+    return _out(saved)
+
+
+@router.get("/automations/rules/history")
+def rules_history_list(db: Session = Depends(get_db), user: User = editors) -> list[dict]:
+    """Ostatnie zmiany reguł: kto, kiedy, co (dodanie / zmiana pól / usunięcie)."""
+    return rules_history.history(db)
+
+
+@router.post("/automations/rules/history/{audit_id}/restore")
+def rules_history_restore(audit_id: int, db: Session = Depends(get_db), user: User = admin_only) -> dict:
+    """Przywraca jedną regułę do stanu sprzed wybranej zmiany (też z wpisem w historii)."""
+    try:
+        rules, before, after = rules_history.restore(db, audit_id)
+        saved = rules_engine.save(db, rules)
+    except LookupError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    entry = db.get(AuditLog, audit_id)
+    record(db, entity_type=rules_history.ENTITY, entity_id=0, field=entry.field if entry else "rule.?",
+           old_value=json.dumps(before, ensure_ascii=False) if before else None,
+           new_value=json.dumps(after, ensure_ascii=False) if after else None, user=user,
+           note=f"przywrócono stan sprzed zmiany #{audit_id}")
     db.commit()
     return _out(saved)
 

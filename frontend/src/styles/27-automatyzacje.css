@@ -80,3 +80,8 @@
 /* Dzwonek: „Nie przypominaj” (trzecia lista PO, pkt 3) */
 .notif-mute { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-top: 4px; font-size: 12px; color: var(--muted); }
 .notif-mute .btn.small { min-height: 24px; padding: 2px 8px; font-size: 12px; }
+
+/* Historia zmian reguł (trzecia lista PO, pkt 4) */
+.auto-rule-history { margin-top: 12px; }
+.auto-rule-history ul { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 4px; font-size: 13px; }
+.auto-rule-history li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }

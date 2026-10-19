@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Historia zmian reguł** (US-066): panel reguł pokazuje, kto i co zmienił; admin przywraca regułę do stanu
+  sprzed wybranej zmiany.
 - **„Nie przypominaj”** (US-065): w dzwonku wyciszysz alerty o kontenerze na 1, 3 albo 7 dni — tylko dla siebie.
 - **Kanały reguły w kreatorze** (US-063): każda reguła wybiera, dokąd idzie alert — dzwonek, e-mail, Teams,
   n8n (domyślnie wszystkie).
