@@ -103,7 +103,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-068 test reguły na 30 dniach | US-036, Z-037 | `test_automation_rules_backtest.py` (2), `RuleBacktest.dom.test.tsx` (2) | #76 | wdrożone |
 | US-069 nagranie Automatyzacje w README | US-056 | `e2e/demo/recruiter.spec.ts` (rozszerzony) | #77 | wdrożone |
 | US-024 archiwum notatek z pomysłami | AUDYT §2.6 pkt 8 | przegląd linków | #78 | wdrożone |
-| US-070 mniej błędów typów (145 → 75) | CODE-003 | `mypy_baseline.py` (CI) | — | czeka na merge |
+| US-070 mniej błędów typów (145 → 75) | CODE-003 | `mypy_baseline.py` (CI) | #79 | wdrożone |
 | US-067 koszt kar w „co jeśli” | US-062, Z-035 | `test_what_if.py` (rozszerzony), `WhatIfPanel.dom.test.tsx` (rozszerzony) | — | czeka na merge |
 | US-071 punktualność armatorów i realne ETA | Z-038 | `test_eta_reliability.py` (2), `EtaReliabilityPanel.dom.test.tsx` (2), `test_seed_demo_automation.py` (1) | — | czeka na merge |
 

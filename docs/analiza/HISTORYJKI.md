@@ -766,7 +766,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **Kryteria akceptacji**
   1. Lista znanych błędów 145 → 75; zero w `containers_stats`, `complaints_common`, `containers_orders`, `assistant`, `auth`.
   2. Zachowanie bez zmian: adnotacje, `Sequence` w sygnaturach, jawne zawężenie `None` tam, gdzie zapytanie i tak je wyklucza.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #79.
 
 ### US-071 · [DEV] Punktualność armatorów i realne ETA (trzecia lista PO, pkt 7)
 - **Rozmiar:** M
