@@ -321,7 +321,7 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 - `REQUIRE_2FA_ADMIN` domyślnie `true` (decyzja PO 2026-10-19, Z-008 odrzucone). Admin bez 2FA po zalogowaniu widzi
   ekran włączania i do tego czasu ma tylko odczyt; zmienna `REQUIRE_2FA_ADMIN=false` w Coolify trzeba usunąć.
   Test `test_2fa_admin_required.py`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #108.
 
 ## Wizytówka automatyzacji procesów (prośba PO 2026-10-17)
 
@@ -1074,6 +1074,9 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2). Zrobione — patrz US-020 wyżej.
 - **US-021** [DEV] Spłata długu modelu danych: UNIQUE w `AvizoItem`/`DeliveryConfirmation`, CHECK dla statusów
   tekstowych, decyzja o dwóch statusach odprawy (`04-model-danych.md` §„Znane niespójności”).
+  Część awizacyjna: migracja `uniq001` (Z-040, zgoda PO na migrację 2026-10-19) — kontener raz w awizacji (UNIQUE),
+  decyzja spedycji tylko z listy (CHECK); `DeliveryConfirmation` celowo bez UNIQUE (ponowna odpowiedź po
+  odrzuceniu). Przed wdrożeniem `scripts/check_avizo_duplicates.py` musi dać „OK”. Stan: czeka na merge.
 - **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
 - **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna). Zrobione: `docs/bezpieczenstwo/ASVS-L2-WERYFIKACJA.md` (czwarta lista PO, pkt 10), wdrożone w PR #96.
 
