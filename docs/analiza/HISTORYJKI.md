@@ -880,7 +880,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Tylko awizacje spółek w zakresie użytkownika; dane demo — trzy spedycje o różnym tempie.
 - **[SEC]:** admin i logistyka (macierz uprawnień), `scope_company` po spółce awizacji; partnerzy nie widzą
   porównania z konkurencją. Próg 24 h to założenie Z-042.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #90.
 
 ## Could
 
