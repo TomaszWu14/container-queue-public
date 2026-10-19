@@ -26,7 +26,7 @@ from ..models import (
     utcnow,
 )
 from ..order_numbers import split_order_numbers
-from ..planning import proposed_date, record_if_over_limit, reset_plan
+from ..planning import lead_days, proposed_date, record_if_over_limit, repropose_after_eta_change, reset_plan
 from ..schemas import ContainerCreate, ContainerOut, ContainerUpdate, StatusChange, WarehouseNameIn
 from ..tracking.service import reset_tracking
 from .containers_common import (
@@ -60,9 +60,9 @@ def create_container(body: ContainerCreate, db: Session = Depends(get_db), user:
     # liczy od completed_at; bez niego kontener nigdy nie byłby czyszczony)
     if container.status == ContainerStatus.ZREALIZOWANY:
         container.completed_at = utcnow()
-    # brak jawnej daty rozładunku + znana ETA => wstępna propozycja (eta + 4 dni)
+    # brak jawnej daty rozładunku + znana ETA => wstępna propozycja (ETA + N dni z ustawienia, US-020)
     if container.eta and not container.notify_date:
-        container.notify_date = proposed_date(container.eta)
+        container.notify_date = proposed_date(container.eta, lead_days(db))
     year = (container.notify_date or today_pl()).year
     container.transport_id = next_transport_id(db, db.get(Company, company_id), year)
     db.add(container)
@@ -155,6 +155,8 @@ def update_container(container_id: int, body: ContainerUpdate,
     prev_no = container.container_no
     prev_customs = container.customs_status
     record_changes(db, container, changes, user, note=note)
+    if "eta" in changes and "notify_date" not in changes:
+        repropose_after_eta_change(db, container, user)   # US-020: tylko nietknięta propozycja
     if "customs_status" in changes:
         sync_status_from_customs(db, container, user)   # status kontenera z odprawy (2026-09-28)
     docs_warning = (missing_docs_warning(db, container, user, container.customs_status.value)

@@ -48,3 +48,4 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-009 | Administrator danych osobowych i kontakt RODO nieznani | wymagane przez RODO | [RODO](../bezpieczenstwo/RODO.md) |
 | Z-010 | Demo publiczne, nigdy z danymi rzeczywistymi | podstawa bezpieczeństwa portfolio | [ZALOZENIA](ZALOZENIA.md) |
 | Z-042 | Karta spedytora: odpowiedź „na czas” = do 24 h zegarowych | potwierdzić próg | 4/8 h roboczych | [ZALOZENIA](ZALOZENIA.md) |
+| Z-043 | „ETA + N”: jedno N z ustawień admina, domyślnie 3 (wcześniej 4 przy zakładaniu) | potwierdzić 3 albo ustawić 4 w panelu | 4 dni | [ZALOZENIA](ZALOZENIA.md) |

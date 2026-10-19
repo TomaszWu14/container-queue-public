@@ -69,7 +69,7 @@ def test_eta_shift_counts_days_from_snapshot():
 def test_creating_container_with_eta_sets_proposal_date(client):
     headers = login(client)
     created = _create(client, headers, "PLAN0000005", eta="2026-10-01")
-    assert created["notify_date"] == "2026-10-05", "eta + 4 dni"
+    assert created["notify_date"] == "2026-10-04", "ETA + N dni z ustawienia (domyślnie 3, US-020)"
     assert created["planning_status"] == "PROPOZYCJA"
 
 
@@ -112,3 +112,35 @@ def test_queue_filters_by_planning_status(client, db_session):
     days = client.get("/api/queue?date_from=2026-11-04&date_to=2026-11-04"
                       "&planning=POTWIERDZONE", headers=headers).json()
     assert [c["container_no"] for c in days[0]["containers"]] == ["PLAN0000129"]
+
+
+def test_lead_days_setting_drives_creation_and_suggestion(client):
+    """US-020 / P-02: jedna reguła „ETA + N” — ustawienie admina dla zakładania i podpowiedzi daty."""
+    from app import app_settings
+    from app.database import SessionLocal
+    headers = login(client)
+    with SessionLocal() as db:
+        app_settings.set_setting(db, "warehouse_eta_buffer_days", "5")
+        db.commit()
+    created = _create(client, headers, "PLAN0000026", eta="2026-10-01")
+    assert created["notify_date"] == "2026-10-06"
+    with SessionLocal() as db:
+        from app.planning import lead_days
+        assert lead_days(db) == 5
+        app_settings.set_setting(db, "warehouse_eta_buffer_days", "abc")
+        assert lead_days(db) == 3                       # błędna wartość → domyślnie
+        app_settings.set_setting(db, "warehouse_eta_buffer_days", "3")
+        db.commit()
+
+
+def test_eta_change_reproposes_only_untouched_proposal(client):
+    """US-020 / P-03 / D2: zmiana ETA przesuwa tylko nietkniętą propozycję; ręczna data zostaje."""
+    headers = login(client)
+    auto = _create(client, headers, "PLAN0000031", eta="2026-10-01")
+    r = client.patch(f"/api/containers/{auto['id']}", json={"eta": "2026-10-08"}, headers=headers)
+    assert r.status_code == 200, r.text
+    assert r.json()["notify_date"] == "2026-10-11"
+    manual = _create(client, headers, "PLAN0000047", eta="2026-10-01")
+    client.patch(f"/api/containers/{manual['id']}", json={"notify_date": "2026-10-09"}, headers=headers)
+    r = client.patch(f"/api/containers/{manual['id']}", json={"eta": "2026-10-20"}, headers=headers)
+    assert r.json()["notify_date"] == "2026-10-09"
