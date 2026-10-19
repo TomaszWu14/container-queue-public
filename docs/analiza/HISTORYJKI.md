@@ -1023,6 +1023,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** luka ❌ z weryfikacji ASVS L2 (US-025) zamknięta; uzupełnia `X-Content-Type-Options: nosniff`.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-090 · [SEC] „Pokaż hasło” i miernik siły hasła (ASVS 2.1.8, 2.1.12)
+- **Rozmiar:** S
+- **Jako** użytkownik **chcę** podejrzeć wpisywane hasło i widzieć, czy nowe hasło jest mocne, **aby** nie mylić
+  się przy wpisywaniu na telefonie i nie wybierać słabych haseł.
+- **Kryteria akceptacji** (testy `PasswordInput.dom.test.tsx`, `AuthPages.dom.test.tsx`)
+  1. Pola hasła przy logowaniu, ustawianiu (link z maila) i obowiązkowej zmianie hasła mają przycisk
+     „Pokaż hasło / Ukryj hasło” (ikona oka, `aria-pressed`, działa z klawiatury).
+  2. Przy nowym haśle miernik: za krótkie / słabe / dobre / mocne (długość, różnorodność znaków, oczywiste wzorce
+     typu `1234`, `qwerty`, nazwa aplikacji).
+  3. Miernik tylko podpowiada — reguły przyjęcia hasła na serwerze bez zmian.
+- **[SEC]:** dwie luki ❌ z weryfikacji ASVS L2 (US-025) zamknięte. Etykieta stoi obok pola (nie wokół), żeby
+  przycisk nie psuł powiązania etykiety z polem dla czytników ekranu.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2). Zrobione — patrz US-020 wyżej.

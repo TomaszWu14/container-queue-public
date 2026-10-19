@@ -100,11 +100,11 @@ Pominięte (L3): 2.2.4–2.2.7, 2.8.7.
 | 2.1.5 | Użytkownik może zmienić hasło | ✅ | `backend/app/routers/auth.py` `change_password` | — |
 | 2.1.6 | Zmiana wymaga obecnego i nowego hasła | ✅ | `auth.py` `change_password` (`current_password`, wyjątek tylko dla hasła tymczasowego) | — |
 | 2.1.7 | Sprawdzanie haseł z wycieków | ❌ | brak (przeszukane `backend/app`, `frontend/src`) | lista najczęstszych/wyciekłych haseł offline w `validate_password_policy` |
-| 2.1.8 | Miernik siły hasła | ❌ | brak w `frontend/src` | prosty wskaźnik przy ustawianiu hasła |
+| 2.1.8 | Miernik siły hasła | ✅ | `frontend/src/PasswordInput.tsx` + `passwordStrength.ts` przy ustawianiu i zmianie hasła (`AuthPages.tsx`), `PasswordInput.dom.test.tsx` (US-090) | tylko podpowiedź — o przyjęciu decyduje serwer |
 | 2.1.9 | Brak reguł składu hasła | ❌ | `security.py` `validate_password_policy` (wymóg litery i cyfry) | usunąć wymóg litery i cyfry, zostawić długość + listę zakazanych |
 | 2.1.10 | Brak okresowej wymiany i historii haseł | ✅ | brak terminu ważności hasła w `backend/app/config.py` i modelu `User` | — |
 | 2.1.11 | Wklejanie i menedżery haseł dozwolone | ✅ | `frontend/src/pages/LoginPage.tsx` (`autoComplete="current-password"`, brak blokady wklejania) | — |
-| 2.1.12 | Możliwość podejrzenia wpisywanego hasła | ❌ | brak przełącznika w `frontend/src/pages/LoginPage.tsx` | przycisk „pokaż hasło” |
+| 2.1.12 | Możliwość podejrzenia wpisywanego hasła | ✅ | przycisk „pokaż / ukryj” w `PasswordInput.tsx` (logowanie, ustawienie i zmiana hasła), `aria-pressed` (US-090) | — |
 | 2.2.1 | Ochrona przed automatyzacją (credential stuffing, brute force) | ✅ | `backend/app/rate_limit.py` `LoginRateLimiter` (IP, IP+login, konto); `auth.py` `login`; `test_login_limiter_db.py`, `test_login_limiter.py` | — |
 | 2.2.2 | SMS/e-mail tylko jako słabszy czynnik | ✅ | SMS i e-mail nie są czynnikiem logowania; e-mail tylko do linku resetu (`auth.py` `forgot_password`) | — |
 | 2.2.3 | Powiadomienie po zmianie danych uwierzytelniania | ⚠️ | `backend/app/login_devices.py` `check_login` (mail „nowe urządzenie”), `test_login_devices.py` | brak maila po zmianie hasła, resecie przez admina, włączeniu/wyłączeniu 2FA |
