@@ -2,13 +2,14 @@ import datetime
 import hashlib
 import secrets
 import time
+from typing import cast
 
 import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt import PyJWTError
-from sqlalchemy import select, update
+from sqlalchemy import CursorResult, select, update
 from sqlalchemy.orm import Session
 
 from . import automation_policy
@@ -184,7 +185,8 @@ def _impersonated_user(real: "User", ctx: dict) -> "User":
         totp_secret=None, totp_backup_codes="", allowed_warehouse_ids=None,
         last_seen=real.last_seen,
     )
-    shadow.impersonated = True  # znacznik dla /me → baner w panelu
+    # znacznik dla /me → baner w panelu; atrybut ad hoc (nie kolumna), czytany przez getattr
+    shadow.impersonated = True  # type: ignore[attr-defined]
     return shadow
 
 
@@ -213,7 +215,7 @@ def consume_refresh_token(db: Session, token: str) -> tuple[int, bool]:
                RefreshToken.revoked.is_(False),
                RefreshToken.expires_at > utcnow())
         .values(revoked=True, revoked_at=utcnow())) if jti else None
-    if result is None or result.rowcount != 1:
+    if result is None or cast(CursorResult, result).rowcount != 1:   # UPDATE → CursorResult
         # ponowne użycie już odwołanego tokenu = możliwa kradzież → unieważnij rodzinę.
         # WYJĄTEK (okno łaski): dwie karty przeglądarki dzielą cookie i odświeżają
         # równolegle — druga trafia w token zrotowany ułamek sekundy wcześniej.

@@ -30,11 +30,11 @@ def can_see_watcher(viewer: User, target: User) -> bool:
 
 
 def _watchers_out(db: Session, model, target_col, target_id: int, user: User) -> dict:
-    rows = db.execute(
+    all_rows = db.execute(
         select(model, User).join(User, User.id == model.user_id)
         .where(target_col == target_id)
         .order_by(model.created_at.asc().nulls_first(), model.id)).all()
-    rows = [(w, u) for w, u in rows if can_see_watcher(user, u)]
+    rows = [(w, u) for w, u in all_rows if can_see_watcher(user, u)]
     return {
         "watching": any(u.id == user.id for _, u in rows),
         "watchers": [{"user_id": u.id, "name": u.full_name or u.login, "reason": w.reason,

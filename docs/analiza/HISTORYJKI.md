@@ -931,6 +931,16 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      ten sam test w CI pilnuje, że przewodnik przechodzi wszystkie kroki na komputerze i telefonie, PL i EN.
   3. Przy okazji poprawki przewodnika (US-081): krok „Kolejka” podświetla właściwą tabelę, podświetlenie wraca po
      przerysowaniu ekranu, na telefonie karta jest u góry (nie znika pod paskiem przeglądarki).
+- **Stan:** wdrożone w PR #94.
+
+### US-082 · [DEV] Zero znanych błędów typów w backendzie (czwarta lista PO, pkt 15)
+- **Rozmiar:** M
+- **Jako** zespół **chcemy** backendu bez znanych błędów mypy, **aby** każdy nowy błąd typów od razu czerwienił CI
+  zamiast ginąć w liście „znanych”.
+- **Kryteria akceptacji** (`scripts/mypy_baseline.py`, pełny pytest)
+  1. `backend/mypy-baseline.txt` pusta (75 → 0); mypy: brak błędów w 280 plikach.
+  2. Bez zmiany zachowania: pełny zestaw testów zielony bez zmian w testach; 3 wyjątki `# type: ignore[kod]` z
+     uzasadnieniem (ograniczenia typów Starlette/FastAPI i atrybut pomocniczy).
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

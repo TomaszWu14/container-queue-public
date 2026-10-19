@@ -245,7 +245,9 @@ def scope_suppliers(query, user: User):
     spółki — jej nadawcy + kartoteka, gdy spółka pracuje na materiałach Acme."""
     if user.role == Role.forwarder or can_view_all(user):
         return query
-    own = Supplier.client_company_id.in_(company_filter_ids(user))
+    ids = company_filter_ids(user)
+    assert ids is not None   # can_view_all=False → zawsze lista (inaczej 403)
+    own = Supplier.client_company_id.in_(ids)
     if is_material_company(user.company):
         return query.where(or_(Supplier.client_company_id.is_(None), own))
     return query.where(own)

@@ -340,6 +340,7 @@ def packing_compare(job_id: int, db: Session = Depends(get_db), user: User = pur
     if job.doc_kind != InvoiceDocKind.packing_list:
         raise HTTPException(status.HTTP_409_CONFLICT, "To nie jest packing lista.")
     container = db.get(Container, job.batch.container_id)
+    assert container is not None   # batch.container_id: NOT NULL + FK
     try:
         return packing_list_report(db, job, container, uploads_dir())
     except FileNotFoundError as exc:
@@ -355,6 +356,7 @@ def order_compare(job_id: int, db: Session = Depends(get_db), user: User = purch
     if job.doc_kind not in INVOICE_LIKE_KINDS:
         raise HTTPException(status.HTTP_409_CONFLICT, "To nie jest faktura.")
     container = db.get(Container, job.batch.container_id)
+    assert container is not None   # batch.container_id: NOT NULL + FK
     return invoice_vs_order(db, job, container, settings.invoice_tolerance_pct)
 
 

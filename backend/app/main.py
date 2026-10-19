@@ -51,7 +51,6 @@ from .routers import (
     documents,
     driver,
     forwarding,
-    health,
     imports,
     inbox,
     invoice_agency,
@@ -190,7 +189,8 @@ app = FastAPI(
     **_docs_kw,
 )
 # DB-007: naruszenie biznesowego klucza unikalnego (ux_*) → 409, reszta IntegrityError jak dotąd
-app.add_exception_handler(IntegrityError, integrity_error_handler)
+# Starlette typuje handler jako (Request, Exception); nasz przyjmuje węższy IntegrityError
+app.add_exception_handler(IntegrityError, integrity_error_handler)  # type: ignore[arg-type]
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -350,7 +350,8 @@ from .routers import automation_rules as automation_rules_router  # noqa: E402 �
 app.include_router(automation_rules_router.router)
 from .routers import report_monthly as report_monthly_router  # noqa: E402 — raport miesięczny (trzecia lista PO, pkt 8)
 app.include_router(report_monthly_router.router)
-app.include_router(health.router)   # OBS-009: /api/health/deep
+from .routers import health as health_router  # noqa: E402 — nazwa `health` to endpoint niżej
+app.include_router(health_router.router)   # OBS-009: /api/health/deep
 from .sms_settings import router as sms_settings_router  # noqa: E402
 
 app.include_router(sms_settings_router)

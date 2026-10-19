@@ -195,6 +195,7 @@ Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
   zostawia formularz z powodem z API. Przegrany wyścig dwóch wysyłek zwraca kod `already_submitted`.
 
 ### Changed
+- **Kod backendu bez znanych błędów typów** (US-082): lista mypy 75 → 0 (adnotacje i zawężenia typów, bez zmian działania).
 Jedna reguła „ETA + N dni” (ustawienie admina) przy zakładaniu kontenera i w podpowiedzi daty; zmiana ETA przelicza nietkniętą propozycję (US-020, P-02, P-03).
 - **Mniej znanych błędów typów** (US-070): lista mypy 145 → 75 (statystyki, reklamacje, zlecenia, dokumenty, asystent).
 - **Archiwum notatek** (US-024): listy pomysłów na automatyzację przeniesione do `docs/archiwum/`.

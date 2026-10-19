@@ -79,10 +79,10 @@ def _classify_level(f: str, b: str, lvl_banner: str | None):
         return ("level", (level, sub))
     if "ilosc podstawowej jednostki miary" in f or "ilość podstawowej jednostki miary" in f \
             or f.startswith("przelicznik"):
-        level = ("paz" if f.endswith("paz") or b == "PAZ"
-                 else "ppa" if f.endswith("ppa") or b == "PPA" else lvl_banner)
-        if level:
-            return ("level", (level, "qty_base"))
+        qty_level = ("paz" if f.endswith("paz") or b == "PAZ"
+                     else "ppa" if f.endswith("ppa") or b == "PPA" else lvl_banner)
+        if qty_level:
+            return ("level", (qty_level, "qty_base"))
     if lvl_banner:
         if f in ("wymiar", "wymiary"):
             return ("level", (lvl_banner, "wymiar"))
@@ -275,7 +275,7 @@ def import_records(db: Session, records: list[dict], dry_run: bool) -> dict:
         if dry_run:
             continue
         is_new = material is None
-        if is_new:
+        if material is None:
             material = Material(ref_code=rec["ref_code"])
             db.add(material)
             existing[rec["ref_code"]] = material
@@ -295,13 +295,13 @@ def import_records(db: Session, records: list[dict], dry_run: bool) -> dict:
             material.levels_json = json.dumps(rec["levels"], ensure_ascii=False)
         material.updated_at = utcnow()
         for unit_from, unit_to, factor in rules:
-            key = (rec["ref_norm"], unit_from, unit_to)
-            rule = rules_existing.get(key)
+            rule_key = (rec["ref_norm"], unit_from, unit_to)
+            rule = rules_existing.get(rule_key)
             if rule is None:
                 rule = UomConversion(ref_norm=rec["ref_norm"], unit_from=unit_from,
                                      unit_to=unit_to, factor=factor)
                 db.add(rule)
-                rules_existing[key] = rule
+                rules_existing[rule_key] = rule
             else:
                 rule.factor = factor
     return {"total": len(seen), "new": new, "updated": updated, "conversions": conversions}

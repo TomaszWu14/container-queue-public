@@ -2,6 +2,7 @@
 2026-09-22): fill_cbm = suma CBM niezablokowanych; CRD = max CRD niezablokowanych;
 kontener zamkniety nie przyjmuje nowych zamowien."""
 import datetime
+from collections.abc import Sequence
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -45,7 +46,7 @@ def _consolidation_key(po) -> tuple:
             (getattr(po, "port_of_discharge", None) or None))
 
 
-def propose_consolidation(orders: list, capacity: float = 70.0) -> list[dict]:
+def propose_consolidation(orders: Sequence, capacity: float = 70.0) -> list[dict]:
     """Propozycje konsolidacji (tylko odczyt): grupuj po dostawcy I trasie (porty),
     w grupie sortuj malejaco po cbm i pakuj first-fit-decreasing do binow <= capacity.
     Najpelniejsze biny na gorze. Miks dostawcow/tras w jednym kontenerze poza zakresem."""

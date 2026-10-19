@@ -241,7 +241,7 @@ def fetch_vessel_photo(vessel_id: int, db: Session = Depends(get_db),
     if not vessel.imo:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
                             "Statek nie ma jeszcze numeru IMO (AIS się uczy).")
-    params = {
+    params: dict[str, str | int] = {
         "action": "query", "format": "json", "generator": "search",
         "gsrsearch": f"IMO {vessel.imo}", "gsrnamespace": 6, "gsrlimit": 1,
         "prop": "imageinfo", "iiprop": "url", "iiurlwidth": 640,
@@ -366,6 +366,7 @@ def tracking_map(db: Session = Depends(get_db), user: User = viewer_or_sales):
     last_event: dict[int, TrackingEvent] = {}
     etd: dict[int, str] = {}
     etd_estimated: dict[int, str] = {}
+    event: TrackingEvent | None   # niżej ta sama nazwa dla „ostatnie zdarzenie albo brak”
     for event in events:
         is_fact = not event.is_estimated and (event.occurred_at is None
                                               or event.occurred_at <= now)

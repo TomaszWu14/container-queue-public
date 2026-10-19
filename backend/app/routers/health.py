@@ -49,7 +49,7 @@ def _check_jobs(db) -> dict:
                  if (now - max(last_ok.get((name, fn)) or loop_started, loop_started))
                  .total_seconds() > max_age_s]
         oks = [last_ok.get((name, fn)) for fn in fns]
-        oldest_ok = None if None in oks else min(oks)
+        oldest_ok = None if None in oks else min(o for o in oks if o is not None)
         items.append({"job": name, "ok": not stale, "stale": stale,
                       "max_age_h": round(max_age_s / 3600, 2),
                       "last_ok_at": oldest_ok.isoformat() if oldest_ok else None})

@@ -16,7 +16,8 @@ def _mask(field: str, value) -> str | None:
 
 
 def record(db: Session, *, entity_type: str, entity_id: int, field: str,
-           old_value, new_value, user: User | None, note: str = "") -> None:
+           old_value, new_value, user: User | None, note: str | None = "") -> None:
+    # note=None → domyślne "" kolumny (wstawia je SQLAlchemy)
     db.add(AuditLog(
         entity_type=entity_type,
         entity_id=entity_id,

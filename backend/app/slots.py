@@ -21,7 +21,7 @@ def free_slots(db: Session, warehouse: Warehouse | None, day: datetime.date | No
                exclude_container_id: int | None = None) -> list[dict]:
     """[{time, free}] dla dnia; kontener `exclude` nie zajmuje własnego slotu (zmiana)."""
     wins = windows(warehouse)
-    if not wins or day is None:
+    if not wins or day is None or warehouse is None:   # brak magazynu ⇒ wins == []
         return []
     q = (select(Container.slot_time, func.count())
          .where(Container.warehouse_id == warehouse.id, Container.notify_date == day,

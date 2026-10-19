@@ -105,7 +105,7 @@ def customs_board(response: Response, db: Session = Depends(get_db), user: User 
         query = query.where(Container.open_in_queue()).order_by(
             Container.customs_assigned_at.desc().nullslast(), Container.eta.asc().nullslast())
     rows = db.scalars(query.limit(limit)).all()
-    total = len(rows)
+    total: int | None = len(rows)
     if total == limit:
         sub = query.order_by(None).subquery()
         total = db.scalar(select(func.count()).select_from(sub))
@@ -114,7 +114,7 @@ def customs_board(response: Response, db: Session = Depends(get_db), user: User 
     required = db.scalars(select(DocumentType)
                           .where(DocumentType.is_active, DocumentType.is_required)
                           .order_by(DocumentType.sort_order, DocumentType.name)).all()
-    present: dict[int, set[int]] = {}
+    present: dict[int, set[int | None]] = {}   # None odfiltrowane w SQL
     if required and rows:
         pairs = db.execute(select(Attachment.container_id, Attachment.document_type_id)
                            .where(Attachment.container_id.in_([c.id for c in rows]),
@@ -249,7 +249,7 @@ def missing_document_types_batch(db: Session, containers: Sequence[Container]) -
                           .order_by(DocumentType.sort_order, DocumentType.name)).all()
     if not required:
         return out
-    present: set[tuple[int, int]] = set(db.execute(select(
+    present: set[tuple[int, int | None]] = set(db.execute(select(
         Attachment.container_id, Attachment.document_type_id).where(
         Attachment.container_id.in_(ids),
         Attachment.document_type_id.is_not(None))).tuples())

@@ -134,7 +134,7 @@ def list_containers(
     eta_from: datetime.date | None = None,
     eta_to: datetime.date | None = None,
     limit: int | None = Query(default=500, ge=1, le=2000),
-    response: Response = None,
+    response: Response = None,  # type: ignore[assignment]  # FastAPI wstrzykuje; None przy wywołaniu z kodu
 ):
     # archiwum od najnowszych — przy limicie rosnąco pokazywało 500 NAJSTARSZYCH (audyt DATA-002)
     order = ((Container.notify_date.desc().nulls_last(), Container.id.desc()) if completed is True
@@ -201,7 +201,7 @@ def list_containers(
     rows = db.scalars(query.limit(limit)).all()
     if response is not None:
         # lista obcięta limitem → UI pokazuje „pokazano N z M” zamiast cicho gubić rekordy
-        total = len(rows)
+        total: int | None = len(rows)
         if limit is not None and total == limit:
             sub = query.order_by(None).subquery()
             total = db.scalar(select(func.count(func.distinct(sub.c.id))))

@@ -104,9 +104,9 @@ def build_plan(db: Session, rows: list[dict], errors: list[dict]) -> Plan:
     catalog = db.scalars(select(Supplier).where(Supplier.client_company_id.is_(None))
                          .order_by(Supplier.id)).all()
     by_code: dict[str, Supplier] = {}
-    for supplier in catalog:
-        if supplier.sap_code:
-            by_code.setdefault(supplier.sap_code, supplier)
+    for s in catalog:
+        if s.sap_code:
+            by_code.setdefault(s.sap_code, s)
     by_name = {s.name.strip().upper(): s for s in catalog if not s.sap_code}
     plan = Plan(total=len(rows) + len(errors), errors=list(errors))
     seen: dict[str, int] = {}

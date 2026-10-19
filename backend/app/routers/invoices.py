@@ -10,6 +10,7 @@ w załącznikach kontenera).
 import logging
 import pathlib
 import secrets
+from collections.abc import Sequence
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile, status
 from sqlalchemy import func, select
@@ -57,7 +58,7 @@ def _job_out(job: InvoiceJob, detail: bool = False, items_count: int | None = No
     return out
 
 
-def _item_counts(db: Session, batches: list[InvoiceBatch]) -> dict[int, int]:
+def _item_counts(db: Session, batches: Sequence[InvoiceBatch]) -> dict[int, int]:
     """Aktywne pozycje per dokument JEDNYM zapytaniem GROUP BY dla wszystkich paczek —
     lista nie ładuje setek wierszy pozycji tylko po to, żeby je policzyć."""
     job_ids = [job.id for batch in batches for job in batch.jobs]
@@ -69,7 +70,7 @@ def _item_counts(db: Session, batches: list[InvoiceBatch]) -> dict[int, int]:
     return {job_id: n for job_id, n in rows}
 
 
-def _batches_out(db: Session, batches: list[InvoiceBatch]) -> list[InvoiceBatchOut]:
+def _batches_out(db: Session, batches: Sequence[InvoiceBatch]) -> list[InvoiceBatchOut]:
     item_counts = _item_counts(db, batches)
     result = []
     for batch in batches:
@@ -91,7 +92,7 @@ def _batch_out(db: Session, batch: InvoiceBatch) -> InvoiceBatchOut:
     return _batches_out(db, [batch])[0]
 
 
-def _batches(db: Session, container_id: int) -> list[InvoiceBatch]:
+def _batches(db: Session, container_id: int) -> Sequence[InvoiceBatch]:
     return db.scalars(select(InvoiceBatch)
                       .options(selectinload(InvoiceBatch.attachment),
                                selectinload(InvoiceBatch.supplier))
@@ -225,7 +226,9 @@ def _get_batch(db: Session, batch_id: int, user: User) -> InvoiceBatch:
 
 def _get_job(db: Session, job_id: int, user: User) -> tuple[InvoiceJob, Container]:
     job = get_scoped(db, InvoiceJob, job_id, user)   # deps: przez paczkę → kontener
-    return job, db.get(Container, job.batch.container_id)
+    container = db.get(Container, job.batch.container_id)
+    assert container is not None   # batch.container_id: NOT NULL + FK
+    return job, container
 
 
 @router.delete("/invoice-batches/{batch_id}", status_code=204)

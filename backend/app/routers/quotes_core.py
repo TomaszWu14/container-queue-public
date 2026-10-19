@@ -3,6 +3,8 @@
 Wydzielone z routers/quotes.py (limit 500 linii/plik). Endpointy: quotes.py (obieg
 zlecenia), quotes_offers.py (oferty i rozstrzygnięcie), quotes_stats.py (statystyki/eksport).
 """
+from typing import Any
+
 from fastapi import HTTPException, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
@@ -143,7 +145,7 @@ def _score_quotes(quotes: list[Quote]) -> tuple[dict[int, int], int | None]:
     priced = [q for q in quotes if q.amount is not None]
     if not priced:
         return {}, None
-    min_price = min(float(q.amount) for q in priced)
+    min_price = min(float(q.amount) for q in priced if q.amount is not None)
     transits = [q.transit_time_days for q in priced if q.transit_time_days is not None]
     min_transit = min(transits) if transits else None
     scores: dict[int, int] = {}
@@ -151,7 +153,7 @@ def _score_quotes(quotes: list[Quote]) -> tuple[dict[int, int], int | None]:
         price_s = min_price / float(q.amount) if q.amount else 0.0
         # brak danych = neutralnie (0.5); transit 0 dni jest najlepszy (nie „brak")
         transit_s = (min_transit / q.transit_time_days
-                     if q.transit_time_days else (1.0 if q.transit_time_days == 0 else 0.5))
+                     if q.transit_time_days and min_transit is not None else (1.0 if q.transit_time_days == 0 else 0.5))
         reliability = 1.0 - (0.5 if q.no_equipment else 0.0) + (0.1 if q.can_roll_booking else 0.0)
         reliability = max(0.0, min(1.0, reliability))
         total = _W_PRICE * price_s + _W_TRANSIT * transit_s + _W_RELIABILITY * reliability
@@ -232,7 +234,9 @@ def _job_out(job: TransportJob, user: User) -> TransportJobOut:
     # numer przesyłki, dane agenta i kontakt dostawcy widzi logistyka oraz WYŁĄCZNIE
     # zwycięska spedycja — nie przegrani/rywale (ochrona PII dostawcy, Q34)
     show_ship_agent = (not is_forwarder) or bool(mine and mine.id == job.chosen_quote_id)
-    containers = [_job_container(it, show_ship_agent) for it in job.items]
+    # słowniki walidowane przez pydantic do JobContainerOut / QuoteOut
+    containers: list[Any] = [_job_container(it, show_ship_agent) for it in job.items]
+    my_quote: Any
     quotes, my_quote, scfi, kpi = (_forwarder_view(mine, passed) if is_forwarder
                                    else _logistics_view(job, passed))
     agent = ({"shipment_number": job.shipment_number, "agent_name": job.agent_name,

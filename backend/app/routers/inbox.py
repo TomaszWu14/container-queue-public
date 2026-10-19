@@ -1,6 +1,8 @@
 """#47 — inbox „Co dziś": jedno miejsce z zadaniami użytkownika przekrojowo przez moduły.
 Łączy sygnały kontenerowe (silnik signals) z zadaniami decyzyjnymi cross-module
 (faktury transportowe czekające na moją akceptację — #42). Liczone na żądanie, bez DB-state."""
+from collections.abc import Sequence
+
 from ..models import today_pl
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
@@ -32,7 +34,7 @@ def _task(kind: str, title: str, link: str, *, container: Container | None = Non
             "container_no": container.container_no if container else None}
 
 
-def _warehouse_tasks(containers: list[Container], today) -> list[dict]:
+def _warehouse_tasks(containers: Sequence[Container], today) -> list[dict]:
     """Magazyn: rozładunki dziś/jutro + zaległe potwierdzenia rozładunku (awizacja minęła)."""
     tasks = []
     for c in sorted(containers, key=lambda c: c.notify_date or today):
