@@ -825,6 +825,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** przeglądarka zapisana tylko jako skrót HMAC nagłówka User-Agent (kluczem aplikacji), najwyżej 10
   ostatnich na konto (`known_devices:{id}` w ustawieniach — bez migracji). IP trafia wyłącznie do maila (jest już
   w dzienniku logowań). Treść maila escapowana.
+- **Stan:** wdrożone w PR #86.
+
+### US-076 · [DEV][SEC] Kwartalny przegląd dostępów (czwarta lista PO, pkt 9)
+- **Rozmiar:** S
+- **Jako** administrator **chcę** raz na kwartał dostać listę kont do sprawdzenia i zablokować nieużywane jednym
+  kliknięciem, **aby** nie zostawiać otwartych dostępów po ludziach, którzy odeszli albo zmienili rolę.
+- **Kryteria akceptacji** (testy `test_access_review.py`, `AccessReviewPanel.dom.test.tsx`)
+  1. Administracja → Użytkownicy → „Przegląd dostępów”: aktywne konta bez logowania od 90 dni albo nigdy,
+     administratorzy bez 2FA, konta z dostępem do wszystkich spółek (poza adminami) — z powodem i ostatnią aktywnością.
+  2. „Zablokuj” przy koncie nieużywanym — po potwierdzeniu ten sam zapis co na liście użytkowników (z audytem).
+  3. Pierwszy poniedziałek stycznia, kwietnia, lipca i października, 8:00 — przypomnienie dla adminów (dzwonek i
+     e-mail wg matrycy kanałów), raz w tygodniu; automat widoczny w katalogu Automatyzacji.
+  4. Konta demo i serwisowe pomijane; automat niczego sam nie blokuje.
+- **[SEC]:** tylko admin (macierz uprawnień); próg 90 dni to założenie Z-041.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

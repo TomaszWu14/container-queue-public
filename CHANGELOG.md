@@ -159,6 +159,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 
 
 ### Dodane
+Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do wszystkich spółek; blokada jednym kliknięciem i kwartalne przypomnienie (US-076).
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
 
 ### Fixed

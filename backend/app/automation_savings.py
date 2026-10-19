@@ -35,6 +35,7 @@ DEFAULT_MINUTES: dict[str, int] = {
     "sms_reminders": 3,        # telefon / SMS do kierowcy
     "daily_digest": 15,        # poranne zebranie dostaw, opóźnień i braków w mail
     "weekly_digest": 10,
+    "access_review": 60,   # kwartalny przegląd kont (zestawienie zamiast ręcznego przeglądu listy)
     "automation_report": 15,   # tygodniowe zestawienie pracy automatów dla kierownika (Excel + mail)
     "avizo_maintenance": 0, "driver_data_purge": 2, "retention": 0, "orphan_files": 0,
     "verify_backup": 0, "watchdog": 0, "sharepoint_sync": 10, "congestion": 5,

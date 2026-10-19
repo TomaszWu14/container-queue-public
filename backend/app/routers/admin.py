@@ -161,6 +161,13 @@ def list_users(db: Session = Depends(get_db), user: User = admin_only):
     return [serialize_user(db, u) for u in db.scalars(select(User).order_by(User.login))]
 
 
+@router.get("/users/access-review")
+def access_review_view(db: Session = Depends(get_db), user: User = admin_only) -> dict:
+    """Przegląd dostępów: konta nieużywane, admini bez 2FA, dostęp do wszystkich spółek (US-076)."""
+    from ..access_review import review
+    return review(db)
+
+
 @router.post("/users", response_model=UserOut, status_code=201)
 def create_user(body: UserIn, db: Session = Depends(get_db), user: User = admin_only):
     if db.scalar(select(User).where(User.login == body.login)):

@@ -10,6 +10,7 @@ import {
   useCompanies, useCustomsAgencies, useForwarders, useWarehouses,
 } from './shared'
 import { useConfirm } from '../../ConfirmDialog'
+import AccessReviewPanel from './AccessReviewPanel'
 
 // modal-lite: sesje wybranego użytkownika z możliwością wylogowania (admin)
 function UserSessions({ user, onClose }: { user: User; onClose: () => void }) {
@@ -231,6 +232,7 @@ export default function UsersTab() {
 
   return (
     <div className="panel">
+      <AccessReviewPanel onChanged={load} />
       <h3>{t('users')}</h3>
       <form className="row" onSubmit={submit} style={{ marginBottom: 12 }}>
         <input aria-label={t('loginField')} placeholder={t('loginField')} value={form.login} required

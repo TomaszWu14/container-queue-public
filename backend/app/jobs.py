@@ -158,6 +158,7 @@ def _verify_backup_fn() -> Callable:
 
 
 def build_jobs(with_ais: bool = False) -> list[Job]:
+    from .access_review import check_access_review
     from .automation_report import check_automation_weekly_report
     from .automation_rules import run_rules
     from .automation_watchdog import check_late_automations
@@ -186,7 +187,8 @@ def build_jobs(with_ais: bool = False) -> list[Job]:
             (check_pallet_urgent_alerts,)),
         # okno poniedziałek 6-7 UTC i dedup per user/dzień siedzą w funkcji — poll co 20 min
         # (przy 24 h okno 1 h było trafiane tylko przypadkiem = digest praktycznie nie szedł)
-        Job("weekly_digest", 20 * 60, (check_weekly_digest_alerts, check_automation_weekly_report)),
+        Job("weekly_digest", 20 * 60, (check_weekly_digest_alerts, check_automation_weekly_report,
+                                       check_access_review)),   # US-076: kwartalnie, poniedziałek 8:00
         Job("verify_backup", 6 * HOUR, (_verify_backup_fn(),)),
         # okno DIGEST_HOUR (czas PL) + dedup per user/dzień w funkcji
         Job("daily_digest", 20 * 60, (check_daily_digest_alerts,)),
