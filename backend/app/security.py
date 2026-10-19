@@ -106,15 +106,6 @@ def verify_totp(secret_b32: str, code: str, at: float | None = None,
     return totp_matched_step(secret_b32, code, at, window) is not None
 
 
-def hash_backup_code(raw: str) -> str:
-    return hashlib.sha256(raw.strip().replace("-", "").lower().encode("utf-8")).hexdigest()
-
-
-def generate_backup_codes(n: int = 10) -> list[str]:
-    """10 kodów zapasowych (pokazywane raz; w bazie tylko hashe SHA-256)."""
-    return [secrets.token_hex(5) for _ in range(n)]
-
-
 def ensure_ip_not_blocked(db: Session, ip: str) -> None:
     """W14 #90: adres z listy BlockedIP dostaje 403 zanim zadziała rate-limit."""
     from .models import BlockedIP

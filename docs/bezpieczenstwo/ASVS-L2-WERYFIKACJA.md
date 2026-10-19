@@ -124,8 +124,8 @@ Pominięte (L3): 2.2.4–2.2.7, 2.8.7.
 | 2.5.6 | Bezpieczny reset zapomnianego hasła | ✅ | `security.py` `create_password_reset_token`/`consume_password_reset_token` (32 B, SHA-256 w bazie, TTL 30 min, jednorazowy); `auth.py` `forgot_password` (zawsze 202); `test_hardening.py` `test_password_reset_flow` | — |
 | 2.5.7 | Utrata 2FA: odzyskanie z weryfikacją tożsamości | ⚠️ | `backend/app/routers/system.py` `disable_2fa` (tylko inny admin, audyt) | brak opisanej procedury potwierdzenia tożsamości (RUNBOOK) |
 | 2.6.1 | Kody zapasowe jednorazowe | ✅ | `auth.py` `_consume_backup_code` (hash usuwany z listy) | — |
-| 2.6.2 | Kody zapasowe z min. 112 bitami albo solone | ❌ | `security.py` `generate_backup_codes` (`token_hex(5)` = 40 bitów), `hash_backup_code` (SHA-256 bez soli) | dłuższe kody (≥ 20 znaków base32) albo hash z solą/pieprzem |
-| 2.6.3 | Kody zapasowe odporne na atak offline | ❌ | jak 2.6.2 | 40 bitów SHA-256 łamie się offline po wycieku bazy |
+| 2.6.2 | Kody zapasowe z min. 112 bitami albo solone | ✅ | `security.py` `generate_backup_codes` (12 znaków, 60 bitów), `hash_backup_code` (scrypt z 16-bajtową solą na kod), `test_backup_codes.py` (US-088) | kody wydane przed US-088 (SHA-256 bez soli) działają do ponownego wygenerowania w profilu |
+| 2.6.3 | Kody zapasowe odporne na atak offline | ✅ | jak 2.6.2: 60 bitów + scrypt (N=2^14) na kod | jak 2.6.2 — stare kody do ponownego wygenerowania |
 | 2.7.1 | SMS/telefon nie jako domyślny kanał OOB | n/d | brak uwierzytelniania poza pasmem (OOB) | — |
 | 2.7.2 | Kody OOB wygasają po 10 min | n/d | jw. | — |
 | 2.7.3 | Kody OOB jednorazowe | n/d | jw. | — |
@@ -396,7 +396,7 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | Rozdział | ✅ | ⚠️ | ❌ | n/d | ❓ | Razem |
 |---|---|---|---|---|---|---|
 | V1 Architektura, projekt i model zagrożeń | 24 | 13 | 1 | 0 | 0 | 38 |
-| V2 Uwierzytelnianie | 20 | 10 | 10 | 12 | 0 | 52 |
+| V2 Uwierzytelnianie | 22 | 10 | 8 | 12 | 0 | 52 |
 | V3 Zarządzanie sesją | 12 | 3 | 2 | 1 | 0 | 18 |
 | V4 Kontrola dostępu | 7 | 1 | 1 | 0 | 0 | 9 |
 | V5 Walidacja, sanityzacja i kodowanie | 18 | 6 | 0 | 6 | 0 | 30 |
@@ -409,9 +409,9 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V12 Pliki i zasoby | 11 | 2 | 2 | 0 | 0 | 15 |
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
 | V14 Konfiguracja | 16 | 4 | 1 | 2 | 0 | 23 |
-| **Razem** | **142** | **60** | **20** | **29** | **6** | **257** |
+| **Razem** | **144** | **60** | **18** | **29** | **6** | **257** |
 
-Spełnione 142 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 64 % (po US-087; wcześniej 140, 63 %).
+Spełnione 144 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 65 % (po US-087 i US-088; wcześniej 140, 63 %).
 
 ### Luki ❌ — proponowane działania
 
@@ -421,7 +421,7 @@ Spełnione 142 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 64 
 | 2.1.3, 2.4.5 | bcrypt obcina hasło do 72 bajtów; brak pieprzu | HMAC-SHA256 z kluczem z env przed bcrypt, migracja przy logowaniu | nowe (do historyjki) |
 | 2.1.7, 2.1.8, 2.1.9, 2.1.12 | Brak listy wyciekłych haseł i miernika siły, reguła „litera + cyfra”, brak „pokaż hasło” | jedna historyjka „polityka haseł wg ASVS”: lista zakazanych offline, wskaźnik, przełącznik, usunięcie reguły składu | nowe |
 | 2.3.2 | Brak kluczy sprzętowych (WebAuthn) | WebAuthn przynajmniej dla adminów | E-01, US-019 |
-| 2.6.2, 2.6.3 | Kody zapasowe 2FA: 40 bitów, SHA-256 bez soli | dłuższe kody (≥ 100 bitów) albo hash z solą | nowe (wysoki priorytet — mała zmiana) |
+| 2.6.2, 2.6.3 | ~~Kody zapasowe 2FA: 40 bitów, SHA-256 bez soli~~ | zrobione: 60 bitów + scrypt z solą (US-088); stare kody do ponownego wygenerowania | zamknięte |
 | 2.8.2 | Sekret TOTP jawnie w bazie | szyfrowanie `crypto.encrypt` + migracja | R-05 / US-002 (ten sam klucz danych) |
 | 3.3.2 | Sesja bez limitu bezwzględnego i bezczynności | limit 12 h od logowania i 30 min bezczynności albo wyjątek PO | nowe |
 | 3.4.4 | Brak prefiksu `__Host-` | `__Host-` dla cookie access | E-07 |
