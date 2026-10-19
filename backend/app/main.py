@@ -350,6 +350,8 @@ from .routers import automation_rules as automation_rules_router  # noqa: E402 �
 app.include_router(automation_rules_router.router)
 from .routers import report_monthly as report_monthly_router  # noqa: E402 — raport miesięczny (trzecia lista PO, pkt 8)
 app.include_router(report_monthly_router.router)
+from .routers import port_budget as port_budget_router  # noqa: E402 — budżet kosztów (czwarta lista PO, pkt 7)
+app.include_router(port_budget_router.router)
 from .routers import health as health_router  # noqa: E402 — nazwa `health` to endpoint niżej
 app.include_router(health_router.router)   # OBS-009: /api/health/deep
 from .sms_settings import router as sms_settings_router  # noqa: E402

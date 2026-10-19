@@ -943,6 +943,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      uzasadnieniem (ograniczenia typów Starlette/FastAPI i atrybut pomocniczy).
 - **Stan:** wdrożone w PR #95.
 
+### US-084 · [BA][DEV] Budżet kosztów transportu na spółkę i miesiąc (czwarta lista PO, pkt 7)
+- **Rozmiar:** M
+- **Jako** kierownik logistyki **chcę** ustawić miesięczny budżet kosztów transportu spółki i widzieć, czy go
+  przekroczymy, **aby** reagować w połowie miesiąca, a nie po fakturach.
+- **Kryteria akceptacji** (testy `test_port_budget.py`, `PortBudgetPanel.dom.test.tsx`)
+  1. Spedycja → zakładka faktur B/L → „Budżet kosztów transportu”: na spółkę budżet (EUR), wydane w bieżącym
+     miesiącu, prognoza na koniec miesiąca i stan z ikoną: brak budżetu / w budżecie / uwaga / przekroczony.
+  2. Wydane = faktury transportowe z miesiąca bez odrzuconych; inne waluty kursem NBP, bez kursu — pominięte i
+     policzone osobno. Uwaga, gdy prognoza ≥ 90% budżetu.
+  3. Budżet zmienia tylko admin (z audytem), puste pole = brak budżetu. Nic nie blokuje wprowadzania faktur.
+- **[SEC]:** podgląd dla ról z dostępem do faktur (admin, logistyka, zakupy) w zakresie spółek; zapis tylko admin;
+  walidacja kwoty 0–100 mln. Co liczymy jako koszt i próg 90% — założenie Z-044. Bez migracji (ustawienia).
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2). Zrobione — patrz US-020 wyżej.

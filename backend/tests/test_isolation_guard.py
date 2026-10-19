@@ -43,6 +43,7 @@ EXCEPTIONS = {
     "GET /api/users/{user_id}/sessions": USERS,
     "PATCH /api/checklist-points/{point_id}": DICT,
     "PATCH /api/companies/{company_id}": "dane spółki — tylko admin",
+    "PUT /api/budgets/port/{company_id}": "budżet spółki (US-084) — tylko admin",
     "PATCH /api/customs-agencies/{agency_id}": DICT,
     "PATCH /api/customs/case-statuses/{status_id}": DICT,
     "PATCH /api/customs/doc-templates/{template_id}": DICT,

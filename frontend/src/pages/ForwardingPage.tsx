@@ -6,6 +6,7 @@ import { Inbox } from 'lucide-react'
 import { EmptyState, LoadError, Skeleton, useToast } from '../feedback'
 import { OrderBadge } from '../collaboration'
 import FreightInvoicesPanel from './FreightInvoicesPanel'
+import PortBudgetPanel from './PortBudgetPanel'
 import { Modal, useDicts } from '../components'
 import { useT } from '../i18n'
 import type { Container, TransportOrder, TransportOrderStatus } from '../types'
@@ -255,6 +256,7 @@ export default function ForwardingPage() {
         </button>
       </div>
 
+      {tab === 'BL' && <PortBudgetPanel />}
       {tab === 'BL' && <FreightInvoicesPanel />}
 
       {error && tab !== 'BL' && <p className="error">{error}</p>}

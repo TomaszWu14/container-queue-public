@@ -221,6 +221,8 @@ routes:
   "POST /api/automations/rules/history/{audit_id}/restore": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # przywrócenie reguły tylko admin, z audytem
   "GET /api/users/access-review": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # przegląd dostępów (US-076) — dane kont, tylko admin
   "GET /api/automations/forwarder-scorecard": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_company (karta spedytora US-079)
+  "GET /api/budgets/port": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 200, sales: 403}  # scoping: scope_company (budżet kosztów US-084)
+  "PUT /api/budgets/port/{company_id}": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # budżet ustawia tylko admin (US-084)
   "GET /api/automations/deliveries": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # ponowienia wysyłek (US-022), tytuły wielu spółek — tylko admin
   "GET /api/automations/rules/backtest": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (test reguły na 30 dniach)
   "GET /api/automations/rules/preview": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (podgląd reguły)

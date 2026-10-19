@@ -52,6 +52,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-041 | Przegląd dostępów (US-076): konto „nieużywane” = brak aktywności od 90 dni; przypomnienie w pierwszy poniedziałek kwartału o 8:00; lista tylko podpowiada — blokuje admin. | — | do potwierdzenia | 30/60/180 dni; automatyczna blokada | `backend/app/access_review.py` |
 | Z-042 | Karta spedytora (US-079): „odpowiedź na czas” = pierwsza odpowiedź spedycji do 24 h od wysłania awizacji; okno 90 dni; ranking po odsetku odpowiedzi na czas. | — | do potwierdzenia | inny próg (np. 4 h roboczych); godziny pracy zamiast zegarowych | `backend/app/forwarder_scorecard.py` |
 | Z-043 | Reguła „ETA + N” (US-020): N = ustawienie admina „ETA magazynu = ETA portu + N dni” (dotąd 3) — także przy zakładaniu kontenera, gdzie wcześniej było na sztywno 4 (FR-014). | — | do potwierdzenia | wrócić do 4 dni (zmiana ustawienia na 4) | `backend/app/planning.py` |
+| Z-044 | Budżet kosztów (US-084): koszt = faktury transportowe (B/L) z bieżącego miesiąca bez odrzuconych, w EUR (inne waluty kursem NBP); prognoza liniowa; ostrzeżenie przy prognozie ≥ 90% budżetu; budżet w EUR na spółkę ustawia admin. | — | do potwierdzenia | doliczać szacunek kar (demurrage), budżet roczny, inny próg | `backend/app/port_budget.py` |
 
 ## Jak potwierdzić
 
