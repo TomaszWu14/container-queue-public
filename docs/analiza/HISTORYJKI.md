@@ -905,7 +905,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      Escape zamyka. Karta na dole ekranu, mieści się na telefonie.
   3. Teksty PL/EN/PT; szanuje „ogranicz ruch” w systemie.
 - **[SEC]:** tylko nawigacja po stronie klienta, bez zapisu i bez nowych wywołań API.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #92.
 
 ### US-020 · [BA][DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (czwarta lista PO, pkt 4)
 - **Rozmiar:** S
