@@ -159,6 +159,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 
 
 ### Dodane
+Budżet kosztów transportu na spółkę i miesiąc z prognozą i ostrzeżeniem (US-084).
 Film „Przewodnik po demo” (~1 min, napisy PL/EN) z testu E2E; poprawki przewodnika: tabela kolejki, trwałe podświetlenie, karta u góry na telefonie (US-083).
 Interaktywny przewodnik po demo: krok po kroku przez najważniejsze ekrany z podświetleniem (US-081).
 Metryki projektu na stronie „Jak to zbudowano”: testy, API, historyjki, ADR — liczone z repozytorium (US-080).
