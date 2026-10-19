@@ -892,7 +892,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Liczby z repozytorium (`python3 scripts/project_metrics.py`), bez sieci i bazy; generowane na żądanie.
   3. Testy liczone jako funkcje testowe — strona mówi to wprost (warianty parametryzowane liczą się raz).
 - **[SEC]:** plik statyczny w paczce frontendu, bez danych i bez wywołań API.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #91.
 
 ### US-081 · [DEV] Interaktywny przewodnik po demo (czwarta lista PO, pkt 14)
 - **Rozmiar:** S
