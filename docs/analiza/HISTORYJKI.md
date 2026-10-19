@@ -748,7 +748,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      przebieg procesu, „co jeśli statek się spóźni”) → `docs/video/automatyzacje.mp4` i GIF w README.
   2. Ten sam test biegnie w CI przy każdym PR (wideo w artefaktach) — nagranie łatwo odświeżyć po zmianach.
   3. Test E2E sprawdza też „co jeśli” (przycisk „Policz” i wynik).
-- **Stan:** zrealizowane, czeka na merge. Nagranie ma ok. 15 s (tyle trwa test), nie 60 s.
+- **Stan:** wdrożone w PR #77. Nagranie ma ok. 15 s (tyle trwa test), nie 60 s.
 
 ### US-024 · [DEV] Archiwum notatek z pomysłami (trzecia lista PO, pkt 15)
 - **Rozmiar:** S
