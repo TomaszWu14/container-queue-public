@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 import httpx
 
-from .. import delivery_retry, what_if
+from .. import delivery_retry, eta_reliability, what_if
 from .. import ai_quality, automation_catalog, automation_switch, automation_events, automation_savings, demo_simulation, process_mining
 from ..config import settings
 from ..audit import record
@@ -140,3 +140,9 @@ def deliveries(user: User = admin_only) -> dict:
     """US-022: wysyłki czekające na ponowienie i te, które nie doszły (tylko admin — tytuły alertów
     mogą dotyczyć kontenerów różnych spółek)."""
     return delivery_retry.snapshot()
+
+
+@router.get("/automations/eta-reliability")
+def eta_reliability_view(db: Session = Depends(get_db), user: User = editors) -> dict:
+    """Punktualność armatorów (mediana spóźnienia wg historii) i realne ETA kontenerów w drodze."""
+    return eta_reliability.analyze(db, user)

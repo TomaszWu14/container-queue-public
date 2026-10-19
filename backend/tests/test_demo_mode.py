@@ -112,7 +112,8 @@ def test_seed_gives_recruiter_a_full_first_screen(client, monkeypatch, tmp_path)
         assert all(c.eta > today for c in cs if c.status == ContainerStatus.ZAPOWIEDZIANY)
         assert all(c.eta < today for c in cs if c.status == ContainerStatus.ZREALIZOWANY)
         assert db.query(AuditLog).filter_by(entity_type="containers", field="status").count() > 300
-        assert db.query(TrackingEvent).count() == 45
+        # 45 zdarzeń mapy śledzenia + wyładunki z historii przypłynięć (punktualność armatorów, US-071)
+        assert db.query(TrackingEvent).count() > 45
         assert all(e.occurred_at < dt.datetime.now() for e in db.query(TrackingEvent))
     hdr = login(client, "demo", PW)
     assert len(client.get("/api/tracking/map", headers=hdr).json()["points"]) == 45

@@ -44,3 +44,12 @@ def test_demo_has_some_rework(seeded, client):  # noqa: F811
     body = client.get("/api/automations/process", headers=login(client, "demo", PW)).json()
     assert body["backward"] >= 2
     assert any(t["from"] == "ODPRAWA" and t["to"] == "W_PORCIE" for t in body["transitions"])
+
+
+def test_demo_has_carrier_punctuality(seeded, client):  # noqa: F811
+    """Punktualność armatorów (trzecia lista PO, pkt 7): demo ma historię przypłynięć i realne ETA."""
+    body = client.get("/api/automations/eta-reliability", headers=login(client, "demo", PW)).json()
+    assert len(body["carriers"]) >= 2
+    medians = sorted(r["median_days"] for r in body["carriers"])
+    assert medians[0] < medians[-1]          # armatorzy różnią się punktualnością
+    assert body["forecast_total"] >= 1

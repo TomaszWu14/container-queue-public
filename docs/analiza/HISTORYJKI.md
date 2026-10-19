@@ -768,6 +768,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Zachowanie bez zmian: adnotacje, `Sequence` w sygnaturach, jawne zawężenie `None` tam, gdzie zapytanie i tak je wyklucza.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-071 · [DEV] Punktualność armatorów i realne ETA (trzecia lista PO, pkt 7)
+- **Rozmiar:** M
+- **Jako** planista **chcę** wiedzieć, o ile dany armator zwykle się spóźnia do danego portu, i widzieć realną
+  datę przypłynięcia kontenerów w drodze, **aby** planować awizacje na realną, a nie obiecaną datę.
+- **Kryteria akceptacji** (testy `test_eta_reliability.py`, `EtaReliabilityPanel.dom.test.tsx`, `test_seed_demo_automation.py`)
+  1. Spóźnienie = faktyczny wyładunek (DISCHARGE/ARRIVE, dzień PL) − pierwsze znane ETA (dziennik zmian `eta`).
+  2. Tabela armator × port z ≥ 3 przypłynięciami (Z-038): liczba, mediana, 90. percentyl, % spóźnionych > 1 dzień.
+  3. „Realne ETA” = ETA + mediana pary armator–port (bez pary: sam armator) dla kontenerów w drodze; tylko podpowiedź.
+  4. Demo ma historię przypłynięć (trzech armatorów o różnej punktualności).
+- **[SEC]:** odczyt, `scope_containers` (obca spółka nie zmienia wyniku); wpis w `tests/permissions.yaml`.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

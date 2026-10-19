@@ -86,3 +86,6 @@
 .auto-rule-history ul { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 4px; font-size: 13px; }
 .auto-rule-history li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .whatif-cost { color: var(--danger-ink); font-weight: 600; }
+
+/* Punktualność armatorów (trzecia lista PO, pkt 7) */
+.eta-forecasts { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 2px; font-size: 14px; }

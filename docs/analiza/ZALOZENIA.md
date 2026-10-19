@@ -47,6 +47,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-035 | Koszt w „co jeśli” (US-067): kontener ponad dzienny limit magazynu czeka co najmniej 1 dzień; stawka kary 150 EUR/dzień — ta sama stała co w sygnałach (stawki armatorów nie są przechowywane). | — | do potwierdzenia | stawka per armator; inny model czekania | `backend/app/what_if.py`, `backend/app/signals.py` |
 | Z-036 | Ponawianie wysyłek (US-022): 3 ponowienia po 1, 5 i 30 min; kolejka w pamięci procesu — restart aplikacji w trakcie gubi oczekujące próby (ślad zostaje w dzienniku zadań). | — | do potwierdzenia | trwała kolejka w bazie (wymaga migracji); więcej prób | `backend/app/delivery_retry.py` |
 | Z-037 | Test reguły na 30 dniach (US-068): etap kontenera z historii statusów, a daty (ETA, awizacja, plan) i kierowca z dzisiejszych danych; „dużo alertów” = średnio ≥ 10 dziennie. | — | do potwierdzenia | pełna historia pól (wymaga zapisu zmian dat); inny próg | `backend/app/automation_rules_backtest.py` |
+| Z-038 | Punktualność armatorów (US-071): okno 365 dni, minimum 3 przypłynięcia na parę armator–port; „spóźniony” = ponad 1 dzień; realne ETA = ETA + mediana (podpowiedź, bez zmiany planu). | — | do potwierdzenia | inne okno / próg; automatyczna korekta planu | `backend/app/eta_reliability.py` |
 
 ## Jak potwierdzić
 
