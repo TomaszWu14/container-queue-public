@@ -32,8 +32,8 @@ dokumentów ani przy przekroczonym limicie magazynu, nie ma publicznego linku dl
 | P-08 | Alert „ETA minęło” ma okno jednego dnia | jeśli zadanie nie przebiegnie danego dnia, alertu nie będzie | `notification_alerts.py:157-160` |
 | P-09 | **Naprawione (US-017, czeka na PR): przycisk „Wyślij plan” w kolejce i mail do spedytora.** „Wyślij plan do spedycji” nie wysyła maila, tylko zmienia status | spedytor dowie się o planie dopiero z aplikacji | `routers/containers_planning.py:40-65` |
 | P-10 | Wybór zwycięskiej oferty nie przypisuje spedytora do kontenera | potrzebny osobny ręczny krok | `routers/quotes_offers.py:173-228` |
-| P-11 | Zdarzenia do n8n ignorują odpowiedzi 4xx/5xx | nieudane zdarzenie znika bez śladu | `notifications.py:263` |
-| P-12 | Maile powiadomień (SMTP) bez ponawiania; bez skonfigurowanego serwera pomijane po cichu | utracone powiadomienia | `notifications.py:121-144` |
+| P-11 | Zdarzenia do n8n ignorują odpowiedzi 4xx/5xx | ~~nieudane zdarzenie znika bez śladu~~ — naprawione: dziennik zadań (US-035) i ponawianie (US-022) | `notifications.py:263` |
+| P-12 | Maile powiadomień (SMTP) bez ponawiania; bez skonfigurowanego serwera pomijane po cichu | ~~utracone powiadomienia~~ — ponawianie po 1/5/30 min i lista „nie doszło” (US-022); brak serwera SMTP = kanał wyłączony | `notifications.py:121-144` |
 | P-13 | **Naprawione w PR #18 (US-003, czeka na scalenie); formularz kontenera był już chroniony (DB-005).** Edycje równoległe statusu, odprawy i zleceń transportowych bez kontroli wersji | ostatni zapis nadpisuje poprzedni bez ostrzeżenia | `routers/containers_write.py:243-253`, `routers/customs.py:434` |
 | P-14 | Dokumentacja projektu częściowo nieaktualna (sloty, ważność linków, liczba etapów) | czytelnik dostaje sprzeczne reguły | patrz niżej |
 

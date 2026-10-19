@@ -21,6 +21,7 @@ from sqlalchemy.engine import CursorResult
 from sqlalchemy.orm import Session
 
 from . import automation_events, teams
+from . import delivery_retry as retry
 from .config import settings
 from .models import (
     Container,
@@ -140,7 +141,7 @@ def _send_email(recipients: list[str], title: str, body: str) -> None:
     # odbiorcy w Bcc — nie ujawniamy adresów pracowników sobie nawzajem
     message["To"] = settings.smtp_from
     # wysyłka w tle — nie blokuje żądania; błędy trafiają do logów w _run
-    _submit(_smtp_send, message, recipients, timeout=15)
+    _submit(retry.attempt, "email", title, _smtp_send, message, recipients, timeout=15)   # ponowienia: US-022
 
 
 def send_html_email(recipients: list[str], subject: str, html: str,
@@ -168,7 +169,7 @@ def send_html_email(recipients: list[str], subject: str, html: str,
         message.attach(part)
     # walidacja (SMTP skonfigurowany?) już się wykonała synchronicznie powyżej, więc
     # wywołujący nadal dostaje natychmiastowy błąd konfiguracji; samą wysyłkę robimy w tle
-    _submit(_smtp_send, message, recipients, timeout=20, channel=channel)
+    _submit(retry.attempt, "email", subject, _smtp_send, message, recipients, timeout=20, channel=channel)
 
 
 def send_password_reset(email: str, full_name: str, link: str, minutes: int) -> None:
@@ -249,7 +250,7 @@ def _send_teams(title: str, body: str, link: str = "") -> None:
     if not settings.teams_webhook_url:
         return
     # wysyłka w tle — nie blokuje żądania; błędy trafiają do logów w _run
-    _submit(_teams_post, settings.teams_webhook_url, title, body, link)
+    _submit(retry.attempt, "teams", title, _teams_post, settings.teams_webhook_url, title, body, link)
 
 
 # US-035: koperta, podpis, kontrola odpowiedzi i zapis w dzienniku — app/automation_events.py
@@ -268,7 +269,7 @@ def send_automation_event(kind: str, title: str, body: str = "", **fields) -> No
     """
     if not settings.automation_webhook_url:
         return
-    _submit(_n8n_post, settings.automation_webhook_url,
+    _submit(retry.attempt, "n8n", title, _n8n_post, settings.automation_webhook_url,
             automation_events.envelope(kind, title, body, **fields))
 
 

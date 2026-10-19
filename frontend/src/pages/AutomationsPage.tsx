@@ -13,6 +13,7 @@ import AiQualityPanel from './AiQualityPanel'
 import ProcessFlowPanel from './ProcessFlowPanel'
 import SimulateDayPanel from './SimulateDayPanel'
 import WhatIfPanel from './WhatIfPanel'
+import DeliveryRetryPanel from './DeliveryRetryPanel'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -194,6 +195,7 @@ export default function AutomationsPage() {
           )}
         </>
       )}
+      {data && isAdmin && <DeliveryRetryPanel />}
       {data && me?.is_demo && <SimulateDayPanel />}
       {data && <ProcessFlowPanel />}
       {data && <WhatIfPanel />}

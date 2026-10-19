@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Ponawianie wysyłek** (US-022): e-mail, Teams i n8n, które się nie udały, są ponawiane po 1, 5 i 30 min;
+  admin widzi na ekranie Automatyzacje, co czeka i co nie doszło.
 - **„Co jeśli” z kosztem kar** (US-067): symulacja spóźnienia statku podaje szacowany koszt kar za przetrzymanie
   w EUR (kontenero-dni ponad limit magazynu × stawka).
 - **Historia zmian reguł** (US-066): panel reguł pokazuje, kto i co zmienił; admin przywraca regułę do stanu

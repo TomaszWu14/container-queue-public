@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 import httpx
 
-from .. import what_if
+from .. import delivery_retry, what_if
 from .. import ai_quality, automation_catalog, automation_switch, automation_events, automation_savings, demo_simulation, process_mining
 from ..config import settings
 from ..audit import record
@@ -133,3 +133,10 @@ def set_automation_enabled(key: str, body: EnabledIn, db: Session = Depends(get_
                old_value="tak" if was else "nie", new_value="tak" if body.enabled else "nie", user=user)
     db.commit()
     return {"key": key, "enabled": body.enabled}
+
+
+@router.get("/automations/deliveries")
+def deliveries(user: User = admin_only) -> dict:
+    """US-022: wysyłki czekające na ponowienie i te, które nie doszły (tylko admin — tytuły alertów
+    mogą dotyczyć kontenerów różnych spółek)."""
+    return delivery_retry.snapshot()
