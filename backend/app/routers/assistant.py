@@ -80,15 +80,15 @@ def _material_fact(m: Material) -> dict:
 def gather_facts(db: Session, user: User, question: str) -> dict:
     upper = question.upper()
     numbers = {a + b for a, b in _CONTAINER_NO.findall(upper)}
-    containers = []
+    containers: list[Container] = []
     if numbers:
-        containers = db.scalars(scope_containers(
+        containers = list(db.scalars(scope_containers(
             select(Container).options(selectinload(Container.supplier),
                                       selectinload(Container.warehouse),
                                       selectinload(Container.port))
-            .where(Container.container_no.in_(numbers)), user).limit(MAX_HITS)).all()
+            .where(Container.container_no.in_(numbers)), user).limit(MAX_HITS)))
 
-    materials = []
+    materials: list[Material] = []
     if user.role in MATERIAL_ROLES:
         tokens = [t for t in re.split(r"[\s,;?!]+", question) if len(t) >= 3]
         norms = {normalize_ref(t) for t in tokens} - {""} - numbers
@@ -98,8 +98,8 @@ def gather_facts(db: Session, user: User, question: str) -> dict:
         conds += [Material.name_pl.ilike(f"%{w}%") for w in words]
         conds += [Material.name_en.ilike(f"%{w}%") for w in words]
         if conds:
-            materials = db.scalars(select(Material).where(Material.is_active, or_(*conds))
-                                   .order_by(Material.ref_code).limit(MAX_HITS)).all()
+            materials = list(db.scalars(select(Material).where(Material.is_active, or_(*conds))
+                                        .order_by(Material.ref_code).limit(MAX_HITS)))
 
     return {"kontenery": [_container_fact(c, user) for c in containers],
             "materialy": [_material_fact(m) for m in materials]}

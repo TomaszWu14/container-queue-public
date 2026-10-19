@@ -82,6 +82,8 @@ def dashboard(today: datetime.date | None = Query(
     for so in db.scalars(select(SapOrder).where(
             SapOrder.container_id.in_(open_q(Container.id)),
             SapOrder.supplier_confirmed.is_(False))):
+        if so.container_id is None:     # wykluczone w zapytaniu (in_) — zawężenie dla mypy
+            continue
         ref = so.doc_date or so.required_ship_date
         days = (today - ref).days if ref else 0
         if days >= po_days:
@@ -282,13 +284,13 @@ def unloading_analysis(
     if not containers:
         return {"warehouses": [], "days": []}
 
-    all_days = [c.notify_date for c in containers]
+    all_days = [c.notify_date for c in containers if c.notify_date]   # zapytanie i tak wyklucza None
     date_from = date_from or min(all_days)
     date_to = date_to or min(max(all_days), date_from + datetime.timedelta(days=400))
 
     by_day: dict = {}
     for c in containers:
-        if date_from <= c.notify_date <= date_to:
+        if c.notify_date and date_from <= c.notify_date <= date_to:
             by_day.setdefault(c.notify_date, []).append(c)
 
     # wszystkie nadpisania limitów dla magazynów spółki w oknie — jedno zapytanie
@@ -368,7 +370,8 @@ def warehouse_forecast(
 
     by_key: dict[tuple[int | None, datetime.date], list[Container]] = {}
     for c in containers:
-        by_key.setdefault((c.warehouse_id, c.notify_date), []).append(c)
+        if c.notify_date:              # zapytanie wyklucza None — zawężenie dla mypy
+            by_key.setdefault((c.warehouse_id, c.notify_date), []).append(c)
 
     def pallets_for(items: list[Container]) -> tuple[int | None, bool]:
         total, estimated = 0.0, False

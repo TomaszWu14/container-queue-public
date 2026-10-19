@@ -5,12 +5,12 @@ demurrage (container_id -> date|None) i 'dziś'. Wagi/progi w SIGNAL_WEIGHTS = p
 strojenia (docelowo panel admina, na razie stałe)."""
 
 import datetime
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from .models import Container, ContainerStatus, DocumentStatus
 
 DEMURRAGE_EUR_PER_DAY = 150.0   # stawka kary za dzień (także „co jeśli”, Z-035)
-SIGNAL_WEIGHTS = {
+SIGNAL_WEIGHTS: dict[str, Any] = {
     # waga bazowa typu (im wyższa, tym wyżej na liście przy równej pilności)
     "weights": {
         "demurrage": 10.0, "delayed": 6.0, "stuck": 5.0,

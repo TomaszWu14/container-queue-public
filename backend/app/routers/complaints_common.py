@@ -2,6 +2,7 @@
 dostępu, numeracja. Używane przez router reklamacji, pisma i pętle tła (re-eksport
 w routers/complaints.py). Ustawienia AppSetting: app/app_settings.py (tu re-eksport)."""
 import datetime
+from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
@@ -55,7 +56,7 @@ def complaint_to_out(c: Complaint, user: User, detail: bool = False) -> Complain
     end = c.closed_at or utcnow()
     costs = user.role in COST_ROLES
     deadline = complaint_deadline(c)
-    data = dict(
+    data: dict[str, Any] = dict(
         recipient_type=c.recipient_type,
         deadline_at=deadline,
         deadline_days_left=((deadline - today_pl()).days

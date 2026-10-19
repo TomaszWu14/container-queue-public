@@ -91,7 +91,7 @@ def order_to_out(order: Order, user: User, detail: bool = False) -> OrderOut:
                                  if order.supplier_contact else None)
     out.created_by_login = order.created_by.login if order.created_by else None
     out.progress = compute_progress(visible)
-    if detail:
+    if detail and isinstance(out, OrderDetailOut):
         # maskowane wg roli
         out.containers = [to_out(c, user) for c in sorted(
             visible, key=lambda c: (c.notify_date or datetime.date.max, c.id))]
@@ -133,7 +133,7 @@ def list_orders(response: Response, db: Session = Depends(get_db), user: User = 
     rows = db.scalars(query.limit(limit)).all()
     total = len(rows)
     if total == limit:
-        total = db.scalar(select(func.count()).select_from(query.order_by(None).subquery()))
+        total = db.scalar(select(func.count()).select_from(query.order_by(None).subquery())) or 0
     response.headers["X-Total-Count"] = str(total)
     return [order_to_out(order, user) for order in rows]
 
@@ -160,8 +160,15 @@ def create_order(body: OrderIn, db: Session = Depends(get_db), user: User = edit
         db.rollback()
         raise HTTPException(status.HTTP_409_CONFLICT, "Zamówienie o tym numerze już istnieje.") from None
     # pełny re-SELECT z relacjami poniżej odświeża rekord — osobny db.refresh() zbędny
-    return order_to_out(db.scalar(select(Order).options(*_ORDER_LOAD)
-                                  .where(Order.id == order.id)), user)
+    return order_to_out(db.scalars(select(Order).options(*_ORDER_LOAD)
+                                   .where(Order.id == order.id)).one(), user)
+
+
+def _company_or_404(db: Session, company_id: int) -> Company:
+    company = db.get(Company, company_id)
+    if company is None:   # spółka sprawdzona wcześniej (zakres) — tu tylko zawężenie typu
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Nie znaleziono spółki.")
+    return company
 
 
 def _resolve_supplier(db: Session, company_id: int, supplier_id: int | None,
@@ -174,7 +181,7 @@ def _resolve_supplier(db: Session, company_id: int, supplier_id: int | None,
     name = (supplier_name or "").strip()
     if not name:
         return None
-    company = db.get(Company, company_id)
+    company = _company_or_404(db, company_id)
     supplier = db.scalar(select(Supplier).where(
         supplier_clause_for_company(company), Supplier.name == name)
         .order_by(Supplier.id).limit(1))
@@ -230,9 +237,9 @@ def found_order(body: FoundOrderIn, db: Session = Depends(get_db), user: User = 
         db.rollback()
         raise HTTPException(status.HTTP_409_CONFLICT, "Zamówienie o tym numerze już istnieje.") from None
 
-    company = db.get(Company, company_id)
+    company = _company_or_404(db, company_id)
     size = ctype.name if ctype else ""
-    transport_type = _MODE_TRANSPORT.get(getattr(body.main_mode, "value", None))
+    transport_type = _MODE_TRANSPORT.get(getattr(body.main_mode, "value", ""))
     year = (body.readiness_date or today_pl()).year
     # jeden blok numerów z licznika w bazie (DB-011) — nie max+1 w pętli ani w Pythonie
     prefix = _transport_prefix(company, year)
@@ -266,5 +273,5 @@ def found_order(body: FoundOrderIn, db: Session = Depends(get_db), user: User = 
                  f"Dostawca: {order.supplier.name if order.supplier else '—'} · "
                  f"Zlecający: {user.full_name or user.login}"))
     db.commit()
-    return order_to_out(db.scalar(select(Order).options(*_ORDER_DETAIL_LOAD)
-                                  .where(Order.id == order.id)), user, detail=True)
+    return order_to_out(db.scalars(select(Order).options(*_ORDER_DETAIL_LOAD)
+                                   .where(Order.id == order.id)).one(), user, detail=True)

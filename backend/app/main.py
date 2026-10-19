@@ -5,6 +5,7 @@ import pathlib
 import time
 import uuid
 from contextlib import asynccontextmanager
+from typing import Any
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -178,7 +179,7 @@ init_sentry()
 # dokumentacja API (/docs, /redoc, /openapi.json) tylko poza produkcją — nie publikujemy
 # całej powierzchni API (admin, tokeny) na wewnętrznym narzędziu
 _is_prod = settings.environment.lower() in ("production", "prod")
-_docs_kw = dict(docs_url=None, redoc_url=None, openapi_url=None) if _is_prod else {}
+_docs_kw: dict[str, Any] = dict(docs_url=None, redoc_url=None, openapi_url=None) if _is_prod else {}
 
 app = FastAPI(
     title=settings.app_name,

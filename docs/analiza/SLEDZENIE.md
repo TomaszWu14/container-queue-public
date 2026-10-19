@@ -103,6 +103,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-068 test reguły na 30 dniach | US-036, Z-037 | `test_automation_rules_backtest.py` (2), `RuleBacktest.dom.test.tsx` (2) | #76 | wdrożone |
 | US-069 nagranie Automatyzacje w README | US-056 | `e2e/demo/recruiter.spec.ts` (rozszerzony) | #77 | wdrożone |
 | US-024 archiwum notatek z pomysłami | AUDYT §2.6 pkt 8 | przegląd linków | — | czeka na merge |
+| US-070 mniej błędów typów (145 → 75) | CODE-003 | `mypy_baseline.py` (CI) | — | czeka na merge |
 
 ## Zasady utrzymania
 
