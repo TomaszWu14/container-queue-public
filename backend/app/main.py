@@ -348,6 +348,8 @@ app.include_router(logs.router)
 app.include_router(automations.router)
 from .routers import automation_rules as automation_rules_router  # noqa: E402 — US-036
 app.include_router(automation_rules_router.router)
+from .routers import report_monthly as report_monthly_router  # noqa: E402 — raport miesięczny (trzecia lista PO, pkt 8)
+app.include_router(report_monthly_router.router)
 app.include_router(health.router)   # OBS-009: /api/health/deep
 from .sms_settings import router as sms_settings_router  # noqa: E402
 

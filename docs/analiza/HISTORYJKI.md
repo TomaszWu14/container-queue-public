@@ -801,6 +801,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Zapis propozycji jednym przyciskiem — dopiero po decyzji PO (Z-031); dziś zmiana na karcie kontenera.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-074 · [DEV] Raport miesięczny dla zarządu (trzecia lista PO, pkt 8)
+- **Rozmiar:** M
+- **Jako** kierownik **chcę** raz w miesiącu jedną stronę z liczbami (dostawy, dokumenty, kary, przebieg procesu,
+  faktury, automaty) do wydruku albo PDF, **aby** pokazać zarządowi efekt pracy bez składania Excela.
+- **Kryteria akceptacji** (testy `test_report_monthly.py`, `AutomationsPage.dom.test.tsx`)
+  1. Ekran Automatyzacje → „Raport miesięczny (PDF)” otwiera stronę do druku („Drukuj / zapisz jako PDF”).
+  2. Liczby z tych samych źródeł co ekrany, w zakresie użytkownika: dostawy i zaoszczędzony czas (30 dni), dokumenty
+     i kary (30 dni / dziś), najdłuższe etapy procesu (30 dni), odczyt faktur (4 tyg.), automaty (7 dni).
+  3. Zestaw pozycji to założenie Z-039 — PO decyduje, co ma być w raporcie.
+- **[SEC]:** admin i logistyka; Jinja z autoescape, przycisk druku jako stały skrypt w CSP.
+- **Stan:** zrealizowane, czeka na merge. PDF przez przeglądarkę (bez nowej biblioteki).
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

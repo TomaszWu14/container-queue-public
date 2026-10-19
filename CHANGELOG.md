@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Raport miesięczny** (US-074): na ekranie Automatyzacje strona do druku / PDF z liczbami za ostatnie 30 dni
+  (dostawy, dokumenty, kary, przebieg procesu, faktury, automaty).
 - **Propozycja przesunięć** (US-073): „co jeśli statek się spóźni” podpowiada najbliższe dni robocze z wolnym
   miejscem dla kontenerów ponad limit (bez zapisu).
 - **Dostępność po zalogowaniu** (US-072): test axe (WCAG 2.1 AA) kolejki, karty kontenera, pulpitu i Automatyzacji

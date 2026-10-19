@@ -214,6 +214,7 @@ routes:
   "GET /api/automations/what-if": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (co jeśli statek się spóźni, bez zapisu)
   "GET /api/automations/process": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (czas etapów procesu, US-038)
   "GET /api/automations/eta-reliability": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (punktualność armatorów)
+  "GET /api/reports/monthly": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (raport miesięczny do druku)
   "GET /api/automations/rules": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # kreator reguł (US-036): lista reguł, ustawienie globalne
   "PUT /api/automations/rules": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # zapis reguł tylko admin, z audytem
   "GET /api/automations/rules/history": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # historia zmian reguł (ustawienie globalne)

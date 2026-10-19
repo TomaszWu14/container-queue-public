@@ -1,0 +1,52 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8">
+<title>Raport miesięczny — {{ today }}</title>
+<style>
+body{font-family:Calibri,Arial,sans-serif;font-size:14px;max-width:820px;margin:32px auto;color:#111;line-height:1.45}
+h1{font-size:22px;margin:0} h2{font-size:16px;margin:22px 0 6px;border-bottom:1px solid #ccc;padding-bottom:2px}
+.sub{color:#444;margin:4px 0 16px} .kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{border:1px solid #bbb;border-radius:6px;padding:8px 12px;min-width:150px}
+.kpi b{display:block;font-size:22px} .kpi span{font-size:12px;color:#333}
+table{border-collapse:collapse;margin:6px 0} th,td{border:1px solid #999;padding:4px 8px;text-align:left}
+th{background:#f3f4f6} .note{font-size:12px;color:#444} .no-print{margin-top:24px}
+@media print{.no-print{display:none} body{margin:0}}
+</style></head><body>
+<h1>Raport miesięczny — kolejka dostaw kontenerowych</h1>
+<p class="sub">Stan na {{ today }} · ostatnie {{ days }} dni · tylko kontenery w Twoim zakresie (spółki, partnerzy).</p>
+
+<h2>Dostawy i praca zespołu ({{ value.days }} dni)</h2>
+<div class="kpis">
+  <div class="kpi"><b>{{ value.delivered }}</b><span>dostarczonych kontenerów</span></div>
+  <div class="kpi"><b>{{ value.delivered_on_time }}</b><span>z tego na czas (do daty awizacji)</span></div>
+  <div class="kpi"><b>{{ open_total }}</b><span>kontenerów w obiegu dziś</span></div>
+  <div class="kpi"><b>ok. {{ value.hours_saved }} h</b><span>zaoszczędzone ({{ value.changes }} zmian × {{ value.minutes_per_change }} min, Z-020)</span></div>
+</div>
+
+<h2>Dokumenty i kary za przestój</h2>
+<div class="kpis">
+  <div class="kpi"><b>{{ value.docs_complete }} / {{ value.docs_in_flow }}</b><span>kontenerów u agencji z kompletem dokumentów</span></div>
+  <div class="kpi"><b>{{ value.demurrage_warned }}</b><span>ostrzeżeń o karze ({{ value.days }} dni)</span></div>
+  <div class="kpi"><b>{{ risks_total }}</b><span>kontenerów z ryzykiem kary dziś</span></div>
+  <div class="kpi"><b>{{ risks_planned_late }}</b><span>z dostawą zaplanowaną po terminie</span></div>
+</div>
+
+<h2>Przebieg procesu ({{ process.days }} dni)</h2>
+<p>Przejść między etapami: {{ process.transitions_total }}{% if process.backward_pct is not none %}, cofnięć statusu: {{ process.backward }} ({{ process.backward_pct }}%){% endif %}.
+Kontenerów „dłużej niż zwykle” w obecnym etapie: {{ process.stuck_total }}.</p>
+{% if slow %}<table><tr><th>Najdłuższe etapy</th><th>Mediana (dni)</th><th>90% kontenerów do (dni)</th><th>Pobytów</th></tr>
+{% for s in slow %}<tr><td>{{ stage_pl.get(s.status, s.status) }}</td><td>{{ s.median_days }}</td><td>{{ s.p90_days }}</td><td>{{ s.count }}</td></tr>{% endfor %}</table>{% endif %}
+
+<h2>Odczyt faktur (4 tygodnie)</h2>
+<p>Pozycji: {{ ai.totals['items'] }}; ustawione automatycznie (reguły + model): {{ ai.automated_pct if ai.automated_pct is not none else '—' }}%;
+trafność podpowiedzi modelu: {{ ai.ml_hit_pct if ai.ml_hit_pct is not none else '—' }}%.</p>
+
+<h2>Automaty (ostatnie 7 dni)</h2>
+<p>Aktywne: {{ summary.active }} z {{ summary.total }}; przebiegi: {{ summary.runs }}; efekty: {{ summary.effects }};
+zaoszczędzone ok. {{ summary.hours_saved }} h (założenia minut na ekranie Automatyzacje, Z-024).
+Wymagają uwagi: {% for i in attention %}{{ i.key }}{% if not loop.last %}, {% endif %}{% else %}brak{% endfor %}.</p>
+
+<p class="note">Założenia (minuty pracy, okna czasowe, zestaw pozycji raportu) są jawne i czekają na potwierdzenie PO —
+docs/analiza/ZALOZENIA.md (Z-020, Z-024, Z-039).</p>
+<button class="no-print" data-print>🖨 Drukuj / zapisz jako PDF</button>
+{# stały skrypt z print_button.py (jego hash jest w CSP), nie dane użytkownika #}
+{{ print_script|safe }}
+</body></html>
