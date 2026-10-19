@@ -841,6 +841,19 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** tylko admin (macierz uprawnień); próg 90 dni to założenie Z-041.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-077 · [DEV] Publiczna dokumentacja API: trasy i uprawnienia (czwarta lista PO, pkt 12)
+- **Rozmiar:** S
+- **Jako** recenzent albo integrator (n8n, Power Automate) **chcę** zobaczyć wszystkie trasy API i role, które
+  mają do nich dostęp, bez uruchamiania aplikacji, **aby** ocenić projekt albo podpiąć integrację.
+- **Kryteria akceptacji** (test `test_export_api_docs.py`)
+  1. `docs/architektura/API-TRASY.md`: każda operacja (metoda, ścieżka, opis) z kolumną „Kto ma dostęp” z macierzy
+     uprawnień — bez pozycji „?” (trasa spoza macierzy).
+  2. `docs/architektura/openapi.json` — pełna specyfikacja do Swagger Editor / Postmana / n8n.
+  3. `python scripts/export_api_docs.py` odświeża oba pliki; generowane na żądanie, nie w każdym PR-ze.
+- **[SEC]:** produkcja dalej nie publikuje `/docs` ani `/openapi.json`; plik opisuje kod, który i tak jest jawny w
+  repozytorium — nie zawiera sekretów ani danych.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

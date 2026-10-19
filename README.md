@@ -109,7 +109,7 @@ Definition of Ready/Done i konwencje: [`CONTRIBUTING.md`](CONTRIBUTING.md). Zgł
 | Obszar | Dokumenty |
 |---|---|
 | Analiza [BA] | [wizja](docs/analiza/WIZJA.md) · [interesariusze](docs/analiza/INTERESARIUSZE.md) · [wymagania 0.1](docs/analiza/WYMAGANIA.md) · [backlog](docs/analiza/HISTORYJKI.md) · [słownik](docs/analiza/SLOWNIK.md) · [założenia do potwierdzenia](docs/analiza/ZALOZENIA.md) · [decyzje do podjęcia](docs/analiza/DECYZJE-DO-PODJECIA.md) · [macierz śledzenia](docs/analiza/SLEDZENIE.md) |
-| Architektura [DEV] | [indeks](docs/architektura/ARCHITEKTURA.md) · [model danych](docs/architektura/MODEL_DANYCH.md) · [API](docs/architektura/API.md) · [ADR](docs/architektura/adr/README.md) |
+| Architektura [DEV] | [indeks](docs/architektura/ARCHITEKTURA.md) · [model danych](docs/architektura/MODEL_DANYCH.md) · [API](docs/architektura/API.md) ([trasy i uprawnienia](docs/architektura/API-TRASY.md)) · [ADR](docs/architektura/adr/README.md) |
 | Bezpieczeństwo [SEC] | [klasyfikacja danych](docs/bezpieczenstwo/KLASYFIKACJA_DANYCH.md) · [model zagrożeń](docs/bezpieczenstwo/THREAT_MODEL.md) · [rejestr ryzyk](docs/bezpieczenstwo/RYZYKA.md) · [RODO](docs/bezpieczenstwo/RODO.md) · [ASVS](docs/bezpieczenstwo/CHECKLISTA_ASVS.md) |
 | Testy i operacje | [strategia testów](docs/testy/STRATEGIA_TESTOW.md) · [runbook](docs/operacje/RUNBOOK.md) |
 | Stan | [audyt 2026-10-15](docs/AUDYT.md) · [CHANGELOG](CHANGELOG.md) |

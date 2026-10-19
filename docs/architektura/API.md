@@ -7,13 +7,15 @@ powierzchni API). Ten plik opisuje konwencje i mapę zasobów; szczegóły pól 
 
 ## Jak dostać OpenAPI bez uruchamiania serwera
 
+Gotowe w repozytorium (US-077): **[lista wszystkich tras z kolumną „kto ma dostęp”](API-TRASY.md)** i pełna
+specyfikacja [`openapi.json`](openapi.json) (Swagger Editor, Postman, n8n). Odświeżenie po zmianie tras:
+
 ```bash
 cd backend
-python -c "import json; from app.main import app; print(json.dumps(app.openapi(), ensure_ascii=False))" > openapi.json
+python scripts/export_api_docs.py
 ```
 
-Propozycja (US-023 lub osobna historyjka): generować `openapi.json` w CI jako artefakt i porównywać
-z poprzednim biegiem (wykrywanie niezamierzonych zmian kontraktu).
+Pliki generujemy na żądanie (nie w każdym PR-ze), żeby równoległe zmiany nie zderzały się na nich.
 
 ## Konwencje
 
