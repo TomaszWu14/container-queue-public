@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api, errorMessage } from '../api'
 import { useT } from '../i18n'
+import PasswordInput from '../PasswordInput'
 
 // Publiczne (bez logowania): prośba o reset i ustawienie nowego hasła.
 
@@ -72,14 +73,16 @@ export function ChangePasswordPage({ onDone }: { onDone: () => void }) {
       <form className="login-card" onSubmit={submit}>
         <h1>{t('mustChangeTitle')}</h1>
         <p style={{ color: 'var(--muted)' }}>{t('mustChangeInfo')}</p>
-        <label>{t('newPassword')}
-          <input type="password" value={password} autoFocus
-                 onChange={e => setPassword(e.target.value)} />
-        </label>
-        <label>{t('repeatPassword')}
-          <input type="password" value={repeat}
-                 onChange={e => setRepeat(e.target.value)} />
-        </label>
+        <div className="pw-labelled">
+          <label htmlFor="change-pw-new">{t('newPassword')}</label>
+          <PasswordInput id="change-pw-new" value={password} autoFocus autoComplete="new-password" showStrength
+            onChange={e => setPassword(e.target.value)} />
+        </div>
+        <div className="pw-labelled">
+          <label htmlFor="change-pw-repeat">{t('repeatPassword')}</label>
+          <PasswordInput id="change-pw-repeat" value={repeat} autoComplete="new-password"
+            onChange={e => setRepeat(e.target.value)} />
+        </div>
         {error && <p className="error">{error}</p>}
         <button className="btn" disabled={busy || !password || !repeat}>{t('resetSet')}</button>
       </form>
@@ -123,14 +126,16 @@ export function ResetPasswordPage() {
           <p style={{ color: 'var(--muted)' }}>{t('resetDone')}</p>
         ) : (
           <>
-            <label>{t('newPassword')}
-              <input type="password" value={password} autoFocus
-                     onChange={e => setPassword(e.target.value)} />
-            </label>
-            <label>{t('repeatPassword')}
-              <input type="password" value={repeat}
-                     onChange={e => setRepeat(e.target.value)} />
-            </label>
+            <div className="pw-labelled">
+              <label htmlFor="reset-pw-new">{t('newPassword')}</label>
+              <PasswordInput id="reset-pw-new" value={password} autoFocus autoComplete="new-password" showStrength
+              onChange={e => setPassword(e.target.value)} />
+            </div>
+            <div className="pw-labelled">
+              <label htmlFor="reset-pw-repeat">{t('repeatPassword')}</label>
+              <PasswordInput id="reset-pw-repeat" value={repeat} autoComplete="new-password"
+              onChange={e => setRepeat(e.target.value)} />
+            </div>
             {error && <p className="error">{error}</p>}
             <button className="btn" disabled={busy || !password || !repeat}>{t('resetSet')}</button>
           </>

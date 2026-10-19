@@ -2,6 +2,7 @@ import { FormEvent, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ApiError, api, login } from '../api'
 import { LANGS, Lang, LangContext, useT } from '../i18n'
+import PasswordInput from '../PasswordInput'
 
 /*
  * Ekran wejścia — wariant „2b Panel logowania" z Claude Design (Landing.dc.html):
@@ -219,7 +220,7 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
             </div>
             <div className="kl2-field">
               <label htmlFor="kl2-pass">{t('password')}</label>
-              <input id="kl2-pass" type="password" autoComplete="current-password"
+              <PasswordInput id="kl2-pass" autoComplete="current-password"
                      placeholder="••••••••" value={password}
                      onChange={e => setPassword(e.target.value)} />
             </div>
