@@ -704,7 +704,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. „Przywróć stan sprzed tej zmiany” (admin, z potwierdzeniem) dotyczy jednej reguły; reszta listy bez zmian.
   3. Przywrócenie też trafia do historii („przywrócono stan sprzed zmiany #…”).
 - **[SEC]:** historia z dziennika zmian (bez nowej tabeli); przywraca tylko admin; logistyka tylko czyta.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #73.
 
 ### US-067 · [DEV] „Co jeśli” z kosztem kar (trzecia lista PO, pkt 5)
 - **Rozmiar:** S
