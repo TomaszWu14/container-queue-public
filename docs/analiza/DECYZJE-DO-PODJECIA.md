@@ -36,6 +36,7 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-037 | Test reguły: przybliżenie (etap z historii, daty dzisiejsze), próg „dużo” = 10 dziennie | tak | inny próg | [ZALOZENIA](ZALOZENIA.md) |
 | Z-038 | Realne ETA = ETA + mediana spóźnienia armatora (min. 3 przypłynięcia), tylko podpowiedź | tak | automatyczna zmiana planu | [ZALOZENIA](ZALOZENIA.md) |
 | Z-039 | Raport miesięczny: zestaw liczb za ostatnie 30 dni, PDF przez przeglądarkę | **podać, co ma być w raporcie** | miesiąc kalendarzowy, wysyłka e-mailem | [ZALOZENIA](ZALOZENIA.md) |
+| Z-041 | Przegląd dostępów: „nieużywane” = 90 dni bez aktywności, przypomnienie raz na kwartał, blokuje admin | potwierdzić próg | 30/60/180 dni, automatyczna blokada | [ZALOZENIA](ZALOZENIA.md) |
 | Z-029 | „Symuluj dzień” nic nie zapisuje — pokazuje kroki w oknie | tak (bezpieczniej dla demo) | zapis w „piaskownicy” demo (ADR-0005) | [ZALOZENIA](ZALOZENIA.md) |
 
 ## Proces i bezpieczeństwo — starsze, wciąż otwarte
