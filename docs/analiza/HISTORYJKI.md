@@ -811,7 +811,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      i kary (30 dni / dziś), najdłuższe etapy procesu (30 dni), odczyt faktur (4 tyg.), automaty (7 dni).
   3. Zestaw pozycji to założenie Z-039 — PO decyduje, co ma być w raporcie.
 - **[SEC]:** admin i logistyka; Jinja z autoescape, przycisk druku jako stały skrypt w CSP.
-- **Stan:** zrealizowane, czeka na merge. PDF przez przeglądarkę (bez nowej biblioteki).
+- **Stan:** wdrożone w PR #84. PDF przez przeglądarkę (bez nowej biblioteki).
 
 ## Could
 
