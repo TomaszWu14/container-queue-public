@@ -15,6 +15,7 @@ import SimulateDayPanel from './SimulateDayPanel'
 import WhatIfPanel from './WhatIfPanel'
 import DeliveryRetryPanel from './DeliveryRetryPanel'
 import EtaReliabilityPanel from './EtaReliabilityPanel'
+import ForwarderScorecardPanel from './ForwarderScorecardPanel'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -204,6 +205,7 @@ export default function AutomationsPage() {
       {data && <ProcessFlowPanel />}
       {data && <WhatIfPanel />}
       {data && <EtaReliabilityPanel />}
+      {data && <ForwarderScorecardPanel />}
       {data && <AiQualityPanel />}
       {data && <AutomationRulesPanel canEdit={isAdmin} />}
       {editMinutes && data && (

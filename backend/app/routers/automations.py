@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 import httpx
 
-from .. import delivery_retry, eta_reliability, what_if
+from .. import delivery_retry, eta_reliability, forwarder_scorecard, what_if
 from .. import ai_quality, automation_catalog, automation_switch, automation_events, automation_savings, demo_simulation, process_mining
 from ..config import settings
 from ..audit import record
@@ -146,3 +146,9 @@ def deliveries(user: User = admin_only) -> dict:
 def eta_reliability_view(db: Session = Depends(get_db), user: User = editors) -> dict:
     """Punktualność armatorów (mediana spóźnienia wg historii) i realne ETA kontenerów w drodze."""
     return eta_reliability.analyze(db, user)
+
+
+@router.get("/automations/forwarder-scorecard")
+def forwarder_scorecard_view(db: Session = Depends(get_db), user: User = editors) -> dict:
+    """Karta spedytora: czas odpowiedzi na awizacje, zmiany terminów, problemy (US-079)."""
+    return forwarder_scorecard.scorecard(db, user)

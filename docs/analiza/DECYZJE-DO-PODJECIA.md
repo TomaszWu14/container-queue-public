@@ -1,9 +1,9 @@
 # Decyzje do podjęcia przez PO
 
 Jedna lista wszystkiego, co czeka na „tak / nie” Product Ownera. Szczegóły i uzasadnienia: kolumna „Gdzie”.
-Pełny rejestr założeń (40 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
-Pełny rejestr założeń (40 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
-Pełny rejestr założeń (40 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (41 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (41 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (41 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
 
 Jak odpowiedzieć: wystarczy numer i decyzja, np. „Z-027 tak, ADR-0004 nie”. [BA] przepisze odpowiedź do
 rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje dokumenty, które się na nią powołują.
@@ -47,3 +47,4 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-008 | 2FA administratorów nieobowiązkowe | ryzyko przejęcia konta admina | [RYZYKA](../bezpieczenstwo/RYZYKA.md) |
 | Z-009 | Administrator danych osobowych i kontakt RODO nieznani | wymagane przez RODO | [RODO](../bezpieczenstwo/RODO.md) |
 | Z-010 | Demo publiczne, nigdy z danymi rzeczywistymi | podstawa bezpieczeństwa portfolio | [ZALOZENIA](ZALOZENIA.md) |
+| Z-042 | Karta spedytora: odpowiedź „na czas” = do 24 h zegarowych | potwierdzić próg | 4/8 h roboczych | [ZALOZENIA](ZALOZENIA.md) |

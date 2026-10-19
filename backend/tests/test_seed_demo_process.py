@@ -110,3 +110,14 @@ def test_seed_is_deterministic_in_dates(seeded):
         assert all(c.etd < c.eta for c in db.query(Container).all() if c.etd)
         assert all(r.expires_at > dt.datetime.now() - dt.timedelta(minutes=1)
                    for r in db.query(AvizoRequest).all())
+
+
+def test_forwarder_scorecard_has_demo_history(seeded):
+    """US-079: karta spedytora w demo — trzy spedycje z różnym czasem odpowiedzi, ranking od najszybszej."""
+    from app.forwarder_scorecard import scorecard
+    from app.models import Role, User
+    with SessionLocal() as db:
+        admin = db.query(User).filter_by(role=Role.admin).first()
+        rows = scorecard(db, admin)["forwarders"]
+    assert len(rows) >= 3 and all(r["answered"] for r in rows)
+    assert rows[0]["forwarder"] == "Spedycja Demo" and rows[-1]["on_time_pct"] < rows[0]["on_time_pct"]
