@@ -74,3 +74,12 @@ def test_nginx_spa_headers_match_backend():
     conf = (ROOT / "frontend" / "nginx.conf").read_text(encoding="utf-8")
     nginx = dict(re.findall(r'add_header\s+(\S+)\s+"([^"]*)"\s+always;', conf))
     assert nginx == SecurityHeadersMiddleware.HEADERS
+
+
+def test_api_responses_not_cached(client, admin_headers):
+    # ASVS 8.2.1 (US-087): dane z API nie zostają w pamięci przeglądarki / proxy
+    r = client.get("/api/auth/me", headers=admin_headers)
+    assert r.headers["cache-control"] == "no-store"
+    assert client.get("/api/public/branding").headers["cache-control"] == "no-store"
+    # SPA i statyki mają własną politykę (index no-cache, assets immutable) — bez zmian
+    assert client.get("/").headers.get("cache-control") != "no-store"

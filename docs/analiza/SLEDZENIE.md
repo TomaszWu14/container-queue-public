@@ -126,7 +126,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-084 budżet kosztów transportu | Z-044 | `test_port_budget.py` (3), `PortBudgetPanel.dom.test.tsx` (2) | #97 | wdrożone |
 | US-082 zero znanych błędów typów (mypy 75 → 0) | — | `scripts/mypy_baseline.py`, pełny pytest | — | czeka na merge |
 | US-085 brama bez zasięgu | — | `gateOffline.test.ts` (2) | #98 | wdrożone |
-| US-086 powiadomienia push | Z-045 | `test_web_push.py` (7), `PushSection.dom.test.tsx` (3) | — | czeka na merge |
+| US-086 powiadomienia push | Z-045 | `test_web_push.py` (7), `PushSection.dom.test.tsx` (3) | #99 | wdrożone |
+| US-087 API bez cache przeglądarki | — | `test_security_headers.py` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 

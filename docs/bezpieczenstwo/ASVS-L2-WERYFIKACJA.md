@@ -264,11 +264,11 @@ Pominięte (L3): 8.1.5, 8.1.6.
 
 | ID | Wymaganie (krótko, własnymi słowami) | Status | Dowód | Uwagi / działanie |
 |---|---|---|---|---|
-| 8.1.1 | Dane wrażliwe nie są buforowane w komponentach serwera | ⚠️ | brak cache po stronie aplikacji dla odpowiedzi API (`main.py`) | odpowiedzi API bez `Cache-Control: no-store`; zachowanie proxy Coolify — ❓ |
+| 8.1.1 | Dane wrażliwe nie są buforowane w komponentach serwera | ✅ | brak cache po stronie aplikacji; `Cache-Control: no-store` na `/api/*` zabrania też buforowania w proxy (US-087) | — |
 | 8.1.2 | Kopie tymczasowe danych wrażliwych chronione lub usuwane | ⚠️ | upload czytany do pamięci z limitem (`forwarding_files.py` `read_upload_capped`); sprzątanie osieroconych plików (`backend/app/orphan_files.py`) | brak retencji dokumentów handlowych (O-3) |
 | 8.1.3 | Minimum parametrów w żądaniu | ✅ | sesja tylko w cookie (`frontend/src/api.ts`); brak ukrytych pól z danymi | — |
 | 8.1.4 | Wykrywanie i alert przy nienormalnej liczbie żądań | ⚠️ | limit API 429 (`main.py` `RateLimitMiddleware`); alert adminów przy blokadzie konta (`auth.py` `_alert_account_lock`); alert 80 % budżetu SMS (`test_sms_budget.py`) | brak alertu przy zalewie API z jednego IP |
-| 8.2.1 | Nagłówki zakazujące cache dla danych wrażliwych | ❌ | `Cache-Control` tylko w `main.py` `spa_response`, `routers/health.py`, `routers/avatars.py`, `routers/sad_drafts.py` | dodać `Cache-Control: no-store` do odpowiedzi `/api/*` w `SecurityHeadersMiddleware` |
+| 8.2.1 | Nagłówki zakazujące cache dla danych wrażliwych | ✅ | `main.py` `SecurityHeadersMiddleware`: `Cache-Control: no-store` dla `/api/*` (trasy z własną polityką ją zachowują); test `test_security_headers.py::test_api_responses_not_cached` | zrobione w US-087 |
 | 8.2.2 | Brak danych wrażliwych w pamięci przeglądarki | ✅ | `localStorage` tylko preferencje UI (`frontend/src/prefs.ts`, `frontend/src/pages/queue/useViewPrefs.ts`); tokeny w cookies HttpOnly | — |
 | 8.2.3 | Dane klienta czyszczone po zakończeniu sesji | ✅ | `auth.py` `clear_auth_cookies`; brak danych sesji w pamięci przeglądarki (8.2.2); PWA bez service workera (`frontend/public/manifest.json`) | — |
 | 8.3.1 | Dane wrażliwe w treści/nagłówkach, nie w query string | ⚠️ | tokeny linków maskowane w logach i `no-referrer` (`redaction.py`, `main.py`) | token resetu hasła w `?token=` (`auth.py` `forgot_password`), tokeny linków publicznych w ścieżce (13.1.3) |
@@ -402,16 +402,16 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V5 Walidacja, sanityzacja i kodowanie | 18 | 6 | 0 | 6 | 0 | 30 |
 | V6 Kryptografia przechowywanych danych | 7 | 2 | 2 | 2 | 0 | 13 |
 | V7 Obsługa błędów i logowanie | 7 | 3 | 0 | 0 | 1 | 11 |
-| V8 Ochrona danych | 4 | 9 | 1 | 1 | 0 | 15 |
+| V8 Ochrona danych | 6 | 8 | 0 | 1 | 0 | 15 |
 | V9 Komunikacja | 1 | 1 | 1 | 0 | 4 | 7 |
 | V10 Złośliwy kod | 3 | 0 | 0 | 1 | 1 | 5 |
 | V11 Logika biznesowa | 5 | 3 | 0 | 0 | 0 | 8 |
 | V12 Pliki i zasoby | 11 | 2 | 2 | 0 | 0 | 15 |
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
 | V14 Konfiguracja | 16 | 4 | 1 | 2 | 0 | 23 |
-| **Razem** | **140** | **61** | **21** | **29** | **6** | **257** |
+| **Razem** | **142** | **60** | **20** | **29** | **6** | **257** |
 
-Spełnione 140 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 63 %.
+Spełnione 142 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 64 % (po US-087; wcześniej 140, 63 %).
 
 ### Luki ❌ — proponowane działania
 
@@ -427,7 +427,7 @@ Spełnione 140 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 63 
 | 3.4.4 | Brak prefiksu `__Host-` | `__Host-` dla cookie access | E-07 |
 | 4.3.1 | MFA adminów nieobowiązkowe | `REQUIRE_2FA_ADMIN=true` na produkcji | E-01, R-11, US-019 |
 | 6.4.1, 6.4.2 | Brak sejfu / HSM na klucze | świadomy wyjątek (skala jednej instancji) z przeglądem | nowy wyjątek (do wpisania) |
-| 8.2.1 | Brak `Cache-Control: no-store` w odpowiedziach API | nagłówek w `SecurityHeadersMiddleware` dla `/api/*` | nowe (mała zmiana) |
+| 8.2.1 | ~~Brak `Cache-Control: no-store` w odpowiedziach API~~ | zrobione: nagłówek w `SecurityHeadersMiddleware` (US-087) | zamknięte |
 | 12.1.3 | Brak limitu wgrań na użytkownika | dzienny limit liczby i rozmiaru plików na konto | R-07 |
 | 12.4.2 | Brak skanowania antywirusowego | ClamAV w osobnym kontenerze | R-03, US-004 |
 | 14.4.2 | Odpowiedzi API bez `Content-Disposition` | nagłówek w `SecurityHeadersMiddleware` (niski priorytet) | nowe |
@@ -461,7 +461,7 @@ Spełnione 140 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 63 
 | 7.1.2 | Imiona w wolnym tekście nie maskowane | zasada „nie wstawiać” + przegląd | R-09, US-012 |
 | 7.3.1 | Log tekstowy bez kodowania nowych linii | filtr zamieniający `\r`/`\n` w danych | nowe |
 | 7.4.1 | Odpowiedź 500 bez identyfikatora żądania | handler wyjątków z `X-Request-ID` | nowe |
-| 8.1.1 | Brak `no-store` (jak 8.2.1) | jak 8.2.1 | nowe |
+| 8.1.1 | ~~Brak `no-store` (jak 8.2.1)~~ | zrobione (US-087) | zamknięte |
 | 8.1.2, 8.3.8 | Dokumenty handlowe bez retencji | decyzja PO o retencji | O-3, R-09 |
 | 8.1.4, 11.1.7, 11.1.8 | Brak alertów anomalii API i biznesowych | alert przy serii 429 z jednego IP / masowym pobieraniu | E-04 |
 | 8.3.1, 13.1.3 | Token resetu w query, tokeny linków w ścieżce | token resetu we fragmencie `#` albo POST | R-06 |
