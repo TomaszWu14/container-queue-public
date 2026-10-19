@@ -714,7 +714,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   1. Wynik pokazuje „kontenero-dni ponad limit” (po − przed) × stawka za dzień = szacowany koszt w EUR.
   2. Ujemny wynik → „mniej kar” (przesunięcie rozładowuje przeciążone dni); zero → „bez dodatkowych kar”.
   3. Stawka ta sama co w sygnałach (150 EUR/dzień) — założenie Z-035.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #74.
 
 ### US-022 · [DEV] Ponawianie nieudanych wysyłek (trzecia lista PO, pkt 1)
 - **Rozmiar:** M
