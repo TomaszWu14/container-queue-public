@@ -726,7 +726,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Opis błędu bez adresów i treści odpowiedzi (adres Power Automate zawiera podpis).
   4. Kolejka w pamięci procesu (kontrakt jednej instancji) — restart gubi oczekujące próby (Z-036).
 - **[SEC]:** podgląd tylko admin (tytuły alertów różnych spółek); P-11/P-12 zamknięte.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #75.
 
 ### US-068 · [DEV] Test reguły na ostatnich 30 dniach (trzecia lista PO, pkt 2)
 - **Rozmiar:** M
