@@ -9,6 +9,7 @@ freight forwarders and the customs agency — replacing an Excel sheet sent arou
 
 📹 [Walkthrough — 2 min, captions, no sound](docs/video/prezentacja.mp4) ·
 🎬 [Recruiter path — 20 s](docs/video/sciezka-rekrutera.mp4) ·
+🧭 [Guided tour — 1 min, captioned](docs/video/przewodnik-en.mp4) ·
 🤖 [Automations — 15 s](docs/video/automatyzacje.mp4)
 
 🌐 **Live demo, no sign-up: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** — read-only

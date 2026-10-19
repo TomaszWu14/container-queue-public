@@ -918,7 +918,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Zmiana ETA przelicza datę tylko nietkniętej propozycji (stan PROPOZYCJA, data nie wpisana ręcznie) — z wpisem
      w historii. Plan wysłany / potwierdzony i ręczna data zostają (D2: tylko alert, decyduje człowiek).
 - **[SEC]:** bez zmian uprawnień; zmiana daty idzie przez audyt.
-- **Stan:** zrealizowane, czeka na merge. Domyślne N = 3 zamiast dawnych 4 przy zakładaniu — założenie Z-043.
+- **Stan:** wdrożone w PR #93. Domyślne N = 3 zamiast dawnych 4 przy zakładaniu — założenie Z-043.
+
+### US-083 · [DEV] Film „Przewodnik po demo” ~1 min z napisami PL/EN (czwarta lista PO, pkt 11)
+- **Rozmiar:** S
+- **Jako** rekruter **chcę** obejrzeć minutowy film z opisem każdego ekranu, **aby** zrozumieć aplikację bez
+  klikania i bez dźwięku.
+- **Kryteria akceptacji** (test `e2e/demo/tour.spec.ts`)
+  1. `docs/video/przewodnik-pl.mp4` i `przewodnik-en.mp4` (~56 s): siedem ekranów przewodnika, podświetlony
+     element i karta z opisem jako napis; linki w README (PL/EN).
+  2. Film powstaje z testu E2E przewodnika (`sh scripts/record_demo_video.sh przewodnik | przewodnik-en`) —
+     ten sam test w CI pilnuje, że przewodnik przechodzi wszystkie kroki na komputerze i telefonie, PL i EN.
+  3. Przy okazji poprawki przewodnika (US-081): krok „Kolejka” podświetla właściwą tabelę, podświetlenie wraca po
+     przerysowaniu ekranu, na telefonie karta jest u góry (nie znika pod paskiem przeglądarki).
+- **Stan:** zrealizowane, czeka na merge.
 
 ## Could
 
