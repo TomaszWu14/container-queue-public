@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Test reguły na 30 dniach** (US-068): w kreatorze reguł widać, ile alertów wysłałaby reguła w ostatnim miesiącu,
+  z ostrzeżeniem przy dużej liczbie.
 - **Ponawianie wysyłek** (US-022): e-mail, Teams i n8n, które się nie udały, są ponawiane po 1, 5 i 30 min;
   admin widzi na ekranie Automatyzacje, co czeka i co nie doszło.
 - **„Co jeśli” z kosztem kar** (US-067): symulacja spóźnienia statku podaje szacowany koszt kar za przetrzymanie

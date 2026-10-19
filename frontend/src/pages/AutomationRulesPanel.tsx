@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { api, errorMessage } from '../api'
 import { useT } from '../i18n'
 import AutomationRulesHistory from './AutomationRulesHistory'
+import RuleBacktest from './RuleBacktest'
 
 type Condition = 'eta_passed' | 'notify_soon_status' | 'no_driver' | 'plan_unconfirmed'
 export type RuleChannel = 'bell' | 'email' | 'teams' | 'n8n'
@@ -142,6 +143,7 @@ export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) 
                 <span className="muted">{describe(r)} → {t(`ruleNotify_${r.notify}`)}
                   {' '}({channelsOf(r).map(c => t(`ruleChannel_${c}`)).join(', ')})</span>
                 <button type="button" className="btn secondary small" onClick={() => preview(i)}>{t('rulePreview')}</button>
+                <RuleBacktest key={`${r.condition}-${r.days}-${r.status}`} condition={r.condition} days={r.days} status={r.status} />
                 {typeof p === 'string' && <span className="error">{p}</span>}
                 {p && typeof p !== 'string' && (
                   <span role="status">{p.count
