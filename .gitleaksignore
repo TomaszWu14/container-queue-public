@@ -9,3 +9,6 @@ backend/tests/test_login_limiter.py:generic-api-key:11
 backend/tests/test_log_file.py:generic-api-key:12
 # Przykładowa wartość DEMO_PASSWORD w instrukcji README (placeholder, nie sekret)
 6490a129c71122b69b17530188e7840079917c28:README.md:generic-api-key:75
+# Hasło testowe w fiksturze US-075 (nie sekret)
+dd1da7da2d8d613ca0ec62f46988b822321d4189:backend/tests/test_login_devices.py:generic-api-key:23
+dd1da7da2d8d613ca0ec62f46988b822321d4189:backend/tests/test_login_devices.py:generic-api-key:29

@@ -20,13 +20,13 @@ def sent(monkeypatch):
 
 def _user(client, admin_headers, email="anna@example.com"):
     r = client.post("/api/users", headers=admin_headers, json={
-        "login": "anna.dev", "password": "haslo1234567", "role": "logistics", "email": email,
+        "login": "anna.dev", "password": "haslo1234567", "role": "logistics", "email": email,  # gitleaks:allow
         "full_name": "Anna Nowak", "view_all_companies": True})
     assert r.status_code == 201, r.text
 
 
 def _login(client, ua):
-    r = client.post("/api/auth/login", data={"username": "anna.dev", "password": "haslo1234567"},
+    r = client.post("/api/auth/login", data={"username": "anna.dev", "password": "haslo1234567"},  # gitleaks:allow
                     headers={"User-Agent": ua})
     assert r.status_code == 200, r.text
 
