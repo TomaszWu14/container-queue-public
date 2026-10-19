@@ -5,6 +5,7 @@ import { useT } from '../i18n'
 import { useUser } from '../App'
 import { formatDateTime } from '../dates'
 import AvatarSection from './profile/AvatarSection'
+import PushSection from './profile/PushSection'
 import { PageHeader } from '../PageHeader'
 
 /*
@@ -157,6 +158,7 @@ export default function ProfilePage() {
       {user?.is_demo ? <p className="muted">{t('demoProfileInfo')}</p> : <>
         <AvatarSection />
         <TwoFactorSection />
+        <PushSection />
         <SessionsSection />
       </>}
     </main>

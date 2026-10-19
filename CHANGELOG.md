@@ -8,6 +8,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+Powiadomienia push na telefon i w przeglądarce dla pilnych alertów, włączane w profilu (US-086). Wymaga zmiennej `VAPID_PRIVATE_KEY`.
 Brama bez zasięgu: lista dnia z pamięci urządzenia i kolejka „Przyjechał” wysyłana po powrocie sieci (US-085).
 - **Raport miesięczny** (US-074): na ekranie Automatyzacje strona do druku / PDF z liczbami za ostatnie 30 dni
   (dostawy, dokumenty, kary, przebieg procesu, faktury, automaty).

@@ -242,6 +242,10 @@ class Settings(BaseSettings):
     # 90 dni = decyzja z Aktualności (2026-10-01) — ta sama wartość w kodzie i w compose Coolify
     notification_retention_days: int = Field(default=90, ge=1)
     teams_webhook_url: str = ""
+    # powiadomienia push (US-086): klucz prywatny VAPID P-256 w base64url (scripts/generate_vapid_key.py);
+    # puste = push wyłączony. Subject: kontakt dla usług push (mailto: albo https:)
+    vapid_private_key: str = ""
+    vapid_subject: str = "mailto:admin@example.com"
     # godzina porannego digestu logistyki (czas polski, Europe/Warsaw)
     digest_hour: int = Field(default=7, ge=0, le=23)
 

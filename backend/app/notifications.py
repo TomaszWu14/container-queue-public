@@ -314,6 +314,7 @@ def notify(db: Session, users: list[User], *, kind: str, title: str, body: str =
     seen: set[int] = set()
     emails: list[str] = []
     count = 0
+    bell_ids: list[int] = []
     for user in recipients:
         if user.id in seen:
             continue
@@ -326,9 +327,13 @@ def notify(db: Session, users: list[User], *, kind: str, title: str, body: str =
                             container_id=container_id, is_read=not bell))
         if mail:
             emails.append(user.email)
+        if bell:
+            bell_ids.append(user.id)
         count += 1
     if count:
         _after_commit(db, lambda: _send_email(emails, title, body))
+        from .web_push import queue as queue_push   # push na urządzenia, pilne alerty (US-086)
+        queue_push(db, kind, title, container_id, bell_ids)
     if count and broadcast:
         if enabled("*", "teams"):
             link = container_link(container_id)
