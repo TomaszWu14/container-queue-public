@@ -24,12 +24,12 @@ from ..security import api_limiter, client_ip
 
 router = APIRouter(prefix="/api", tags=["portal"])
 
-# ciaśniejszy limit dla stron publicznych (globalny limiter API dalej obowiązuje)
-_PUBLIC_LIMIT_PER_MINUTE = 60
-
-
 def public_rate_limit(request: Request) -> None:
-    retry = api_limiter.hit(f"pub:{client_ip(request)}", _PUBLIC_LIMIT_PER_MINUTE)
+    """Ciaśniejszy limit dla stron publicznych (globalny limiter API dalej obowiązuje)."""
+    limit = settings.public_rate_limit_per_minute
+    if not limit:   # 0 = wyłączony (tylko testy E2E, wiele logowań demo z jednego IP)
+        return
+    retry = api_limiter.hit(f"pub:{client_ip(request)}", limit)
     if retry is not None:
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS,
                             "Za dużo żądań. Spróbuj ponownie za chwilę.")

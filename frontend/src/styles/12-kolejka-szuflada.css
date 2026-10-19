@@ -36,7 +36,7 @@
   background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px;
   padding: 8px 10px; font: inherit; font-size: 13px; color: var(--muted); cursor: pointer;
 }
-.kq-dr-tabs button.active { border-bottom-color: var(--accent); color: var(--accent); font-weight: 700; }
+.kq-dr-tabs button.active { border-bottom-color: var(--accent); color: var(--accent-ink); font-weight: 700; }   /* --accent-ink: ≥4.5:1 na tle szuflady (axe) */
 
 .kq-dr-body { flex: 1; overflow: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 14px; }
 .kq-dr-kv { display: grid; gap: 7px 12px; margin: 6px 0 0; font-size: 13px; }

@@ -70,7 +70,7 @@ export default function AiQualityPanel() {
           </div>
 
           <h3 className="aiq-sub">{t('aiqCalibration')}</h3>
-          <div style={{ overflowX: 'auto' }}>
+          <div style={{ overflowX: 'auto' }} tabIndex={0} role="group" aria-label={t('aiqCalibration')}>
             <table className="grid">
               <thead><tr>
                 <th>{t('aiqColBucket')}</th><th>{t('aiqColSuggested')}</th><th>{t('aiqColDecided')}</th>

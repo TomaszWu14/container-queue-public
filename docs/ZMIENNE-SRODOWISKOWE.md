@@ -50,6 +50,7 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | `LOGIN_ACCOUNT_LOCK_AFTER` | int | ma bezpieczny domyślny | **nie** | SEC-012: porażki jednego konta ze wszystkich IP w oknie `LOGIN_WINDOW_MINUTES`, od których zaczyna się progresywna przerwa (domyślnie 10) + alert do adminów |
 | `LOGIN_ACCOUNT_LOCK_SECONDS` | int | ma bezpieczny domyślny | **nie** | SEC-012: pierwsza przerwa konta (s, domyślnie 30); każda kolejna porażka ją podwaja, maks. okno logowań |
 | `API_RATE_LIMIT_PER_MINUTE` | int | ma bezpieczny domyślny | tak | globalny limit żądań API na IP w oknie minutowym (0 = wyłączony) |
+| `PUBLIC_RATE_LIMIT_PER_MINUTE` | int | ma bezpieczny domyślny | tak | ciaśniejszy limit stron publicznych (branding, formularze bez logowania) na IP/min, domyślnie 60 (0 = wyłączony — tylko testy E2E) |
 | `PASSWORD_RESET_MINUTES` | int | ma bezpieczny domyślny | **nie** | ważność linku resetu hasła |
 | `PASSWORD_MIN_LENGTH` | int | ma bezpieczny domyślny | **nie** | W14 #89: polityka haseł — minimalna długość (+ wymóg litery i cyfry w kodzie) |
 | `BCRYPT_ROUNDS` | int | ma bezpieczny domyślny (12) | **nie** | koszt bcrypt nowych hashy haseł; produkcja min. 12 (start odmawia niżej), testy 4 — szybkie CI |

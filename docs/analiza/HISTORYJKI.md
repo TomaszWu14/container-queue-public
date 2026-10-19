@@ -778,7 +778,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. „Realne ETA” = ETA + mediana pary armator–port (bez pary: sam armator) dla kontenerów w drodze; tylko podpowiedź.
   4. Demo ma historię przypłynięć (trzech armatorów o różnej punktualności).
 - **[SEC]:** odczyt, `scope_containers` (obca spółka nie zmienia wyniku); wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #80.
+
+### US-072 · [DEV] Dostępność stron po zalogowaniu (trzecia lista PO, pkt 11)
+- **Rozmiar:** M
+- **Jako** użytkownik czytnika ekranu albo słabszego wzroku **chcę**, żeby ekrany pracy (kolejka, karta kontenera,
+  pulpit, Automatyzacje) spełniały WCAG 2.1 AA, **aby** móc z nich korzystać bez barier.
+- **Kryteria akceptacji** (test `e2e/demo/a11y.spec.ts`, `queue-row-warehouse.test.ts`)
+  1. axe-core (WCAG 2.1 A/AA) na koncie demo, komputer i telefon: zero naruszeń „serious”/„critical” na 4 ekranach — w CI przy każdym PR.
+  2. Naprawione: kontrast terminu kary „wkrótce” na tle wiersza MAG1, kafelków dokumentów „brak”, aktywnej zakładki
+     karty, wyszarzonych przycisków zapisu w demo; przewijane wykres przepływu i tabela kalibracji dostępne z klawiatury.
+- **Stan:** zrealizowane, czeka na merge. Lighthouse dalej mierzy logowanie; ekrany po zalogowaniu pilnuje axe.
 
 ## Could
 

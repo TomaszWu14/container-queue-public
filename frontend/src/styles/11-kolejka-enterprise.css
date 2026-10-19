@@ -11,7 +11,7 @@
   --kq-row-none-hover: #fafbfd; --kq-row-sel: #f5f8fd; --kq-row-active: #eaf2ff;
   /* teksty tabeli z własnym kolorem — każdy ma ciemny odpowiednik niżej (strażnik kontrastu j.w.) */
   --kq-navy: #0a1f33;       /* nr kontenera, posortowany nagłówek (= --chrome) */
-  --kq-warn-ink: #b45309;   /* przesunięte ETA, demurrage „wkrótce" */
+  --kq-warn-ink: #92400e;   /* przesunięte ETA, demurrage „wkrótce" — ≥4.5:1 także na tle wiersza MAG1 (axe) */
   --kq-late-ink: var(--danger-ink);   /* opóźnienie, demurrage po terminie — #d92d20 miał 4.35:1 na tle wiersza */
   --kq-line: #c9d2dc;       /* linie między wierszami */
   --kq-grid: #cfd7e0;       /* pionowe linie komórek */

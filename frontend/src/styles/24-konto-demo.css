@@ -17,7 +17,11 @@
 /* konto demo (demoLimits.setDemoSession): przyciski zapisu w formularzach wyszarzone od razu —
    zapis i tak jest odcinany (api.ts, serwer); klik nadal pokaże powód */
 body.demo-readonly form button[type="submit"],
-body.demo-readonly form button:not([type]) { opacity: .45; cursor: not-allowed; }
+body.demo-readonly form button:not([type]) {
+  /* bez przezroczystości: szary tekst na jasnym tle i przerywana ramka — czytelne (≥4.5:1, axe), a widać,
+     że zapis w demo jest wyłączony */
+  background: var(--soft); color: var(--muted); border: 1px dashed var(--border); cursor: not-allowed;
+}
 /* „historia jednego kontenera” — pierwszy, wyróżniony krok ekranu powitalnego */
 .demo-steps li.demo-step-story { border-color: var(--accent); background: var(--soft); }
 

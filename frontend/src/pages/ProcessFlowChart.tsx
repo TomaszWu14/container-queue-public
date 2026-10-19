@@ -31,7 +31,8 @@ export default function ProcessFlowChart({ transitions, order }: { transitions: 
   const label = (x: Transition) => `${t(`st_${x.from}`)} → ${t(`st_${x.to}`)}: ${x.count}`
 
   return (
-    <div className="proc-flow" style={{ overflowX: 'auto' }}>
+    // tabIndex: przewijany wykres dostępny z klawiatury (strzałki) — axe scrollable-region-focusable
+    <div className="proc-flow" style={{ overflowX: 'auto' }} tabIndex={0} role="group" aria-label={t('procFlowTitle')}>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" style={{ width: '100%', minWidth: Math.min(W, 760), height: 'auto' }}
            aria-label={`${t('procFlowTitle')}: ${transitions.map(label).join('; ')}`}>
         {transitions.map(x => {

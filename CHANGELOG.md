@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Dostępność po zalogowaniu** (US-072): test axe (WCAG 2.1 AA) kolejki, karty kontenera, pulpitu i Automatyzacji
+  w CI; poprawione kontrasty i przewijanie z klawiatury.
 - **Punktualność armatorów i realne ETA** (US-071): ekran Automatyzacje pokazuje medianę spóźnienia armatora
   i portu z historii oraz realną datę przypłynięcia kontenerów w drodze.
 - **Nagranie ekranu Automatyzacje** (US-069): 15-sekundowe wideo i GIF w README, nagrywane z testu E2E

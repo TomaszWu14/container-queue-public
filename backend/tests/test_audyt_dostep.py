@@ -112,10 +112,10 @@ def test_commit_with_file_cleans_up_on_failed_commit(tmp_path):
 
 
 def test_public_pages_are_rate_limited(client, monkeypatch):
-    from app.routers import portal
+    from app.config import settings
     from app.security import api_limiter
     api_limiter._hits.clear()
-    monkeypatch.setattr(portal, "_PUBLIC_LIMIT_PER_MINUTE", 2)
+    monkeypatch.setattr(settings, "public_rate_limit_per_minute", 2)
     try:
         codes = [client.get("/api/public/branding").status_code for _ in range(3)]
         assert codes == [200, 200, 429]
