@@ -12,6 +12,7 @@ import ipaddress
 import logging
 import threading
 import time
+from typing import Any
 from urllib.parse import urlsplit
 
 import httpx
@@ -109,7 +110,7 @@ def chat(model: str, prompt: str, *, system: str = "", images: list[str] | None 
     if not is_configured():
         raise LLMUnavailable("Lokalny model AI nie jest skonfigurowany (OLLAMA_URL).")
     messages = [{"role": "system", "content": system}] if system else []
-    user = {"role": "user", "content": prompt}
+    user: dict[str, Any] = {"role": "user", "content": prompt}
     if images:
         user["images"] = images
     messages.append(user)

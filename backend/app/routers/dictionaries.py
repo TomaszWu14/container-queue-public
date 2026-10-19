@@ -42,6 +42,7 @@ from ..schemas import (
     MergeOut,
     SupplierIn,
     SupplierOut,
+    SupplierStatContainerOut,
     SupplierStatsOut,
     WarehouseIn,
     WarehouseOut,
@@ -185,9 +186,10 @@ def supplier_stats(supplier_id: int, db: Session = Depends(get_db),
     return SupplierStatsOut(active_containers=active_containers, on_time_pct=on_time_pct,
                             avg_transit_days=avg_transit_days,
                             recent_containers=[
-                                {"id": c.id, "container_no": c.container_no,
-                                 "status": c.status.value, "eta": c.eta, "atd": c.atd,
-                                 "notify_date": c.notify_date}
+                                SupplierStatContainerOut(
+                                    id=c.id, container_no=c.container_no,
+                                    status=c.status.value, eta=c.eta, atd=c.atd,
+                                    notify_date=c.notify_date)
                                 for c in recent])
 
 

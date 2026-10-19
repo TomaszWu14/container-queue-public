@@ -3,6 +3,7 @@
 Router bez prefiksu — prefiks /api i tag nadaje dictionaries.router, który go dołącza.
 """
 import datetime
+from typing import cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
@@ -116,7 +117,7 @@ def entity_history(entity_type: str, entity_id: int,
     row = db.get(model, entity_id)
     if model is Supplier:
         if row is not None:
-            check_supplier_access(user, row)
+            check_supplier_access(user, cast(Supplier, row))   # model is Supplier
         elif not can_view_all(user):
             # fail-closed: dostawca skasowany, nie da się sprawdzić kartoteka/nadawca —
             # historia tylko dla kont widzących wszystkie spółki (jak przy company_column).

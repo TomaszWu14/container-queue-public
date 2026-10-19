@@ -5,6 +5,7 @@ Wszystkie reguły w JEDNYM miejscu — dokładanie nowej to wpis do RULES
 Endpoint: GET /api/master-data/quality (Editors).
 """
 import datetime
+from collections.abc import Callable
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import func, select
@@ -125,7 +126,7 @@ def containers_without_eta(db: Session, user: User) -> list[tuple[int, str]]:
 
 
 # klucz (etykieta po stronie frontu, i18n) → (zakładka Master data, funkcja)
-RULES: list[tuple[str, str, object]] = [
+RULES: list[tuple[str, str, Callable[[Session, User], list[tuple[int, str]]]]] = [
     ("suppliers_no_sap", "suppliers", suppliers_without_sap),
     ("suppliers_no_country", "suppliers", suppliers_without_country),
     ("suppliers_dup_names", "suppliers", duplicate_supplier_names),

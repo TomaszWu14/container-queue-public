@@ -93,6 +93,7 @@ class LoginRateLimiter:
         delay = self.account_delay(failures)
         if delay is None:
             return
+        assert last is not None   # delay≠None ⇒ ≥1 porażka (lock_after ≥ 1) ⇒ jest data
         remaining = (last + delay - utcnow()).total_seconds()
         if remaining > 0:
             raise _too_many(math.ceil(remaining))

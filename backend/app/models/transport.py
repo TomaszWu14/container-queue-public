@@ -1,5 +1,6 @@
 """Moduł spedytora: zlecenia transportowe, wyceny (RFQ), wiadomości, załączniki, faktury frachtowe."""
 import datetime
+from decimal import Decimal
 
 from sqlalchemy import (
     Boolean,
@@ -103,7 +104,7 @@ class Quote(Base):
     forwarder_id: Mapped[int] = mapped_column(ForeignKey("forwarders.id"), index=True)
     status: Mapped[QuoteStatus] = mapped_column(
         Enum(QuoteStatus), default=QuoteStatus.ZAPYTANIE, index=True)
-    amount: Mapped[float | None] = mapped_column(Numeric(12, 2), nullable=True)
+    amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
     currency: Mapped[str] = mapped_column(String(3), default="PLN")
     valid_until: Mapped[datetime.date | None] = mapped_column(Date, nullable=True)
     note: Mapped[str] = mapped_column(Text, default="")
@@ -117,7 +118,7 @@ class Quote(Base):
     submitted_at: Mapped[datetime.datetime | None] = mapped_column(DateTime, nullable=True)
     # pilna zmiana ceny zgłoszona przez spedycję (wiersz 21 / Q55) — czeka na akceptację
     # logistyki (Q56); po akceptacji revised_amount przechodzi do amount i jest czyszczone
-    revised_amount: Mapped[float | None] = mapped_column(Numeric(12, 2), nullable=True)
+    revised_amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
     revised_note: Mapped[str] = mapped_column(Text, default="")
     revised_at: Mapped[datetime.datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utcnow)
@@ -133,7 +134,7 @@ class QuoteRevision(Base):
     __tablename__ = "quote_revisions"
     id: Mapped[int] = mapped_column(primary_key=True)
     quote_id: Mapped[int] = mapped_column(ForeignKey("quotes.id"), index=True)
-    amount: Mapped[float | None] = mapped_column(Numeric(12, 2), nullable=True)
+    amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
     currency: Mapped[str] = mapped_column(String(3), default="PLN")
     note: Mapped[str] = mapped_column(Text, default="")
     kind: Mapped[str] = mapped_column(String(20), default="wycena")  # wycena / korekta / akceptacja

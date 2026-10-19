@@ -6,6 +6,7 @@ podobieństwo trigramowe (pg_trgm, łapie drobne literówki w numerze/statku); S
 (testy, dev): samo ILIKE.
 """
 import re
+from typing import Any
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func, or_, select, text
@@ -32,7 +33,7 @@ _trgm: bool | None = None   # czy pg_trgm jest zainstalowane (sprawdzane raz na 
 def _has_trgm(db: Session) -> bool:
     global _trgm
     if _trgm is None:
-        _trgm = (db.bind.dialect.name == "postgresql" and bool(db.scalar(
+        _trgm = (db.get_bind().dialect.name == "postgresql" and bool(db.scalar(
             text("SELECT 1 FROM pg_extension WHERE extname = 'pg_trgm'"))))
     return _trgm
 
@@ -88,7 +89,7 @@ def suggest(q: str = Query(default="", max_length=500), completed: bool | None =
         "vessel": Container.vessel.ilike(like),
         "supplier_name": fk_matches(db, Container.supplier_id,
                                     select(Supplier.id).where(Supplier.name.ilike(like)))})
-    order = [Container.notify_date.desc().nulls_last(), Container.id.desc()]
+    order: list[Any] = [Container.notify_date.desc().nulls_last(), Container.id.desc()]
     if _has_trgm(db):
         # `a % b` ≡ similarity(a, b) > pg_trgm.similarity_threshold, ale w odróżnieniu od
         # `similarity(...) > x` idzie po GIN; próg = TRGM_MIN tylko w tej transakcji

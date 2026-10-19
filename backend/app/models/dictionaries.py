@@ -1,5 +1,6 @@
 """Firmy, użytkownicy i słowniki master data (dostawcy, spedycje, agencje, porty, magazyny)."""
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     JSON,
@@ -21,6 +22,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..database import Base
 from .checks import in_check
 from .enums import PortCategory, Role, utcnow
+
+if TYPE_CHECKING:   # tylko dla mypy — import w runtime byłby cykliczny
+    from .supplier_profiles import SupplierDocProfile
 
 # active | blocked | inactive_in_sap — importers/lfa1.py; CHECK ck_suppliers_sap_status (DB-007)
 SUPPLIER_SAP_STATUSES = ("active", "blocked", "inactive_in_sap")

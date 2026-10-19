@@ -41,8 +41,8 @@ def build_xlsx(call) -> bytes:
     trucks = getattr(call, "trucks", None) or []
     if trucks:
         wb.remove(wb.active)
-        by_truck = {t.id: [] for t in trucks}
-        loose = []
+        by_truck: dict[int, list] = {t.id: [] for t in trucks}
+        loose: list = []
         for line in call.lines:
             by_truck.get(line.truck_id, loose).append(line)
         for t in sorted(trucks, key=lambda t: t.ordinal):

@@ -64,7 +64,9 @@ def create_container(body: ContainerCreate, db: Session = Depends(get_db), user:
     if container.eta and not container.notify_date:
         container.notify_date = proposed_date(container.eta, lead_days(db))
     year = (container.notify_date or today_pl()).year
-    container.transport_id = next_transport_id(db, db.get(Company, company_id), year)
+    company = db.get(Company, company_id)
+    assert company is not None   # resolve_company_id zweryfikował spółkę
+    container.transport_id = next_transport_id(db, company, year)
     db.add(container)
     db.flush()
     record(db, entity_type="containers", entity_id=container.id, field="status",

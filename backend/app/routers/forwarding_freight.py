@@ -213,6 +213,7 @@ def create_freight_invoice(
     db.refresh(invoice)
     inv = db.scalar(select(FreightInvoice).options(*_FREIGHT_OPTS)
                     .where(FreightInvoice.id == invoice.id))
+    assert inv is not None   # właśnie zapisana
     return _freight_out(inv)
 
 

@@ -7,10 +7,10 @@ importowalne z .dictionaries (guarded_delete, fk_usage, mapy scalania).
 (ekran „Do rozstrzygnięcia" i komenda).
 """
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from fastapi import HTTPException, status
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import CursorResult, delete, func, select, update
 from sqlalchemy.orm import Session
 
 from .. import audit
@@ -217,8 +217,8 @@ def merge_into(db: Session, spec: _Dict, source, target, user: User | None) -> d
                                 if spec is SUPPLIERS else (False, set()))
     repinned: dict[str, int] = {}
     for model, column in spec.refs:
-        result = db.execute(update(model).where(getattr(model, column) == source.id)
-                            .values(**{column: target.id}))
+        result = cast(CursorResult, db.execute(update(model).where(getattr(model, column) == source.id)
+                            .values(**{column: target.id})))
         if result.rowcount:
             repinned[model.__tablename__] = result.rowcount
 

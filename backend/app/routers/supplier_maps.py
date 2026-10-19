@@ -38,7 +38,7 @@ def list_maps(company_code: str | None = Query(default=None),
         pattern = f"%{q.strip()}%"
         query = query.where(SupplierMaterialMap.supplier_code.ilike(pattern)
                             | SupplierMaterialMap.ref_code.ilike(pattern))
-    rows = db.scalars(query).all()
+    rows = list(db.scalars(query).all())
     rows.sort(key=lambda m: (m.supplier_id, m.supplier_code))
     return rows
 

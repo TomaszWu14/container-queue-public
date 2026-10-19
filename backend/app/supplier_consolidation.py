@@ -12,6 +12,7 @@ co pojedyncze DELETE dostawcy (dictionaries_merge.SUPPLIERS.refs), plus profil d
 („owned", nie w refs, ale realny rekord skonfigurowany ręcznie — nie kopia z importu).
 """
 from collections import Counter, defaultdict
+from typing import cast
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -37,7 +38,7 @@ def _usage(db: Session) -> dict[int, int]:
         for supplier_id, count in db.execute(
                 select(model.supplier_id, func.count()).where(model.supplier_id.is_not(None))
                 .group_by(model.supplier_id)):
-            out[supplier_id] += count
+            out[cast(int, supplier_id)] += count   # NULL odfiltrowane w SQL
     return out
 
 
@@ -114,7 +115,7 @@ def _orphans(db: Session) -> list[tuple[Supplier, str]]:
     """Kopie nadawców spółek-klientów bez żadnych powiązań (decyzja usera #8: kartoteka Acme
     — z kodem SAP i bez — nigdy masowo), z kodem spółki."""
     referenced = _referenced_supplier_ids(db)
-    return [tuple(row) for row in db.execute(
+    return [(s, code) for s, code in db.execute(
         select(Supplier, Company.code)
         .join(Company, Company.id == Supplier.client_company_id)
         .where(Supplier.client_company_id.is_not(None), Supplier.id.not_in(referenced))

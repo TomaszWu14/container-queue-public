@@ -3,6 +3,7 @@ konsolidacji. Filtrowanie koszyka po cart_status zylo do istniejacego
 GET /api/purchase-orders (parametr cart_status). Mutacje (dodaj/usun/zwolnij)
 w kolejnym plastrze."""
 import datetime
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
@@ -151,7 +152,7 @@ def update_crd(po_id: int, body: CrdIn, db: Session = Depends(get_db),
                user: User = _releasers) -> dict:
     po = _scoped_po(db, po_id, user)
     was_blocked = po.cart_status == CartStatus.zablokowane.value
-    changes = {"crd": body.crd, "crd_target": body.crd_target}
+    changes: dict[str, Any] = {"crd": body.crd, "crd_target": body.crd_target}
     dev = crd_deviation_days(body)
     if dev is not None:
         if dev >= CRD_ESCALATION_DAYS:

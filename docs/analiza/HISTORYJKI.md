@@ -933,6 +933,16 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      przerysowaniu ekranu, na telefonie karta jest u góry (nie znika pod paskiem przeglądarki).
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-082 · [DEV] Zero znanych błędów typów w backendzie (czwarta lista PO, pkt 15)
+- **Rozmiar:** M
+- **Jako** zespół **chcemy** backendu bez znanych błędów mypy, **aby** każdy nowy błąd typów od razu czerwienił CI
+  zamiast ginąć w liście „znanych”.
+- **Kryteria akceptacji** (`scripts/mypy_baseline.py`, pełny pytest)
+  1. `backend/mypy-baseline.txt` pusta (75 → 0); mypy: brak błędów w 280 plikach.
+  2. Bez zmiany zachowania: pełny zestaw testów zielony bez zmian w testach; 3 wyjątki `# type: ignore[kod]` z
+     uzasadnieniem (ograniczenia typów Starlette/FastAPI i atrybut pomocniczy).
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2). Zrobione — patrz US-020 wyżej.

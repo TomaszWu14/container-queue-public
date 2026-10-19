@@ -191,6 +191,7 @@ def resolve_supplier_id(db: Session, company_id: int, name: str) -> int | None:
     if not name:
         return None
     company = db.get(Company, company_id)
+    assert company is not None   # importer działa w kontekście istniejącej spółki
     sid = db.scalar(select(Supplier.id).where(
         supplier_clause_for_company(company), func.lower(Supplier.name) == name.lower())
         .order_by(Supplier.id).limit(1))

@@ -2,9 +2,10 @@
 import datetime
 import logging
 import pathlib
+from typing import cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import delete, event, select
+from sqlalchemy import ColumnElement, CursorResult, delete, event, select
 from sqlalchemy.orm import Session
 
 from ..audit import record
@@ -45,8 +46,9 @@ def _unlink_after_commit(db: Session, paths: set[pathlib.Path]) -> None:
 def _delete_where(db: Session, model, condition) -> int:
     """DELETE w stylu 2.0 (ARCH-009) — jak dotychczasowe Query.delete(synchronize_session=False):
     bez synchronizacji obiektów sesji; zwraca liczbę skasowanych wierszy."""
-    return db.execute(delete(model).where(condition),
-                      execution_options={"synchronize_session": False}).rowcount
+    result = db.execute(delete(model).where(condition),
+                        execution_options={"synchronize_session": False})
+    return cast(CursorResult, result).rowcount   # DELETE zwraca CursorResult
 
 
 # Dzieci kontenera wyliczane z Base.metadata (każdy FK do containers.id), więc nowa
@@ -77,7 +79,7 @@ def _purge_containers(db: Session, ids: list[int]) -> int:
     suggestion_job_ids = [jid for (jid,) in db.execute(
         select(InvoiceJob.id).join(InvoiceBatch, InvoiceJob.batch_id == InvoiceBatch.id)
         .where(InvoiceBatch.container_id.in_(ids)))]
-    suggestions = AttachmentSuggestion.container_id.in_(ids)
+    suggestions: ColumnElement[bool] = AttachmentSuggestion.container_id.in_(ids)
     if suggestion_job_ids:
         suggestions = suggestions | AttachmentSuggestion.job_id.in_(suggestion_job_ids)
     _delete_where(db, AttachmentSuggestion, suggestions)

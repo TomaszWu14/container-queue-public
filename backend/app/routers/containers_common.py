@@ -2,7 +2,7 @@
 pól per rola, izolacja spółki, numeracja transportu, limity dzienne i kolizje paczek."""
 import datetime
 from collections.abc import Mapping
-from typing import cast
+from typing import Any, cast
 
 from fastapi import HTTPException, status
 from sqlalchemy import CursorResult, any_, case, func, select, update
@@ -90,6 +90,8 @@ def _max_transport_seq(db: Session, prefix: str) -> int:
                        Container.transport_id.desc()))
     for batch in (query.limit(50), query):   # pełny odczyt tylko, gdy 50 śmieciowych sufiksów
         for tid in db.scalars(batch):
+            if tid is None:   # LIKE i tak nie dopasuje NULL — zawężenie dla mypy
+                continue
             suffix = tid[len(prefix):]
             if suffix.isascii() and suffix.isdigit():
                 return int(suffix)
@@ -105,6 +107,7 @@ def reserve_transport_seqs(db: Session, prefix: str, count: int = 1) -> int:
     naprawia licznik, gdyby numer nadano poza nim (np. stary proces w trakcie deployu).
     Wycofana transakcja cofa też licznik — bez dziur po nieudanym imporcie."""
     from ..models import TransportIdCounter
+    upsert: Any   # insert z ON CONFLICT — typy dialektów się różnią, API to samo
     if db.get_bind().dialect.name == "postgresql":
         from sqlalchemy.dialects.postgresql import insert as upsert
     else:

@@ -3,12 +3,16 @@
 → lista aliasów nagłówka. `ref_kind`: kolumna `ref` to nasz REF (`ours`) albo kod
 dostawcy (`supplier`, tłumaczony przez SupplierMaterialMap)."""
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import JSON, DateTime, Float, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..database import Base
 from .enums import utcnow
+
+if TYPE_CHECKING:   # tylko dla mypy — import w runtime byłby cykliczny
+    from .dictionaries import Supplier
 
 __all__ = ["SupplierDocProfile", "SupplierDocSample"]
 

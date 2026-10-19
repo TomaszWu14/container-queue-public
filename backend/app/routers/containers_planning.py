@@ -131,7 +131,7 @@ def suggest_notify_date(container_id: int, db: Session = Depends(get_db),
     wh_ids = [warehouse.id] if warehouse else []
     limits = daily_limits_map(db, wh_ids, base, horizon)
     overrides = calendar_overrides_map(db, wh_ids, base, horizon)
-    used_by_day: dict[datetime.date, int] = {}
+    used_by_day: dict[datetime.date | None, int] = {}   # notify_date w SQL jest nullable
     if warehouse:
         rows = db.execute(
             select(Container.notify_date, func.count(Container.id))

@@ -120,6 +120,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-081 interaktywny przewodnik po demo | — | `DemoGuide.dom.test.tsx` (4) | #92 | wdrożone |
 | US-020 jedna reguła „ETA + N” i przeliczanie propozycji | D2, Z-043 | `test_planning.py` (2 nowe), `test_dashboard.py` | #93 | wdrożone |
 | US-083 film „Przewodnik po demo” PL/EN | — | `e2e/demo/tour.spec.ts` (2 × 2 urządzenia) | — | czeka na merge |
+| US-020 jedna reguła „ETA + N” i przeliczanie propozycji | D2, Z-043 | `test_planning.py` (2 nowe), `test_dashboard.py` | — | czeka na merge |
+| US-082 zero znanych błędów typów (mypy 75 → 0) | — | `scripts/mypy_baseline.py`, pełny pytest | — | czeka na merge |
 
 ## Zasady utrzymania
 

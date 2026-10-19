@@ -74,7 +74,7 @@ def care_risk_by_company(db: Session, companies: set[int], today: datetime.date,
         if not r["at_risk"]:
             continue
         t1 = r["trigger_etd_missed"]
-        days = (today - order.max_etd).days if t1 else (
+        days = (today - order.max_etd).days if t1 and order.max_etd else (
             r["latest_eta"] + datetime.timedelta(days=order.buffer_days) - order.deadline).days
         for c in r["matched"]:
             if c.id not in out:

@@ -1,4 +1,6 @@
 """Wspólna serializacja modeli ORM do schematów wyjściowych z dopełnianiem pól."""
+from collections.abc import Sequence
+
 from sqlalchemy.orm import Session
 
 from .models import Company, CustomsAgency, User
@@ -60,7 +62,7 @@ def marm_volume_m3(quantity: float, unit: str, material_rows: list) -> float | N
     return None
 
 
-def attach_marm_volumes(db: Session, items: list) -> dict[int, float | None]:
+def attach_marm_volumes(db: Session, items: Sequence) -> dict[int, float | None]:
     """Mapa OrderItem.id -> objętość m³ wyliczona z MARM (jedno zapytanie na listę)."""
     from sqlalchemy import select
 

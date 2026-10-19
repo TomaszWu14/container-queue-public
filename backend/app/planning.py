@@ -6,6 +6,7 @@ automatyczne przeliczanie działa wyłącznie na nietkniętej propozycji. Wszęd
 indziej zmiana ETA jedynie podnosi alert — decyzję o przeplanowaniu podejmuje człowiek.
 """
 import datetime
+from typing import Any
 
 from fastapi import HTTPException, status
 from sqlalchemy import func, select
@@ -99,7 +100,7 @@ def confirm_plan(db: Session, container: Container, day: datetime.date, confirme
     if day < today_pl():
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
                             "Data dostawy nie może być z przeszłości.")
-    changes = {"planning_status": PlanningStatus.POTWIERDZONE}
+    changes: dict[str, Any] = {"planning_status": PlanningStatus.POTWIERDZONE}
     if container.notify_date != day:
         # uzgodniona data jest ręczna: automat ETA nie może jej ruszyć nawet po resecie
         changes["notify_date"] = day
