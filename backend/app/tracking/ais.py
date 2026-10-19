@@ -197,14 +197,18 @@ def handle_message(db: Session, raw: str | bytes,
         msg = json.loads(raw)
     except (ValueError, TypeError):
         return False
+    if not isinstance(msg, dict):          # T-10: ramka innego kształtu nie przerywa obsługi
+        return False
     meta = msg.get("MetaData") or {}
+    if not isinstance(meta, dict):
+        return False
     vessel = wanted.get(normalize_name(meta.get("ShipName") or ""))
     if vessel is None:
         return False
 
     now = utcnow()
     _learn_mmsi(db, vessel, meta)
-    handler = _HANDLERS.get(msg.get("MessageType"))
+    handler = _HANDLERS.get(str(msg.get("MessageType") or ""))
     if handler is None:
         return False
     handler(db, vessel, msg.get("Message") or {}, meta, now)

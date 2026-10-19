@@ -87,16 +87,20 @@ def fetch_weather(db: Session) -> list[dict]:
         lons = ",".join(f"{lon:.2f}" for _, _, _, lon in plan)
         out: list[dict] = []
         try:
-            wind = httpx.get(
+            # T-11: kod błędu (np. 400 z {"error": true}) → ścieżka błędu, nie „pusta” prognoza w cache
+            wind_r = httpx.get(
                 "https://api.open-meteo.com/v1/forecast",
                 params={"latitude": lats, "longitude": lons,
                         "current": "wind_speed_10m,wind_direction_10m"},
-                timeout=8).json()
-            wave = httpx.get(
+                timeout=8)
+            wind_r.raise_for_status()
+            wave_r = httpx.get(
                 "https://marine-api.open-meteo.com/v1/marine",
                 params={"latitude": lats, "longitude": lons,
                         "current": "wave_height"},
-                timeout=8).json()
+                timeout=8)
+            wave_r.raise_for_status()
+            wind, wave = wind_r.json(), wave_r.json()
             # multi-point zwraca listę obiektów; pojedynczy punkt — obiekt
             wind_list = wind if isinstance(wind, list) else [wind]
             wave_list = wave if isinstance(wave, list) else [wave]

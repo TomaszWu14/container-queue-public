@@ -215,6 +215,7 @@ def test_weather_endpoint_scoped_and_mocked(client, db_session, monkeypatch):
     class _Resp:
         def __init__(self, data): self._d = data
         def json(self): return self._d
+        def raise_for_status(self): pass
 
     def fake_get(url, params=None, timeout=None):
         if "marine" in url:

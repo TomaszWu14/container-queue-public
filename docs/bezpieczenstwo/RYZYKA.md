@@ -29,7 +29,7 @@ Status: otwarte · w realizacji · zaakceptowane (wyjątek E-xx) · zamknięte (
 | R-16 | Surowe f-stringi SQL ze stałymi identyfikatorami (`backup_verify.py`, `db_bootstrap.py`) | niskie | niski | N | zaakceptowane | E-03 | DEV | — | 2027-01-15 |
 | R-17 | `ALLOWED_HOSTS` puste domyślnie (filtr Hosta wyłączony); `PUBLIC_BASE_URL` ogranicza skutek | niskie | niski | N | otwarte | brak | OPS | RUNBOOK | 2026-11-15 |
 | R-18 | Poczta → poczekalnia bez listy zaufanych nadawców (T-04) | niskie | niski | N | otwarte | brak | BA | US-023 (poczekalnia) | 2026-11-15 |
-| R-19 | Integracje zewnętrzne: nieoczekiwana odpowiedź = 500 (T-08…T-12) | średnie | niski | N | otwarte | brak | DEV | US-026 | 2026-11-15 |
+| R-19 | Integracje zewnętrzne: nieoczekiwana odpowiedź = 500 (T-08…T-12) | średnie | niski | N | zamknięte (2026-10-19, US-026) | brak | DEV | US-026 | 2026-11-15 |
 | R-20 | Rozjazd wersji Python (3.12 CI / 3.14 obraz) i Node (22 / 24 / 26) | niskie | średni | N | otwarte | brak | DEV | US-015 | 2026-11-15 |
 
 ## Wyjątki zaakceptowane

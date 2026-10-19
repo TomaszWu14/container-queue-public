@@ -1,7 +1,7 @@
 # Decyzje do podjęcia przez PO
 
 Jedna lista wszystkiego, co czeka na „tak / nie” Product Ownera. Szczegóły i uzasadnienia: kolumna „Gdzie”.
-Pełny rejestr założeń (32 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (33 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
 
 Jak odpowiedzieć: wystarczy numer i decyzja, np. „Z-027 tak, ADR-0004 nie”. [BA] przepisze odpowiedź do
 rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje dokumenty, które się na nią powołują.
@@ -27,6 +27,7 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-030 | Automat włącza / wyłącza tylko admin; RODO, retencja, pliki, kopia i strażnik chronione | tak | także logistyka | [ZALOZENIA](ZALOZENIA.md) |
 | Z-031 | „Co jeśli statek się spóźni” liczy tylko w pamięci (1–21 dni), plan zostaje bez zmian | tak | przycisk „zapisz nowy plan” | [ZALOZENIA](ZALOZENIA.md) |
 | Z-032 | Reguła wybiera kanały (dzwonek / e-mail / Teams / n8n), domyślnie wszystkie; Teams to jeden wspólny kanał | tak | osobny kanał Teams na regułę | [ZALOZENIA](ZALOZENIA.md) |
+| Z-033 | Przy awarii NBP kursy najwyżej 5-dniowe, starsze = bez przeliczenia | tak | inny limit | [ZALOZENIA](ZALOZENIA.md) |
 | Z-029 | „Symuluj dzień” nic nie zapisuje — pokazuje kroki w oknie | tak (bezpieczniej dla demo) | zapis w „piaskownicy” demo (ADR-0005) | [ZALOZENIA](ZALOZENIA.md) |
 
 ## Proces i bezpieczeństwo — starsze, wciąż otwarte

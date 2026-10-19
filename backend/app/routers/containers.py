@@ -320,8 +320,11 @@ def get_palletization(container_id: int, db: Session = Depends(get_db), user: Us
             timeout=settings.pallet_api_timeout,
         )
         resp.raise_for_status()
-        return {"configured": True, "data": resp.json()}
-    except httpx.HTTPError as exc:
+        data = resp.json()
+        if not isinstance(data, dict | list):
+            raise ValueError(f"nieoczekiwany format: {type(data).__name__}")
+        return {"configured": True, "data": data}
+    except (httpx.HTTPError, ValueError) as exc:   # T-09: zła odpowiedź = komunikat, nie 500
         logger.warning("Pallet service proxy failed for %s: %s", container.container_no, exc)
         return {"configured": True, "error": "Serwis paletyzacji niedostępny."}
 
