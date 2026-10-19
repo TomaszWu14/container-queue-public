@@ -114,6 +114,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-075 mail o logowaniu z nowego urządzenia | — | `test_login_devices.py` (9) | #86 | wdrożone |
 | US-076 kwartalny przegląd dostępów | Z-041 | `test_access_review.py` (4), `AccessReviewPanel.dom.test.tsx` (2) | #87 | wdrożone |
 | US-077 dokumentacja API: trasy i uprawnienia | — | `test_export_api_docs.py` (2) | — | czeka na merge |
+| US-078 aplikacja na ekran telefonu (PWA) | — | `pwa.manifest.test.ts` (3) | — | czeka na merge |
 
 ## Zasady utrzymania
 

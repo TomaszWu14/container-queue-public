@@ -854,6 +854,19 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   repozytorium — nie zawiera sekretów ani danych.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-078 · [DEV] Aplikacja „na ekran telefonu” (PWA) (czwarta lista PO, pkt 1)
+- **Rozmiar:** S
+- **Jako** magazynier, kierowca bramy albo logistyk w terenie **chcę** dodać Kolejkę do ekranu telefonu i
+  otwierać ją jak zwykłą aplikację, **aby** nie szukać zakładki w przeglądarce.
+- **Kryteria akceptacji** (test `pwa.manifest.test.ts`)
+  1. Chrome / Edge / Android proponują instalację („Zainstaluj aplikację” / „Dodaj do ekranu głównego”); iOS —
+     Safari → Udostępnij → „Do ekranu początkowego” z własną ikoną.
+  2. Po instalacji aplikacja startuje w osobnym oknie (bez paska adresu), pasek systemowy w kolorze nawigacji.
+  3. Długie przytrzymanie ikony: skróty do Kolejki, Bramy i Kalendarza.
+- **[SEC]:** sam manifest i ikony — bez service workera i pamięci podręcznej danych (tryb offline to osobna
+  historyjka); te same ciasteczka i CSP co w przeglądarce.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).
