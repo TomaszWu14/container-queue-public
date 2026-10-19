@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { api } from './api'
+import DemoGuide, { stepsFor } from './DemoGuide'
 import { useT } from './i18n'
 import { Modal } from './Modal'
 import { useUser } from './userContext'
@@ -30,6 +31,7 @@ export default function DemoMode() {
   const [open, setOpen] = useState(() => !seen())
   const [support, setSupport] = useState('')
   const [storyId, setStoryId] = useState<number | null>(null)   // kontener pokazowy (seed_demo_story)
+  const [guide, setGuide] = useState<number | null>(null)          // US-081: krok przewodnika
   useEffect(() => {
     api.get<{ support_email?: string; demo_story_container_id?: number | null }>('/api/public/branding')
       .then(b => { setSupport(b?.support_email ?? ''); setStoryId(b?.demo_story_container_id ?? null) })
@@ -41,6 +43,7 @@ export default function DemoMode() {
     setOpen(false)
   }
   const go = (to: string) => { close(); navigate(to) }
+  const startGuide = () => { close(); setGuide(0) }
 
   return (
     <>
@@ -50,6 +53,9 @@ export default function DemoMode() {
         <button type="button" className="btn small" onClick={() => setOpen(true)}>
           {t('demoBannerTour')}
         </button>
+        <button type="button" className="btn small secondary" onClick={() => setGuide(0)}>
+          {t('tourStart')}
+        </button>
         <button type="button" className="btn small secondary" onClick={() => navigate('/jak-zbudowano')}>
           {t('hbNav')}
         </button>
@@ -58,6 +64,7 @@ export default function DemoMode() {
       {open && createPortal(
         <Modal title={t('demoWelcomeTitle')} onClose={close} width={560}>
           <p className="muted" style={{ marginTop: 0 }}>{t('demoWelcomeIntro')}</p>
+          <p><button type="button" className="btn" onClick={startGuide}>{t('tourStartLong')}</button></p>
           <ol className="demo-steps">
             {storyId !== null && (
               <li className="demo-step-story">
@@ -89,6 +96,9 @@ export default function DemoMode() {
           </div>
         </Modal>,
         document.body,
+      )}
+      {guide !== null && (
+        <DemoGuide steps={stepsFor(role)} index={guide} onIndex={setGuide} onClose={() => setGuide(null)} />
       )}
     </>
   )

@@ -45,3 +45,15 @@ body.demo-readonly form button:not([type]) {
 /* panel „Ile to oszczędza”: podpis kafelka niesie założenie i „a z b” — na telefonie zostaje
    (pulpit chowa .ctl-kpi-sub < 640 px, 05-status-pages.css A6) */
 @media (max-width: 640px) { .value-card .ctl-kpi-sub { display: block; } }
+
+/* US-081: przewodnik po demo — karta na dole ekranu i obrys wskazanego miejsca */
+.tour-card { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 1200;
+  width: min(520px, calc(100vw - 32px)); box-sizing: border-box; padding: 14px 16px; border-radius: 12px;
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  box-shadow: var(--shadow-3); }
+.tour-card p { margin: 6px 0 10px; line-height: 1.45; }
+.tour-count { font-size: 12px; margin-bottom: 4px; }
+.tour-actions { display: flex; gap: 8px; align-items: center; }
+.tour-highlight { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 6px;
+  transition: outline-color 0.2s; }
+@media (prefers-reduced-motion: reduce) { .tour-highlight { transition: none; } }

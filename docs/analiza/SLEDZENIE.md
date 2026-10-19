@@ -117,6 +117,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-078 aplikacja na ekran telefonu (PWA) | — | `pwa.manifest.test.ts` (3) | #89 | wdrożone |
 | US-079 karta spedytora | Z-042 | `test_forwarder_scorecard.py` (2), `test_seed_demo_process.py` (1), `ForwarderScorecardPanel.dom.test.tsx` (2) | #90 | wdrożone |
 | US-080 metryki projektu w „Jak to zbudowano” | — | `ProjectMetrics.dom.test.tsx` (2), `test_project_metrics.py` (1) | — | czeka na merge |
+| US-081 interaktywny przewodnik po demo | — | `DemoGuide.dom.test.tsx` (4) | — | czeka na merge |
 
 ## Zasady utrzymania
 
