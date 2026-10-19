@@ -811,7 +811,21 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      i kary (30 dni / dziś), najdłuższe etapy procesu (30 dni), odczyt faktur (4 tyg.), automaty (7 dni).
   3. Zestaw pozycji to założenie Z-039 — PO decyduje, co ma być w raporcie.
 - **[SEC]:** admin i logistyka; Jinja z autoescape, przycisk druku jako stały skrypt w CSP.
-- **Stan:** zrealizowane, czeka na merge. PDF przez przeglądarkę (bez nowej biblioteki).
+- **Stan:** wdrożone w PR #84. PDF przez przeglądarkę (bez nowej biblioteki).
+
+### US-075 · [DEV][SEC] Mail „logowanie z nowego urządzenia” (czwarta lista PO, pkt 8)
+- **Rozmiar:** S
+- **Jako** użytkownik **chcę** dostać maila, gdy ktoś zaloguje się na moje konto z nowej przeglądarki, **aby**
+  szybko zauważyć przejęcie konta.
+- **Kryteria akceptacji** (testy `test_login_devices.py`)
+  1. Pierwsze logowanie konta zapamiętuje urządzenie bez maila; to samo urządzenie później — bez maila.
+  2. Logowanie z nowej przeglądarki (także po 2FA) → mail do właściciela: kiedy, przeglądarka i system, adres IP,
+     co zrobić, jeśli to nie on (PL/EN).
+  3. Konta demo i konta bez e-maila — bez maila; błąd wysyłki nie blokuje logowania.
+- **[SEC]:** przeglądarka zapisana tylko jako skrót HMAC nagłówka User-Agent (kluczem aplikacji), najwyżej 10
+  ostatnich na konto (`known_devices:{id}` w ustawieniach — bez migracji). IP trafia wyłącznie do maila (jest już
+  w dzienniku logowań). Treść maila escapowana.
+- **Stan:** zrealizowane, czeka na merge.
 
 ## Could
 
