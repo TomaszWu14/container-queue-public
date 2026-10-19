@@ -839,7 +839,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      e-mail wg matrycy kanałów), raz w tygodniu; automat widoczny w katalogu Automatyzacji.
   4. Konta demo i serwisowe pomijane; automat niczego sam nie blokuje.
 - **[SEC]:** tylko admin (macierz uprawnień); próg 90 dni to założenie Z-041.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #87.
 
 ### US-077 · [DEV] Publiczna dokumentacja API: trasy i uprawnienia (czwarta lista PO, pkt 12)
 - **Rozmiar:** S
