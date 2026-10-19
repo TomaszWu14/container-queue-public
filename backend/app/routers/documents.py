@@ -6,6 +6,7 @@ import logging
 import pathlib
 import secrets
 import zipfile
+from collections.abc import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import HTMLResponse, Response
@@ -359,7 +360,7 @@ def order_compare(job_id: int, db: Session = Depends(get_db), user: User = purch
 
 # --- 35: masowe pobieranie ZIP ------------------------------------------------
 
-def _zip_attachments(attachments: list[Attachment]) -> bytes:
+def _zip_attachments(attachments: Sequence[Attachment]) -> bytes:
     """ZIP w pamięci (zipfile stdlib). Załączniki są ograniczone max_upload_mb,
     a liczba plików limitem archive_zip_max_files — bufor nie rośnie bez końca."""
     uploads = uploads_dir()

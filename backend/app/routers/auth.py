@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -70,7 +71,7 @@ def _set_access_cookie(response: Response, access: str) -> None:
 
 
 def _set_auth_cookies(response: Response, access: str, refresh: str) -> None:
-    common = {"httponly": True, "samesite": "lax", "secure": settings.secure_cookies}
+    common: dict[str, Any] = {"httponly": True, "samesite": "lax", "secure": settings.secure_cookies}
     _set_access_cookie(response, access)
     response.set_cookie(REFRESH_COOKIE, refresh, path="/api/auth",
                         max_age=settings.refresh_token_days * 86400, **common)

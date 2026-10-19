@@ -757,6 +757,15 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **Kryteria akceptacji**
   1. `docs/pomysly-automatyzacje*.md` w `docs/archiwum/` z krótkim README (co to i gdzie jest to, co weszło do systemu).
   2. Mapa dokumentacji i odwołania (07-ograniczenia, HISTORYJKI, AUDYT) wskazują nowe miejsce; brak martwych linków.
+- **Stan:** wdrożone w PR #78.
+
+### US-070 · [DEV] Mniej znanych błędów typów: 145 → 75 (trzecia lista PO, pkt 12)
+- **Rozmiar:** M
+- **Jako** zespół **chcemy** dalej zmniejszać listę znanych błędów mypy w najcięższych modułach, **aby** CI łapało
+  błędy typów także w statystykach, reklamacjach, zleceniach, dokumentach i asystencie.
+- **Kryteria akceptacji**
+  1. Lista znanych błędów 145 → 75; zero w `containers_stats`, `complaints_common`, `containers_orders`, `assistant`, `auth`.
+  2. Zachowanie bez zmian: adnotacje, `Sequence` w sygnaturach, jawne zawężenie `None` tam, gdzie zapytanie i tak je wyklucza.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

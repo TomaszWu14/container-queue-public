@@ -9,6 +9,8 @@ Flow procesowy (jasny i przejrzysty):
 Zakres widoczności agencji: wyłącznie kontenery, których odprawę jej zlecono
 (egzekwowane przez scope_containers / check_container_access w deps).
 """
+from collections.abc import Sequence
+
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -236,7 +238,7 @@ def missing_document_types(db: Session, container: Container) -> list[str]:
     return missing_document_types_batch(db, [container])[container.id]
 
 
-def missing_document_types_batch(db: Session, containers: list[Container]) -> dict[int, list[str]]:
+def missing_document_types_batch(db: Session, containers: Sequence[Container]) -> dict[int, list[str]]:
     """Wsadowo {container.id: braki} — dwa zapytania zamiast 2×N (PERF-004)."""
     out: dict[int, list[str]] = {c.id: [] for c in containers}
     ids = [c.id for c in containers if in_customs_flow(c)]

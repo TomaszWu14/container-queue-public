@@ -1,5 +1,7 @@
 """W5 #36 — szablony wysyłki dokumentów do agencji celnej: CRUD szablonów,
 render tematu/treści (render_docs_message, używany przez customs.py) i podgląd."""
+from collections.abc import Sequence
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
@@ -50,7 +52,7 @@ def template_for(db: Session, customs_agency_id: int | None) -> DocSendTemplate 
 
 
 def render_docs_message(db: Session, container: Container,
-                        attachments: list[Attachment]) -> tuple[str, str]:
+                        attachments: Sequence[Attachment]) -> tuple[str, str]:
     """(temat, treść) wysyłki dokumentów wg szablonu; brak szablonu = obecna treść."""
     template = template_for(db, container.customs_agency_id)
     subject = (template.subject if template and template.subject.strip()
