@@ -799,7 +799,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      miejscem w tym samym magazynie, do 7 dni później; brak miejsca → licznik „bez wolnego miejsca”.
   2. Ruszamy tylko kontenery z symulacji (zakres użytkownika); plan w bazie bez zmian.
   3. Zapis propozycji jednym przyciskiem — dopiero po decyzji PO (Z-031); dziś zmiana na karcie kontenera.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #83.
 
 ### US-074 · [DEV] Raport miesięczny dla zarządu (trzecia lista PO, pkt 8)
 - **Rozmiar:** M
