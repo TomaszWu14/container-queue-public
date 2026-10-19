@@ -1,0 +1,11 @@
+{
+  "generated_at": "2026-10-19",
+  "backend_tests": 1799,
+  "frontend_tests": 930,
+  "e2e_tests": 23,
+  "api_operations": 481,
+  "stories_shipped": 57,
+  "adrs": 6,
+  "languages": 3,
+  "last_pr": 90
+}

@@ -2,6 +2,7 @@
 // jakości i kluczowe decyzje z linkami do dokumentów w repozytorium. Treść statyczna (bez API).
 import { PageHeader } from '../PageHeader'
 import { useT } from '../i18n'
+import ProjectMetrics from './ProjectMetrics'
 
 export const REPO = 'https://github.com/TomaszWu14/container-queue-public'
 const doc = (path: string) => `${REPO}/blob/main/${path}`
@@ -62,6 +63,8 @@ export default function HowBuiltPage() {
           ))}
         </div>
       </section>
+
+      <ProjectMetrics />
 
       <section className="panel">
         <h2 className="as-h3">{t('hbDecisions')}</h2>

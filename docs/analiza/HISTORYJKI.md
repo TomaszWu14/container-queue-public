@@ -882,6 +882,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   porównania z konkurencją. Próg 24 h to założenie Z-042.
 - **Stan:** wdrożone w PR #90.
 
+### US-080 · [DEV] Metryki projektu na stronie „Jak to zbudowano” (czwarta lista PO, pkt 13)
+- **Rozmiar:** S
+- **Jako** rekruter albo recenzent **chcę** zobaczyć w demo konkretne liczby o projekcie (testy, API, historyjki,
+  decyzje) z datą, **aby** ocenić skalę i dyscyplinę pracy bez czytania kodu.
+- **Kryteria akceptacji** (testy `ProjectMetrics.dom.test.tsx`, `test_project_metrics.py`)
+  1. „Jak to zbudowano” → „Metryki projektu”: testy backendu, frontendu i E2E, operacje API z opisaną rolą,
+     historyjki wdrożone, ADR, numer ostatniego PR-a — z datą policzenia.
+  2. Liczby z repozytorium (`python3 scripts/project_metrics.py`), bez sieci i bazy; generowane na żądanie.
+  3. Testy liczone jako funkcje testowe — strona mówi to wprost (warianty parametryzowane liczą się raz).
+- **[SEC]:** plik statyczny w paczce frontendu, bez danych i bez wywołań API.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).
