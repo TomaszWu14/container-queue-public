@@ -15,6 +15,9 @@ NBP_TABLE_A = "https://api.nbp.pl/api/exchangerates/tables/A?format=json"
 # waluty prezentowane po przeliczeniu (PLN zawsze; EUR/USD to najczęstsze waluty zakupu)
 DEFAULT_TARGETS = ("PLN", "EUR", "USD")
 _CACHE_TTL = datetime.timedelta(hours=6)
+# T-12: przy awarii NBP oddajemy ostatnie kursy najwyżej tyle po pobraniu (długi weekend + zapas);
+# starsze = brak kursów (available=False) zamiast cichego liczenia po kursie sprzed tygodni
+MAX_STALE = datetime.timedelta(days=5)
 
 # cache: (pobrane_o, {kod_waluty: kurs_w_PLN}, data_notowania)
 _cache: tuple[datetime.datetime, dict[str, float], str] | None = None
@@ -42,7 +45,7 @@ def get_rates(now: datetime.datetime | None = None) -> tuple[dict[str, float], s
         return rates, as_of
     except Exception:  # noqa: BLE001 — kanał zewnętrzny nie może blokować operacji
         logger.warning("NBP niedostępny — przewalutowanie pominięte", exc_info=True)
-        if _cache:  # oddaj ostatnie znane kursy, nawet jeśli przeterminowane
+        if _cache and now - _cache[0] <= MAX_STALE:  # ostatnie znane kursy, w granicy wieku
             return _cache[1], _cache[2]
         return {}, None
 

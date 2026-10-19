@@ -668,6 +668,19 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. Zachowanie bez zmian — poza błędem wykrytym przy okazji: weryfikacja kopii na PostgreSQL podawała do `psql`
      skompresowany plik (gzip) zamiast SQL, więc na produkcji kończyłaby się błędem; teraz dostaje rozpakowany SQL
      (test `test_verify_feeds_psql_plain_sql`).
+- **Stan:** wdrożone w PR #65.
+
+### US-026 · [DEV] Awaria integracji = czytelny komunikat, nie „błąd serwera” (trzecia lista PO, pkt 10)
+- **Rozmiar:** S
+- **Jako** użytkownik **chcę**, żeby awaria systemu zewnętrznego (SharePoint, paletyzacja, AIS, pogoda, kursy NBP)
+  dawała zrozumiały komunikat albo „niedostępne”, **aby** reszta ekranu działała, a błąd było widać w panelu integracji.
+- **Kryteria akceptacji** (test `test_integration_errors.py`)
+  1. T-08 SharePoint: odpowiedź Graph w innym formacie → opis błędu w panelu integracji (bez KeyError).
+  2. T-09 paletyzacja: nie-JSON albo zły typ → „Serwis paletyzacji niedostępny.” zamiast 500.
+  3. T-10 AIS: ramka innego kształtu niż słownik jest pomijana, połączenie trwa.
+  4. T-11 pogoda: kod błędu open-meteo → ścieżka błędu (krótki cache), nie pusta „prognoza” na 30 min.
+  5. T-12 NBP: przy awarii ostatnie kursy najwyżej 5 dni po pobraniu (Z-033); starsze → bez przeliczenia.
+- **[SEC]:** zamyka ryzyko R-19.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could
@@ -679,7 +692,6 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
 - **US-024** [DEV] Archiwizacja `docs/pomysly-automatyzacje*.md` (340 KB) poza główną mapą dokumentacji.
 - **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna).
-- **US-026** [DEV] Obsługa nieoczekiwanych odpowiedzi integracji (T-08…T-12): 502/503 z komunikatem zamiast 500.
 
 ## Won't (na teraz)
 

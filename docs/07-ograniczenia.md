@@ -52,11 +52,11 @@ Granice, przez które do systemu wchodzą dane z zewnątrz.
 | T-05 | Upload załącznika | typ pliku rozpoznawany tylko po rozszerzeniu | `routers/forwarding_files.py:177-186` |
 | T-06 | Archiwum ZIP | limit rozmiaru liczony z deklaracji w nagłówku archiwum | `routers/archive_upload.py:47-69` |
 | T-07 | Import Excela | wiersze z błędnym numerem pomijane tylko w logu; użytkownik nie dostaje listy | `importers/queue.py:347-351` |
-| T-08 | SharePoint (Microsoft Graph) | nieoczekiwana odpowiedź kończy się błędem 500 | `sharepoint.py:64,76` |
-| T-09 | Serwis paletyzacji | odpowiedź bez walidacji, błąd parsowania = 500 | `routers/containers.py:313-323` |
-| T-10 | AIS (websocket) | ramka w innym formacie niż słownik przerywa obsługę | `tracking/ais.py:196-200` |
-| T-11 | Pogoda (Open-Meteo) | brak sprawdzenia kodu odpowiedzi | `tracking/weather.py:88-99` |
-| T-12 | Kursy NBP | przy awarii zwracane kursy bez limitu wieku | `nbp.py:42-46` |
+| T-08 | SharePoint (Microsoft Graph) | ~~nieoczekiwana odpowiedź kończy się błędem 500~~ — naprawione (US-026) | `sharepoint.py:64,76` |
+| T-09 | Serwis paletyzacji | ~~odpowiedź bez walidacji, błąd parsowania = 500~~ — naprawione (US-026) | `routers/containers.py:313-323` |
+| T-10 | AIS (websocket) | ~~ramka w innym formacie niż słownik przerywa obsługę~~ — naprawione (US-026) | `tracking/ais.py:196-200` |
+| T-11 | Pogoda (Open-Meteo) | ~~brak sprawdzenia kodu odpowiedzi~~ — naprawione (US-026) | `tracking/weather.py:88-99` |
+| T-12 | Kursy NBP | ~~przy awarii zwracane kursy bez limitu wieku~~ — naprawione: limit 5 dni (US-026, Z-033) | `nbp.py:42-46` |
 | T-13 | Dane kierowcy w panelu | brak walidacji telefonu i rejestracji (formularz publiczny je ma) | `schemas/dictionaries.py:236-244` |
 | T-14 | Dni wolne demurrage | brak dolnej granicy — wartość ujemna przesuwa termin wstecz | `schemas/containers.py:51,111` |
 | T-15 | Pola tekstowe kontenera | brak limitu długości w schemacie (limit tylko w bazie → 500) | `schemas/containers.py:23-61` |

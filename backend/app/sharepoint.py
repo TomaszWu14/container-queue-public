@@ -57,11 +57,25 @@ def _get(url: str, token: str, headers: dict | None = None) -> httpx.Response:
     return r
 
 
+def _json(r: httpx.Response, what: str) -> dict:
+    """Treść odpowiedzi Graph jako słownik — inny format = czytelny SharePointError (T-08), nie 500."""
+    try:
+        data = r.json()
+    except ValueError as exc:
+        raise SharePointError(f"Graph: {what} — odpowiedź nie jest JSON-em") from exc
+    if not isinstance(data, dict):
+        raise SharePointError(f"Graph: {what} — nieoczekiwany format odpowiedzi")
+    return data
+
+
 def site_id(token: str) -> str:
     """GET /sites/{hostname}:/{ścieżka} → id witryny (cache na czas procesu)."""
     site = settings.sharepoint_site.strip()
     if site not in _site_ids:
-        _site_ids[site] = _get(f"{GRAPH}/sites/{site}", token).json()["id"]
+        sid = _json(_get(f"{GRAPH}/sites/{site}", token), "witryna").get("id")
+        if not isinstance(sid, str) or not sid:
+            raise SharePointError(f"Graph: witryna {site!r} bez identyfikatora")
+        _site_ids[site] = sid
     return _site_ids[site]
 
 
@@ -73,7 +87,7 @@ def fetch_file(path: str, etag: str | None = None) -> tuple[bytes | None, dict]:
     r = _get(item, token, {"If-None-Match": etag} if etag else None)
     if r.status_code == 304:
         return None, {"eTag": etag}
-    meta = r.json()
+    meta = _json(r, "plik")
     if etag and meta.get("eTag") == etag:
         return None, meta
     return _get(f"{item}:/content", token).content, meta

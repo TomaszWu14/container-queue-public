@@ -139,6 +139,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
 ### Fixed
+- **Awarie integracji** (US-026): SharePoint, paletyzacja, AIS, pogoda i kursy NBP przy nieoczekiwanej odpowiedzi
+  dają komunikat albo „niedostępne” zamiast błędu serwera; stare kursy NBP najwyżej 5 dni.
 - **Weryfikacja kopii zapasowej** (US-064): `psql` dostawał skompresowany plik zamiast SQL — próbne odtworzenie
   na PostgreSQL zawsze kończyło się błędem.
 - **Przebieg procesu: lista „do sprawdzenia”** pomija kontenery po dostawie na magazyn — czekanie na rozliczenie

@@ -29,11 +29,18 @@ def test_route_points_degenerate_same_point():
 
 
 class _Resp:
-    def __init__(self, data):
+    def __init__(self, data, status=200):
         self._d = data
+        self.status_code = status
 
     def json(self):
         return self._d
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            import httpx
+            raise httpx.HTTPStatusError("blad", request=httpx.Request("GET", "https://x"),
+                                        response=httpx.Response(self.status_code))
 
 
 def test_fetch_weather_includes_route_samples(client, db_session, monkeypatch):
