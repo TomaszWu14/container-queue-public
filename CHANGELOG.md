@@ -211,6 +211,7 @@ Jedna reguła „ETA + N dni” (ustawienie admina) przy zakładaniu kontenera i
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- Wylogowanie po 30 min bezczynności i zawsze po 12 h od zalogowania (US-091, ASVS 3.3.2).
 - Pola hasła z przyciskiem „pokaż / ukryj” i miernikiem siły przy ustawianiu hasła (US-090, ASVS 2.1.8/2.1.12).
 - JSON z `/api/*` z `Content-Disposition: attachment` — nie otwiera się w karcie jako strona (US-089, ASVS 14.4.2).
 - Kody zapasowe 2FA: 12 znaków (60 bitów), w bazie scrypt z solą na kod; stare kody działają do ponownego wygenerowania (US-088, ASVS 2.6.2/2.6.3).

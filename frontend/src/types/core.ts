@@ -117,6 +117,7 @@ export interface User {
   // bezpieczeństwo (W14) — opcjonalne, by nie łamać mocków w istniejących testach
   totp_enabled?: boolean
   must_enroll_2fa?: boolean  // SEC-006: admin bez 2FA — ekran włączania zamiast panelu
+  session_idle_minutes?: number  // wylogowanie po bezczynności (idleLogout.ts)
   impersonated?: boolean
   is_demo?: boolean   // konto z DEMO_READONLY_LOGINS (instancja portfolio)
   allowed_warehouse_ids?: number[] | null

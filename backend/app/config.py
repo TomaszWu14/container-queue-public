@@ -33,11 +33,15 @@ class Settings(BaseSettings):
     # --workers). >1 tylko na PostgreSQL (rate_limit.assert_worker_config); pętle tła
     # prowadzi wtedy jeden proces-lider (leader.py). Każdy worker ~260 MB RAM i własna pula.
     web_concurrency: int = Field(default=1, ge=1, le=16)
-    access_token_minutes: int = Field(default=120, ge=1)  # 2 h — decyzja 2026-09-18
+    # access token: najwyżej pół okna bezczynności (session_limits) — przy 30 min to 15 min
+    access_token_minutes: int = Field(default=15, ge=1)
+    # limity sesji (ASVS 3.3.2, decyzja PO 2026-10-19): wylogowanie po bezczynności i
+    # zawsze najpóźniej N godzin po zalogowaniu
+    session_idle_minutes: int = Field(default=30, ge=2)
+    session_max_hours: int = Field(default=12, ge=1)
     # okno łaski dla ponownego użycia zrotowanego refresh tokenu (wyścig kart) — s;
     # krótkie (SEC-010): w oknie wydajemy tylko access token, bez nowego refresh
     refresh_reuse_grace_seconds: int = Field(default=10, ge=0)
-    refresh_token_days: int = Field(default=14, ge=1)
     # retencja (OBS-011/GDPR-007): tokeny po wygaśnięciu, historia SMS, błędy JS z beaconu
     token_retention_days: int = Field(default=30, ge=1)
     sms_retention_days: int = Field(default=90, ge=1)

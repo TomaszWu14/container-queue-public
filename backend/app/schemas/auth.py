@@ -125,6 +125,7 @@ class UserOut(ORMModel):
     must_enroll_2fa: bool = False    # SEC-006: admin musi włączyć 2FA (do tego tylko odczyt)
     impersonated: bool = False       # W14 #87: sesja podglądu „jako rola"
     is_demo: bool = False            # konto z DEMO_READONLY_LOGINS (baner, ekran powitalny)
+    session_idle_minutes: int = 30   # panel wylogowuje po tylu min bez aktywności (session_limits)
     allowed_warehouse_ids: list[int] | None = None  # W14 #91 (tylko logistyka)
     has_avatar: bool = False
     # tylko w odpowiedzi na utworzenie z zaproszeniem / reset-invite (jednorazowo)

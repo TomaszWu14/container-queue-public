@@ -6,6 +6,7 @@ import { Forbidden, LegacyRedirect, LEGACY_REDIRECTS, NotFound, canAccess, homeF
 import { api, logoutRequest } from './api'
 import { setUploadLimitMb } from './uploadLimit'
 import { SESSION_EXPIRED_EVENT } from './sessionEvents'
+import { useIdleLogout } from './idleLogout'
 import { CSRF_HEADERS } from './csrf'
 import GlobalSearch from './GlobalSearch'
 import Onboarding from './Onboarding'
@@ -155,6 +156,9 @@ export default function App() {
     // wspólny terminal: następna osoba startuje od „/”, nie na stronie (lub 403) poprzednika
     navigate('/', { replace: true })
   }
+
+  // wylogowanie po bezczynności (domyślnie 30 min, ustawienie serwera SESSION_IDLE_MINUTES)
+  useIdleLogout(!!user, user?.session_idle_minutes ?? 30, () => { void logout() })
 
   if (!checked) return <AppSkeleton />
 

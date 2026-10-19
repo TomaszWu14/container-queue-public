@@ -12,7 +12,7 @@ from jwt import PyJWTError
 from sqlalchemy import CursorResult, select, update
 from sqlalchemy.orm import Session
 
-from . import automation_policy
+from . import automation_policy, session_limits
 from .config import settings
 from .database import get_db
 from .models import PasswordResetToken, RefreshToken, Role, User, utcnow
@@ -125,11 +125,13 @@ def dummy_verify() -> bool:
 
 
 def _create_token(user_id: int, token_type: str, expires_delta: datetime.timedelta,
-                  jti: str | None = None) -> str:
+                  jti: str | None = None, started: datetime.datetime | None = None) -> str:
     now = datetime.datetime.now(datetime.UTC)
-    payload = {"sub": str(user_id), "type": token_type, "iat": now, "exp": now + expires_delta}
+    payload: dict = {"sub": str(user_id), "type": token_type, "iat": now, "exp": now + expires_delta}
     if jti:
         payload["jti"] = jti
+    if started:
+        payload["at"] = int(started.timestamp())   # czas zalogowania — limit 12 h (session_limits)
     return jwt.encode(payload, settings.secret_key, algorithm=ALGORITHM)
 
 
@@ -140,10 +142,10 @@ def _create_access(user_id: int, session_version: int, expires_delta: datetime.t
     return jwt.encode(payload, settings.secret_key, algorithm=ALGORITHM)
 
 
-def create_access_token(user: "User") -> str:
-    # osadzamy wersję sesji — wylogowanie podbija ją i unieważnia stare tokeny
-    return _create_access(user.id, user.session_version,
-                          datetime.timedelta(minutes=settings.access_token_minutes))
+def create_access_token(user: "User", started: datetime.datetime | None = None) -> str:
+    # osadzamy wersję sesji — wylogowanie podbija ją i unieważnia stare tokeny;
+    # czas życia: pół okna bezczynności, nie poza 12 h od zalogowania (session_limits)
+    return _create_access(user.id, user.session_version, session_limits.access_lifetime(started))
 
 
 def create_pending_2fa_token(user: "User") -> str:
@@ -181,13 +183,20 @@ def _impersonated_user(real: "User", ctx: dict) -> "User":
     return shadow
 
 
-def issue_refresh_token(db: Session, user_id: int) -> str:
-    """Wystawia refresh token i zapisuje jego JTI, aby można było go odwołać."""
+def issue_refresh_token(db: Session, user_id: int, started: datetime.datetime | None = None) -> str:
+    """Wystawia refresh token i zapisuje jego JTI, aby można było go odwołać.
+    started = czas zalogowania (przy rotacji przenoszony); ważność = okno bezczynności."""
+    started = started or datetime.datetime.now(datetime.UTC)
+    delta = session_limits.refresh_lifetime(started)
     jti = secrets.token_hex(32)
-    delta = datetime.timedelta(days=settings.refresh_token_days)
     db.add(RefreshToken(user_id=user_id, jti=jti, expires_at=utcnow() + delta))
     db.commit()
-    return _create_token(user_id, "refresh", delta, jti=jti)
+    return _create_token(user_id, "refresh", delta, jti=jti, started=started)
+
+
+def refresh_session_start(token: str) -> datetime.datetime:
+    """Czas zalogowania z (już sprawdzonego) refresh tokenu."""
+    return session_limits.session_start(_decode(token))
 
 
 def consume_refresh_token(db: Session, token: str) -> tuple[int, bool]:
