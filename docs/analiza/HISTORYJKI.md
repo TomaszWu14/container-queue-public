@@ -970,7 +970,10 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** na urządzeniu tylko pola potrzebne przy bramie, bez nazwiska kierowcy; zapis osobno na użytkownika,
   ważny 12 h; kolejka wysyła się tylko jako zalogowany użytkownik (zwykłe uprawnienia API). Działa, gdy
   aplikacja jest otwarta — bez service workera.
+- **Stan:** wdrożone w PR #98.
+
 ### US-086 · [BA][DEV][SEC] Powiadomienia push na telefon i w przeglądarce (czwarta lista PO, pkt 2)
+- **Rozmiar:** M
 - **Jako** logistyk w terenie **chcę** dostać na telefon najpilniejsze alerty, także gdy aplikacja jest zamknięta,
   **aby** zareagować na demurrage czy kierowcę przy bramie bez ciągłego sprawdzania dzwonka.
 - **Kryteria akceptacji** (testy `test_web_push.py`, `PushSection.dom.test.tsx`)
@@ -984,7 +987,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   znane usługi push (Google, Mozilla, Apple, Microsoft) — ochrona przed SSRF. W treści tylko tytuł i link, bez opisu.
   Każdy zarządza wyłącznie swoimi urządzeniami (najwyżej 5), włączenie zapisane w audycie. Nowa zależność: `http-ece`
   (mała, oparta na `cryptography`). Bez migracji (ustawienia).
-- **Stan:** wdrożone w PR #98.
+- **Stan:** wdrożone w PR #99.
+
+### US-087 · [SEC] Odpowiedzi API bez zapisu w pamięci przeglądarki (ASVS 8.1.1, 8.2.1)
+- **Rozmiar:** XS
+- **Jako** administrator **chcę**, żeby dane z aplikacji nie zostawały w pamięci podręcznej przeglądarki ani
+  serwerów pośredniczących, **aby** na wspólnym komputerze (brama, magazyn) nikt nie odczytał ich po wylogowaniu.
+- **Kryteria akceptacji** (test `test_security_headers.py::test_api_responses_not_cached`)
+  1. Każda odpowiedź `/api/*` ma `Cache-Control: no-store`.
+  2. Trasy z własną polityką (zdjęcia użytkowników, podglądy SAD) i panel (index, statyki) zostają bez zmian.
+- **[SEC]:** luka ❌ z weryfikacji ASVS L2 (US-025) zamknięta; bez wpływu na działanie aplikacji.
+- **Stan:** zrealizowane, czeka na merge.
 
 ## Could
 

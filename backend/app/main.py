@@ -215,6 +215,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         for name, value in self.HEADERS.items():
             response.headers.setdefault(name, value)
         path = request.url.path
+        if path.startswith("/api/"):
+            # ASVS 8.2.1: odpowiedzi API (dane firm, osobowe) nie trafiają do pamięci przeglądarki ani proxy;
+            # trasy z własną polityką (zdjęcia, podglądy) zostawiają swoją wartość (setdefault)
+            response.headers.setdefault("Cache-Control", "no-store")
         if path.startswith(("/avizo/", "/api/avizo/", "/mag1/", "/api/mag1/")):
             # link z tokenem nie może wyciec w Referer ani trafić do wyszukiwarek
             response.headers["Referrer-Policy"] = "no-referrer"
