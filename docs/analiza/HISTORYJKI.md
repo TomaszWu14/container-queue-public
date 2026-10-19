@@ -788,7 +788,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   1. axe-core (WCAG 2.1 A/AA) na koncie demo, komputer i telefon: zero naruszeń „serious”/„critical” na 4 ekranach — w CI przy każdym PR.
   2. Naprawione: kontrast terminu kary „wkrótce” na tle wiersza MAG1, kafelków dokumentów „brak”, aktywnej zakładki
      karty, wyszarzonych przycisków zapisu w demo; przewijane wykres przepływu i tabela kalibracji dostępne z klawiatury.
-- **Stan:** zrealizowane, czeka na merge. Lighthouse dalej mierzy logowanie; ekrany po zalogowaniu pilnuje axe.
+- **Stan:** wdrożone w PR #81. Lighthouse dalej mierzy logowanie; ekrany po zalogowaniu pilnuje axe.
 
 ### US-073 · [DEV] „Co jeśli” z propozycją przesunięć (trzecia lista PO, pkt 6)
 - **Rozmiar:** S
