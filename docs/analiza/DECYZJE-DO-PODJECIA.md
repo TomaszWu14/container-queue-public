@@ -1,10 +1,16 @@
 # Decyzje do podjęcia przez PO
 
 Jedna lista wszystkiego, co czeka na „tak / nie” Product Ownera. Szczegóły i uzasadnienia: kolumna „Gdzie”.
-Pełny rejestr założeń (44 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (36 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
 
 Jak odpowiedzieć: wystarczy numer i decyzja, np. „Z-027 tak, ADR-0004 nie”. [BA] przepisze odpowiedź do
 rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje dokumenty, które się na nią powołują.
+
+## Ostatnio potwierdzone
+
+2026-10-19 — PO potwierdził obecne działanie: Z-031 (co jeśli = tylko podgląd), Z-035 (150 EUR/dzień),
+Z-039 (raport z ostatnich 30 dni, PDF), Z-041 (90 dni, blokuje admin), Z-042 (24 h zegarowe), Z-043 (ETA + 3),
+Z-044 (faktury B/L, próg 90%), Z-045 (push tylko dla pilnych alertów). Kod bez zmian.
 
 ## Architektura (ADR) — zmieniają zakres systemu
 
@@ -25,16 +31,12 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-027 | „Dłużej niż zwykle” = powyżej 90. percentyla etapu z 90 dni, dni kalendarzowe; kontenery po dostawie na magazyn pomijane | tak | mediana × 2, dni robocze | panel „Przebieg procesu” |
 | Z-028 | Asystent bez modelu AI odpowiada z szablonu po polsku, także po awarii modelu | tak | szablon tylko w demo, wersje EN/PT | [ZALOZENIA](ZALOZENIA.md) |
 | Z-030 | Automat włącza / wyłącza tylko admin; RODO, retencja, pliki, kopia i strażnik chronione | tak | także logistyka | [ZALOZENIA](ZALOZENIA.md) |
-| Z-031 | „Co jeśli statek się spóźni” liczy tylko w pamięci (1–21 dni), plan zostaje bez zmian | tak | przycisk „zapisz nowy plan” | [ZALOZENIA](ZALOZENIA.md) |
 | Z-032 | Reguła wybiera kanały (dzwonek / e-mail / Teams / n8n), domyślnie wszystkie; Teams to jeden wspólny kanał | tak | osobny kanał Teams na regułę | [ZALOZENIA](ZALOZENIA.md) |
 | Z-033 | Przy awarii NBP kursy najwyżej 5-dniowe, starsze = bez przeliczenia | tak | inny limit | [ZALOZENIA](ZALOZENIA.md) |
 | Z-034 | „Nie przypominaj”: 1 / 3 / 7 dni, tylko dla siebie, wzmianki przechodzą | tak | inne okresy | [ZALOZENIA](ZALOZENIA.md) |
-| Z-035 | Koszt w „co jeśli”: 150 EUR/dzień za kontener ponad limit magazynu | **podać stawkę** | stawki per armator | [ZALOZENIA](ZALOZENIA.md) |
 | Z-036 | Ponawianie wysyłek 1/5/30 min, kolejka w pamięci (restart gubi oczekujące) | tak | trwała kolejka w bazie (migracja) | [ZALOZENIA](ZALOZENIA.md) |
 | Z-037 | Test reguły: przybliżenie (etap z historii, daty dzisiejsze), próg „dużo” = 10 dziennie | tak | inny próg | [ZALOZENIA](ZALOZENIA.md) |
 | Z-038 | Realne ETA = ETA + mediana spóźnienia armatora (min. 3 przypłynięcia), tylko podpowiedź | tak | automatyczna zmiana planu | [ZALOZENIA](ZALOZENIA.md) |
-| Z-039 | Raport miesięczny: zestaw liczb za ostatnie 30 dni, PDF przez przeglądarkę | **podać, co ma być w raporcie** | miesiąc kalendarzowy, wysyłka e-mailem | [ZALOZENIA](ZALOZENIA.md) |
-| Z-041 | Przegląd dostępów: „nieużywane” = 90 dni bez aktywności, przypomnienie raz na kwartał, blokuje admin | potwierdzić próg | 30/60/180 dni, automatyczna blokada | [ZALOZENIA](ZALOZENIA.md) |
 | Z-029 | „Symuluj dzień” nic nie zapisuje — pokazuje kroki w oknie | tak (bezpieczniej dla demo) | zapis w „piaskownicy” demo (ADR-0005) | [ZALOZENIA](ZALOZENIA.md) |
 
 ## Proces i bezpieczeństwo — starsze, wciąż otwarte
@@ -45,7 +47,3 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-008 | 2FA administratorów nieobowiązkowe | ryzyko przejęcia konta admina | [RYZYKA](../bezpieczenstwo/RYZYKA.md) |
 | Z-009 | Administrator danych osobowych i kontakt RODO nieznani | wymagane przez RODO | [RODO](../bezpieczenstwo/RODO.md) |
 | Z-010 | Demo publiczne, nigdy z danymi rzeczywistymi | podstawa bezpieczeństwa portfolio | [ZALOZENIA](ZALOZENIA.md) |
-| Z-042 | Karta spedytora: odpowiedź „na czas” = do 24 h zegarowych | potwierdzić próg | 4/8 h roboczych | [ZALOZENIA](ZALOZENIA.md) |
-| Z-043 | „ETA + N”: jedno N z ustawień admina, domyślnie 3 (wcześniej 4 przy zakładaniu) | potwierdzić 3 albo ustawić 4 w panelu | 4 dni | [ZALOZENIA](ZALOZENIA.md) |
-| Z-044 | Budżet kosztów: co jest kosztem (faktury B/L), próg ostrzeżenia 90%, waluta EUR | potwierdzić zakres kosztów i próg | doliczać kary, budżet roczny | [ZALOZENIA](ZALOZENIA.md) |
-| Z-045 | Push tylko dla pilnych alertów (lista w ZALOZENIA), treść = sam tytuł | potwierdzić listę alertów | push wybierany w matrycy kanałów | [ZALOZENIA](ZALOZENIA.md) |
