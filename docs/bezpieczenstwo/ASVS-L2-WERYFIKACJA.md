@@ -158,7 +158,7 @@ Pominięte (L3): 3.6.1, 3.6.2.
 | 3.2.3 | Token w przeglądarce przechowywany bezpiecznie | ✅ | cookies HttpOnly (`auth.py` `_set_auth_cookies`); `frontend/src/api.ts` (bez localStorage) | tokeny wracają też w treści JSON logowania — panel ich nie zapisuje |
 | 3.2.4 | Token tworzony zatwierdzoną kryptografią | ✅ | PyJWT HS256, `secrets` (`security.py`) | — |
 | 3.3.1 | Wylogowanie i wygaśnięcie unieważniają sesję | ✅ | `auth.py` `logout` (`session_version += 1`, `revoke_user_refresh_tokens`); `test_hardening.py` `test_logout_invalidates_access_token` | — |
-| 3.3.2 | Ponowne uwierzytelnienie: L2 co 12 h albo po 30 min bezczynności | ❌ | `config.py` `refresh_token_days=14`; `security.py` `issue_refresh_token` (każda rotacja daje nowe 14 dni) | sesja aktywnego użytkownika nie wygasa nigdy. Działanie: limit bezwzględny (czas pierwszego logowania w refresh) i limit bezczynności albo świadomy wyjątek PO |
+| 3.3.2 | Ponowne uwierzytelnienie: L2 co 12 h albo po 30 min bezczynności | ✅ | `session_limits.py` (refresh ważny 30 min od odświeżenia, nic poza 12 h od zalogowania), `idleLogout.ts`; `test_session_limits.py`, `idleLogout.dom.test.tsx` | US-091 (decyzja PO 2026-10-19) |
 | 3.3.3 | Po zmianie hasła wylogowanie innych sesji | ✅ | `auth.py` `change_password`, `reset_password` (`revoke_user_refresh_tokens`) | — |
 | 3.3.4 | Użytkownik widzi i kończy aktywne sesje | ✅ | `auth.py` `my_sessions`, `revoke_my_session`, `revoke_other_sessions`; `frontend/src/pages/ProfilePage.tsx` | luka z oceny wstępnej zamknięta |
 | 3.4.1 | Cookie z atrybutem `Secure` | ⚠️ | `auth.py` `_set_auth_cookies` (`secure=settings.secure_cookies`); `settings_check.py` (prod bez `SECURE_COOKIES` = odmowa); `test_prod_without_https.py` | wyjątek `ALLOW_INSECURE_HTTP` (E-06) |
@@ -397,7 +397,7 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 |---|---|---|---|---|---|---|
 | V1 Architektura, projekt i model zagrożeń | 24 | 13 | 1 | 0 | 0 | 38 |
 | V2 Uwierzytelnianie | 24 | 10 | 6 | 12 | 0 | 52 |
-| V3 Zarządzanie sesją | 12 | 3 | 2 | 1 | 0 | 18 |
+| V3 Zarządzanie sesją | 13 | 3 | 1 | 1 | 0 | 18 |
 | V4 Kontrola dostępu | 7 | 1 | 1 | 0 | 0 | 9 |
 | V5 Walidacja, sanityzacja i kodowanie | 18 | 6 | 0 | 6 | 0 | 30 |
 | V6 Kryptografia przechowywanych danych | 7 | 2 | 2 | 2 | 0 | 13 |
@@ -409,9 +409,9 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V12 Pliki i zasoby | 11 | 2 | 2 | 0 | 0 | 15 |
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
 | V14 Konfiguracja | 17 | 4 | 0 | 2 | 0 | 23 |
-| **Razem** | **147** | **60** | **15** | **29** | **6** | **257** |
+| **Razem** | **148** | **60** | **14** | **29** | **6** | **257** |
 
-Spełnione 147 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 66 % (po US-087…US-090; wcześniej 140, 63 %).
+Spełnione 148 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 67 % (po US-087…US-091; wcześniej 140, 63 %).
 
 ### Luki ❌ — proponowane działania
 
@@ -423,7 +423,7 @@ Spełnione 147 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 66 
 | 2.3.2 | Brak kluczy sprzętowych (WebAuthn) | WebAuthn przynajmniej dla adminów | E-01, US-019 |
 | 2.6.2, 2.6.3 | ~~Kody zapasowe 2FA: 40 bitów, SHA-256 bez soli~~ | zrobione: 60 bitów + scrypt z solą (US-088); stare kody do ponownego wygenerowania | zamknięte |
 | 2.8.2 | Sekret TOTP jawnie w bazie | szyfrowanie `crypto.encrypt` + migracja | R-05 / US-002 (ten sam klucz danych) |
-| 3.3.2 | Sesja bez limitu bezwzględnego i bezczynności | limit 12 h od logowania i 30 min bezczynności albo wyjątek PO | nowe |
+| 3.3.2 | ~~Sesja bez limitu bezwzględnego i bezczynności~~ | zrobione: 30 min bezczynności, 12 h od zalogowania (US-091) | zamknięte |
 | 3.4.4 | Brak prefiksu `__Host-` | `__Host-` dla cookie access | E-07 |
 | 4.3.1 | MFA adminów nieobowiązkowe | `REQUIRE_2FA_ADMIN=true` na produkcji | E-01, R-11, US-019 |
 | 6.4.1, 6.4.2 | Brak sejfu / HSM na klucze | świadomy wyjątek (skala jednej instancji) z przeglądem | nowy wyjątek (do wpisania) |

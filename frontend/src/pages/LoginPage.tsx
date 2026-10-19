@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ApiError, api, login } from '../api'
 import { LANGS, Lang, LangContext, useT } from '../i18n'
 import PasswordInput from '../PasswordInput'
+import { clearIdleLogout, wasIdleLogout } from '../idleLogout'
 
 /*
  * Ekran wejścia — wariant „2b Panel logowania" z Claude Design (Landing.dc.html):
@@ -101,6 +102,8 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
     ? { login: brand.demo_login, password: brand.demo_password } : null
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [idleOut] = useState(wasIdleLogout)
+  useEffect(() => clearIdleLogout(), [])
   const [busy, setBusy] = useState(false)
   // 2FA: drugi krok logowania — backend zwrócił pending_token zamiast cookies
   const [pendingToken, setPendingToken] = useState('')
@@ -177,6 +180,7 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
           <div>
             <h2>{t('login')}</h2>
             <div className="kl2-note">{t('loginAccountsInfo')}</div>
+            {idleOut && <div className="kl2-note" role="status">{t('idleLoggedOut')}</div>}
           </div>
           {pendingToken ? (
             <form onSubmit={submitTotp} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

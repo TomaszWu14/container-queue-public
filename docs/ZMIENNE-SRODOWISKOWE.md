@@ -37,9 +37,10 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 
 | Zmienna | Typ | Kategoria domyślnej | W compose | Przeznaczenie (z komentarza w kodzie) |
 |---|---|---|---|---|
-| `ACCESS_TOKEN_MINUTES` | int | ma bezpieczny domyślny | **nie** | 2 h — decyzja 2026-09-18 |
+| `ACCESS_TOKEN_MINUTES` | int | ma bezpieczny domyślny | **nie** | domyślnie 15; i tak najwyżej połowa `SESSION_IDLE_MINUTES` (dawne 2 h z 2026-09-18 zastąpione limitem bezczynności) |
 | `REFRESH_REUSE_GRACE_SECONDS` | int | ma bezpieczny domyślny | **nie** | okno łaski dla ponownego użycia zrotowanego refresh tokenu (wyścig kart) — s; domyślnie 10, w oknie tylko nowy access token bez nowego refresh (SEC-010) |
-| `REFRESH_TOKEN_DAYS` | int | ma bezpieczny domyślny | **nie** |  |
+| `SESSION_IDLE_MINUTES` | int | ma bezpieczny domyślny | **nie** | wylogowanie po bezczynności — min; domyślnie 30 (ASVS 3.3.2, decyzja PO 2026-10-19). Refresh token ważny tyle od ostatniego odświeżenia; panel odświeża tylko przy aktywności |
+| `SESSION_MAX_HOURS` | int | ma bezpieczny domyślny | **nie** | wylogowanie zawsze po tylu godzinach od zalogowania; domyślnie 12 (ASVS 3.3.2, decyzja PO 2026-10-19) |
 | `ADMIN_LOGIN` | str | ma bezpieczny domyślny | tak |  |
 | `ADMIN_PASSWORD` | str | SEKRET (ustaw w Coolify, nigdy w repo) | tak |  |
 | `CORS_ORIGINS` | str | puste = funkcja wyłączona / auto | **nie** | pusta lista = brak CORS (panel serwowany z tego samego adresu go nie potrzebuje) |

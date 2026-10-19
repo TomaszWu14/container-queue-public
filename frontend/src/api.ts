@@ -88,6 +88,9 @@ async function tryRefresh(): Promise<boolean> {
   return refreshing
 }
 
+/** Przedłuża sesję (okno bezczynności liczy serwer od ostatniego odświeżenia) — idleLogout.ts. */
+export const refreshSession = tryRefresh
+
 async function request<T>(path: string, options: RequestInit = {}, retried = false): Promise<T> {
   if (demoBlocksWrite(path, options.method)) throw new ApiError(403, DEMO_READONLY_MESSAGE)
   const headers: Record<string, string> = {

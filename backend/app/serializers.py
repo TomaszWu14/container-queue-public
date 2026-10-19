@@ -3,6 +3,7 @@ from collections.abc import Sequence
 
 from sqlalchemy.orm import Session
 
+from .config import settings
 from .models import Company, CustomsAgency, User
 from .schemas import UserOut
 from .security import is_demo_login
@@ -16,6 +17,7 @@ def serialize_user(db: Session, user: User) -> UserOut:
     out.impersonated = bool(getattr(user, "impersonated", False))
     out.must_enroll_2fa = must_enroll_2fa(user)
     out.is_demo = is_demo_login(user.login)
+    out.session_idle_minutes = settings.session_idle_minutes
     if user.company_id:
         company = db.get(Company, user.company_id)
         out.company_code = company.code if company else None
