@@ -124,6 +124,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-082 zero znanych błędów typów (mypy 75 → 0) | — | `scripts/mypy_baseline.py`, pełny pytest | #95 | wdrożone |
 | US-083 film „Przewodnik po demo” PL/EN | — | `e2e/demo/tour.spec.ts` (2 × 2 urządzenia) | — | czeka na merge |
 | US-084 budżet kosztów transportu | Z-044 | `test_port_budget.py` (3), `PortBudgetPanel.dom.test.tsx` (2) | — | czeka na merge |
+| US-082 zero znanych błędów typów (mypy 75 → 0) | — | `scripts/mypy_baseline.py`, pełny pytest | — | czeka na merge |
+| US-085 brama bez zasięgu | — | `gateOffline.test.ts` (2) | — | czeka na merge |
 
 ## Zasady utrzymania
 
