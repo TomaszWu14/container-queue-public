@@ -738,7 +738,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      daty i dane kierowcy z dzisiejszych danych — przybliżenie nazwane wprost (Z-037).
   3. Średnio ≥ 10 dziennie → ostrzeżenie „Dużo alertów”. Tylko kontenery w zakresie użytkownika; nic nie jest zapisywane.
 - **[SEC]:** odczyt, `scope_containers`; wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #76.
 
 ### US-069 · [DEV] Nagranie ekranu Automatyzacje w README (trzecia lista PO, pkt 9)
 - **Rozmiar:** S
