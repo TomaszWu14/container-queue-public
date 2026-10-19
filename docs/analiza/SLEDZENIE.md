@@ -129,6 +129,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-086 powiadomienia push | Z-045 | `test_web_push.py` (7), `PushSection.dom.test.tsx` (3) | #99 | wdrożone |
 | US-087 API bez cache przeglądarki | — | `test_security_headers.py` (1) | #101 | wdrożone |
 | US-088 mocniejsze kody zapasowe 2FA | — | `test_backup_codes.py` (4) | — | czeka na merge |
+| US-087 API bez cache przeglądarki | — | `test_security_headers.py` (1) | — | czeka na merge |
+| US-089 JSON z API jako załącznik | — | `test_security_headers.py` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 

@@ -219,6 +219,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             # ASVS 8.2.1: odpowiedzi API (dane firm, osobowe) nie trafiają do pamięci przeglądarki ani proxy;
             # trasy z własną polityką (zdjęcia, podglądy) zostawiają swoją wartość (setdefault)
             response.headers.setdefault("Cache-Control", "no-store")
+            # ASVS 14.4.2: odpowiedź API otwarta wprost w karcie nie renderuje się jako strona (fetch ignoruje);
+            # pobierania plików mają własny Content-Disposition z nazwą pliku (setdefault)
+            if response.headers.get("content-type", "").startswith("application/json"):
+                response.headers.setdefault("Content-Disposition", 'attachment; filename="api.json"')
         if path.startswith(("/avizo/", "/api/avizo/", "/mag1/", "/api/mag1/")):
             # link z tokenem nie może wyciec w Referer ani trafić do wyszukiwarek
             response.headers["Referrer-Policy"] = "no-referrer"

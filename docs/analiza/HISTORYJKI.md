@@ -1012,6 +1012,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   ponownie włączyć 2FA (nowe kody), żeby stare, słabsze kody przestały istnieć.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-089 · [SEC] JSON z API nie otwiera się jako strona (ASVS 14.4.2)
+- **Rozmiar:** XS
+- **Jako** administrator **chcę**, żeby odpowiedź API otwarta wprost w karcie przeglądarki była traktowana jak plik,
+  **aby** spreparowana treść w danych nie mogła zostać wyświetlona jako strona w domenie aplikacji.
+- **Kryteria akceptacji** (test `test_security_headers.py::test_json_api_served_as_attachment`)
+  1. Odpowiedzi JSON z `/api/*` mają `Content-Disposition: attachment; filename="api.json"`; aplikacja i integracje
+     czytają je bez zmian.
+  2. Pobierania plików (Excel, PDF, ZIP) zachowują własną nazwę pliku; panel bez zmian.
+- **[SEC]:** luka ❌ z weryfikacji ASVS L2 (US-025) zamknięta; uzupełnia `X-Content-Type-Options: nosniff`.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2). Zrobione — patrz US-020 wyżej.

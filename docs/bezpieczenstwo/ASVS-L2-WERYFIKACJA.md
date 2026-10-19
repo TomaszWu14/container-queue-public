@@ -376,7 +376,7 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | 14.3.2 | Tryby debug wyłączone na produkcji | ✅ | `main.py` (`FastAPI` bez `debug`); `Dockerfile.coolify` CMD bez `--reload` | — |
 | 14.3.3 | Nagłówki bez szczegółowych wersji komponentów | ⚠️ | uvicorn wysyła `server: uvicorn` bez wersji (`Dockerfile.coolify` CMD bez `--no-server-header`) | `frontend/nginx.conf` bez `server_tokens off`; `/api/health` publikuje SHA builda — dodać `--no-server-header` i `server_tokens off` |
 | 14.4.1 | `Content-Type` z bezpiecznym kodowaniem | ✅ | `JSONResponse` (`application/json`); pliki z jawnym `media_type` (`download_attachment`) | — |
-| 14.4.2 | Odpowiedzi API z `Content-Disposition: attachment` | ❌ | nagłówek tylko przy pobieraniu plików (np. `routers/imports_master.py`, `routers/pallets.py`) | dodać do odpowiedzi JSON `/api/*` w `SecurityHeadersMiddleware` (niski priorytet; `nosniff` już jest) |
+| 14.4.2 | Odpowiedzi API z `Content-Disposition: attachment` | ✅ | `main.py` `SecurityHeadersMiddleware`: JSON z `/api/*` z `attachment; filename="api.json"`, pobierania plików zachowują własną nazwę; `test_security_headers.py::test_json_api_served_as_attachment` (US-089) | — |
 | 14.4.3 | Nagłówek CSP | ✅ | `main.py` `SecurityHeadersMiddleware.CSP`; `frontend/nginx.conf`; `test_security_headers.py` | `style-src 'unsafe-inline'` |
 | 14.4.4 | `X-Content-Type-Options: nosniff` | ✅ | `main.py` `SecurityHeadersMiddleware.HEADERS` | — |
 | 14.4.5 | HSTS na wszystkich odpowiedziach i subdomenach | ⚠️ | `main.py` (`max-age=31536000; includeSubDomains` przy `SECURE_COOKIES`); `test_security_headers.py` | brak HSTS przy wyjątku E-06 |
@@ -410,6 +410,8 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
 | V14 Konfiguracja | 16 | 4 | 1 | 2 | 0 | 23 |
 | **Razem** | **144** | **60** | **18** | **29** | **6** | **257** |
+| V14 Konfiguracja | 17 | 4 | 0 | 2 | 0 | 23 |
+| **Razem** | **142** | **60** | **20** | **29** | **6** | **257** |
 
 Spełnione 144 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 65 % (po US-087 i US-088; wcześniej 140, 63 %).
 
@@ -430,7 +432,7 @@ Spełnione 144 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 65 
 | 8.2.1 | ~~Brak `Cache-Control: no-store` w odpowiedziach API~~ | zrobione: nagłówek w `SecurityHeadersMiddleware` (US-087) | zamknięte |
 | 12.1.3 | Brak limitu wgrań na użytkownika | dzienny limit liczby i rozmiaru plików na konto | R-07 |
 | 12.4.2 | Brak skanowania antywirusowego | ClamAV w osobnym kontenerze | R-03, US-004 |
-| 14.4.2 | Odpowiedzi API bez `Content-Disposition` | nagłówek w `SecurityHeadersMiddleware` (niski priorytet) | nowe |
+| 14.4.2 | ~~Odpowiedzi API bez `Content-Disposition`~~ | zrobione (US-089) | zamknięte |
 
 ### Luki ⚠️ — proponowane działania
 

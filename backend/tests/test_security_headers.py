@@ -83,3 +83,11 @@ def test_api_responses_not_cached(client, admin_headers):
     assert client.get("/api/public/branding").headers["cache-control"] == "no-store"
     # SPA i statyki mają własną politykę (index no-cache, assets immutable) — bez zmian
     assert client.get("/").headers.get("cache-control") != "no-store"
+
+
+def test_json_api_served_as_attachment(client, admin_headers):
+    # ASVS 14.4.2 (US-089): JSON z API otwarty w karcie przeglądarki nie jest renderowany
+    r = client.get("/api/auth/me", headers=admin_headers)
+    assert r.headers["content-disposition"] == 'attachment; filename="api.json"'
+    assert r.json()["login"] == "admin"                              # klient API czyta normalnie
+    assert "content-disposition" not in client.get("/").headers      # panel bez zmian
