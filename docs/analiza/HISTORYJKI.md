@@ -1010,7 +1010,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Kody wydane wcześniej działają dalej, aż użytkownik wygeneruje nowe (bez zmiany danych w bazie).
 - **[SEC]:** dwie luki ❌ z weryfikacji ASVS L2 (US-025) zamknięte; bez migracji. Zalecenie dla adminów:
   ponownie włączyć 2FA (nowe kody), żeby stare, słabsze kody przestały istnieć.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #102.
 
 ### US-089 · [SEC] JSON z API nie otwiera się jako strona (ASVS 14.4.2)
 - **Rozmiar:** XS
