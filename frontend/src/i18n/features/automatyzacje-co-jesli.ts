@@ -3,6 +3,9 @@ import { defineFeature } from '../feature'
 // Symulacja „co jeśli statek się spóźni” (druga lista PO, pkt 10).
 export default defineFeature({
   pl: {
+    whatIfCost: 'Szacowany koszt kar: ok. {eur} EUR ({n} kontenero-dni ponad limit × {rate} EUR/dzień).',
+    whatIfRelief: 'Mniej przeciążenia: ok. {eur} EUR mniej kar ({n} kontenero-dni ponad limit mniej).',
+    whatIfNoCost: 'Bez dodatkowych kar za przetrzymanie.',
     whatIfTitle: 'Co jeśli statek się spóźni?',
     whatIfIntro: 'Wybierz statek i liczbę dni opóźnienia. Przesuniemy awizacje jego kontenerów i pokażemy, w które dni magazyn przekroczy dzienny limit rozładunków.',
     whatIfNoVessels: 'Brak statków z zaplanowanymi awizacjami.',
@@ -14,6 +17,9 @@ export default defineFeature({
     whatIfNoWrite: 'Tylko symulacja — plan awizacji zostaje bez zmian.',
   },
   en: {
+    whatIfCost: 'Estimated demurrage cost: about {eur} EUR ({n} container-days over the limit × {rate} EUR/day).',
+    whatIfRelief: 'Less congestion: about {eur} EUR less demurrage ({n} fewer container-days over the limit).',
+    whatIfNoCost: 'No extra demurrage.',
     whatIfTitle: 'What if a vessel is late?',
     whatIfIntro: 'Pick a vessel and the delay in days. We shift the delivery dates of its containers and show the days on which a warehouse goes over its daily unloading limit.',
     whatIfNoVessels: 'No vessels with planned deliveries.',
@@ -25,6 +31,9 @@ export default defineFeature({
     whatIfNoWrite: 'Simulation only — the delivery plan stays unchanged.',
   },
   pt: {
+    whatIfCost: 'Custo estimado de sobre-estadia: cerca de {eur} EUR ({n} contentor-dias acima do limite × {rate} EUR/dia).',
+    whatIfRelief: 'Menos congestionamento: cerca de {eur} EUR a menos ({n} contentor-dias acima do limite a menos).',
+    whatIfNoCost: 'Sem sobre-estadia adicional.',
     whatIfTitle: 'E se o navio atrasar?',
     whatIfIntro: 'Escolha um navio e o atraso em dias. Deslocamos as datas de entrega dos seus contentores e mostramos os dias em que um armazém ultrapassa o limite diário de descargas.',
     whatIfNoVessels: 'Sem navios com entregas planeadas.',

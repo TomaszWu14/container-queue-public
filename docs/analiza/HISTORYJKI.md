@@ -704,6 +704,16 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   2. „Przywróć stan sprzed tej zmiany” (admin, z potwierdzeniem) dotyczy jednej reguły; reszta listy bez zmian.
   3. Przywrócenie też trafia do historii („przywrócono stan sprzed zmiany #…”).
 - **[SEC]:** historia z dziennika zmian (bez nowej tabeli); przywraca tylko admin; logistyka tylko czyta.
+- **Stan:** wdrożone w PR #73.
+
+### US-067 · [DEV] „Co jeśli” z kosztem kar (trzecia lista PO, pkt 5)
+- **Rozmiar:** S
+- **Jako** planista **chcę** przy symulacji spóźnienia statku widzieć szacowany koszt kar za przetrzymanie,
+  **aby** od razu wiedzieć, czy warto przesuwać awizacje.
+- **Kryteria akceptacji** (testy `test_what_if.py`, `WhatIfPanel.dom.test.tsx`)
+  1. Wynik pokazuje „kontenero-dni ponad limit” (po − przed) × stawka za dzień = szacowany koszt w EUR.
+  2. Ujemny wynik → „mniej kar” (przesunięcie rozładowuje przeciążone dni); zero → „bez dodatkowych kar”.
+  3. Stawka ta sama co w sygnałach (150 EUR/dzień) — założenie Z-035.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

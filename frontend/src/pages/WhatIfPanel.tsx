@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, errorMessage } from '../api'
-import { formatDate } from '../dates'
+import { formatDate, formatNum } from '../dates'
 import { useT } from '../i18n'
 
 export interface WhatIfResult {
@@ -14,6 +14,9 @@ export interface WhatIfResult {
           over_before: boolean; over_after: boolean }[]
   new_overloads: number
   resolved_overloads: number
+  extra_container_days?: number
+  rate_eur?: number
+  cost_eur?: number
 }
 
 const URL = '/api/automations/what-if'
@@ -74,6 +77,13 @@ export default function WhatIfPanel() {
         <div aria-live="polite" style={{ marginTop: 10 }}>
           <p>{fill('whatIfSummary', { vessel: result.vessel, d: result.delay, n: result.containers.length,
                                       add: result.new_overloads, fix: result.resolved_overloads })}</p>
+          {result.cost_eur !== undefined && result.extra_container_days !== undefined && (
+            <p className={result.cost_eur > 0 ? 'whatif-cost' : 'muted'}>
+              {fill(result.cost_eur > 0 ? 'whatIfCost' : result.cost_eur < 0 ? 'whatIfRelief' : 'whatIfNoCost', {
+                eur: formatNum(Math.abs(result.cost_eur), 0), n: Math.abs(result.extra_container_days),
+                rate: formatNum(result.rate_eur ?? 0, 0) })}
+            </p>
+          )}
           {result.days.length === 0
             ? <p className="muted">{t('whatIfNoChange')}</p>
             : (
