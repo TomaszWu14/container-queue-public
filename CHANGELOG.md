@@ -157,6 +157,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
   (dwa kanały: powiadomienie i szkic .eml, kryteria AK-01…AK-20 z testami, mini-STRIDE, luki L-1…L-8, pytania do PO).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
+
+### Dodane
+Zabezpieczenia w bazie dla awizacji (US-021, szkic — wymaga zgody PO na migrację): kontener raz w awizacji, decyzja spedycji tylko z listy; skrypt sprawdzający dane przed migracją (tylko odczyt).
+
 ### Fixed
 - **Awarie integracji** (US-026): SharePoint, paletyzacja, AIS, pogoda i kursy NBP przy nieoczekiwanej odpowiedzi
   dają komunikat albo „niedostępne” zamiast błędu serwera; stare kursy NBP najwyżej 5 dni.

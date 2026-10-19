@@ -818,6 +818,8 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).
 - **US-021** [DEV] Spłata długu modelu danych: UNIQUE w `AvizoItem`/`DeliveryConfirmation`, CHECK dla statusów
   tekstowych, decyzja o dwóch statusach odprawy (`04-model-danych.md` §„Znane niespójności”).
+  Część awizacyjna gotowa w PR-szkicu (migracja `uniq001`, Z-040) — czeka na zgodę PO na migrację produkcji;
+  `DeliveryConfirmation` celowo bez UNIQUE (ponowna odpowiedź po odrzuceniu).
 - **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
 - **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna).
 

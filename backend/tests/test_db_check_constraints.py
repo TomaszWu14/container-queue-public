@@ -25,12 +25,12 @@ from app.models import Company, Container, ContainerStatus, Supplier
 
 from .test_api import VALID_NO, _company_id
 
-_MIG = (pathlib.Path(__file__).resolve().parents[1] / "migrations" / "versions"
-        / "chk001_ograniczenia_check_i_klucze.py")
+_VERSIONS = pathlib.Path(__file__).resolve().parents[1] / "migrations" / "versions"
+_MIG = _VERSIONS / "chk001_ograniczenia_check_i_klucze.py"
 
 
-def _load():
-    spec = importlib.util.spec_from_file_location("mig_chk001", _MIG)
+def _load(path=_MIG):
+    spec = importlib.util.spec_from_file_location(f"mig_{path.stem}", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
@@ -137,7 +137,8 @@ def test_migration_definitions_match_models():
     model_checks = {c.name: (t.name, str(c.sqltext)) for t in Base.metadata.tables.values()
                     for c in t.constraints if isinstance(c, CheckConstraint) and c.name
                     and c.name.startswith("ck_")}
-    assert {n: (t, sql) for n, (t, sql, _fix) in mig.CHECKS.items()} == model_checks
+    later = _load(_VERSIONS / "uniq001_avizo_unique_check.py").CHECKS   # US-021: CHECK dodany później
+    assert {**{n: (t, sql) for n, (t, sql, _fix) in mig.CHECKS.items()}, **later} == model_checks
     for name, (table, cols, where) in mig.UNIQUES.items():
         ix = next(i for i in Base.metadata.tables[table].indexes if i.name == name)
         assert ix.unique and [c.name for c in ix.columns] == cols

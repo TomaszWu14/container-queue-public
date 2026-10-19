@@ -49,6 +49,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-037 | Test reguły na 30 dniach (US-068): etap kontenera z historii statusów, a daty (ETA, awizacja, plan) i kierowca z dzisiejszych danych; „dużo alertów” = średnio ≥ 10 dziennie. | — | do potwierdzenia | pełna historia pól (wymaga zapisu zmian dat); inny próg | `backend/app/automation_rules_backtest.py` |
 | Z-038 | Punktualność armatorów (US-071): okno 365 dni, minimum 3 przypłynięcia na parę armator–port; „spóźniony” = ponad 1 dzień; realne ETA = ETA + mediana (podpowiedź, bez zmiany planu). | — | do potwierdzenia | inne okno / próg; automatyczna korekta planu | `backend/app/eta_reliability.py` |
 | Z-039 | Raport miesięczny (US-074): dostawy i zaoszczędzony czas (30 dni), dokumenty i kary (30 dni / dziś), najdłuższe etapy (30 dni), odczyt faktur (4 tyg.), automaty (7 dni); PDF przez „Drukuj” w przeglądarce. | — | do potwierdzenia | inne pozycje / miesiąc kalendarzowy; wysyłka e-mailem | `backend/app/routers/report_monthly.py` |
+| Z-040 | Zabezpieczenia w bazie (US-021, PR w trybie szkicu): kontener najwyżej raz w awizacji (UNIQUE) i decyzja spedycji tylko z listy (CHECK); odpowiedzi spedycji NIE są unikalne, bo po odrzuceniu spedycja odpowiada ponownie. Migracja nie usuwa danych — przy duplikatach zatrzymuje się. | — | do potwierdzenia (zgoda PO na migrację produkcji) | czyszczenie duplikatów w migracji | `backend/migrations/versions/uniq001_avizo_unique_check.py`, `backend/scripts/check_avizo_duplicates.py` |
 
 ## Jak potwierdzić
 
