@@ -931,7 +931,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      ten sam test w CI pilnuje, że przewodnik przechodzi wszystkie kroki na komputerze i telefonie, PL i EN.
   3. Przy okazji poprawki przewodnika (US-081): krok „Kolejka” podświetla właściwą tabelę, podświetlenie wraca po
      przerysowaniu ekranu, na telefonie karta jest u góry (nie znika pod paskiem przeglądarki).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #94.
 
 ### US-082 · [DEV] Zero znanych błędów typów w backendzie (czwarta lista PO, pkt 15)
 - **Rozmiar:** M
