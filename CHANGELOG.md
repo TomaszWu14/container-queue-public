@@ -8,6 +8,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+Brama bez zasięgu: lista dnia z pamięci urządzenia i kolejka „Przyjechał” wysyłana po powrocie sieci (US-085).
 - **Raport miesięczny** (US-074): na ekranie Automatyzacje strona do druku / PDF z liczbami za ostatnie 30 dni
   (dostawy, dokumenty, kary, przebieg procesu, faktury, automaty).
 - **Propozycja przesunięć** (US-073): „co jeśli statek się spóźni” podpowiada najbliższe dni robocze z wolnym

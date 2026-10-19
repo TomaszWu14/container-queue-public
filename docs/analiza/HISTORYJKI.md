@@ -955,6 +955,21 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Budżet zmienia tylko admin (z audytem), puste pole = brak budżetu. Nic nie blokuje wprowadzania faktur.
 - **[SEC]:** podgląd dla ról z dostępem do faktur (admin, logistyka, zakupy) w zakresie spółek; zapis tylko admin;
   walidacja kwoty 0–100 mln. Co liczymy jako koszt i próg 90% — założenie Z-044. Bez migracji (ustawienia).
+- **Stan:** wdrożone w PR #97.
+
+### US-085 · [BA][DEV] Brama bez zasięgu (czwarta lista PO, pkt 3)
+- **Rozmiar:** S
+- **Jako** pracownik bramy **chcę** widzieć listę dnia i zaznaczać „Przyjechał”, gdy na placu zanika sieć,
+  **aby** kierowca nie czekał, aż wróci zasięg.
+- **Kryteria akceptacji** (testy `gateOffline.test.ts`)
+  1. Ostatnia pobrana lista bramy jest pamiętana na urządzeniu; bez sieci ekran pokazuje ją z paskiem
+     „Brak sieci — lista z godz. …” zamiast błędu.
+  2. „Przyjechał” bez sieci trafia do kolejki (plakietka „czeka na sieć”) i wysyła się sam po powrocie sieci;
+     odrzucone przez serwer zgłoszenia są pokazane jako błąd.
+  3. Opóźnienie i zmiana rampy bez sieci są wyłączone (wymagają odpowiedzi serwera).
+- **[SEC]:** na urządzeniu tylko pola potrzebne przy bramie, bez nazwiska kierowcy; zapis osobno na użytkownika,
+  ważny 12 h; kolejka wysyła się tylko jako zalogowany użytkownik (zwykłe uprawnienia API). Działa, gdy
+  aplikacja jest otwarta — bez service workera.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could
