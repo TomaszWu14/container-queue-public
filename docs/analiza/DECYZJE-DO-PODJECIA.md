@@ -47,3 +47,4 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-008 | 2FA administratorów nieobowiązkowe | ryzyko przejęcia konta admina | [RYZYKA](../bezpieczenstwo/RYZYKA.md) |
 | Z-009 | Administrator danych osobowych i kontakt RODO nieznani | wymagane przez RODO | [RODO](../bezpieczenstwo/RODO.md) |
 | Z-010 | Demo publiczne, nigdy z danymi rzeczywistymi | podstawa bezpieczeństwa portfolio | [ZALOZENIA](ZALOZENIA.md) |
+| Z-042 | Karta spedytora: odpowiedź „na czas” = do 24 h zegarowych | potwierdzić próg | 4/8 h roboczych | [ZALOZENIA](ZALOZENIA.md) |

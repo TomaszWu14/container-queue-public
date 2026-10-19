@@ -867,6 +867,21 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   historyjka); te same ciasteczka i CSP co w przeglądarce.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-079 · [BA][DEV] Karta spedytora (czwarta lista PO, pkt 5)
+- **Rozmiar:** M
+- **Jako** kierownik logistyki **chcę** widzieć, jak szybko i jak dobrze spedycje odpowiadają na awizacje,
+  **aby** rozmawiać z nimi na liczbach, a nie na wrażeniach.
+- **Kryteria akceptacji** (testy `test_forwarder_scorecard.py`, `test_seed_demo_process.py`,
+  `ForwarderScorecardPanel.dom.test.tsx`)
+  1. Ekran Automatyzacje → „Karta spedytora”: dla każdej spedycji z ostatnich 90 dni — odpowiedzi / awizacje,
+     odsetek odpowiedzi w 24 h, mediana czasu odpowiedzi, odsetek próśb o inny termin i problemów, awizacje
+     odesłane do poprawy.
+  2. Ranking: najpierw odsetek odpowiedzi na czas, potem mediana.
+  3. Tylko awizacje spółek w zakresie użytkownika; dane demo — trzy spedycje o różnym tempie.
+- **[SEC]:** admin i logistyka (macierz uprawnień), `scope_company` po spółce awizacji; partnerzy nie widzą
+  porównania z konkurencją. Próg 24 h to założenie Z-042.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

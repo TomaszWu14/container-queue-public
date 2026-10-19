@@ -24,6 +24,7 @@ from app.models import (AuditLog, Company, Container, CustomsAgency, Forwarder, 
 from app.models.enums import ContainerStatus, Role, today_pl, utcnow
 from app.security import hash_password, validate_password_policy
 from scripts import seed_demo_automation as automation
+from scripts import seed_demo_forwarders as forwarders
 from scripts import seed_demo_process as process
 from scripts import seed_demo_story as story
 
@@ -142,6 +143,7 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     automation.invoices(db, containers, author.id, now)
     automation.rework(db, containers, author.id)
     automation.arrivals(db, containers, author.id)
+    forwarders.history(db, containers, acme.id, author.id, now)   # US-079: karta spedytora
     db.commit()
     count = db.query(Container).count()
     db.close()
