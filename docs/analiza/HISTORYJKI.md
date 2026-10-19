@@ -984,7 +984,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   znane usługi push (Google, Mozilla, Apple, Microsoft) — ochrona przed SSRF. W treści tylko tytuł i link, bez opisu.
   Każdy zarządza wyłącznie swoimi urządzeniami (najwyżej 5), włączenie zapisane w audycie. Nowa zależność: `http-ece`
   (mała, oparta na `cryptography`). Bez migracji (ustawienia).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #98.
 
 ## Could
 
