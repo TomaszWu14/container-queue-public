@@ -98,6 +98,11 @@ test('ekran Automatyzacje w demo: katalog, oszczędność, panele z danymi i „
   await sim.getByRole('button', { name: 'Uruchom symulację' }).click()
   await expect(sim.locator('.sim-step')).toHaveCount(5)
   await expect(sim.getByText(/odczytał z treści numer/)).toBeVisible()
+  // „co jeśli statek się spóźni” (US-062/067): wynik z kosztem kar, bez zapisu
+  const whatIf = page.getByRole('region', { name: 'Co jeśli statek się spóźni?' })
+  await whatIf.scrollIntoViewIfNeeded()
+  await whatIf.getByRole('button', { name: 'Policz' }).click()
+  await expect(whatIf.getByText(/spóźniony o 5 dni/)).toBeVisible()
   if (process.env.PW_SHOT) {
     // zrzuty do README: kroki symulacji pojawiają się z animacją — czekamy na ostatni
     await expect(sim.locator('.sim-step').last()).toHaveCSS('opacity', '1')

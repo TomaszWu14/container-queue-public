@@ -12,6 +12,13 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
 🎬 [Ścieżka rekrutera — 20 s: historia jednego kontenera, pulpit, „Jak to zbudowano”](docs/video/sciezka-rekrutera.mp4) — nagranie testu przeglądarkowego (`sh scripts/record_demo_video.sh`); świeże wideo z każdego PR w artefaktach workflow „E2E — ścieżka rekrutera”.
+🤖 [Automatyzacje — 15 s: katalog automatów, „Symuluj dzień”, przebieg procesu, „co jeśli statek się spóźni”](docs/video/automatyzacje.mp4) (`sh scripts/record_demo_video.sh automatyzacje`)
+
+<details><summary>Podgląd ekranu Automatyzacje (GIF, 15 s)</summary>
+
+![Ekran Automatyzacje w demo: katalog, symulacja dnia, przebieg procesu i symulacja spóźnienia statku](docs/screenshots/automatyzacje.gif)
+
+</details>
 
 🌐 **Demo online bez logowania: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** —
 link od razu wpuszcza na konto demo. Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do

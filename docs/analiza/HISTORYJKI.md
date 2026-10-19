@@ -740,6 +740,16 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** odczyt, `scope_containers`; wpis w `tests/permissions.yaml`.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-069 · [DEV] Nagranie ekranu Automatyzacje w README (trzecia lista PO, pkt 9)
+- **Rozmiar:** S
+- **Jako** rekruter **chcę** w README zobaczyć w kilkanaście sekund, co robią automaty, **aby** nie musieć logować się do demo.
+- **Kryteria akceptacji**
+  1. `sh scripts/record_demo_video.sh automatyzacje` nagrywa test E2E ekranu Automatyzacje (katalog, „Symuluj dzień”,
+     przebieg procesu, „co jeśli statek się spóźni”) → `docs/video/automatyzacje.mp4` i GIF w README.
+  2. Ten sam test biegnie w CI przy każdym PR (wideo w artefaktach) — nagranie łatwo odświeżyć po zmianach.
+  3. Test E2E sprawdza też „co jeśli” (przycisk „Policz” i wynik).
+- **Stan:** zrealizowane, czeka na merge. Nagranie ma ok. 15 s (tyle trwa test), nie 60 s.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

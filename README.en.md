@@ -8,7 +8,8 @@ freight forwarders and the customs agency — replacing an Excel sheet sent arou
 ![An invalid container number stopped by ISO 6346 validation, the fix and the change history entry](docs/screenshots/demo.gif)
 
 📹 [Walkthrough — 2 min, captions, no sound](docs/video/prezentacja.mp4) ·
-🎬 [Recruiter path — 20 s](docs/video/sciezka-rekrutera.mp4)
+🎬 [Recruiter path — 20 s](docs/video/sciezka-rekrutera.mp4) ·
+🤖 [Automations — 15 s](docs/video/automatyzacje.mp4)
 
 🌐 **Live demo, no sign-up: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** — read-only
 account with 150 fictional containers. The app opens in English for browsers outside Poland and Portugal (language switch in the sidebar or on the login screen).
