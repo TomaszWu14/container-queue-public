@@ -50,3 +50,4 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-042 | Karta spedytora: odpowiedź „na czas” = do 24 h zegarowych | potwierdzić próg | 4/8 h roboczych | [ZALOZENIA](ZALOZENIA.md) |
 | Z-043 | „ETA + N”: jedno N z ustawień admina, domyślnie 3 (wcześniej 4 przy zakładaniu) | potwierdzić 3 albo ustawić 4 w panelu | 4 dni | [ZALOZENIA](ZALOZENIA.md) |
 | Z-044 | Budżet kosztów: co jest kosztem (faktury B/L), próg ostrzeżenia 90%, waluta EUR | potwierdzić zakres kosztów i próg | doliczać kary, budżet roczny | [ZALOZENIA](ZALOZENIA.md) |
+| Z-045 | Push tylko dla pilnych alertów (lista w ZALOZENIA), treść = sam tytuł | potwierdzić listę alertów | push wybierany w matrycy kanałów | [ZALOZENIA](ZALOZENIA.md) |

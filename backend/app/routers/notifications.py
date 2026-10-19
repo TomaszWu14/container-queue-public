@@ -1,6 +1,7 @@
 """Powiadomienia in-app: lista, licznik nieprzeczytanych, oznaczanie jako przeczytane;
 feed Aktualności na Pulpicie (kategorie, ważność, wątki — spec 2026-10-01)."""
 from typing import Literal
+from urllib.parse import urlsplit
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
@@ -13,7 +14,7 @@ from ..deps import AdminOnly as admin_only
 from ..deps import ViewerOrSales as viewer_or_sales
 from ..deps import get_scoped, scope_containers
 from ..models import Container, Notification, NotificationRule, Role, User
-from .. import alert_mutes
+from .. import alert_mutes, web_push
 from .. import notification_feed as feed
 from ..notifications import NOTIFY_CHANNELS, NOTIFY_KINDS
 from ..schemas import NotificationOut
@@ -231,3 +232,51 @@ def remove_mute(container_id: int, db: Session = Depends(get_db), user: User = v
                old_value="wyciszone", new_value="", user=user, note="cofnięcie wyciszenia alertów")
     db.commit()
     return {"ok": True}
+
+
+class PushIn(BaseModel):
+    endpoint: str
+    p256dh: str = ""
+    auth: str = ""
+
+
+@router.get("/push")
+def push_status(db: Session = Depends(get_db), user: User = viewer_or_sales):
+    """Czy push działa na serwerze, klucz dla przeglądarki i liczba moich urządzeń (US-086)."""
+    return {"available": web_push.public_key() is not None, "public_key": web_push.public_key(),
+            "endpoints": [s["endpoint"] for s in web_push.load(db, user.id)],
+            "kinds": sorted(web_push.URGENT_KINDS)}
+
+
+@router.post("/push")
+def push_subscribe(body: PushIn, db: Session = Depends(get_db), user: User = viewer_or_sales):
+    """Włączenie push na tym urządzeniu (subskrypcja z przeglądarki)."""
+    if web_push.public_key() is None:
+        raise HTTPException(409, "Powiadomienia push nie są skonfigurowane na serwerze.")
+    try:
+        web_push.subscribe(db, user.id, body.endpoint, body.p256dh, body.auth)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    record(db, entity_type="users", entity_id=user.id, field="push_device", old_value="",
+           new_value=urlsplit(body.endpoint).hostname or "", user=user, note="włączenie powiadomień push")
+    db.commit()
+    return {"ok": True}
+
+
+@router.post("/push/remove")
+def push_unsubscribe(body: PushIn, db: Session = Depends(get_db), user: User = viewer_or_sales):
+    """Wyłączenie push na tym urządzeniu."""
+    web_push.unsubscribe(db, user.id, body.endpoint)
+    db.commit()
+    return {"ok": True}
+
+
+@router.post("/push/test")
+def push_test(db: Session = Depends(get_db), user: User = viewer_or_sales):
+    """Próbne powiadomienie na moje urządzenia — sprawdzenie, że telefon je pokazuje."""
+    subs = web_push.load(db, user.id)
+    if web_push.public_key() is None or not subs:
+        raise HTTPException(409, "Najpierw włącz powiadomienia push na tym urządzeniu.")
+    sent = sum(1 for s in subs if 200 <= web_push.send(s, {"title": "Kolejka: test powiadomienia",
+                                                          "url": "/", "tag": "push-test"}) < 300)
+    return {"devices": len(subs), "sent": sent}

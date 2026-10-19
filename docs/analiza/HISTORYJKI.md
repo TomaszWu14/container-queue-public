@@ -970,6 +970,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** na urządzeniu tylko pola potrzebne przy bramie, bez nazwiska kierowcy; zapis osobno na użytkownika,
   ważny 12 h; kolejka wysyła się tylko jako zalogowany użytkownik (zwykłe uprawnienia API). Działa, gdy
   aplikacja jest otwarta — bez service workera.
+### US-086 · [BA][DEV][SEC] Powiadomienia push na telefon i w przeglądarce (czwarta lista PO, pkt 2)
+- **Jako** logistyk w terenie **chcę** dostać na telefon najpilniejsze alerty, także gdy aplikacja jest zamknięta,
+  **aby** zareagować na demurrage czy kierowcę przy bramie bez ciągłego sprawdzania dzwonka.
+- **Kryteria akceptacji** (testy `test_web_push.py`, `PushSection.dom.test.tsx`)
+  1. Profil → „Powiadomienia push”: włącz / wyłącz na tym urządzeniu i „Wyślij próbne”. Bez kluczy na serwerze
+     sekcja mówi, że push nie jest włączony; przeglądarka bez obsługi push — komunikat zamiast przycisku.
+  2. Pilne rodzaje alertów (Z-045) wychodzą jako push do osób, które dostają je w dzwonku, dopiero po zapisie
+     zdarzenia w bazie; kliknięcie otwiera kartę kontenera.
+  3. Urządzenie wyrejestrowane w przeglądarce (odpowiedź 404/410 usługi push) znika z listy samo.
+- **[SEC]:** treść szyfrowana kluczem przeglądarki (Web Push, aes128gcm), serwer podpisany kluczem VAPID ze zmiennej
+  `VAPID_PRIVATE_KEY` (sekret, tylko w Coolify; bez niego funkcja wyłączona). Adres subskrypcji tylko https i tylko
+  znane usługi push (Google, Mozilla, Apple, Microsoft) — ochrona przed SSRF. W treści tylko tytuł i link, bez opisu.
+  Każdy zarządza wyłącznie swoimi urządzeniami (najwyżej 5), włączenie zapisane w audycie. Nowa zależność: `http-ece`
+  (mała, oparta na `cryptography`). Bez migracji (ustawienia).
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

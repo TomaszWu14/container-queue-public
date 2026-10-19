@@ -212,6 +212,8 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | Zmienna | Typ | Kategoria domyślnej | W compose | Przeznaczenie (z komentarza w kodzie) |
 |---|---|---|---|---|
 | `TEAMS_WEBHOOK_URL` | str | puste = funkcja wyłączona / auto | tak |  |
+| `VAPID_PRIVATE_KEY` | str | SEKRET (ustaw w Coolify, nigdy w repo); puste = push wyłączony | tak | powiadomienia push na telefon / w przeglądarce (US-086). Wygeneruj raz: `python scripts/generate_vapid_key.py` (z `backend/`). Zmiana klucza unieważnia subskrypcje — użytkownicy ponownie włączają push w ustawieniach |
+| `VAPID_SUBJECT` | str | ma bezpieczny domyślny | tak | kontakt dla usług push (`mailto:…` albo `https://…`), podawany w podpisie VAPID; ustaw adres administratora |
 | `DIGEST_HOUR` | int | ma bezpieczny domyślny | **nie** | godzina porannego digestu logistyki (czas polski, Europe/Warsaw) |
 
 ## Automatyzacje (n8n)
