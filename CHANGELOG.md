@@ -159,6 +159,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 
 
 ### Dodane
+Aplikacja „na ekran telefonu” (PWA): manifest, ikony, skróty do Kolejki, Bramy i Kalendarza (US-078).
 Dokumentacja API w repozytorium: wszystkie trasy z kolumną „kto ma dostęp” i openapi.json (US-077).
 Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do wszystkich spółek; blokada jednym kliknięciem i kwartalne przypomnienie (US-076).
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
