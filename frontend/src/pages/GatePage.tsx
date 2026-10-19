@@ -1,5 +1,5 @@
 import { CircleCheckIcon, ClockIcon } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api, errorMessage } from '../api'
 import { LoadError, Skeleton, useToast } from '../feedback'
@@ -79,13 +79,16 @@ export default function GatePage() {
     if (sent.length || failed.length) load()
   }, [uid, load, showToast, t])
 
+  // ref: efekt zależy tylko od użytkownika — nowa funkcja co render (np. toast) nie może go zapętlić
+  const flushRef = useRef(flushQueue)
+  flushRef.current = flushQueue
   useEffect(() => {
     setQueued(offline.pending(uid).map(p => p.id))
-    void flushQueue()
-    const onOnline = () => { void flushQueue() }
+    void flushRef.current()
+    const onOnline = () => { void flushRef.current() }
     window.addEventListener('online', onOnline)
     return () => window.removeEventListener('online', onOnline)
-  }, [flushQueue, uid])
+  }, [uid])
 
   const queueCheckin = (id: number) => {
     const at = new Date().toISOString().slice(0, 19)
