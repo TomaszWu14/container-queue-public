@@ -955,7 +955,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Budżet zmienia tylko admin (z audytem), puste pole = brak budżetu. Nic nie blokuje wprowadzania faktur.
 - **[SEC]:** podgląd dla ról z dostępem do faktur (admin, logistyka, zakupy) w zakresie spółek; zapis tylko admin;
   walidacja kwoty 0–100 mln. Co liczymy jako koszt i próg 90% — założenie Z-044. Bez migracji (ustawienia).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #97.
 
 ### US-085 · [BA][DEV] Brama bez zasięgu (czwarta lista PO, pkt 3)
 - **Rozmiar:** S
