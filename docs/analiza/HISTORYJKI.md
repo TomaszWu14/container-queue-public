@@ -1050,6 +1050,20 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. Progi w zmiennych `SESSION_IDLE_MINUTES`, `SESSION_MAX_HOURS`; `REFRESH_TOKEN_DAYS` usunięte.
 - **[SEC]:** zamyka lukę ❌ 3.3.2 z weryfikacji ASVS L2. Bez migracji. Starsze tokeny bez czasu zalogowania liczą
   od chwili wystawienia, więc po wdrożeniu nikt nie zostaje wylogowany natychmiast.
+- **Stan:** wdrożone w PR #106.
+
+### US-092 · [SEC] Sekret 2FA zaszyfrowany w bazie (ASVS 2.8.2)
+- **Rozmiar:** S
+- **Jako** właściciel danych **chcę**, żeby wyciek kopii bazy nie zdradzał kodów 2FA, **aby** druga warstwa logowania
+  nadal chroniła konta po takim wycieku (decyzja PO 2026-10-19).
+- **Kryteria akceptacji** (test `test_totp_encrypted.py`)
+  1. Włączenie 2FA zapisuje w bazie szyfrogram (`enc:…`, Fernet, `DATA_ENCRYPTION_KEY`), nie sam sekret.
+  2. Migracja `totpenc001` poszerza kolumnę do 255 znaków i szyfruje istniejące sekrety; cofnięcie je odszyfrowuje.
+  3. Jawny wpis (np. z kopii sprzed migracji) dalej działa i jest szyfrowany przy najbliższym logowaniu z 2FA.
+  4. Sekretu, którego nie da się odszyfrować (zmieniony klucz), nie traktujemy jak błąd serwera — kod jest odrzucany,
+     a w logu jest wpis dla admina; awaryjnie 2FA wyłącza inny administrator.
+- **[SEC]:** zamyka lukę ❌ 2.8.2. **Migracja na produkcji** — wymaga zgody PO (udzielona 2026-10-19).
+  Zmiana `DATA_ENCRYPTION_KEY` bez zachowania starego klucza = wszyscy z 2FA muszą je włączyć od nowa.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could
