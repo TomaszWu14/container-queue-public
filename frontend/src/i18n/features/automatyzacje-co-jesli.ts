@@ -3,6 +3,8 @@ import { defineFeature } from '../feature'
 // Symulacja „co jeśli statek się spóźni” (druga lista PO, pkt 10).
 export default defineFeature({
   pl: {
+    whatIfPlanTitle: 'Propozycja przesunięć', whatIfPlanIntro: 'Kontenery ponad limit → najbliższy dzień roboczy z wolnym miejscem w tym samym magazynie (do {d} dni później). Tylko propozycja — plan zmienisz na karcie kontenera.',
+    whatIfPlanUnresolved: 'Dla {n} kontenerów nie ma wolnego miejsca w ciągu {d} dni.',
     whatIfCost: 'Szacowany koszt kar: ok. {eur} EUR ({n} kontenero-dni ponad limit × {rate} EUR/dzień).',
     whatIfRelief: 'Mniej przeciążenia: ok. {eur} EUR mniej kar ({n} kontenero-dni ponad limit mniej).',
     whatIfNoCost: 'Bez dodatkowych kar za przetrzymanie.',
@@ -17,6 +19,8 @@ export default defineFeature({
     whatIfNoWrite: 'Tylko symulacja — plan awizacji zostaje bez zmian.',
   },
   en: {
+    whatIfPlanTitle: 'Proposed moves', whatIfPlanIntro: 'Containers over the limit → nearest working day with free capacity in the same warehouse (up to {d} days later). Proposal only — change the plan on the container card.',
+    whatIfPlanUnresolved: 'No free capacity within {d} days for {n} containers.',
     whatIfCost: 'Estimated demurrage cost: about {eur} EUR ({n} container-days over the limit × {rate} EUR/day).',
     whatIfRelief: 'Less congestion: about {eur} EUR less demurrage ({n} fewer container-days over the limit).',
     whatIfNoCost: 'No extra demurrage.',
@@ -31,6 +35,8 @@ export default defineFeature({
     whatIfNoWrite: 'Simulation only — the delivery plan stays unchanged.',
   },
   pt: {
+    whatIfPlanTitle: 'Proposta de mudanças', whatIfPlanIntro: 'Contentores acima do limite → dia útil mais próximo com capacidade livre no mesmo armazém (até {d} dias depois). Apenas proposta — altere o plano na ficha do contentor.',
+    whatIfPlanUnresolved: 'Sem capacidade livre em {d} dias para {n} contentores.',
     whatIfCost: 'Custo estimado de sobre-estadia: cerca de {eur} EUR ({n} contentor-dias acima do limite × {rate} EUR/dia).',
     whatIfRelief: 'Menos congestionamento: cerca de {eur} EUR a menos ({n} contentor-dias acima do limite a menos).',
     whatIfNoCost: 'Sem sobre-estadia adicional.',

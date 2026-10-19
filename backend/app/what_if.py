@@ -11,19 +11,25 @@ bez danych kontenerów innych spółek.
 
 Koszt (trzecia lista PO, pkt 5, Z-035): kontener ponad dzienny limit czeka co najmniej dzień w porcie, więc
 dodatkowe „kontenero-dni ponad limit” × stawka kary za dzień (ta sama co w sygnałach, 150 EUR) to szacunek
-kosztu opóźnienia; ujemny wynik = przesunięcie rozładowuje zatłoczone dni."""
+kosztu opóźnienia; ujemny wynik = przesunięcie rozładowuje zatłoczone dni.
+
+Propozycja planu (trzecia lista PO, pkt 6): kontenery spóźnionego statku, które wypadają ponad limit, dostają
+propozycję najbliższego dnia roboczego (do `PLAN_WINDOW` dni później) z wolnym miejscem w tym samym magazynie.
+Tylko podpowiedź — zapis planu po akceptacji człowieka to osobna decyzja PO (Z-031)."""
 from __future__ import annotations
 
 import datetime
-from collections import Counter
+from collections import Counter, defaultdict
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from .holidays import is_free_day
 from .models import Container, DailyLimit, Warehouse, today_pl
 from .signals import DEMURRAGE_EUR_PER_DAY
 
 HORIZON_DAYS = 28
+PLAN_WINDOW = 7
 MAX_DELAY = 21
 
 
@@ -49,7 +55,8 @@ def simulate(db: Session, user, vessel: str, delay: int) -> dict:
     shift = datetime.timedelta(days=delay)
     load = Counter({(wid, day): n for wid, day, n in db.execute(_open(
         select(Container.warehouse_id, Container.notify_date, func.count(Container.id))
-        .where(Container.notify_date >= today, Container.notify_date <= horizon + shift))
+        .where(Container.notify_date >= today,
+               Container.notify_date <= horizon + shift + datetime.timedelta(days=PLAN_WINDOW)))
         .group_by(Container.warehouse_id, Container.notify_date)).all()})
     after = Counter(load)
     for _, _, wid, day in moved:
@@ -71,6 +78,7 @@ def simulate(db: Session, user, vessel: str, delay: int) -> dict:
         days.append({"warehouse": names.get(wid, "?"), "day": day.isoformat(), "before": b, "after": a,
                      "limit": limit, "over_before": b > limit, "over_after": a > limit})
     over = sum(max(0, d["after"] - d["limit"]) - max(0, d["before"] - d["limit"]) for d in days)
+    proposal, unresolved = _propose(after, moved, shift, lambda w, d: overrides.get((w, d), defaults.get(w)), names)
     rate = DEMURRAGE_EUR_PER_DAY
     return {
         "vessel": vessel, "delay": delay,
@@ -81,4 +89,35 @@ def simulate(db: Session, user, vessel: str, delay: int) -> dict:
         "days": days,
         "new_overloads": sum(1 for d in days if d["over_after"] and not d["over_before"]),
         "resolved_overloads": sum(1 for d in days if d["over_before"] and not d["over_after"]),
+        "proposal": proposal, "proposal_unresolved": unresolved, "plan_window": PLAN_WINDOW,
     }
+
+
+def _propose(after: Counter, moved, shift: datetime.timedelta, limit_of, names: dict) -> tuple[list[dict], int]:
+    """Przesunięcia kontenerów spóźnionego statku z dni ponad limit na najbliższy dzień roboczy z miejscem.
+    Ruszamy tylko kontenery z symulacji (w zakresie użytkownika); cudze awizacje zostają jak są."""
+    cap = Counter(after)
+    ours: dict[tuple, list[tuple[int, str]]] = defaultdict(list)
+    for cid, no, wid, day in sorted(moved, key=lambda r: r[0]):
+        ours[(wid, day + shift)].append((cid, no))
+    proposal, unresolved = [], 0
+    for wid, day in sorted(ours, key=lambda k: k[1]):
+        limit = limit_of(wid, day)
+        if limit is None:
+            continue
+        for cid, no in ours[(wid, day)][::-1]:
+            if cap[(wid, day)] <= limit:
+                break
+            for k in range(1, PLAN_WINDOW + 1):
+                target = day + datetime.timedelta(days=k)
+                lim = limit_of(wid, target)
+                if is_free_day(target, "PL") or lim is None or cap[(wid, target)] >= lim:
+                    continue
+                cap[(wid, day)] -= 1
+                cap[(wid, target)] += 1
+                proposal.append({"id": cid, "container_no": no, "warehouse": names.get(wid, "?"),
+                                 "from": day.isoformat(), "to": target.isoformat()})
+                break
+            else:
+                unresolved += 1
+    return proposal, unresolved
