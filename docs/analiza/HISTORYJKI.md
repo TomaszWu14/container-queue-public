@@ -825,7 +825,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** przeglądarka zapisana tylko jako skrót HMAC nagłówka User-Agent (kluczem aplikacji), najwyżej 10
   ostatnich na konto (`known_devices:{id}` w ustawieniach — bez migracji). IP trafia wyłącznie do maila (jest już
   w dzienniku logowań). Treść maila escapowana.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #86.
 
 ### US-076 · [DEV][SEC] Kwartalny przegląd dostępów (czwarta lista PO, pkt 9)
 - **Rozmiar:** S
