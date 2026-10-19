@@ -865,7 +865,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Długie przytrzymanie ikony: skróty do Kolejki, Bramy i Kalendarza.
 - **[SEC]:** sam manifest i ikony — bez service workera i pamięci podręcznej danych (tryb offline to osobna
   historyjka); te same ciasteczka i CSP co w przeglądarce.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #89.
 
 ### US-079 · [BA][DEV] Karta spedytora (czwarta lista PO, pkt 5)
 - **Rozmiar:** M
