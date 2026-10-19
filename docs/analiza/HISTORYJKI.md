@@ -681,7 +681,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   4. T-11 pogoda: kod błędu open-meteo → ścieżka błędu (krótki cache), nie pusta „prognoza” na 30 min.
   5. T-12 NBP: przy awarii ostatnie kursy najwyżej 5 dni po pobraniu (Z-033); starsze → bez przeliczenia.
 - **[SEC]:** zamyka ryzyko R-19.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #71.
 
 ### US-065 · [DEV] „Nie przypominaj” — osobiste wyciszenie alertów kontenera (trzecia lista PO, pkt 3)
 - **Rozmiar:** S
