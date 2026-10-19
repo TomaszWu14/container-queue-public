@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { api, errorMessage } from '../api'
 import { useT } from '../i18n'
+import AutomationRulesHistory from './AutomationRulesHistory'
 
 type Condition = 'eta_passed' | 'notify_soon_status' | 'no_driver' | 'plan_unconfirmed'
 export type RuleChannel = 'bell' | 'email' | 'teams' | 'n8n'
@@ -27,6 +28,7 @@ export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) 
   const [previews, setPreviews] = useState<Record<number, Preview | string>>({})
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [busy, setBusy] = useState(false)
+  const [histKey, setHistKey] = useState(0)
 
   useEffect(() => {
     api.get<RulesResponse>('/api/automations/rules')
@@ -73,6 +75,7 @@ export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) 
     try {
       const r = await api.put<RulesResponse>('/api/automations/rules', { rules })
       setRules(r.rules)
+      setHistKey(k => k + 1)
       setMsg({ ok: true, text: t('ruleSaved') })
     } catch (err) {
       setMsg({ ok: false, text: errorMessage(err) })
@@ -159,6 +162,10 @@ export default function AutomationRulesPanel({ canEdit }: { canEdit: boolean }) 
         </div>
       )}
       {msg && <p className={msg.ok ? 'muted' : 'error'}>{msg.text}</p>}
+      <AutomationRulesHistory canEdit={canEdit} refreshKey={histKey} onRestored={r => {
+        const res = r as RulesResponse
+        if (Array.isArray(res?.rules)) { setRules(res.rules); setPreviews({}); setHistKey(k => k + 1) }
+      }} />
     </section>
   )
 }

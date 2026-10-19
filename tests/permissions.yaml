@@ -215,6 +215,8 @@ routes:
   "GET /api/automations/process": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (czas etapów procesu, US-038)
   "GET /api/automations/rules": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # kreator reguł (US-036): lista reguł, ustawienie globalne
   "PUT /api/automations/rules": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # zapis reguł tylko admin, z audytem
+  "GET /api/automations/rules/history": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # historia zmian reguł (ustawienie globalne)
+  "POST /api/automations/rules/history/{audit_id}/restore": {anon: 401, admin: '2xx', logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # przywrócenie reguły tylko admin, z audytem
   "GET /api/automations/rules/preview": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: scope_containers (podgląd reguły)
   "GET /api/stats/demurrage-risk": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 200, customs: 200, purchasing: 200, sales: 403}  # scoping: scope_containers (ryzyko kary z wyjaśnieniem)
   "GET /api/stats/overview": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 200, customs: 200, purchasing: 200, sales: 403}  # scoping: scope_containers (pulpit analityczny)

@@ -693,6 +693,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Po terminie alerty wracają same; kontener spoza zakresu → 404.
 - **[SEC]:** `get_scoped` przy wyciszeniu, lista tylko w zakresie (`scope_containers`), wpis w audycie; zapis
   w ustawieniach (bez migracji bazy).
+- **Stan:** wdrożone w PR #72.
+
+### US-066 · [DEV][SEC] Historia zmian reguł i „przywróć” (trzecia lista PO, pkt 4)
+- **Rozmiar:** S
+- **Jako** administrator **chcę** widzieć, kto i kiedy zmienił regułę z kreatora, i jednym kliknięciem cofnąć
+  zmianę, **aby** błędna edycja nie wysyłała alertów do niewłaściwych osób.
+- **Kryteria akceptacji** (testy `test_automation_rules_history.py`, `AutomationRulesHistory.dom.test.tsx`)
+  1. Panel reguł → „Historia zmian reguł”: data, osoba, dodano / zmieniono (które pola) / usunięto.
+  2. „Przywróć stan sprzed tej zmiany” (admin, z potwierdzeniem) dotyczy jednej reguły; reszta listy bez zmian.
+  3. Przywrócenie też trafia do historii („przywrócono stan sprzed zmiany #…”).
+- **[SEC]:** historia z dziennika zmian (bez nowej tabeli); przywraca tylko admin; logistyka tylko czyta.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could

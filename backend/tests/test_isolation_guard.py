@@ -25,6 +25,7 @@ VESSEL = "statek — dane publiczne AIS wspólne dla wszystkich spółek"
 EXCEPTIONS = {
     "DELETE /api/admin/blocked-ips/{blocked_id}": "zablokowane IP — bezpieczeństwo instancji, tylko admin",
     "DELETE /api/auth/sessions/{session_id}": OWN,
+    "POST /api/automations/rules/history/{audit_id}/restore": "historia reguł z kreatora — ustawienie globalne, tylko admin",
     "DELETE /api/container-ports/{port_id}": DICT,
     "DELETE /api/customs-agencies/{agency_id}": DICT,
     "DELETE /api/customs/case-statuses/{status_id}": DICT,

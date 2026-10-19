@@ -60,10 +60,16 @@ jobs:
         working-directory: frontend
         run: |
           export CHROME_PATH=$(node -e "console.log(require('@playwright/test').chromium.executablePath())")
-          npx --yes lighthouse@12.6.1 http://localhost:8000/ --quiet \
-            --chrome-flags="--headless=new --no-sandbox" \
-            --only-categories=performance,accessibility,best-practices,seo \
-            --output=json --output=html --output-path=./lighthouse
+          # błąd narzędzia przed pomiarem (np. NO_NAVSTART — Chrome nie nagrał ładowania) → jedna ponowna
+          # próba; progi sprawdza lighthouse-assert.mjs, więc słaby wynik nie przejdzie przez ponowienie
+          for attempt in 1 2; do
+            npx --yes lighthouse@12.6.1 http://localhost:8000/ --quiet \
+              --chrome-flags="--headless=new --no-sandbox" \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --output=json --output=html --output-path=./lighthouse && break
+            [ "$attempt" = 2 ] && exit 1
+            echo "Lighthouse: błąd narzędzia, ponawiam"
+          done
           node scripts/lighthouse-assert.mjs lighthouse.report.json "$GITHUB_STEP_SUMMARY"
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
