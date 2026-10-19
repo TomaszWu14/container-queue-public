@@ -408,12 +408,10 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V11 Logika biznesowa | 5 | 3 | 0 | 0 | 0 | 8 |
 | V12 Pliki i zasoby | 11 | 2 | 2 | 0 | 0 | 15 |
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
-| V14 Konfiguracja | 16 | 4 | 1 | 2 | 0 | 23 |
-| **Razem** | **144** | **60** | **18** | **29** | **6** | **257** |
 | V14 Konfiguracja | 17 | 4 | 0 | 2 | 0 | 23 |
-| **Razem** | **142** | **60** | **20** | **29** | **6** | **257** |
+| **Razem** | **145** | **60** | **17** | **29** | **6** | **257** |
 
-Spełnione 144 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 65 % (po US-087 i US-088; wcześniej 140, 63 %).
+Spełnione 145 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 65 % (po US-087, US-088 i US-089; wcześniej 140, 63 %).
 
 ### Luki ❌ — proponowane działania
 
