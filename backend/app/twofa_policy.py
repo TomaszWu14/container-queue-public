@@ -1,4 +1,4 @@
-"""Obowiązkowe 2FA dla administratorów (audyt SEC-006, REQUIRE_2FA_ADMIN — domyślnie wyłączone).
+"""Obowiązkowe 2FA dla administratorów (audyt SEC-006, REQUIRE_2FA_ADMIN — domyślnie włączone, decyzja PO 2026-10-19).
 
 Admin bez włączonego 2FA dalej czyta dane, ale każda zmiana poza własnym kontem
 (`/api/auth/*`: włączenie 2FA, zmiana hasła, sesje, ustawienia, wylogowanie) kończy się 403,

@@ -318,7 +318,10 @@ klasa danych i mini-STRIDE od [SEC] · priorytet od PO.
 
 ### US-019 · [SEC] 2FA obowiązkowe dla administratorów na produkcji
 - **Rozmiar:** XS (konfiguracja) · **Źródło:** E-01 · **Zależy od:** decyzji PO (Z-008).
-- `REQUIRE_2FA_ADMIN=true` w Coolify po tym, jak każdy admin włączy 2FA; procedura w RUNBOOK.
+- `REQUIRE_2FA_ADMIN` domyślnie `true` (decyzja PO 2026-10-19, Z-008 odrzucone). Admin bez 2FA po zalogowaniu widzi
+  ekran włączania i do tego czasu ma tylko odczyt; zmienna `REQUIRE_2FA_ADMIN=false` w Coolify trzeba usunąć.
+  Test `test_2fa_admin_required.py`.
+- **Stan:** zrealizowane, czeka na merge.
 
 ## Wizytówka automatyzacji procesów (prośba PO 2026-10-17)
 
@@ -1064,7 +1067,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      a w logu jest wpis dla admina; awaryjnie 2FA wyłącza inny administrator.
 - **[SEC]:** zamyka lukę ❌ 2.8.2. **Migracja na produkcji** — wymaga zgody PO (udzielona 2026-10-19).
   Zmiana `DATA_ENCRYPTION_KEY` bez zachowania starego klucza = wszyscy z 2FA muszą je włączyć od nowa.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #107.
 
 ## Could
 

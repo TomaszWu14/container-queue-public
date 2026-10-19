@@ -55,7 +55,7 @@ Limity kontenerów w compose (INFRA-004): `APP_MEM_LIMIT` (domyślnie 1536m), `A
 | `PASSWORD_RESET_MINUTES` | int | ma bezpieczny domyślny | **nie** | ważność linku resetu hasła |
 | `PASSWORD_MIN_LENGTH` | int | ma bezpieczny domyślny | **nie** | W14 #89: polityka haseł — minimalna długość (+ wymóg litery i cyfry w kodzie) |
 | `BCRYPT_ROUNDS` | int | ma bezpieczny domyślny (12) | **nie** | koszt bcrypt nowych hashy haseł; produkcja min. 12 (start odmawia niżej), testy 4 — szybkie CI |
-| `REQUIRE_2FA_ADMIN` | bool | domyślnie `false` | **nie** | SEC-006: przy `true` konto admina bez 2FA po zalogowaniu widzi ekran włączania 2FA; do tego czasu tylko odczyt (zapisy poza `/api/auth/*` → 403). domyślnie wymóg wyłączony (decyzja właściciela 2026-09-29); 2FA mogą włączyć wszystkie role |
+| `REQUIRE_2FA_ADMIN` | bool | domyślnie `true` | **nie** | SEC-006: przy `true` konto admina bez 2FA po zalogowaniu widzi ekran włączania 2FA; do tego czasu tylko odczyt (zapisy poza `/api/auth/*` → 403). domyślnie wymóg włączony (decyzja PO 2026-10-19, wcześniej wyłączony od 2026-09-29); `false` tylko dla dev/e2e; 2FA mogą włączyć wszystkie role |
 | `CLIENT_ERROR_RATE_PER_MINUTE` | int | ma bezpieczny domyślny | **nie** | W14 #50: limit beaconów błędów JS z panelu (na IP, okno minutowe) |
 
 ## Pliki i kopie

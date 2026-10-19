@@ -72,7 +72,7 @@ class Settings(BaseSettings):
     # SEC-006: przy true admin bez 2FA czyta, ale nic nie zmieni (poza własnym kontem), dopóki
     # nie włączy 2FA — panel pokazuje ekran włączania po zalogowaniu (twofa_policy.py).
     # Domyślnie wyłączone (decyzja właściciela 2026-09-29); 2FA dobrowolne w Profilu działa zawsze.
-    require_2fa_admin: bool = False
+    require_2fa_admin: bool = True   # SEC-006/US-019: decyzja PO 2026-10-19 — domyślnie wymagane
     # W14 #50: limit beaconów błędów JS z panelu (na IP, okno minutowe)
     client_error_rate_per_minute: int = Field(default=10, ge=1)
     # W14 #47: dzień tygodnia cotygodniowej weryfikacji backupu (0=pon … 6=niedziela; -1 = wyłączona, demo)

@@ -62,7 +62,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-016 Portugalia: telefon, kraj magazynu | FR-017, P-05, P-06, Z-022 | `test_phones_portugal.py` (13) | #29 | wdrożone |
 | US-017 „Wyślij plan” wysyła mail | FR-015, FR-020, P-09 | `test_plan_mail.py` (4), `BulkActionBar.plan.dom.test.tsx` (3) | #28 | wdrożone |
 | US-018 testy ekranów | TEST-007 | `AuthPages.dom.test.tsx` (7), `ClearQueueModal.dom.test.tsx` (3), `ImportModal.dom.test.tsx` (4) | #30 | wdrożone |
-| US-019 2FA adminów | SR-004, E-01 | — | — | czeka na Z-008 |
+| US-019 2FA adminów | SR-004, E-01 | `test_2fa_admin_required.py` | — | czeka na merge |
 | US-027 demo pokazuje cały proces | FR-005, FR-009…011, FR-019, FR-020, FR-028 | `test_seed_demo_process.py` (5 testów), `test_demo_mode.py` | #18 | wdrożone |
 | US-028 konta demo per rola | FR-022…FR-024, E-05 | `test_seed_demo_process.py::test_role_accounts_see_own_scope_and_cannot_write` | #18 | wdrożone |
 | US-029 ograniczenia widoków demo | E-05, R-12 | `test_demo_limits.py` (17 przypadków), `demoLimits.dom.test.tsx`, `ProfilePage.demo.dom.test.tsx` | #27 | wdrożone |
@@ -132,7 +132,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-089 JSON z API jako załącznik | — | `test_security_headers.py` (1) | #103 | wdrożone |
 | US-090 pokaż hasło i miernik siły | — | `PasswordInput.dom.test.tsx` (3), `AuthPages.dom.test.tsx` | #104 | wdrożone |
 | US-091 wylogowanie po bezczynności / 12 h | — | `test_session_limits.py` (5), `idleLogout.dom.test.tsx` (3) | #106 | wdrożone |
-| US-092 sekret 2FA szyfrowany | — | `test_totp_encrypted.py` (3), CI migracje (upgrade/downgrade na PostgreSQL) | — | czeka na merge |
+| US-092 sekret 2FA szyfrowany | — | `test_totp_encrypted.py` (3), CI migracje (upgrade/downgrade na PostgreSQL) | #107 | wdrożone |
 
 ## Zasady utrzymania
 
