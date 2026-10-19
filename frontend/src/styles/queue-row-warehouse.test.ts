@@ -52,6 +52,12 @@ describe('teksty tabeli kolejki — ciemny motyw', () => {
       }
     })
 
+  it('jasny motyw: termin kary „wkrótce” ≥4.5:1 na tłach wierszy (axe, trzecia lista PO, pkt 11)', () => {
+    for (const bg of ['#ffffff', ...BG.map(b => token(rows, b))]) {
+      expect(contrast(token(rows, '--kq-warn-ink'), bg), `--kq-warn-ink na ${bg}`).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+
   it('jasny motyw: nr kontenera ≥7:1 na tłach wierszy', () => {
     for (const bg of ['#ffffff', ...BG.map(b => token(rows, b))]) {
       expect(contrast(token(rows, '--kq-navy'), bg), `--kq-navy na ${bg}`).toBeGreaterThanOrEqual(7)
