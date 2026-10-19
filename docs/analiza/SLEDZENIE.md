@@ -96,6 +96,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-026 awaria integracji = komunikat | R-19, Z-033 | `test_integration_errors.py` (9) | #71 | wdrożone |
 | US-065 „nie przypominaj” w dzwonku | Z-034 | `test_alert_mutes.py` (1), `notificationsBell.dom.test.tsx` (1) | #72 | wdrożone |
 | US-066 historia zmian reguł i przywróć | US-036 | `test_automation_rules_history.py` (1), `AutomationRulesHistory.dom.test.tsx` (2) | — | czeka na merge |
+| US-065 „nie przypominaj” w dzwonku | Z-034 | `test_alert_mutes.py` (1), `notificationsBell.dom.test.tsx` (1) | — | czeka na merge |
+| US-067 koszt kar w „co jeśli” | US-062, Z-035 | `test_what_if.py` (rozszerzony), `WhatIfPanel.dom.test.tsx` (rozszerzony) | — | czeka na merge |
 
 ## Zasady utrzymania
 

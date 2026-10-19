@@ -58,6 +58,9 @@ def test_delay_moves_only_scoped_and_shows_overload(client):
     assert days[d3.isoformat()]["before"] == 3 and days[d3.isoformat()]["after"] == 1
     assert days[d8.isoformat()]["after"] == 4 and days[d8.isoformat()]["over_after"]
     assert result["resolved_overloads"] == 1 and result["new_overloads"] == 1
+    # dzień +3: 3→1 przy limicie 2 (−1 ponad limit), dzień +8: 2→4 (+2) → netto +1 kontenero-dzień
+    assert result["extra_container_days"] == 1
+    assert result["cost_eur"] == result["rate_eur"] == 150.0
 
 
 def test_endpoint_vessels_and_validation(client):

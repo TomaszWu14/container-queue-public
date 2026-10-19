@@ -9,6 +9,7 @@ from typing import NamedTuple
 
 from .models import Container, ContainerStatus, DocumentStatus
 
+DEMURRAGE_EUR_PER_DAY = 150.0   # stawka kary za dzień (także „co jeśli”, Z-035)
 SIGNAL_WEIGHTS = {
     # waga bazowa typu (im wyższa, tym wyżej na liście przy równej pilności)
     "weights": {
@@ -23,7 +24,7 @@ SIGNAL_WEIGHTS = {
     "docs_pre_eta_days": 5,   # brak dokumentów w oknie N dni przed ETA = mocniejszy sygnał
     "eta_shift_days": 2,      # przesunięcie ETA (vs zdjęcie z chwili awizacji) o ≥N dni
     "po_confirm_days": 5,     # zamówienie niepotwierdzone przez dostawcę po N dniach
-    "demurrage_eur_per_day": 150.0,  # brak pola w configu — stała pokrętła
+    "demurrage_eur_per_day": DEMURRAGE_EUR_PER_DAY,  # brak pola w configu — stała pokrętła
     "cost_scale": 100.0,      # dzielnik kosztu w punktacji (€ -> punkty)
 }
 

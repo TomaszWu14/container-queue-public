@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **„Co jeśli” z kosztem kar** (US-067): symulacja spóźnienia statku podaje szacowany koszt kar za przetrzymanie
+  w EUR (kontenero-dni ponad limit magazynu × stawka).
 - **Historia zmian reguł** (US-066): panel reguł pokazuje, kto i co zmienił; admin przywraca regułę do stanu
   sprzed wybranej zmiany.
 - **„Nie przypominaj”** (US-065): w dzwonku wyciszysz alerty o kontenerze na 1, 3 albo 7 dni — tylko dla siebie.

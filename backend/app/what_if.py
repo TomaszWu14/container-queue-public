@@ -7,7 +7,11 @@ limit dzienny magazynu albo nadpisanie na dzień. Wynik: przesunięte kontenery 
 przekroczenie limitu. Nic nie zapisujemy — plan zostaje bez zmian.
 
 Obciążenie dnia to suma wszystkich spółek (limit magazynu jest wspólny), pokazywana wyłącznie jako liczba —
-bez danych kontenerów innych spółek."""
+bez danych kontenerów innych spółek.
+
+Koszt (trzecia lista PO, pkt 5, Z-035): kontener ponad dzienny limit czeka co najmniej dzień w porcie, więc
+dodatkowe „kontenero-dni ponad limit” × stawka kary za dzień (ta sama co w sygnałach, 150 EUR) to szacunek
+kosztu opóźnienia; ujemny wynik = przesunięcie rozładowuje zatłoczone dni."""
 from __future__ import annotations
 
 import datetime
@@ -17,6 +21,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .models import Container, DailyLimit, Warehouse, today_pl
+from .signals import DEMURRAGE_EUR_PER_DAY
 
 HORIZON_DAYS = 28
 MAX_DELAY = 21
@@ -65,8 +70,11 @@ def simulate(db: Session, user, vessel: str, delay: int) -> dict:
             continue
         days.append({"warehouse": names.get(wid, "?"), "day": day.isoformat(), "before": b, "after": a,
                      "limit": limit, "over_before": b > limit, "over_after": a > limit})
+    over = sum(max(0, d["after"] - d["limit"]) - max(0, d["before"] - d["limit"]) for d in days)
+    rate = DEMURRAGE_EUR_PER_DAY
     return {
         "vessel": vessel, "delay": delay,
+        "extra_container_days": over, "rate_eur": rate, "cost_eur": round(over * rate, 2),
         "containers": [{"id": cid, "container_no": no, "warehouse": names.get(wid, "?"),
                         "from": day.isoformat(), "to": (day + shift).isoformat()}
                        for cid, no, wid, day in sorted(moved, key=lambda r: r[3])],

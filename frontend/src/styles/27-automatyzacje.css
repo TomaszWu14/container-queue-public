@@ -85,3 +85,4 @@
 .auto-rule-history { margin-top: 12px; }
 .auto-rule-history ul { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 4px; font-size: 13px; }
 .auto-rule-history li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.whatif-cost { color: var(--danger-ink); font-weight: 600; }

@@ -19,7 +19,7 @@ const result: WhatIfResult = {
     { warehouse: 'Magazyn Łódź', day: '2026-10-21', before: 8, after: 7, limit: 7, over_before: true, over_after: false },
     { warehouse: 'Magazyn Łódź', day: '2026-10-26', before: 7, after: 8, limit: 7, over_before: false, over_after: true },
   ],
-  new_overloads: 1, resolved_overloads: 1,
+  new_overloads: 1, resolved_overloads: 1, extra_container_days: 2, rate_eur: 150, cost_eur: 300,
 }
 
 const show = () => render(<MemoryRouter><WhatIfPanel /></MemoryRouter>)
@@ -33,6 +33,7 @@ describe('Co jeśli statek się spóźni', () => {
     expect(await screen.findByText(/Statek MSC ALFA spóźniony o 5 dni: przesuniętych kontenerów 1, nowe przekroczenia limitu 1/)).toBeTruthy()
     expect(get).toHaveBeenLastCalledWith('/api/automations/what-if?vessel=MSC+ALFA&delay=5')
     expect(screen.getAllByText('ponad limit')).toHaveLength(2)
+    expect(screen.getByText(/Szacowany koszt kar: ok\. 300 EUR \(2 kontenero-dni ponad limit × 150 EUR\/dzień\)/)).toBeTruthy()
     expect(document.querySelectorAll('tr.whatif-new')).toHaveLength(1)
     expect(screen.getByRole('link', { name: 'MSKU1000132' }).getAttribute('href')).toBe('/kontenery/3')
   })
