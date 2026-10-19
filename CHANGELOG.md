@@ -208,6 +208,8 @@ Jedna reguła „ETA + N dni” (ustawienie admina) przy zakładaniu kontenera i
 - `README.md`, `docs/README.md`: sekcja procesu zespołowego i mapa nowych dokumentów.
 
 ### Security
+- **Pełna weryfikacja OWASP ASVS L2 wymaganie po wymaganiu** (US-025): `docs/bezpieczenstwo/ASVS-L2-WERYFIKACJA.md`
+  — 257 wymagań L1+L2 ze statusem i dowodem w kodzie; `CHECKLISTA_ASVS.md` to odtąd podsumowanie.
 - **Eksport CSV z przeglądarki chroni przed formułami jak serwer** (US-008): wartość zaczynająca się od spacji
   i znaku `= + - @` (Excel pomija spacje) dostaje apostrof, tak jak dotąd tabulator i powrót karetki.
 - **Semgrep blokuje PR** (US-007): reguły OWASP Top 10 jako bramka; pierwszy przegląd — 6 fałszywych alarmów

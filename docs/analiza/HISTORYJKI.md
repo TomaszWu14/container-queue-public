@@ -949,7 +949,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **US-021** [DEV] Spłata długu modelu danych: UNIQUE w `AvizoItem`/`DeliveryConfirmation`, CHECK dla statusów
   tekstowych, decyzja o dwóch statusach odprawy (`04-model-danych.md` §„Znane niespójności”).
 - **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
-- **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna).
+- **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna). Zrobione: `docs/bezpieczenstwo/ASVS-L2-WERYFIKACJA.md` (czwarta lista PO, pkt 10).
 
 ## Won't (na teraz)
 
