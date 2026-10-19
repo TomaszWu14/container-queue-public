@@ -997,7 +997,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   1. Każda odpowiedź `/api/*` ma `Cache-Control: no-store`.
   2. Trasy z własną polityką (zdjęcia użytkowników, podglądy SAD) i panel (index, statyki) zostają bez zmian.
 - **[SEC]:** luka ❌ z weryfikacji ASVS L2 (US-025) zamknięta; bez wpływu na działanie aplikacji.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #101.
 
 ### US-088 · [SEC] Mocniejsze kody zapasowe 2FA (ASVS 2.6.2, 2.6.3)
 - **Rozmiar:** S
