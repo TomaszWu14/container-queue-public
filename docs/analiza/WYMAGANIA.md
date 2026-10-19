@@ -23,7 +23,7 @@ Priorytety MoSCoW: wszystko, co wdrożone, jest *Must* (utrzymujemy); nowe — w
 | FR-011 | W-11 | Wymagane dokumenty zależą od etapu; profil dostawcy zawęża zestaw | Must | wdrożone |
 | FR-012 | W-12 | PDF z numerem innego kontenera odrzucony (409); uszkodzony 422; skan przyjęty z ostrzeżeniem | Must | wdrożone |
 | FR-013 | W-13 | SAD-PZ → ODPRAWIONY, SAD-PW → ZWOLNIONY; plik od spedytora nie zmienia statusu | Must | wdrożone |
-| FR-014 | W-14 | Propozycja daty dostawy: ETA + 4 dni w stanie PROPOZYCJA | Must | wdrożone; rozjazd P-02/P-03 |
+| FR-014 | W-14 | Propozycja daty dostawy: ETA + N dni (ustawienie admina, domyślnie 3 — Z-043) w stanie PROPOZYCJA, przeliczana po zmianie ETA | Must | wdrożone (US-020) |
 | FR-015 | W-15 | Uzgodniona data nie zmienia się sama po zmianie ETA; ręczna zmiana cofa do PROPOZYCJA | Must | wdrożone |
 | FR-016 | W-16 | Limit dzienny magazynu ostrzega, nie blokuje; tranzyty i propozycje nie liczą się | Must | wdrożone |
 | FR-017 | W-17 | Kalendarz dni wolnych kraju magazynu (PL/PT) i wyjątki per magazyn | Must | wdrożone; P-06 |

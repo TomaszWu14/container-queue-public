@@ -14,13 +14,38 @@ from sqlalchemy.orm import Session
 from .audit import record, record_changes
 from .models import Container, DailyLimit, PlanningStatus, Warehouse, today_pl, utcnow
 
-# domyślne wyprzedzenie: rozładunek planujemy 4 dni po przypłynięciu
-PLAN_LEAD_DAYS = 4
+# US-020 (czwarta lista PO, pkt 4): JEDNA reguła „ETA + N” — N z ustawienia admina
+# `warehouse_eta_buffer_days` (odprawa + transport), ta sama przy zakładaniu kontenera, w podpowiedzi daty
+# i przy przeliczaniu propozycji po zmianie ETA. Wcześniej: 4 dni na sztywno vs 3 w ustawieniu (P-02, Z-043).
+PLAN_LEAD_DAYS = 3   # gdy ustawienie puste albo błędne
 
 
-def proposed_date(eta: datetime.date) -> datetime.date:
+def lead_days(db: Session) -> int:
+    from .app_settings import get_setting
+    try:
+        return max(0, int(get_setting(db, "warehouse_eta_buffer_days") or PLAN_LEAD_DAYS))
+    except ValueError:
+        return PLAN_LEAD_DAYS
+
+
+def proposed_date(eta: datetime.date, days: int = PLAN_LEAD_DAYS) -> datetime.date:
     """Domyślna data dostawy wyliczona z ETA."""
-    return eta + datetime.timedelta(days=PLAN_LEAD_DAYS)
+    return eta + datetime.timedelta(days=days)
+
+
+def repropose_after_eta_change(db: Session, container: Container, user) -> bool:
+    """P-03: po zmianie ETA przelicza datę TYLKO nietkniętej propozycji (D2): plan w stanie PROPOZYCJA,
+    data nie wpisana ręcznie. Wysłany / potwierdzony plan i ręczna data zostają — wtedy tylko alert.
+    Zwraca True, gdy data się zmieniła. Commit należy do wołającego."""
+    if (container.eta is None or container.planning_status != PlanningStatus.PROPOZYCJA
+            or container.notify_date_manual):
+        return False
+    new_day = proposed_date(container.eta, lead_days(db))
+    if container.notify_date == new_day:
+        return False
+    record_changes(db, container, {"notify_date": new_day}, user,
+                   note="przeliczenie propozycji po zmianie ETA (ETA + N dni)")
+    return True
 
 
 def transit_days_for(port, month: int) -> int | None:
@@ -41,7 +66,7 @@ def transit_days_for(port, month: int) -> int | None:
 def estimated_eta(container: Container) -> datetime.date | None:
     """D12: fallback ETA dla kontenera bez ETA z trackingu (AIS) — ETD +
     transit time portu w miesiącu wypłynięcia. Tylko do wyświetlenia jako „szacunek”:
-    nie zapisuje `eta` ani nie rusza planowania (to dalej stała PLAN_LEAD_DAYS)."""
+    nie zapisuje `eta` ani nie rusza planowania."""
     if container.eta or not container.etd:
         return None
     days = transit_days_for(container.port, container.etd.month)

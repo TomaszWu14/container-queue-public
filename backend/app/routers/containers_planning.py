@@ -18,7 +18,7 @@ from ..deps import check_container_access, scope_containers
 from ..holidays import is_free_day
 from ..models import Container, PlanningStatus, User, Warehouse, today_pl
 from ..plan_mail import send_plan_mails
-from ..planning import confirm_plan, send_to_forwarder
+from ..planning import confirm_plan, lead_days, send_to_forwarder
 from ..schemas import ContainerOut, QueueDay
 from .containers_common import (
     _LOAD,
@@ -123,10 +123,7 @@ def suggest_notify_date(container_id: int, db: Session = Depends(get_db),
     """#50: propozycja daty awizacji — pierwszy dzień roboczy (kalendarz magazynu)
     po ETA+bufor z wolnym slotem (used < limit); bez limitu, gdy brak magazynu."""
     container = get_container_checked(db, container_id, user)
-    try:
-        buffer_days = int(get_setting(db, "warehouse_eta_buffer_days") or 3)
-    except ValueError:
-        buffer_days = 3
+    buffer_days = lead_days(db)   # US-020: ta sama reguła „ETA + N” co przy zakładaniu kontenera
     base = (container.eta or today_pl()) + datetime.timedelta(days=buffer_days)
     warehouse = container.warehouse
     country = warehouse.country if warehouse else "PL"

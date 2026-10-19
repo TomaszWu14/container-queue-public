@@ -27,9 +27,9 @@ Tam, gdzie powód nie został nigdzie zapisany, jest to zaznaczone.
 - **Rozważane opcje.** (a) cofać potwierdzenie przy każdej zmianie ETA; (b) zamrozić datę po
   wysłaniu planu i ostrzegać człowieka.
 - **Wybór: (b).** Opcja (a) wywraca obietnicę „zaplanowane” i generuje szum przy każdym drgnięciu ETA.
-- **Skutki.** Rozbieżność ETA i daty wymaga decyzji logistyka. W obecnym kodzie przeliczanie po
-  zmianie ETA nie działa także w stanie PROPOZYCJA (automat opisany w `planning.py:1-7` nie
-  istnieje) — patrz [07](07-ograniczenia.md).
+- **Skutki.** Rozbieżność ETA i daty wymaga decyzji logistyka. Od US-020 zmiana ETA przelicza tylko
+  nietkniętą propozycję (PROPOZYCJA, data nie wpisana ręcznie) regułą „ETA + N dni” z ustawienia admina
+  (`planning.repropose_after_eta_change`); wysłany i potwierdzony plan zostaje zamrożony.
 - **Źródło.** jw.; `planning.py:51-135`.
 
 ## D3. Spedytor może działać bez konta — jednorazowe linki

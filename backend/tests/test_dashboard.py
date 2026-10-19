@@ -18,7 +18,9 @@ def test_dashboard_tiles_and_lists(client, admin_headers):
         "notify_date": today.isoformat(), "status": "AWIZOWANY"})
     client.post("/api/containers", headers=admin_headers, json={
         "container_no": "CSQU3054383", "company_id": beta,
-        "eta": yesterday.isoformat(), "status": "W_TRANSPORCIE"})  # opóźniony
+        "eta": yesterday.isoformat(), "status": "W_TRANSPORCIE",   # opóźniony
+        # dzień dostawy jawnie poza „dziś/jutro” — propozycja ETA + N nie miesza w kubełkach (US-020)
+        "notify_date": (today + datetime.timedelta(days=10)).isoformat()})
     client.post("/api/containers", headers=admin_headers, json={
         "container_no": "TGBU6784203", "company_id": beta,
         "notify_date": (today + datetime.timedelta(days=1)).isoformat(),

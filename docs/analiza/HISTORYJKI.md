@@ -905,11 +905,24 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      Escape zamyka. Karta na dole ekranu, mieści się na telefonie.
   3. Teksty PL/EN/PT; szanuje „ogranicz ruch” w systemie.
 - **[SEC]:** tylko nawigacja po stronie klienta, bez zapisu i bez nowych wywołań API.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #92.
+
+### US-020 · [BA][DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (czwarta lista PO, pkt 4)
+- **Rozmiar:** S
+- **Jako** logistyk **chcę**, żeby proponowana data dostawy liczyła się zawsze tak samo i nadążała za ETA, dopóki
+  nikt jej nie uzgodnił, **aby** nie dostawać dwóch różnych dat dla tej samej sytuacji (P-02) ani starej
+  propozycji po przesunięciu statku (P-03).
+- **Kryteria akceptacji** (testy `test_planning.py`, `test_dashboard.py`)
+  1. Zakładanie kontenera z ETA i podpowiedź daty awizacji liczą „ETA + N dni”, gdzie N to ustawienie admina
+     „ETA magazynu = ETA portu + N dni” (domyślnie 3; błędna wartość → 3).
+  2. Zmiana ETA przelicza datę tylko nietkniętej propozycji (stan PROPOZYCJA, data nie wpisana ręcznie) — z wpisem
+     w historii. Plan wysłany / potwierdzony i ręczna data zostają (D2: tylko alert, decyduje człowiek).
+- **[SEC]:** bez zmian uprawnień; zmiana daty idzie przez audyt.
+- **Stan:** zrealizowane, czeka na merge. Domyślne N = 3 zamiast dawnych 4 przy zakładaniu — założenie Z-043.
 
 ## Could
 
-- **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).
+- **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2). Zrobione — patrz US-020 wyżej.
 - **US-021** [DEV] Spłata długu modelu danych: UNIQUE w `AvizoItem`/`DeliveryConfirmation`, CHECK dla statusów
   tekstowych, decyzja o dwóch statusach odprawy (`04-model-danych.md` §„Znane niespójności”).
 - **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
