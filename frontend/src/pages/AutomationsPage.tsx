@@ -14,6 +14,7 @@ import ProcessFlowPanel from './ProcessFlowPanel'
 import SimulateDayPanel from './SimulateDayPanel'
 import WhatIfPanel from './WhatIfPanel'
 import DeliveryRetryPanel from './DeliveryRetryPanel'
+import EtaReliabilityPanel from './EtaReliabilityPanel'
 
 type Status = 'ok' | 'late' | 'error' | 'unknown' | 'off'
 type Category = 'alerts' | 'documents' | 'communication' | 'data' | 'integrations'
@@ -199,6 +200,7 @@ export default function AutomationsPage() {
       {data && me?.is_demo && <SimulateDayPanel />}
       {data && <ProcessFlowPanel />}
       {data && <WhatIfPanel />}
+      {data && <EtaReliabilityPanel />}
       {data && <AiQualityPanel />}
       {data && <AutomationRulesPanel canEdit={isAdmin} />}
       {editMinutes && data && (

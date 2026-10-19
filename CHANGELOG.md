@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Punktualność armatorów i realne ETA** (US-071): ekran Automatyzacje pokazuje medianę spóźnienia armatora
+  i portu z historii oraz realną datę przypłynięcia kontenerów w drodze.
 - **Nagranie ekranu Automatyzacje** (US-069): 15-sekundowe wideo i GIF w README, nagrywane z testu E2E
   (`sh scripts/record_demo_video.sh automatyzacje`).
 - **Test reguły na 30 dniach** (US-068): w kreatorze reguł widać, ile alertów wysłałaby reguła w ostatnim miesiącu,

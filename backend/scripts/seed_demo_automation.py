@@ -140,3 +140,33 @@ def rework(db, containers: list[Container], author_id: int, limit: int = 4) -> i
                             new_value=new.value, user_id=author_id, created_at=t1 + (t2 - t1) * k / 3,
                             note="Agencja: brak świadectwa pochodzenia — powrót do portu, uzupełnione"))
     return len(picked)
+
+
+# armator (kolejność id) → typowe spóźnienie w dniach; realistycznie: jeden punktualny, jeden spóźnialski
+_CARRIER_DELAY = (1, 4, -1)
+_PAST_PORT = (S.W_PORCIE, S.ODPRAWA, S.AWIZOWANY, S.W_DOSTAWIE, S.DOSTARCZONY, S.ZREALIZOWANY)
+
+
+def arrivals(db, containers: list[Container], author_id: int) -> int:
+    """Historia przypłynięć dla punktualności armatorów (trzecia lista PO, pkt 7): pierwsze ETA w dzienniku
+    zmian i faktyczny wyładunek (DISCHARGE) dla kontenerów po porcie; spóźnienie zależy od armatora."""
+    from app.models import AuditLog, TrackingEvent
+    db.flush()
+    carriers = sorted({c.carrier_id for c in containers if c.carrier_id})
+    with_event = {cid for (cid,) in db.query(TrackingEvent.container_id).filter(
+        TrackingEvent.event_code.in_(("DISCHARGE", "ARRIVE")), TrackingEvent.is_estimated.is_(False))}
+    n = 0
+    for i, c in enumerate(containers):
+        if c.status not in _PAST_PORT or c.eta is None or not c.carrier_id or c.id in with_event:
+            continue
+        delay = _CARRIER_DELAY[carriers.index(c.carrier_id) % len(_CARRIER_DELAY)] + (i % 3) - 1
+        planned = c.eta - dt.timedelta(days=delay)
+        if delay:
+            db.add(AuditLog(entity_type="containers", entity_id=c.id, field="eta", old_value=planned.isoformat(),
+                            new_value=c.eta.isoformat(), user_id=author_id,
+                            created_at=dt.datetime.combine(planned - dt.timedelta(days=3), dt.time(9)),
+                            note="Armator: nowe ETA"))
+        db.add(TrackingEvent(container_id=c.id, event_code="DISCHARGE", description="Wyładunek w porcie",
+                             vessel=c.vessel, occurred_at=dt.datetime.combine(c.eta, dt.time(7)), source="demo"))
+        n += 1
+    return n
