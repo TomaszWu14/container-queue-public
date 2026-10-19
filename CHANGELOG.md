@@ -159,6 +159,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 
 
 ### Dodane
+Metryki projektu na stronie „Jak to zbudowano”: testy, API, historyjki, ADR — liczone z repozytorium (US-080).
 Karta spedytora: czas odpowiedzi na awizacje, inne terminy, problemy i ranking spedycji z 90 dni (US-079).
 Aplikacja „na ekran telefonu” (PWA): manifest, ikony, skróty do Kolejki, Bramy i Kalendarza (US-078).
 Dokumentacja API w repozytorium: wszystkie trasy z kolumną „kto ma dostęp” i openapi.json (US-077).

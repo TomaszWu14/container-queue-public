@@ -115,7 +115,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-076 kwartalny przegląd dostępów | Z-041 | `test_access_review.py` (4), `AccessReviewPanel.dom.test.tsx` (2) | #87 | wdrożone |
 | US-077 dokumentacja API: trasy i uprawnienia | — | `test_export_api_docs.py` (2) | #88 | wdrożone |
 | US-078 aplikacja na ekran telefonu (PWA) | — | `pwa.manifest.test.ts` (3) | #89 | wdrożone |
-| US-079 karta spedytora | Z-042 | `test_forwarder_scorecard.py` (2), `test_seed_demo_process.py` (1), `ForwarderScorecardPanel.dom.test.tsx` (2) | — | czeka na merge |
+| US-079 karta spedytora | Z-042 | `test_forwarder_scorecard.py` (2), `test_seed_demo_process.py` (1), `ForwarderScorecardPanel.dom.test.tsx` (2) | #90 | wdrożone |
+| US-080 metryki projektu w „Jak to zbudowano” | — | `ProjectMetrics.dom.test.tsx` (2), `test_project_metrics.py` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 
