@@ -12,6 +12,7 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
 📹 [Prezentacja działania — 2 min, z napisami, bez dźwięku](docs/video/prezentacja.mp4)
 🎬 [Ścieżka rekrutera — 20 s: historia jednego kontenera, pulpit, „Jak to zbudowano”](docs/video/sciezka-rekrutera.mp4) — nagranie testu przeglądarkowego (`sh scripts/record_demo_video.sh`); świeże wideo z każdego PR w artefaktach workflow „E2E — ścieżka rekrutera”.
+🧭 [Przewodnik po demo — 1 min, z napisami](docs/video/przewodnik-pl.mp4) ([wersja angielska](docs/video/przewodnik-en.mp4)) — kolejka, pulpit, kalendarz, śledzenie, Automatyzacje i „Jak to zbudowano”; to samo przejdziesz sam w demo przyciskiem „Przewodnik”.
 🤖 [Automatyzacje — 15 s: katalog automatów, „Symuluj dzień”, przebieg procesu, „co jeśli statek się spóźni”](docs/video/automatyzacje.mp4) (`sh scripts/record_demo_video.sh automatyzacje`)
 
 <details><summary>Podgląd ekranu Automatyzacje (GIF, 15 s)</summary>

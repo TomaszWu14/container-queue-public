@@ -9,7 +9,7 @@ import { useT } from './i18n'
 export interface GuideStep { path: string; selector: string; key: string; roles?: string[] }
 
 export const GUIDE_STEPS: GuideStep[] = [
-  { path: '/kolejka', selector: 'table.grid', key: 'queue' },
+  { path: '/kolejka', selector: 'table.kq-table, table.grid', key: 'queue' },
   { path: '/pulpit', selector: '.ctl-kpis', key: 'dashboard' },
   { path: '/kalendarz', selector: 'main .panel, main', key: 'calendar' },
   { path: '/sledzenie', selector: 'main .panel, main', key: 'tracking' },
@@ -33,22 +33,29 @@ export default function DemoGuide({ steps, index, onIndex, onClose }: {
 
   useEffect(() => {
     navigate(step.path)
-    let el: Element | null = null
-    let tries = 0
-    // ekran ładuje się leniwie i pobiera dane — szukamy celu do ~3 s
+    let scrolled = false
+    // ekran ładuje się leniwie i doładowuje dane (bywa przerysowany) — przez cały krok pilnujemy,
+    // żeby cel był podświetlony; przewijamy do niego raz, gdy pojawi się pierwszy raz
     const timer = window.setInterval(() => {
-      el = document.querySelector(step.selector)
-      if (el || ++tries > 30) {
-        window.clearInterval(timer)
-        if (el) {
-          el.classList.add(HIGHLIGHT)
-          el.scrollIntoView?.({ block: 'center', behavior: 'smooth' })
-        }
+      const el = document.querySelector(step.selector)
+      if (!el) return
+      el.classList.add(HIGHLIGHT)
+      if (!scrolled) {
+        scrolled = true
+        el.scrollIntoView?.({ block: 'start' })   // cel u góry, karta przewodnika na dole go nie zasłania
       }
     }, 100)
     nextRef.current?.focus()
-    return () => { window.clearInterval(timer); el?.classList.remove(HIGHLIGHT) }
+    return () => {
+      window.clearInterval(timer)
+      document.querySelectorAll(`.${HIGHLIGHT}`).forEach(e => e.classList.remove(HIGHLIGHT))
+    }
   }, [index])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {   // miejsce pod treścią na kartę — ostatnie elementy strony da się przewinąć nad nią
+    document.body.classList.add('tour-active')
+    return () => document.body.classList.remove('tour-active')
+  }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }

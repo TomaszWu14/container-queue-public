@@ -53,7 +53,14 @@ body.demo-readonly form button:not([type]) {
   box-shadow: var(--shadow-3); }
 .tour-card p { margin: 6px 0 10px; line-height: 1.45; }
 .tour-count { font-size: 12px; margin-bottom: 4px; }
-.tour-actions { display: flex; gap: 8px; align-items: center; }
-.tour-highlight { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 6px;
+.tour-actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tour-highlight { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 6px; scroll-margin-top: 120px;
   transition: outline-color 0.2s; }
 @media (prefers-reduced-motion: reduce) { .tour-highlight { transition: none; } }
+body.tour-active { padding-bottom: 220px; }
+/* telefon: dolna krawędź „fixed” bywa poza widokiem (pasek przeglądarki, szersza strona) — karta u góry */
+@media (max-width: 640px) {
+  .tour-card { top: 8px; bottom: auto; }
+  .tour-highlight { scroll-margin-top: 260px; }
+  body.tour-active { padding-bottom: 0; }
+}
