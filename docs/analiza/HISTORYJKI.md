@@ -728,6 +728,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **[SEC]:** podgląd tylko admin (tytuły alertów różnych spółek); P-11/P-12 zamknięte.
 - **Stan:** zrealizowane, czeka na merge.
 
+### US-068 · [DEV] Test reguły na ostatnich 30 dniach (trzecia lista PO, pkt 2)
+- **Rozmiar:** M
+- **Jako** administrator **chcę** przed zapisaniem reguły zobaczyć, ile alertów wysłałaby w ostatnich 30 dniach,
+  **aby** nie zasypać ludzi powiadomieniami.
+- **Kryteria akceptacji** (testy `test_automation_rules_backtest.py`, `RuleBacktest.dom.test.tsx`)
+  1. Przy regule „Sprawdź na 30 dniach” → liczba alertów, kontenerów, średnio i najwięcej dziennie.
+  2. Jeden alert na kontener i dzień (jak pętla tła); etap kontenera z historii statusów tamtego dnia,
+     daty i dane kierowcy z dzisiejszych danych — przybliżenie nazwane wprost (Z-037).
+  3. Średnio ≥ 10 dziennie → ostrzeżenie „Dużo alertów”. Tylko kontenery w zakresie użytkownika; nic nie jest zapisywane.
+- **[SEC]:** odczyt, `scope_containers`; wpis w `tests/permissions.yaml`.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

@@ -8,6 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import automation_rules as rules_engine
+from .. import automation_rules_backtest as rules_backtest
 from .. import automation_rules_history as rules_history
 from ..audit import record
 from ..database import get_db
@@ -96,3 +97,16 @@ def preview_rule(condition: str = Query(...), days: int = Query(..., ge=0, le=60
         select(Container.id, Container.container_no).where(where), user)
         .order_by(Container.notify_date, Container.id).limit(PREVIEW_SAMPLE)).all()
     return {"count": count, "sample": [{"id": i, "container_no": no} for i, no in sample]}
+
+
+@router.get("/automations/rules/backtest")
+def backtest_rule(condition: str = Query(...), days: int = Query(..., ge=0, le=60),
+                  status: str | None = Query(None), db: Session = Depends(get_db),
+                  user: User = editors) -> dict:
+    """Ile alertów wysłałaby reguła w ostatnich 30 dniach — w zakresie użytkownika, bez zapisu."""
+    try:
+        rule = rules_engine.Rule.model_validate(
+            {"name": "test", "condition": condition, "days": days, "status": status})
+    except ValidationError as exc:
+        raise HTTPException(422, "Nieprawidłowy warunek reguły") from exc
+    return rules_backtest.backtest(db, rule, scope=lambda q: scope_containers(q, user))
