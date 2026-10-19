@@ -42,6 +42,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-030 | Przełącznik automatów (US-059): wyłączać może tylko admin; nie da się wyłączyć z ekranu: usuwania danych kierowców (RODO), retencji dzienników, osieroconych plików, testu kopii i strażnika automatów. | — | do potwierdzenia | także logistyka; inna lista chroniona | `backend/app/automation_switch.py` |
 | Z-031 | „Co jeśli statek się spóźni” (US-062): opóźnienie 1–21 dni, okno 28 dni; obciążenie dnia liczone jak prognoza przeciążenia (limit magazynu wspólny dla wszystkich spółek, pokazywany tylko jako liczba), przesuwamy tylko kontenery w zakresie użytkownika; nic nie zapisujemy. | — | do potwierdzenia | zapis nowego planu po akceptacji; dłuższe opóźnienia | `backend/app/what_if.py` |
 | Z-032 | Kanały reguły z kreatora (US-063): dzwonek, e-mail, Teams, n8n — domyślnie wszystkie (stare reguły działają jak dotąd); matryca kanałów per rola nadal obowiązuje; reguła tylko na Teams / n8n zostawia odbiorcom przeczytany wpis (ślad i deduplikacja). | — | do potwierdzenia | osobny adres Teams na regułę; e-mail na dowolny adres | `backend/app/automation_rules.py` |
+| Z-033 | Przy awarii NBP przeliczenie wartości towaru używa ostatnich kursów najwyżej 5 dni po pobraniu (długi weekend + zapas); starsze → bez przeliczenia, z informacją „kursy niedostępne”. | — | do potwierdzenia | inny limit dni; zawsze najświeższe znane kursy | `backend/app/nbp.py` |
 
 ## Jak potwierdzić
 
