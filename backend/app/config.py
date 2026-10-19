@@ -60,6 +60,8 @@ class Settings(BaseSettings):
     login_account_lock_seconds: int = Field(default=30, ge=1)
     # globalny limit żądań API na IP w oknie minutowym (0 = wyłączony)
     api_rate_limit_per_minute: int = Field(default=300, ge=0)
+    # ciaśniejszy limit stron publicznych (branding, formularze bez logowania) na IP/min (0 = wyłączony)
+    public_rate_limit_per_minute: int = Field(default=60, ge=0)
     password_reset_minutes: int = Field(default=30, ge=1)  # ważność linku resetu hasła
     # W14 #89: polityka haseł — minimalna długość (+ wymóg litery i cyfry w kodzie)
     password_min_length: int = Field(default=12, ge=4)
