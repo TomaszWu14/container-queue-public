@@ -693,7 +693,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   3. Po terminie alerty wracają same; kontener spoza zakresu → 404.
 - **[SEC]:** `get_scoped` przy wyciszeniu, lista tylko w zakresie (`scope_containers`), wpis w audycie; zapis
   w ustawieniach (bez migracji bazy).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #72.
 
 ### US-066 · [DEV][SEC] Historia zmian reguł i „przywróć” (trzecia lista PO, pkt 4)
 - **Rozmiar:** S
