@@ -1,4 +1,4 @@
-"""Audyt SEC-006: 2FA obowiązkowe dla administratorów (REQUIRE_2FA_ADMIN, domyślnie wyłączone)
+"""Audyt SEC-006: 2FA obowiązkowe dla administratorów (REQUIRE_2FA_ADMIN, domyślnie włączone)
 i dostępne dla wszystkich ról. Admin bez 2FA czyta, ale nic nie zmieni poza własnym kontem
 (/api/auth/*), dopóki nie włączy 2FA. Testy domyślnie mają wymóg wyłączony (conftest)."""
 import pytest
@@ -23,10 +23,10 @@ def _enable(client, headers) -> str:
     return secret
 
 
-def test_default_setting_does_not_require_2fa_for_admin():
-    # decyzja właściciela 2026-09-29: wymóg włącza się jawnie REQUIRE_2FA_ADMIN=true
+def test_default_setting_requires_2fa_for_admin():
+    # decyzja PO 2026-10-19 (US-019): wymóg domyślnie włączony; testy wyłączają go w conftest
     from app.config import Settings
-    assert Settings.model_fields["require_2fa_admin"].default is False
+    assert Settings.model_fields["require_2fa_admin"].default is True
 
 
 def test_admin_without_2fa_blocked_from_mutations_until_enrolled(client, require_2fa):

@@ -18,7 +18,7 @@ pip install -r requirements.txt -r requirements-dev.txt   # dev: pytest, ruff (n
 python -m alembic upgrade head                        # schemat w ./timporye.db
 uvicorn app.main:app --reload                         # http://localhost:8000/docs (Swagger — tylko poza produkcją)
 ```
-Konto startowe: `admin` / `admin123` (tylko dev; `ENVIRONMENT=production` tego nie przyjmie). Przy `REQUIRE_2FA_ADMIN=true` (domyślnie wyłączone, SEC-006) konto admina wymaga 2FA — po zalogowaniu włącz je aplikacją TOTP.
+Konto startowe: `admin` / `admin123` (tylko dev; `ENVIRONMENT=production` tego nie przyjmie). Konto admina wymaga 2FA (`REQUIRE_2FA_ADMIN`, domyślnie włączone, SEC-006) — po zalogowaniu włącz je aplikacją TOTP albo lokalnie ustaw `REQUIRE_2FA_ADMIN=false` w `.env`.
 Wzór zmiennych: `.env.example`; pełny katalog: `docs/ZMIENNE-SRODOWISKOWE.md`.
 Dane przykładowe: `backend/scripts/seed_demo.py` (**kasuje wszystkie dane**; wymaga `DEMO_READONLY_LOGINS`
 i flagi `--wyczysc-wszystko` — tylko lokalnie lub na instancji demo). TODO: właściciel — czy jest lżejszy seed deweloperski.

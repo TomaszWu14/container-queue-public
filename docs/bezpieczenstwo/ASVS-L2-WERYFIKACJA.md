@@ -32,7 +32,7 @@ Sprawdzone w kodzie — te luki z `CHECKLISTA_ASVS.md` są już **zamknięte**:
 - Osobny `DATA_ENCRYPTION_KEY` istnieje (`backend/app/crypto.py`, `test_crypto_data_key.py`), ale **nie jest
   wymagany** na produkcji — US-002 otwarta.
 
-Nadal otwarte (sprawdzone): `REQUIRE_2FA_ADMIN` domyślnie `false` (`backend/app/config.py`, E-01), brak prefiksu
+Nadal otwarte (sprawdzone): brak prefiksu
 `__Host-` (`backend/app/security.py` `ACCESS_COOKIE`, E-07), `ALLOWED_HOSTS` puste w
 `docker-compose.coolify.yml` (E-08; w `docker-compose.demo.yml` ustawione).
 
@@ -181,7 +181,7 @@ Pominięte (L3): 3.6.1, 3.6.2.
 | 4.1.5 | Kontrola dostępu zawodzi bezpiecznie | ✅ | `deps.py` `_enforce_scope` (nieznany kształt → 403), `get_scoped` (brak i obcy rekord → to samo 404) | — |
 | 4.2.1 | Ochrona przed IDOR | ✅ | `deps.py` `get_scoped`; `test_idor_scoping.py`, `test_idor_containers.py`, `test_isolation_guard.py` | izolacja tylko w kodzie (R-01, ADR-0006) |
 | 4.2.2 | Ochrona przed CSRF | ✅ | `backend/app/csrf.py` `csrf_rejected` (`X-Requested-With` albo własny `Origin`/`Referer`); `SameSite=Lax`; `test_csrf.py` | żądanie bez `Origin` i `Referer` przechodzi (E-07) |
-| 4.3.1 | Interfejsy administracyjne z MFA | ❌ | `config.py` `require_2fa_admin: bool = False`; `backend/app/twofa_policy.py` | wyjątek E-01 (R-11); US-019 — włączyć na produkcji |
+| 4.3.1 | Interfejsy administracyjne z MFA | ✅ | `config.py` `require_2fa_admin: bool = True`; `backend/app/twofa_policy.py`; `test_2fa_admin_required.py` | US-019 (decyzja PO 2026-10-19); E-01 zamknięty |
 | 4.3.2 | Brak listowania katalogów i metadanych (.git) | ✅ | `backend/app/main.py` `spa_response` (tylko pliki z builda, `is_relative_to`); `test_spa_assets.py`; `test_dockerignore.py` | — |
 | 4.3.3 | Dodatkowa autoryzacja / rozdział obowiązków dla operacji wysokiej wartości | ⚠️ | podgląd „jako rola” tylko GET z audytem (`security.py` `get_current_user`); 2FA admina wyłącza tylko inny admin (`system.py` `disable_2fa`) | brak potwierdzenia hasłem/2FA dla krytycznych operacji admina |
 
@@ -398,7 +398,7 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V1 Architektura, projekt i model zagrożeń | 24 | 13 | 1 | 0 | 0 | 38 |
 | V2 Uwierzytelnianie | 25 | 10 | 5 | 12 | 0 | 52 |
 | V3 Zarządzanie sesją | 13 | 3 | 1 | 1 | 0 | 18 |
-| V4 Kontrola dostępu | 7 | 1 | 1 | 0 | 0 | 9 |
+| V4 Kontrola dostępu | 8 | 1 | 0 | 0 | 0 | 9 |
 | V5 Walidacja, sanityzacja i kodowanie | 18 | 6 | 0 | 6 | 0 | 30 |
 | V6 Kryptografia przechowywanych danych | 7 | 2 | 2 | 2 | 0 | 13 |
 | V7 Obsługa błędów i logowanie | 7 | 3 | 0 | 0 | 1 | 11 |
@@ -409,9 +409,9 @@ Pominięte (L3): 14.1.5. Usunięte w 4.0.3: 14.3.1.
 | V12 Pliki i zasoby | 11 | 2 | 2 | 0 | 0 | 15 |
 | V13 API i usługi sieciowe | 5 | 4 | 0 | 4 | 0 | 13 |
 | V14 Konfiguracja | 17 | 4 | 0 | 2 | 0 | 23 |
-| **Razem** | **149** | **60** | **13** | **29** | **6** | **257** |
+| **Razem** | **150** | **60** | **12** | **29** | **6** | **257** |
 
-Spełnione 149 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 67 % (po US-087…US-092; wcześniej 140, 63 %).
+Spełnione 150 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 68 % (po US-019, US-087…US-092; wcześniej 140, 63 %).
 
 ### Luki ❌ — proponowane działania
 
@@ -425,7 +425,7 @@ Spełnione 149 z 222 wymagań, które dotyczą aplikacji (bez n/d i ❓) — 67 
 | 2.8.2 | ~~Sekret TOTP jawnie w bazie~~ | zrobione: szyfrowanie `crypto.encrypt` + migracja `totpenc001` (US-092) | zamknięte |
 | 3.3.2 | ~~Sesja bez limitu bezwzględnego i bezczynności~~ | zrobione: 30 min bezczynności, 12 h od zalogowania (US-091) | zamknięte |
 | 3.4.4 | Brak prefiksu `__Host-` | `__Host-` dla cookie access | E-07 |
-| 4.3.1 | MFA adminów nieobowiązkowe | `REQUIRE_2FA_ADMIN=true` na produkcji | E-01, R-11, US-019 |
+| 4.3.1 | ~~MFA adminów nieobowiązkowe~~ | zrobione: `REQUIRE_2FA_ADMIN` domyślnie `true` (US-019) | zamknięte |
 | 6.4.1, 6.4.2 | Brak sejfu / HSM na klucze | świadomy wyjątek (skala jednej instancji) z przeglądem | nowy wyjątek (do wpisania) |
 | 8.2.1 | ~~Brak `Cache-Control: no-store` w odpowiedziach API~~ | zrobione: nagłówek w `SecurityHeadersMiddleware` (US-087) | zamknięte |
 | 12.1.3 | Brak limitu wgrań na użytkownika | dzienny limit liczby i rozmiaru plików na konto | R-07 |
