@@ -790,6 +790,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      karty, wyszarzonych przycisków zapisu w demo; przewijane wykres przepływu i tabela kalibracji dostępne z klawiatury.
 - **Stan:** zrealizowane, czeka na merge. Lighthouse dalej mierzy logowanie; ekrany po zalogowaniu pilnuje axe.
 
+### US-073 · [DEV] „Co jeśli” z propozycją przesunięć (trzecia lista PO, pkt 6)
+- **Rozmiar:** S
+- **Jako** planista **chcę** po symulacji spóźnienia statku dostać propozycję, na które dni przenieść kontenery ponad
+  limit, **aby** nie szukać ręcznie wolnych miejsc w magazynie.
+- **Kryteria akceptacji** (testy `test_what_if.py`, `WhatIfPanel.dom.test.tsx`)
+  1. Kontenery spóźnionego statku ponad dzienny limit → najbliższy dzień roboczy (bez świąt i weekendów) z wolnym
+     miejscem w tym samym magazynie, do 7 dni później; brak miejsca → licznik „bez wolnego miejsca”.
+  2. Ruszamy tylko kontenery z symulacji (zakres użytkownika); plan w bazie bez zmian.
+  3. Zapis propozycji jednym przyciskiem — dopiero po decyzji PO (Z-031); dziś zmiana na karcie kontenera.
+- **Stan:** zrealizowane, czeka na merge.
+
 ## Could
 
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).

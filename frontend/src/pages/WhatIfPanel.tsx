@@ -17,6 +17,9 @@ export interface WhatIfResult {
   extra_container_days?: number
   rate_eur?: number
   cost_eur?: number
+  proposal?: { id: number; container_no: string; warehouse: string; from: string; to: string }[]
+  proposal_unresolved?: number
+  plan_window?: number
 }
 
 const URL = '/api/automations/what-if'
@@ -119,6 +122,23 @@ export default function WhatIfPanel() {
                 ))}
               </ul>
             </details>
+          )}
+          {(result.proposal?.length ?? 0) > 0 && (
+            <div className="whatif-plan">
+              <h3 style={{ margin: '10px 0 4px', fontSize: 15 }}>{t('whatIfPlanTitle')}</h3>
+              <p className="muted" style={{ margin: 0 }}>{fill('whatIfPlanIntro', { d: result.plan_window ?? 7 })}</p>
+              <ul className="whatif-moved">
+                {result.proposal?.map(m => (
+                  <li key={m.id}>
+                    <Link className="mono" to={`/kontenery/${m.id}`}>{m.container_no}</Link>{' '}
+                    {m.warehouse}: {formatDate(m.from)} → <b>{formatDate(m.to)}</b>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {(result.proposal_unresolved ?? 0) > 0 && (
+            <p className="whatif-cost">{fill('whatIfPlanUnresolved', { n: result.proposal_unresolved ?? 0, d: result.plan_window ?? 7 })}</p>
           )}
           <p className="muted" style={{ fontSize: 12 }}>{t('whatIfNoWrite')}</p>
         </div>

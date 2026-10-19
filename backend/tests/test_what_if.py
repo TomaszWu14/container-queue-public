@@ -73,3 +73,24 @@ def test_endpoint_vessels_and_validation(client):
     assert r.status_code == 200 and len(r.json()["containers"]) == 2
     r = client.get("/api/automations/what-if", params={"vessel": "MSC BETA", "delay": 22}, headers=headers)
     assert r.status_code == 422
+
+
+def test_proposal_moves_overflow_to_free_working_day(client):
+    """Trzecia lista PO, pkt 6: kontener ponad limit dostaje propozycję najbliższego dnia roboczego z miejscem;
+    cudze kontenery i plan w bazie bez zmian."""
+    from app.holidays import is_free_day
+    _setup("WIC")
+    with SessionLocal() as db:
+        user = db.scalars(select(User).where(User.login == "logi-wic")).one()
+        # ALFA (2 moje kontenery z dnia +3) spóźniony o 5 → dzień +8, gdzie stoją 2 kontenery BETA: 4 > limit 2
+        result = what_if.simulate(db, user, "MSC ALFA", 5)
+        before = {c.container_no: c.notify_date for c in db.scalars(select(Container))}
+    moves = result["proposal"]
+    assert len(moves) == 2 and result["proposal_unresolved"] == 0
+    assert {m["container_no"] for m in moves} <= {"WICU1000001", "WICU1000002"}      # tylko kontenery z symulacji
+    for m in moves:
+        target = dt.date.fromisoformat(m["to"])
+        assert target > dt.date.fromisoformat(m["from"]) and not is_free_day(target, "PL")
+    with SessionLocal() as db:
+        after = {c.container_no: c.notify_date for c in db.scalars(select(Container))}
+    assert before == after

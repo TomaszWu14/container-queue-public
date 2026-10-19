@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Propozycja przesunięć** (US-073): „co jeśli statek się spóźni” podpowiada najbliższe dni robocze z wolnym
+  miejscem dla kontenerów ponad limit (bez zapisu).
 - **Dostępność po zalogowaniu** (US-072): test axe (WCAG 2.1 AA) kolejki, karty kontenera, pulpitu i Automatyzacji
   w CI; poprawione kontrasty i przewijanie z klawiatury.
 - **Punktualność armatorów i realne ETA** (US-071): ekran Automatyzacje pokazuje medianę spóźnienia armatora

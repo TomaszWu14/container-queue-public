@@ -20,6 +20,8 @@ const result: WhatIfResult = {
     { warehouse: 'Magazyn Łódź', day: '2026-10-26', before: 7, after: 8, limit: 7, over_before: false, over_after: true },
   ],
   new_overloads: 1, resolved_overloads: 1, extra_container_days: 2, rate_eur: 150, cost_eur: 300,
+  proposal: [{ id: 3, container_no: 'MSKU1000132', warehouse: 'Magazyn Łódź', from: '2026-10-26', to: '2026-10-27' }],
+  proposal_unresolved: 1, plan_window: 7,
 }
 
 const show = () => render(<MemoryRouter><WhatIfPanel /></MemoryRouter>)
@@ -35,7 +37,9 @@ describe('Co jeśli statek się spóźni', () => {
     expect(screen.getAllByText('ponad limit')).toHaveLength(2)
     expect(screen.getByText(/Szacowany koszt kar: ok\. 300 EUR \(2 kontenero-dni ponad limit × 150 EUR\/dzień\)/)).toBeTruthy()
     expect(document.querySelectorAll('tr.whatif-new')).toHaveLength(1)
-    expect(screen.getByRole('link', { name: 'MSKU1000132' }).getAttribute('href')).toBe('/kontenery/3')
+    expect(screen.getAllByRole('link', { name: 'MSKU1000132' })[0].getAttribute('href')).toBe('/kontenery/3')
+    expect(screen.getByText('Propozycja przesunięć')).toBeTruthy()
+    expect(screen.getByText('Dla 1 kontenerów nie ma wolnego miejsca w ciągu 7 dni.')).toBeTruthy()
   })
 
   it('brak statków i błąd', async () => {
