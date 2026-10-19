@@ -100,7 +100,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-067 koszt kar w „co jeśli” | US-062, Z-035 | `test_what_if.py` (rozszerzony), `WhatIfPanel.dom.test.tsx` (rozszerzony) | #74 | wdrożone |
 | US-022 ponawianie wysyłek | P-11, P-12, Z-036 | `test_delivery_retry.py` (4), `DeliveryRetryPanel.dom.test.tsx` (2) | #75 | wdrożone |
 | US-066 historia zmian reguł i przywróć | US-036 | `test_automation_rules_history.py` (1), `AutomationRulesHistory.dom.test.tsx` (2) | — | czeka na merge |
-| US-068 test reguły na 30 dniach | US-036, Z-037 | `test_automation_rules_backtest.py` (2), `RuleBacktest.dom.test.tsx` (2) | — | czeka na merge |
+| US-068 test reguły na 30 dniach | US-036, Z-037 | `test_automation_rules_backtest.py` (2), `RuleBacktest.dom.test.tsx` (2) | #76 | wdrożone |
+| US-069 nagranie Automatyzacje w README | US-056 | `e2e/demo/recruiter.spec.ts` (rozszerzony) | — | czeka na merge |
 
 ## Zasady utrzymania
 

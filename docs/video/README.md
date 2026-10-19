@@ -4,6 +4,8 @@
 |---|---|
 | `prezentacja.mp4` | film 2:11, 1280×720, napisy w obrazie, bez dźwięku, dane pokazowe |
 | `miniatura-youtube.png` | miniatura 1280×720 |
+| `sciezka-rekrutera.mp4` | ścieżka rekrutera z testu E2E (`sh scripts/record_demo_video.sh`) |
+| `automatyzacje.mp4` | ekran Automatyzacje z testu E2E, ok. 15 s; GIF w `docs/screenshots/automatyzacje.gif` (`sh scripts/record_demo_video.sh automatyzacje`) |
 
 ## Opis na YouTube (do wklejenia)
 

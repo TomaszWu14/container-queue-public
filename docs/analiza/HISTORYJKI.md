@@ -738,7 +738,17 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
      daty i dane kierowcy z dzisiejszych danych — przybliżenie nazwane wprost (Z-037).
   3. Średnio ≥ 10 dziennie → ostrzeżenie „Dużo alertów”. Tylko kontenery w zakresie użytkownika; nic nie jest zapisywane.
 - **[SEC]:** odczyt, `scope_containers`; wpis w `tests/permissions.yaml`.
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #76.
+
+### US-069 · [DEV] Nagranie ekranu Automatyzacje w README (trzecia lista PO, pkt 9)
+- **Rozmiar:** S
+- **Jako** rekruter **chcę** w README zobaczyć w kilkanaście sekund, co robią automaty, **aby** nie musieć logować się do demo.
+- **Kryteria akceptacji**
+  1. `sh scripts/record_demo_video.sh automatyzacje` nagrywa test E2E ekranu Automatyzacje (katalog, „Symuluj dzień”,
+     przebieg procesu, „co jeśli statek się spóźni”) → `docs/video/automatyzacje.mp4` i GIF w README.
+  2. Ten sam test biegnie w CI przy każdym PR (wideo w artefaktach) — nagranie łatwo odświeżyć po zmianach.
+  3. Test E2E sprawdza też „co jeśli” (przycisk „Policz” i wynik).
+- **Stan:** zrealizowane, czeka na merge. Nagranie ma ok. 15 s (tyle trwa test), nie 60 s.
 
 ## Could
 
