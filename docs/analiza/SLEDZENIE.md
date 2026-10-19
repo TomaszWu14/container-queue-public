@@ -109,7 +109,8 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-022 ponawianie wysyłek | P-11, P-12, Z-036 | `test_delivery_retry.py` (4), `DeliveryRetryPanel.dom.test.tsx` (2) | — | czeka na merge |
 | US-072 dostępność stron po zalogowaniu | WCAG 2.1 AA | `e2e/demo/a11y.spec.ts` (4 × 2 urządzenia), `queue-row-warehouse.test.ts` (1) | #81 | wdrożone |
 | US-068 test reguły na 30 dniach | US-036, Z-037 | `test_automation_rules_backtest.py` (2), `RuleBacktest.dom.test.tsx` (2) | — | czeka na merge |
-| US-073 propozycja przesunięć w „co jeśli” | US-062, Z-031 | `test_what_if.py` (1), `WhatIfPanel.dom.test.tsx` (rozszerzony) | — | czeka na merge |
+| US-073 propozycja przesunięć w „co jeśli” | US-062, Z-031 | `test_what_if.py` (1), `WhatIfPanel.dom.test.tsx` (rozszerzony) | #83 | wdrożone |
+| US-074 raport miesięczny dla zarządu | Z-039 | `test_report_monthly.py` (2), `AutomationsPage.dom.test.tsx` (1) | — | czeka na merge |
 
 ## Zasady utrzymania
 

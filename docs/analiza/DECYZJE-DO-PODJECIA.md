@@ -1,9 +1,9 @@
 # Decyzje do podjęcia przez PO
 
 Jedna lista wszystkiego, co czeka na „tak / nie” Product Ownera. Szczegóły i uzasadnienia: kolumna „Gdzie”.
-Pełny rejestr założeń (38 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
-Pełny rejestr założeń (38 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
-Pełny rejestr założeń (38 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (39 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (39 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
+Pełny rejestr założeń (39 pozycji „do potwierdzenia”): [`ZALOZENIA.md`](ZALOZENIA.md).
 
 Jak odpowiedzieć: wystarczy numer i decyzja, np. „Z-027 tak, ADR-0004 nie”. [BA] przepisze odpowiedź do
 rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje dokumenty, które się na nią powołują.
@@ -35,6 +35,7 @@ rejestru (status „potwierdzone” / „odrzucone” z datą) i zaktualizuje do
 | Z-036 | Ponawianie wysyłek 1/5/30 min, kolejka w pamięci (restart gubi oczekujące) | tak | trwała kolejka w bazie (migracja) | [ZALOZENIA](ZALOZENIA.md) |
 | Z-037 | Test reguły: przybliżenie (etap z historii, daty dzisiejsze), próg „dużo” = 10 dziennie | tak | inny próg | [ZALOZENIA](ZALOZENIA.md) |
 | Z-038 | Realne ETA = ETA + mediana spóźnienia armatora (min. 3 przypłynięcia), tylko podpowiedź | tak | automatyczna zmiana planu | [ZALOZENIA](ZALOZENIA.md) |
+| Z-039 | Raport miesięczny: zestaw liczb za ostatnie 30 dni, PDF przez przeglądarkę | **podać, co ma być w raporcie** | miesiąc kalendarzowy, wysyłka e-mailem | [ZALOZENIA](ZALOZENIA.md) |
 | Z-029 | „Symuluj dzień” nic nie zapisuje — pokazuje kroki w oknie | tak (bezpieczniej dla demo) | zapis w „piaskownicy” demo (ADR-0005) | [ZALOZENIA](ZALOZENIA.md) |
 
 ## Proces i bezpieczeństwo — starsze, wciąż otwarte

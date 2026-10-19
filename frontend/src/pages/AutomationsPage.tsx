@@ -113,10 +113,13 @@ export default function AutomationsPage() {
 
   return (
     <main className="page automations">
-      <PageHeader title={t('autoTitle')} actions={isAdmin && data ? (
+      <PageHeader title={t('autoTitle')} actions={data ? (
         <>
-          <button className="btn secondary small" onClick={sendTest}>{t('autoTestEventBtn')}</button>
-          <button className="btn secondary small" onClick={() => setEditMinutes(true)}>{t('autoMinutesBtn')}</button>
+          {/* raport miesięczny dla zarządu: strona do druku / zapisu jako PDF (trzecia lista PO, pkt 8) */}
+          <button className="btn secondary small" onClick={() => window.open('/api/reports/monthly', '_blank')}>
+            {t('autoReportBtn')}</button>
+          {isAdmin && <button className="btn secondary small" onClick={sendTest}>{t('autoTestEventBtn')}</button>}
+          {isAdmin && <button className="btn secondary small" onClick={() => setEditMinutes(true)}>{t('autoMinutesBtn')}</button>}
         </>
       ) : undefined} />
       {testMsg && <p className={testMsg.ok ? 'muted' : 'error'} role="status">{testMsg.text}</p>}

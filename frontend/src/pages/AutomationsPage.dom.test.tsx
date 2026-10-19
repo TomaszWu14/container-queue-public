@@ -150,4 +150,13 @@ describe('ekran Automatyzacje', () => {
     await screen.findByText('Ostrzeżenie o karze za przestój')
     expect(screen.queryByRole('button', { name: /^Wyłącz: / })).toBeNull()
   })
+
+  it('raport miesięczny (PDF) otwiera stronę do druku — także bez roli admina', async () => {
+    mockGet(catalog)
+    const open = vi.spyOn(window, 'open').mockReturnValue(null)
+    render(<AutomationsPage />)
+    fireEvent.click(await screen.findByRole('button', { name: 'Raport miesięczny (PDF)' }))
+    expect(open).toHaveBeenCalledWith('/api/reports/monthly', '_blank')
+    expect(screen.queryByRole('button', { name: 'Wyślij zdarzenie testowe' })).toBeNull()
+  })
 })
