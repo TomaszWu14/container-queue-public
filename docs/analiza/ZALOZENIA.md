@@ -45,6 +45,7 @@ Statusy: **do potwierdzenia** · potwierdzone (data) · odrzucone (data, co w za
 | Z-033 | Przy awarii NBP przeliczenie wartości towaru używa ostatnich kursów najwyżej 5 dni po pobraniu (długi weekend + zapas); starsze → bez przeliczenia, z informacją „kursy niedostępne”. | — | do potwierdzenia | inny limit dni; zawsze najświeższe znane kursy | `backend/app/nbp.py` |
 | Z-034 | „Nie przypominaj” (US-065): wyciszenie na 1, 3 albo 7 dni, osobiste, obejmuje automatyczne alerty o kontenerze (bez wzmianek @); wspólny kanał Teams/n8n działa dalej, chyba że wszyscy odbiorcy wyciszyli. | — | do potwierdzenia | inne okresy; wyciszenie także kanału Teams | `backend/app/alert_mutes.py` |
 | Z-035 | Koszt w „co jeśli” (US-067): kontener ponad dzienny limit magazynu czeka co najmniej 1 dzień; stawka kary 150 EUR/dzień — ta sama stała co w sygnałach (stawki armatorów nie są przechowywane). | — | do potwierdzenia | stawka per armator; inny model czekania | `backend/app/what_if.py`, `backend/app/signals.py` |
+| Z-036 | Ponawianie wysyłek (US-022): 3 ponowienia po 1, 5 i 30 min; kolejka w pamięci procesu — restart aplikacji w trakcie gubi oczekujące próby (ślad zostaje w dzienniku zadań). | — | do potwierdzenia | trwała kolejka w bazie (wymaga migracji); więcej prób | `backend/app/delivery_retry.py` |
 
 ## Jak potwierdzić
 

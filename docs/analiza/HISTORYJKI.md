@@ -714,6 +714,18 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   1. Wynik pokazuje „kontenero-dni ponad limit” (po − przed) × stawka za dzień = szacowany koszt w EUR.
   2. Ujemny wynik → „mniej kar” (przesunięcie rozładowuje przeciążone dni); zero → „bez dodatkowych kar”.
   3. Stawka ta sama co w sygnałach (150 EUR/dzień) — założenie Z-035.
+- **Stan:** wdrożone w PR #74.
+
+### US-022 · [DEV] Ponawianie nieudanych wysyłek (trzecia lista PO, pkt 1)
+- **Rozmiar:** M
+- **Jako** administrator **chcę**, żeby e-mail, karta w Teams albo zdarzenie do n8n, które się nie udały, były
+  ponawiane, a te, które ostatecznie nie doszły, widoczne na ekranie Automatyzacje, **aby** alert nie ginął po cichu.
+- **Kryteria akceptacji** (testy `test_delivery_retry.py`, `DeliveryRetryPanel.dom.test.tsx`)
+  1. Nieudana wysyłka wraca do kolejki: ponowienia po 1, 5 i 30 min; zdarzenie n8n z tym samym `id` (deduplikacja).
+  2. Po ostatniej próbie: lista „nie doszło” (admin) i wpis w dzienniku zadań (`delivery_retry`, licznik błędów).
+  3. Opis błędu bez adresów i treści odpowiedzi (adres Power Automate zawiera podpis).
+  4. Kolejka w pamięci procesu (kontrakt jednej instancji) — restart gubi oczekujące próby (Z-036).
+- **[SEC]:** podgląd tylko admin (tytuły alertów różnych spółek); P-11/P-12 zamknięte.
 - **Stan:** zrealizowane, czeka na merge.
 
 ## Could
@@ -721,7 +733,6 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
 - **US-020** [DEV] Jedna reguła „ETA + N” i przeliczanie propozycji po zmianie ETA (P-02, P-03; D2).
 - **US-021** [DEV] Spłata długu modelu danych: UNIQUE w `AvizoItem`/`DeliveryConfirmation`, CHECK dla statusów
   tekstowych, decyzja o dwóch statusach odprawy (`04-model-danych.md` §„Znane niespójności”).
-- **US-022** [DEV] Ponawianie maili SMTP i rejestrowanie błędów zdarzeń n8n (P-11, P-12).
 - **US-023** [BA] Wymagania FR-1xx dla modułów pobocznych — tylko dla modułów, które PO uzna za *Must* (Z-005).
 - **US-024** [DEV] Archiwizacja `docs/pomysly-automatyzacje*.md` (340 KB) poza główną mapą dokumentacji.
 - **US-025** [SEC] Pełna weryfikacja ASVS L2 wymaganie po wymaganiu (`CHECKLISTA_ASVS.md` to ocena wstępna).
