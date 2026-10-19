@@ -157,6 +157,10 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
   (dwa kanały: powiadomienie i szkic .eml, kryteria AK-01…AK-20 z testami, mini-STRIDE, luki L-1…L-8, pytania do PO).
 - `docs/AUDYT.md` — audyt repozytorium z trzech perspektyw (stan na 2026-10-15), z wynikami narzędzi.
 
+
+### Dodane
+Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
+
 ### Fixed
 - **Awarie integracji** (US-026): SharePoint, paletyzacja, AIS, pogoda i kursy NBP przy nieoczekiwanej odpowiedzi
   dają komunikat albo „niedostępne” zamiast błędu serwera; stare kursy NBP najwyżej 5 dni.

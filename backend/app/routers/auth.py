@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from .. import login_devices
 from ..audit import record
 from ..automation_policy import is_service_login
 from ..config import settings
@@ -140,6 +141,7 @@ def login(request: Request, response: Response,
         return {"totp_required": True, "pending_token": create_pending_2fa_token(user)}
     record(db, entity_type="auth", entity_id=user.id, field="login",
            old_value=None, new_value=user.login, user=user, note=f"logowanie z {ip}")
+    login_devices.check_login(db, user, request.headers.get("user-agent", ""), ip)
     db.commit()
     access = create_access_token(user)
     refresh = issue_refresh_token(db, user.id)
@@ -198,6 +200,7 @@ def verify_2fa(request: Request, response: Response, body: TwoFAVerifyIn,
     login_limiter.reset(key, user_key)
     record(db, entity_type="auth", entity_id=user.id, field="login",
            old_value=None, new_value=user.login, user=user, note=f"logowanie (2FA) z {ip}")
+    login_devices.check_login(db, user, request.headers.get("user-agent", ""), ip)
     db.commit()
     access = create_access_token(user)
     refresh = issue_refresh_token(db, user.id)

@@ -111,6 +111,7 @@ Wymagania niefunkcjonalne i bezpieczeństwa (NFR/SR) są śledzone przez history
 | US-068 test reguły na 30 dniach | US-036, Z-037 | `test_automation_rules_backtest.py` (2), `RuleBacktest.dom.test.tsx` (2) | — | czeka na merge |
 | US-073 propozycja przesunięć w „co jeśli” | US-062, Z-031 | `test_what_if.py` (1), `WhatIfPanel.dom.test.tsx` (rozszerzony) | #83 | wdrożone |
 | US-074 raport miesięczny dla zarządu | Z-039 | `test_report_monthly.py` (2), `AutomationsPage.dom.test.tsx` (1) | #84 | wdrożone |
+| US-075 mail o logowaniu z nowego urządzenia | — | `test_login_devices.py` (9) | — | czeka na merge |
 
 ## Zasady utrzymania
 
