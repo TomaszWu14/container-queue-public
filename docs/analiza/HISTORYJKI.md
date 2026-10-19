@@ -941,7 +941,7 @@ już działa — część historyjek to pokazanie ich i zmierzenie, nie budowa o
   1. `backend/mypy-baseline.txt` pusta (75 → 0); mypy: brak błędów w 280 plikach.
   2. Bez zmiany zachowania: pełny zestaw testów zielony bez zmian w testach; 3 wyjątki `# type: ignore[kod]` z
      uzasadnieniem (ograniczenia typów Starlette/FastAPI i atrybut pomocniczy).
-- **Stan:** zrealizowane, czeka na merge.
+- **Stan:** wdrożone w PR #95.
 
 ## Could
 
