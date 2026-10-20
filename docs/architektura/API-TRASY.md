@@ -442,6 +442,7 @@ Na produkcji `/docs` i `/openapi.json` są wyłączone — ten plik jest jedynym
 | DELETE | `/api/customers/{customer_id}` | Delete Customer | admin, logistics |
 | PATCH | `/api/customers/{customer_id}` | Update Customer | admin, logistics |
 | GET | `/api/public/branding` | Branding stron publicznych — z konfiguracji, bez hardkodu spółki. | publiczna (link z tokenem / logowanie) |
+| GET | `/api/public/whoami` | Adres IP odwiedzającego tak, jak widzi go aplikacja — diagnostyka proxy (monitor demo). | publiczna (link z tokenem / logowanie) |
 
 ## powiadomienia
 
