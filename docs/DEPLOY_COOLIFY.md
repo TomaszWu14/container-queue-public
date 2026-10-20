@@ -3,7 +3,7 @@
 Repozytorium zawiera gotową konfigurację: `docker-compose.coolify.yml`
 (PostgreSQL + jeden kontener aplikacji serwujący API i panel) oraz
 `Dockerfile.coolify`. Domenę i certyfikat HTTPS zapewnia Coolify. Merge do `main` **niczego
-nie wdraża** — wdrożenie to ręczny Redeploy w Coolify (sekcja 4).
+nie wdraża** — wdrożenie to ręczny Redeploy w Coolify (sekcja 4). Demo wdrażamy z wydań (tag `vX.Y.Z`) — `docs/WYDANIA.md`.
 
 ## 1. Utwórz zasób w Coolify
 

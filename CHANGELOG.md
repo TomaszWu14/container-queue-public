@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Wydania** (`docs/WYDANIA.md`): tag `vX.Y.Z` → wydanie na GitHubie z notatkami z CHANGELOG i opcjonalny deploy demo w Coolify
+  (workflow „Wydanie”); `scripts/przygotuj_wydanie.py` przenosi [Unreleased] do nowej wersji i podbija numer w aplikacji.
 - **Statki na mapie demo**: instancja pokazowa (bez AIS) ma 4 statki z pozycją, trasą Azja → Europa, prędkością i portem docelowym; jeden czeka na redzie Gdańska.
 Powiadomienia push na telefon i w przeglądarce dla pilnych alertów, włączane w profilu (US-086). Wymaga zmiennej `VAPID_PRIVATE_KEY`.
 Brama bez zasięgu: lista dnia z pamięci urządzenia i kolejka „Przyjechał” wysyłana po powrocie sieci (US-085).
