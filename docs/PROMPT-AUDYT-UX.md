@@ -23,7 +23,7 @@ wiele godzin dziennie na kolejce kontenerów (`/kolejka`), często na laptopach 
 pewność „czy moja akcja się zapisała", brak mrugania i skakania treści.
 
 ## 1. Zasady projektu (obowiązkowe — przeczytaj przed czymkolwiek)
-1. Przeczytaj `CLAUDE.md`, `graphify-out/wiki/index.md`, `UX_AUDIT.md` (historyczny, decyzja D16 — nie
+1. Przeczytaj `CLAUDE.md`, `graphify-out/wiki/index.md`, `docs/UX_AUDIT.md` (historyczny, decyzja D16 — nie
    duplikuj już wdrożonych ustaleń), `docs/audyt-nielsen-kolejka.md`
    (sekcje §1, §3, §4 — numery linii mogą być nieaktualne, zweryfikuj).
 2. Limit **500 linii** na plik `.py`/`.ts`/`.tsx`/`.css` (`scripts/check_file_lengths.py`). Dodając kod —

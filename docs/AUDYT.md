@@ -132,7 +132,7 @@ Z `docs/07-ograniczenia.md` (zweryfikowane w kodzie, nadal aktualne). Najbardzie
 | P-02/P-03 | Dwie reguły „ETA + N” (4 i 3 dni); zmiana ETA nie przelicza propozycji | dwie różne daty dla tej samej sytuacji |
 | P-12 | Maile SMTP bez ponawiania; bez serwera pomijane po cichu | utracone powiadomienia |
 
-UX: audyt heurystyczny (`UX_AUDIT.md`, zamrożony, większość wdrożona) i `audyt-nielsen-kolejka.md`;
+UX: audyt heurystyczny (`docs/UX_AUDIT.md`, zamrożony, większość wdrożona) i `audyt-nielsen-kolejka.md`;
 21 modułów stron bez testu (`docs/testy/E2E.md`), w tym import Excela i operacja masowa czyszczenia kolejki.
 
 ### 1.7 Mierniki sukcesu
@@ -154,7 +154,7 @@ zatrzymane walidacją). Rejestr `job_runs`/`audit_log` pozwoliłby je policzyć 
 | Migracje Alembic | 121 plików, 5 810 linii; 106 tabel |
 | Frontend `src/` | 40 284 linii TS/TSX (bez testów); 96 plików stron; 98 plików i18n per funkcja |
 | Frontend testy | 14 745 linii w 238 plikach; 964 testów (vitest) + 16 E2E (Playwright) |
-| Dokumentacja | 113 plików Markdown w `docs/` (+ README, SECURITY, BUGS-FOUND, UX_AUDIT, CLAUDE) |
+| Dokumentacja | 113 plików Markdown w `docs/` (+ README, SECURITY, CLAUDE; `BUGS-FOUND.md` w `docs/testy/`, `UX_AUDIT.md` w `docs/`) |
 | Historia (repo publiczne) | 18 commitów, 1 autor, 2026-10-08 → 2026-10-13; 17 PR-ów (docs/demo) |
 
 Stos: Python 3.12 + FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL 16 (SQLite lokalnie i w testach);
