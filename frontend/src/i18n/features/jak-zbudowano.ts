@@ -24,8 +24,6 @@ export default defineFeature({
     hbDecProcessBody: 'Każda zmiana przechodzi analizę wymagań, test przed kodem, przegląd bezpieczeństwa i odbiór — z historyjką i kryteriami akceptacji.',
     hbDecThreatsTitle: 'Model zagrożeń',
     hbDecThreatsBody: 'Przepływy danych przeanalizowane metodą STRIDE, ryzyka w rejestrze z właścicielem i datą przeglądu.',
-    hbLinks: 'Dla programistów', hbLinkRepo: 'Kod źródłowy (GitHub)', hbLinkAdr: 'Decyzje architektoniczne (ADR)',
-    hbLinkTests: 'Strategia testów', hbLinkChangelog: 'Historia zmian (CHANGELOG)',
   },
   en: {
     hbNav: 'How it was built', hbTitle: 'How it was built',
@@ -49,8 +47,6 @@ export default defineFeature({
     hbDecProcessBody: 'Every change goes through requirements analysis, a test before code, a security review and acceptance — with a user story and acceptance criteria.',
     hbDecThreatsTitle: 'Threat model',
     hbDecThreatsBody: 'Data flows analysed with STRIDE; risks kept in a register with an owner and a review date.',
-    hbLinks: 'For developers', hbLinkRepo: 'Source code (GitHub)', hbLinkAdr: 'Architecture decisions (ADR)',
-    hbLinkTests: 'Test strategy', hbLinkChangelog: 'Change history (CHANGELOG)',
   },
   pt: {
     hbNav: 'Como foi construído', hbTitle: 'Como foi construído',
@@ -74,7 +70,5 @@ export default defineFeature({
     hbDecProcessBody: 'Cada alteração passa por análise de requisitos, teste antes do código, revisão de segurança e aceitação — com história de utilizador e critérios de aceitação.',
     hbDecThreatsTitle: 'Modelo de ameaças',
     hbDecThreatsBody: 'Fluxos de dados analisados com STRIDE; riscos num registo com responsável e data de revisão.',
-    hbLinks: 'Para programadores', hbLinkRepo: 'Código-fonte (GitHub)', hbLinkAdr: 'Decisões de arquitetura (ADR)',
-    hbLinkTests: 'Estratégia de testes', hbLinkChangelog: 'Histórico de alterações (CHANGELOG)',
   },
 })
