@@ -33,6 +33,7 @@ from scripts import seed_demo_automation as automation
 from scripts import seed_demo_forwarders as forwarders
 from scripts import seed_demo_process as process
 from scripts import seed_demo_story as story
+from scripts import seed_demo_vessels as vessels
 
 FLAG = "--wyczysc-wszystko"
 IF_STALE = "--tylko-gdy-nieaktualne"
@@ -152,6 +153,7 @@ def seed(demo_logins: list[str], password: str, n: int = 150) -> int:
     automation.rework(db, containers, author.id)
     automation.arrivals(db, containers, author.id)
     forwarders.history(db, containers, acme.id, author.id, now)   # US-079: karta spedytora
+    vessels.positions(db, VESSELS, now)   # mapa śledzenia: statki z pozycją i trasą (demo bez AIS)
     db.commit()
     count = db.query(Container).count()
     db.close()
