@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Wydania** (`docs/WYDANIA.md`): tag `vX.Y.Z` → wydanie na GitHubie z notatkami z CHANGELOG i opcjonalny deploy demo w Coolify
+  (workflow „Wydanie”); `scripts/przygotuj_wydanie.py` przenosi [Unreleased] do nowej wersji i podbija numer w aplikacji.
 - **Monitor demo** (`.github/workflows/demo-monitor.yml`): co 15 min sprawdza demo jak rekruter — serwer, przycisk „Wejdź jako demo”,
   logowanie, kontenery, statki i czy serwer widzi prawdziwe IP (`GET /api/public/whoami`); awaria → issue „Demo nie działa”, naprawa → zamknięte.
 - **Statki na mapie demo**: instancja pokazowa (bez AIS) ma 4 statki z pozycją, trasą Azja → Europa, prędkością i portem docelowym; jeden czeka na redzie Gdańska.

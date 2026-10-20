@@ -1,0 +1,58 @@
+name: Wydanie
+
+# Tag vX.Y.Z → wydanie na GitHubie z notatkami z sekcji [X.Y.Z] w CHANGELOG.md, a gdy są
+# sekrety COOLIFY_DEPLOY_WEBHOOK i COOLIFY_TOKEN — wdrożenie demo w Coolify. Dzięki temu demo
+# nie przebudowuje się po każdym scaleniu do main (wyłącz wtedy Auto Deploy w Coolify).
+# Procedura: docs/WYDANIA.md.
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Wydanie ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Wersja z taga zgodna z aplikacją i CHANGELOG
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="${TAG#v}"
+          pkg=$(jq -r .version frontend/package.json)
+          api=$(grep -oP 'version="\K[0-9.]+' backend/app/main.py | head -1)
+          [ "$pkg" = "$version" ] || { echo "::error::frontend/package.json ma $pkg, tag $TAG"; exit 1; }
+          [ "$api" = "$version" ] || { echo "::error::backend/app/main.py ma $api, tag $TAG"; exit 1; }
+          # notatki: treść sekcji [X.Y.Z] aż do następnego nagłówka wersji
+          awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" { on = 1; next }
+            on && /^## \[/ { exit }
+            on && !/^\[[^]]+\]: https?:/ { print }' CHANGELOG.md > notes.md   # bez linków porównań z dołu
+          [ -s notes.md ] || { echo "::error::brak sekcji [$version] w CHANGELOG.md"; exit 1; }
+
+      - name: Wydanie na GitHubie
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" --title "$TAG" --notes-file notes.md --verify-tag
+
+      - name: Wdrożenie demo (Coolify)
+        env:
+          WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          if [ -z "$WEBHOOK" ] || [ -z "$TOKEN" ]; then
+            echo "Brak sekretów COOLIFY_DEPLOY_WEBHOOK / COOLIFY_TOKEN — wdrożenie ręczne (Coolify → Redeploy)."
+            exit 0
+          fi
+          case "$WEBHOOK" in https://*) ;; *) echo "::error::webhook Coolify tylko po HTTPS (token w nagłówku)"; exit 1 ;; esac
+          curl -fsS --max-time 60 -H "Authorization: Bearer $TOKEN" "$WEBHOOK"
