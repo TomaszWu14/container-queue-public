@@ -121,3 +121,13 @@ def test_forwarder_scorecard_has_demo_history(seeded):
         rows = scorecard(db, admin)["forwarders"]
     assert len(rows) >= 3 and all(r["answered"] for r in rows)
     assert rows[0]["forwarder"] == "Spedycja Demo" and rows[-1]["on_time_pct"] < rows[0]["on_time_pct"]
+
+
+def test_demo_map_has_moving_vessels(seeded, client):
+    # mapa śledzenia w demo nie jest pusta: statki z kolejki mają pozycję, trasę i port docelowy
+    hdr = login(client, "demo", PW)
+    vessels = client.get("/api/tracking/vessels", headers=hdr).json()
+    assert len(vessels) == 4
+    assert all(v["lat"] is not None and len(v["trail"]) >= 2 and v["destination"] for v in vessels)
+    assert sum(1 for v in vessels if v["near_port"]) == 1   # jeden czeka na redzie
+    assert all(v["containers"] > 0 for v in vessels)
