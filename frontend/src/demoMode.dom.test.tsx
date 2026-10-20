@@ -109,3 +109,40 @@ describe('Ekran powitalny demo — ekran Automatyzacje (US-032)', () => {
     expect(screen.queryByText(/każdy automat z wyzwalaczem/)).toBeNull()
   })
 })
+
+describe('Ekran logowania — chwilowy brak połączenia', () => {
+  it('ponawia branding i pokazuje przycisk demo, gdy serwer wróci', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    let calls = 0
+    vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).includes('/api/public/branding')) {
+        calls += 1
+        return calls < 3 ? jsonResponse({ detail: 'Za dużo żądań.' }, 429)
+          : jsonResponse({ demo_login: 'demo', demo_password: 'haslo-demo-123' })
+      }
+      return jsonResponse({})
+    }))
+    render(<MemoryRouter><LoginPage onLogin={() => {}} /></MemoryRouter>)
+    await vi.advanceTimersByTimeAsync(8_000)
+    expect(await screen.findByTestId('demo-card')).toBeTruthy()
+    expect(screen.queryByTestId('branding-failed')).toBeNull()
+    vi.useRealTimers()
+  })
+
+  it('po nieudanych próbach mówi, że serwer nie odpowiada, i pozwala spróbować ponownie', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    let down = true
+    vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).includes('/api/public/branding'))
+        return down ? jsonResponse({ detail: 'Bad Gateway' }, 502) : jsonResponse({ demo_login: 'demo', demo_password: 'x' })
+      return jsonResponse({ status: 'ok' })
+    }))
+    render(<MemoryRouter><LoginPage onLogin={() => {}} /></MemoryRouter>)
+    await vi.advanceTimersByTimeAsync(8_000)
+    expect(await screen.findByTestId('branding-failed')).toBeTruthy()
+    down = false
+    fireEvent.click(screen.getByRole('button', { name: 'Spróbuj ponownie' }))
+    expect(await screen.findByTestId('demo-card')).toBeTruthy()
+    vi.useRealTimers()
+  })
+})
