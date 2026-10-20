@@ -115,4 +115,5 @@ kierowcy) → JSON dla osoby. Usunięcie: użytkownik → `DELETE /api/users/{id
 
 `docker-compose.demo.yml`; konto `demo` tylko do odczytu; nocny reset `python -m scripts.seed_demo
 --wyczysc-wszystko` (Scheduled Task 03:00). **Nigdy** nie podłączać do bazy produkcyjnej ani nie wgrywać
-danych rzeczywistych (E-05). Weryfikacja backupu wyłączona (`VERIFY_BACKUP_WEEKDAY=-1`) — dane są syntetyczne.
+danych rzeczywistych (E-05). Start kontenera wgrywa dane tylko, gdy są nieaktualne (`--tylko-gdy-nieaktualne`:
+inny dzień, zmienione skrypty `seed_demo*` lub konta/hasło) — restart po wdrożeniu nie wylogowuje odwiedzających. Weryfikacja backupu wyłączona (`VERIFY_BACKUP_WEEKDAY=-1`) — dane są syntetyczne.

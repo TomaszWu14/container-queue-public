@@ -1,5 +1,7 @@
 """Instancja portfolio: konto demo tylko do odczytu (egzekwowane w API), podpowiedź logowania,
 bezpieczniki skryptu scripts/seed_demo.py (kasuje wszystko — tylko na instancji pokazowej, z flagą)."""
+import datetime as dt
+
 import pytest
 
 from app.config import settings
@@ -125,3 +127,29 @@ def test_demo_presence_ping_allowed(client, db_session, monkeypatch):
     hdr = login(client, "demo", PW)
     assert client.post("/api/presence", headers=hdr, json={"path": "/kolejka", "active": True}).status_code == 200
     assert client.post("/api/presence/leave", headers=hdr).status_code == 204
+
+
+def test_seed_on_start_skips_fresh_data_and_keeps_sessions(client, monkeypatch, tmp_path):
+    # restart kontenera demo (każde wdrożenie) nie kasuje aktualnych danych ani sesji odwiedzających
+    from app.database import SessionLocal
+    from app.models import RefreshToken
+    monkeypatch.setattr(settings, "demo_readonly_logins", "demo")
+    monkeypatch.setattr(settings, "uploads_dir", str(tmp_path))
+    monkeypatch.setenv("DEMO_PASSWORD", PW)
+    args = ["--wyczysc-wszystko", "--tylko-gdy-nieaktualne"]
+    seed_demo.main(args)   # pierwsze wgranie (brak znacznika)
+    login(client, "demo", PW)
+    with SessionLocal() as db:
+        sessions = db.query(RefreshToken).count()
+    assert sessions >= 1
+    seed_demo.main(args)   # restart: dane z dziś, te same skrypty — pominięte
+    with SessionLocal() as db:
+        assert db.query(RefreshToken).count() == sessions
+    monkeypatch.setattr(seed_demo, "today_pl", lambda: dt.date(2000, 1, 1))
+    seed_demo.main(args)   # inny dzień — dane nieaktualne, wgrane od nowa (sesje znikają)
+    with SessionLocal() as db:
+        assert db.query(RefreshToken).count() == 0
+
+
+def test_seed_stamp_changes_with_password():
+    assert seed_demo.seed_stamp(["demo"], PW) != seed_demo.seed_stamp(["demo"], PW + "x")

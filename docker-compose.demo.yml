@@ -1,6 +1,7 @@
 # Publiczne demo portfolio w Coolify (Docker Compose): dane fikcyjne, konto „demo” tylko do odczytu.
 # Hasła i klucz generuje Coolify (zmienne SERVICE_PASSWORD_* — nikt ich nie wpisuje ręcznie).
-# Przy każdym starcie kontenera dane demo są wgrywane od nowa (seed_demo kasuje poprzednie).
+# Start kontenera wgrywa dane demo od nowa tylko, gdy są nieaktualne (inny dzień, zmienione skrypty seed_demo*
+# albo konta/hasło) — zwykły restart po wdrożeniu nie wylogowuje odwiedzających. Nocny reset: RUNBOOK §10.
 # Domena w Coolify dla usługi „app”: https://container.queue.twapp.pl:8000 (8000 = port kontenera).
 services:
   db:
@@ -61,7 +62,7 @@ services:
       UPLOADS_DIR: /data/uploads
     command: >-
       sh -c "alembic upgrade head
-      && python -m scripts.seed_demo --wyczysc-wszystko
+      && python -m scripts.seed_demo --wyczysc-wszystko --tylko-gdy-nieaktualne
       && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='172.16.0.0/12,127.0.0.1/32'"
     volumes:
       - uploads:/data/uploads

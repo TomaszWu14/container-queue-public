@@ -6,18 +6,24 @@ Bezpieczniki (oba wymagane — na zwykłej instancji skrypt odmawia):
   2. flaga --wyczysc-wszystko.
 Uruchom z backend/ (w kontenerze app):
   DEMO_PASSWORD='<min. 12 znaków>' python -m scripts.seed_demo --wyczysc-wszystko
+Start kontenera demo dokłada --tylko-gdy-nieaktualne: dane z dziś, z tej samej wersji skryptów
+i haseł zostają — restart po wdrożeniu nie wylogowuje odwiedzających i nie wydłuża przestoju.
 Schemat i alembic_version zostają (czyszczone są wiersze), więc kolejne wdrożenia działają normalnie.
 """
 import datetime as dt
+import hashlib
 import os
 import pathlib
 import random
 import secrets
 import sys
 
+from sqlalchemy.exc import SQLAlchemyError
+
 from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.main import bootstrap  # przez app.main: kolejność importów omija cykl modułów (ARCH-002)
+from app.app_settings import get_setting, set_setting  # noqa: I001 — po app.main (ARCH-002)
 from app.iso6346 import check_digit
 from app.models import (AuditLog, Company, Container, CustomsAgency, Forwarder, TrackingEvent, User,
                         Warehouse)
@@ -29,6 +35,8 @@ from scripts import seed_demo_process as process
 from scripts import seed_demo_story as story
 
 FLAG = "--wyczysc-wszystko"
+IF_STALE = "--tylko-gdy-nieaktualne"
+STAMP_SETTING = "demo_seed_stamp"
 SUPPLIERS = ["Ningbo Demo Trading Co.", "Qingdao Przykładowe Tekstylia", "Shenzhen Pokazowa Elektronika",
              "Xiamen Wzorcowe Meble", "Dostawca Portugalski Demo Lda", "Foshan Testowe Oświetlenie"]
 VESSELS = ["DEMO EXPRESS", "SAMPLE STAR", "PRZYKŁAD OCEAN", "TEST HORIZON"]
@@ -175,12 +183,41 @@ def _history(db, container: Container, statuses: list, author: User, today: dt.d
                                               second=0, microsecond=0)))
 
 
+def seed_stamp(demo_logins: list[str], password: str) -> str:
+    """Znacznik wgranych danych: dzień (daty ETA liczone od dziś) + skrót skryptów seed_demo*
+    i kont/hasła. Zmiana któregokolwiek = dane nieaktualne, trzeba wgrać od nowa."""
+    digest = hashlib.sha256(f"{','.join(demo_logins)}|{password}".encode())
+    for path in sorted(pathlib.Path(__file__).parent.glob("seed_demo*.py")):
+        digest.update(path.read_bytes())
+    return f"{today_pl().isoformat()}|{digest.hexdigest()[:16]}"
+
+
+def is_fresh(stamp: str) -> bool:
+    try:
+        with SessionLocal() as db:
+            return get_setting(db, STAMP_SETTING) == stamp
+    except SQLAlchemyError:   # pusta baza bez tabel — wgrywamy
+        return False
+
+
+def save_stamp(stamp: str) -> None:
+    with SessionLocal() as db:
+        set_setting(db, STAMP_SETTING, stamp)
+        db.commit()
+
+
 def main(argv: list[str]) -> None:
     demo = check_guards(argv)
     password = os.environ.get("DEMO_PASSWORD", "")
     validate_password_policy(password)
+    stamp = seed_stamp(demo, password)
+    if IF_STALE in argv and is_fresh(stamp):
+        print("seed_demo: dane demo aktualne — pomijam (sesje odwiedzających zostają)")
+        return
     wipe()
-    print(f"seed_demo: gotowe — {seed(demo, password)} kontenerów, konta demo: {', '.join(demo)}")
+    count = seed(demo, password)
+    save_stamp(stamp)
+    print(f"seed_demo: gotowe — {count} kontenerów, konta demo: {', '.join(demo)}")
 
 
 if __name__ == "__main__":
