@@ -25,10 +25,6 @@ const DECISIONS: [string, string, string][] = [   // [tytuł, opis, dokument] �
   ['hbDecProcessTitle', 'hbDecProcessBody', doc('docs/architektura/adr/0002-proces-zespolowy-ba-dev-sec.md')],
   ['hbDecThreatsTitle', 'hbDecThreatsBody', doc('docs/bezpieczenstwo/THREAT_MODEL.md')],
 ]
-const LINKS: [string, string][] = [
-  ['hbLinkRepo', REPO], ['hbLinkAdr', doc('docs/architektura/adr/README.md')],
-  ['hbLinkTests', doc('docs/testy/STRATEGIA_TESTOW.md')], ['hbLinkChangelog', doc('CHANGELOG.md')],
-]
 
 export default function HowBuiltPage() {
   const t = useT()
@@ -76,15 +72,6 @@ export default function HowBuiltPage() {
             </li>
           ))}
         </ol>
-      </section>
-
-      <section className="panel">
-        <h2 className="as-h3">{t('hbLinks')}</h2>
-        <ul className="hb-links">
-          {LINKS.map(([key, href]) => (
-            <li key={key}><a href={href} target="_blank" rel="noopener noreferrer">{t(key)} ↗</a></li>
-          ))}
-        </ul>
       </section>
     </main>
   )

@@ -15,7 +15,8 @@ describe('Jak to zbudowano', () => {
     expect(screen.getByText('≥ 92%')).toBeTruthy()
     expect(screen.getByText('Izolacja danych w jednym miejscu')).toBeTruthy()
     const links = screen.getAllByRole('link')
-    expect(links.length).toBeGreaterThanOrEqual(10)
+    expect(links.length).toBe(6)   // tylko „więcej” przy decyzjach — sekcja „Dla programistów” usunięta
+    expect(screen.queryByRole('heading', { name: 'Dla programistów' })).toBeNull()
     for (const a of links) {
       expect(a.getAttribute('href')!.startsWith(REPO)).toBe(true)
       expect(a.getAttribute('rel')).toContain('noopener')
