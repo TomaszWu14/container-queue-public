@@ -175,6 +175,8 @@ Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do ws
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
 
 ### Fixed
+- **Przycisk „Wejdź jako demo” nie znika po cichu**: ekran logowania ponawia pobranie konta demo (3 próby), a gdy serwer dalej
+  nie odpowiada, pokazuje komunikat z przyciskiem „Spróbuj ponownie”.
 - **Dostępność linku „Kolejka”** (WCAG 2.5.3): nazwa dostępna zawiera widoczny licznik kontenerów — axe-core 4.14 zgłaszał
   `label-content-name-mismatch` i E2E „ścieżka rekrutera” było czerwone na każdym PR.
 - **Demo wyrzucało po wyjściu z karty**: konto demo (tylko odczyt) nie ma już 30-minutowego okna bezczynności —
