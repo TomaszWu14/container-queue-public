@@ -173,6 +173,8 @@ Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do ws
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
 
 ### Fixed
+- **Dostępność linku „Kolejka”** (WCAG 2.5.3): nazwa dostępna zawiera widoczny licznik kontenerów — axe-core 4.14 zgłaszał
+  `label-content-name-mismatch` i E2E „ścieżka rekrutera” było czerwone na każdym PR.
 - **Demo wyrzucało po wyjściu z karty**: konto demo (tylko odczyt) nie ma już 30-minutowego okna bezczynności —
   sesja trwa do limitu 12 h od zalogowania; zwykłe konta bez zmian.
 - **Demo zrywało sesje wszystkim naraz**: powtórzony stary token odświeżania jednego odwiedzającego (np. telefon zgubił
