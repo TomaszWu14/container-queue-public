@@ -8,6 +8,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Monitor demo** (`.github/workflows/demo-monitor.yml`): co 15 min sprawdza demo jak rekruter — serwer, przycisk „Wejdź jako demo”,
+  logowanie, kontenery, statki i czy serwer widzi prawdziwe IP (`GET /api/public/whoami`); awaria → issue „Demo nie działa”, naprawa → zamknięte.
 - **Statki na mapie demo**: instancja pokazowa (bez AIS) ma 4 statki z pozycją, trasą Azja → Europa, prędkością i portem docelowym; jeden czeka na redzie Gdańska.
 Powiadomienia push na telefon i w przeglądarce dla pilnych alertów, włączane w profilu (US-086). Wymaga zmiennej `VAPID_PRIVATE_KEY`.
 Brama bez zasięgu: lista dnia z pamięci urządzenia i kolejka „Przyjechał” wysyłana po powrocie sieci (US-085).

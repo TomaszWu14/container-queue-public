@@ -6,6 +6,8 @@ z linkiem per klient i flaga „plik dla klienta” zostały usunięte (spec dok
 §4 pkt 25). Tu zostaje też limit i branding stron publicznych (share, logowanie).
 """
 
+import ipaddress
+
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
@@ -128,6 +130,19 @@ def public_branding(db: Session = Depends(get_db)):
             **_demo_account(),
             "demo_story_container_id": _demo_story_id(db),
             "support_email": settings.support_email}
+
+
+@router.get("/public/whoami", dependencies=[Depends(public_rate_limit)])
+def public_whoami(request: Request):
+    """Adres IP odwiedzającego tak, jak widzi go aplikacja — diagnostyka proxy (monitor demo).
+    private=True = widzimy adres z sieci dockera/proxy zamiast klienta: wszyscy odwiedzający
+    dzielą wtedy limity na IP (TRUSTED_PROXY_COUNT / TRUSTED_PROXY_CIDRS do poprawy)."""
+    ip = client_ip(request)
+    try:
+        private = not ipaddress.ip_address(ip).is_global   # też CGNAT, link-local
+    except ValueError:
+        private = True   # „unknown” albo śmieci — też znak, że proxy nie podaje klienta
+    return {"ip": ip, "private": private}
 
 
 def _demo_story_id(db: Session) -> int | None:

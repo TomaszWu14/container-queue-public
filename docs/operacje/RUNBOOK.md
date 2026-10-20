@@ -115,5 +115,7 @@ kierowcy) → JSON dla osoby. Usunięcie: użytkownik → `DELETE /api/users/{id
 
 `docker-compose.demo.yml`; konto `demo` tylko do odczytu; nocny reset `python -m scripts.seed_demo
 --wyczysc-wszystko` (Scheduled Task 03:00). **Nigdy** nie podłączać do bazy produkcyjnej ani nie wgrywać
-danych rzeczywistych (E-05). Start kontenera wgrywa dane tylko, gdy są nieaktualne (`--tylko-gdy-nieaktualne`:
+danych rzeczywistych (E-05). Monitor: workflow „Monitor demo” (co 15 min) zakłada issue „Demo nie działa” z listą
+problemów i zamyka je po naprawie; `GET /api/public/whoami` pokazuje IP odwiedzającego wg aplikacji (`private: true` =
+proxy źle ustawione, poprawić `TRUSTED_PROXY_*`). Start kontenera wgrywa dane tylko, gdy są nieaktualne (`--tylko-gdy-nieaktualne`:
 inny dzień, zmienione skrypty `seed_demo*` lub konta/hasło) — restart po wdrożeniu nie wylogowuje odwiedzających. Weryfikacja backupu wyłączona (`VERIFY_BACKUP_WEEKDAY=-1`) — dane są syntetyczne.
