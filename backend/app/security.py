@@ -228,11 +228,14 @@ def consume_refresh_token(db: Session, token: str) -> tuple[int, bool]:
                 if stolen.revoked_at is not None and utcnow() - stolen.revoked_at <= grace:
                     db.commit()
                     return int(payload["sub"]), False
-                revoke_user_refresh_tokens(db, stolen.user_id)
-                # podbij wersję sesji, by natychmiast unieważnić też wydane access tokeny
                 victim = db.get(User, stolen.user_id)
-                if victim:
-                    victim.session_version += 1
+                # wspólne konto demo (tylko odczyt, jawne hasło): odrzucamy sam ten token —
+                # unieważnienie rodziny wylogowałoby wszystkich odwiedzających naraz
+                if not (victim and is_demo_login(victim.login)):
+                    revoke_user_refresh_tokens(db, stolen.user_id)
+                    # podbij wersję sesji, by natychmiast unieważnić też wydane access tokeny
+                    if victim:
+                        victim.session_version += 1
         db.commit()
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Nieprawidłowy lub wygasły token.")
     db.commit()
