@@ -153,3 +153,23 @@ def test_seed_on_start_skips_fresh_data_and_keeps_sessions(client, monkeypatch, 
 
 def test_seed_stamp_changes_with_password():
     assert seed_demo.seed_stamp(["demo"], PW) != seed_demo.seed_stamp(["demo"], PW + "x")
+
+
+def test_demo_token_reuse_does_not_log_out_other_visitors(client, db_session, monkeypatch):
+    # wspólne konto demo: powtórzony stary refresh token jednej osoby (np. telefon zgubił
+    # odpowiedź) nie może zrywać sesji wszystkich odwiedzających
+    import datetime as _dt
+
+    from app.database import SessionLocal
+    from app.models import RefreshToken
+    _add_demo(db_session, monkeypatch)
+    first = client.post("/api/auth/login", data={"username": "demo", "password": PW}).json()
+    other = login(client, "demo", PW)
+    old = first["refresh_token"]
+    assert client.post("/api/auth/refresh", json={"refresh_token": old}).status_code == 200
+    with SessionLocal() as db:   # odwołanie starsze niż okno łaski
+        for row in db.query(RefreshToken).filter(RefreshToken.revoked_at.isnot(None)):
+            row.revoked_at -= _dt.timedelta(seconds=3600)
+        db.commit()
+    assert client.post("/api/auth/refresh", json={"refresh_token": old}).status_code == 401
+    assert client.get("/api/auth/me", headers=other).status_code == 200

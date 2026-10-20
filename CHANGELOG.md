@@ -172,6 +172,8 @@ Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do ws
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
 
 ### Fixed
+- **Demo zrywało sesje wszystkim naraz**: powtórzony stary token odświeżania jednego odwiedzającego (np. telefon zgubił
+  odpowiedź) był traktowany jak kradzież i wylogowywał wszystkich na wspólnym koncie demo. Teraz odrzucany jest tylko ten token.
 - **Demo działało raz tak, raz nie**: start kontenera demo (każde wdrożenie z `main`) kasował i wgrywał dane od nowa,
   wylogowując odwiedzających. Teraz `seed_demo --tylko-gdy-nieaktualne` pomija wgrywanie, gdy dane są z dziś i z tych
   samych skryptów/haseł. Pole loginu nie zmienia „demo” na „Demo” na telefonie.
