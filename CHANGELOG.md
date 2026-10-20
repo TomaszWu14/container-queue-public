@@ -172,6 +172,9 @@ Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do ws
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
 
 ### Fixed
+- **Demo działało raz tak, raz nie**: start kontenera demo (każde wdrożenie z `main`) kasował i wgrywał dane od nowa,
+  wylogowując odwiedzających. Teraz `seed_demo --tylko-gdy-nieaktualne` pomija wgrywanie, gdy dane są z dziś i z tych
+  samych skryptów/haseł. Pole loginu nie zmienia „demo” na „Demo” na telefonie.
 - **Awarie integracji** (US-026): SharePoint, paletyzacja, AIS, pogoda i kursy NBP przy nieoczekiwanej odpowiedzi
   dają komunikat albo „niedostępne” zamiast błędu serwera; stare kursy NBP najwyżej 5 dni.
 - **Weryfikacja kopii zapasowej** (US-064): `psql` dostawał skompresowany plik zamiast SQL — próbne odtworzenie

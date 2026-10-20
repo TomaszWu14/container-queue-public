@@ -218,7 +218,9 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
             ) : demoHint && <p className="kl2-demo" data-testid="demo-hint">{t('demoLoginHint')}: <b>{demoHint}</b></p>}
             <div className="kl2-field">
               <label htmlFor="kl2-login">{t('loginField')}</label>
+              {/* telefon nie zmienia „demo” na „Demo” — login rozróżnia wielkość liter */}
               <input id="kl2-login" type="text" autoComplete="username" autoFocus
+                     autoCapitalize="none" autoCorrect="off" spellCheck={false}
                      placeholder="np. m.kowalski" value={username}
                      onChange={e => setUsername(e.target.value)} />
             </div>
