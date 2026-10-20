@@ -37,7 +37,7 @@ dokumentów ani przy przekroczonym limicie magazynu, nie ma publicznego linku dl
 | P-13 | **Naprawione w PR #18 (US-003, czeka na scalenie); formularz kontenera był już chroniony (DB-005).** Edycje równoległe statusu, odprawy i zleceń transportowych bez kontroli wersji | ostatni zapis nadpisuje poprzedni bez ostrzeżenia | `routers/containers_write.py:243-253`, `routers/customs.py:434` |
 | P-14 | Dokumentacja projektu częściowo nieaktualna (sloty, ważność linków, liczba etapów) | czytelnik dostaje sprzeczne reguły | patrz niżej |
 
-Rejestr błędów zgłoszonych wcześniej: [`BUGS-FOUND.md`](../BUGS-FOUND.md); długi UX: [`UX_AUDIT.md`](../UX_AUDIT.md).
+Rejestr błędów zgłoszonych wcześniej: [`BUGS-FOUND.md`](testy/BUGS-FOUND.md); długi UX: [`UX_AUDIT.md`](UX_AUDIT.md).
 
 ## Miejsca bez walidacji lub obsługi błędów
 
