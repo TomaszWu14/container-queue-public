@@ -185,9 +185,11 @@ def _impersonated_user(real: "User", ctx: dict) -> "User":
 
 def issue_refresh_token(db: Session, user_id: int, started: datetime.datetime | None = None) -> str:
     """Wystawia refresh token i zapisuje jego JTI, aby można było go odwołać.
-    started = czas zalogowania (przy rotacji przenoszony); ważność = okno bezczynności."""
+    started = czas zalogowania (przy rotacji przenoszony); ważność = okno bezczynności
+    (konto demo: do limitu 12 h — session_limits.refresh_lifetime)."""
     started = started or datetime.datetime.now(datetime.UTC)
-    delta = session_limits.refresh_lifetime(started)
+    user = db.get(User, user_id)
+    delta = session_limits.refresh_lifetime(started, idle=not (user and is_demo_login(user.login)))
     jti = secrets.token_hex(32)
     db.add(RefreshToken(user_id=user_id, jti=jti, expires_at=utcnow() + delta))
     db.commit()
