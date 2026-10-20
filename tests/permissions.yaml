@@ -516,6 +516,7 @@ routes:
   "DELETE /api/customers/{customer_id}": {anon: 401, admin: '2xx', logistics: '2xx', warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: get_scoped
   "PATCH /api/customers/{customer_id}": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: get_scoped
   "GET /api/public/branding": {anon: public}
+  "GET /api/public/whoami": {anon: public}   # diagnostyka proxy: IP odwiedzającego wg aplikacji
 
   # --- purchase_orders ---
   "GET /api/purchase-orders": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 200, sales: 403}  # scoping: scope_company

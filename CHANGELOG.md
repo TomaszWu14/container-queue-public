@@ -10,6 +10,8 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ### Added
 - **Wydania** (`docs/WYDANIA.md`): tag `vX.Y.Z` → wydanie na GitHubie z notatkami z CHANGELOG i opcjonalny deploy demo w Coolify
   (workflow „Wydanie”); `scripts/przygotuj_wydanie.py` przenosi [Unreleased] do nowej wersji i podbija numer w aplikacji.
+- **Monitor demo** (`.github/workflows/demo-monitor.yml`): co 15 min sprawdza demo jak rekruter — serwer, przycisk „Wejdź jako demo”,
+  logowanie, kontenery, statki i czy serwer widzi prawdziwe IP (`GET /api/public/whoami`); awaria → issue „Demo nie działa”, naprawa → zamknięte.
 - **Statki na mapie demo**: instancja pokazowa (bez AIS) ma 4 statki z pozycją, trasą Azja → Europa, prędkością i portem docelowym; jeden czeka na redzie Gdańska.
 Powiadomienia push na telefon i w przeglądarce dla pilnych alertów, włączane w profilu (US-086). Wymaga zmiennej `VAPID_PRIVATE_KEY`.
 Brama bez zasięgu: lista dnia z pamięci urządzenia i kolejka „Przyjechał” wysyłana po powrocie sieci (US-085).
@@ -175,6 +177,10 @@ Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do ws
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
 
 ### Fixed
+- **Przycisk „Wejdź jako demo” nie znika po cichu**: ekran logowania ponawia pobranie konta demo (3 próby), a gdy serwer dalej
+  nie odpowiada, pokazuje komunikat z przyciskiem „Spróbuj ponownie”.
+- **Dostępność linku „Kolejka”** (WCAG 2.5.3): nazwa dostępna zawiera widoczny licznik kontenerów — axe-core 4.14 zgłaszał
+  `label-content-name-mismatch` i E2E „ścieżka rekrutera” było czerwone na każdym PR.
 - **Demo wyrzucało po wyjściu z karty**: konto demo (tylko odczyt) nie ma już 30-minutowego okna bezczynności —
   sesja trwa do limitu 12 h od zalogowania; zwykłe konta bez zmian.
 - **Demo zrywało sesje wszystkim naraz**: powtórzony stary token odświeżania jednego odwiedzającego (np. telefon zgubił

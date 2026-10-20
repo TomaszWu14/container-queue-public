@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ApiError, api, login } from '../api'
 import { LANGS, Lang, LangContext, useT } from '../i18n'
 import PasswordInput from '../PasswordInput'
+import { useBranding } from './loginBranding'
 import { clearIdleLogout, wasIdleLogout } from '../idleLogout'
 
 /*
@@ -79,10 +80,6 @@ const STYLE = `
 @media(prefers-reduced-motion:reduce){.kl2 *{transition:none!important}}
 `
 
-type Branding = {
-  demo_hint?: string; demo_login?: string; demo_password?: string; support_email?: string
-}
-
 const CHIPS = ['Awizacje', 'Limity magazynów', 'Odprawa celna', 'Zlecenia transportowe', 'Powiadomienia']
 
 // autoDemo: wejście z linku /demo (README, YouTube) — na instancji portfolio loguje od razu kontem
@@ -92,11 +89,9 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
   const navigate = useNavigate()
   const { lang, setLang } = useContext(LangContext)
   const [username, setUsername] = useState('')
-  // instancja portfolio: konto demo i kontakt z /api/public/branding (puste = zwykła instancja)
-  const [brand, setBrand] = useState<Branding>({})
-  useEffect(() => {
-    api.get<Branding>('/api/public/branding').then(b => setBrand(b ?? {})).catch(() => {})
-  }, [])
+  // instancja portfolio: konto demo i kontakt z /api/public/branding (puste = zwykła instancja);
+  // błąd ponawiany, a po kilku próbach komunikat zamiast cichego braku przycisku demo
+  const { brand, failed: brandFailed, retry: retryBrand } = useBranding()
   const demoHint = typeof brand.demo_hint === 'string' ? brand.demo_hint : ''
   const demo = brand.demo_login && brand.demo_password
     ? { login: brand.demo_login, password: brand.demo_password } : null
@@ -215,7 +210,13 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
                 </div>
                 <div className="kl2-or">{t('demoOrOwnAccount')}</div>
               </>
-            ) : demoHint && <p className="kl2-demo" data-testid="demo-hint">{t('demoLoginHint')}: <b>{demoHint}</b></p>}
+            ) : demoHint ? <p className="kl2-demo" data-testid="demo-hint">{t('demoLoginHint')}: <b>{demoHint}</b></p>
+              : brandFailed && (
+                <p className="kl2-demo" role="status" data-testid="branding-failed">
+                  {t('brandingUnavailable')}{' '}
+                  <button type="button" className="kl2-forgot" onClick={retryBrand}>{t('brandingRetry')}</button>
+                </p>
+              )}
             <div className="kl2-field">
               <label htmlFor="kl2-login">{t('loginField')}</label>
               {/* telefon nie zmienia „demo” na „Demo” — login rozróżnia wielkość liter */}

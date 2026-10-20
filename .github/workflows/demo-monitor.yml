@@ -1,0 +1,104 @@
+name: Monitor demo
+
+# Co 15 min sprawdza publiczne demo tak, jak widzi je rekruter: serwer żyje, ekran logowania
+# ma przycisk „Wejdź jako demo”, konto demo się loguje i widzi kontenery oraz statki, a serwer
+# widzi prawdziwe IP odwiedzających (inaczej wszyscy dzielą limity na IP). Awaria → issue
+# „Demo nie działa” (jedno, z kolejnymi komentarzami); powrót do normy → issue zamknięte.
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'   # co 15 min, poza pełną godziną (mniej opóźnień w GitHub)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: demo-monitor
+  cancel-in-progress: false
+
+env:
+  DEMO_URL: https://container.queue.twapp.pl
+  LABEL: demo-monitor
+
+jobs:
+  check:
+    name: Demo dla rekrutera
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Sprawdź demo
+        id: check
+        shell: bash
+        run: |
+          set -uo pipefail
+          problems=()
+          get() { curl -sS --max-time 30 --retry 2 --retry-delay 20 --retry-all-errors "$@"; }
+
+          health=$(get "$DEMO_URL/api/health") || health=''
+          [ "$(jq -r '.status // empty' <<<"$health" 2>/dev/null)" = ok ] \
+            || problems+=("Serwer nie odpowiada poprawnie na /api/health: ${health:0:200}")
+
+          brand=$(get "$DEMO_URL/api/public/branding") || brand=''
+          login=$(jq -r '.demo_login // empty' <<<"$brand" 2>/dev/null)
+          password=$(jq -r '.demo_password // empty' <<<"$brand" 2>/dev/null)
+          if [ -z "$login" ] || [ -z "$password" ]; then
+            problems+=("Brak przycisku „Wejdź jako demo”: /api/public/branding bez konta demo: ${brand:0:200}")
+          else
+            token=$(get -X POST "$DEMO_URL/api/auth/login" -H 'X-Requested-With: XMLHttpRequest' \
+              --data-urlencode "username=$login" --data-urlencode "password=$password" \
+              | jq -r '.access_token // empty' 2>/dev/null)
+            if [ -z "$token" ]; then
+              problems+=("Logowanie kontem demo nie działa")
+            else
+              auth=(-H "Authorization: Bearer $token")
+              containers=$(get "${auth[@]}" "$DEMO_URL/api/containers" | jq 'length' 2>/dev/null || echo 0)
+              [ "${containers:-0}" -gt 0 ] || problems+=("Demo bez danych: lista kontenerów pusta")
+              vessels=$(get "${auth[@]}" "$DEMO_URL/api/tracking/vessels" | jq 'length' 2>/dev/null || echo 0)
+              [ "${vessels:-0}" -gt 0 ] || problems+=("Mapa śledzenia bez statków")
+            fi
+          fi
+
+          whoami=$(get "$DEMO_URL/api/public/whoami") || whoami=''
+          if [ "$(jq -r '.private' <<<"$whoami" 2>/dev/null)" = true ]; then
+            problems+=("Serwer widzi adres proxy zamiast odwiedzającego ($(jq -r .ip <<<"$whoami")) — wszyscy dzielą limity na IP; popraw TRUSTED_PROXY_COUNT / TRUSTED_PROXY_CIDRS")
+          fi
+
+          if [ ${#problems[@]} -eq 0 ]; then
+            echo "Demo działa." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo "Demo $DEMO_URL — problemy ($(date -u '+%Y-%m-%d %H:%M UTC')):"
+              for p in "${problems[@]}"; do echo "- $p"; done
+              echo
+              echo "Przebieg: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            } > report.md
+            cat report.md | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Zgłoś awarię (issue)
+        if: steps.check.outputs.ok == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create "$LABEL" --color B60205 --description "Automatyczny monitor demo" 2>/dev/null || true
+          open=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number')
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --body-file report.md
+          else
+            gh issue create --title "Demo nie działa" --label "$LABEL" --body-file report.md
+          fi
+          exit 1   # czerwony przebieg = mail z GitHub do właściciela repozytorium
+
+      - name: Zamknij zgłoszenie po naprawie
+        if: steps.check.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for n in $(gh issue list --label "$LABEL" --state open --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Demo znów działa ($(date -u '+%Y-%m-%d %H:%M UTC'))."
+          done
