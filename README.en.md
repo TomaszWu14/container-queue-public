@@ -1,5 +1,8 @@
 # Container queue — planning import deliveries
 
+[![ci-backend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-backend.yml) [![ci-frontend](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-frontend.yml) [![security](https://github.com/TomaszWu14/container-queue-public/actions/workflows/security.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/security.yml) [![migrations](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-migrations.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/ci-migrations.yml) [![lighthouse](https://github.com/TomaszWu14/container-queue-public/actions/workflows/lighthouse.yml/badge.svg)](https://github.com/TomaszWu14/container-queue-public/actions/workflows/lighthouse.yml)
+![coverage](https://img.shields.io/badge/backend_coverage-%E2%89%A592%25_enforced_in_CI-brightgreen) ![tests](https://img.shields.io/badge/tests-3000%2B-brightgreen) ![stack](https://img.shields.io/badge/FastAPI_%C2%B7_PostgreSQL_%C2%B7_React_%C2%B7_TypeScript-informational) ![languages](https://img.shields.io/badge/UI-PL_%C2%B7_EN_%C2%B7_PT-informational) [![demo](https://img.shields.io/badge/demo-online-blue)](https://container.queue.twapp.pl/demo)
+
 *[Polska wersja](README.md)*
 
 **One shared view of container deliveries for the logistics teams of several companies, their warehouses,
@@ -13,7 +16,10 @@ freight forwarders and the customs agency — replacing an Excel sheet sent arou
 🤖 [Automations — 15 s](docs/video/automatyzacje.mp4)
 
 🌐 **Live demo, no sign-up: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** — read-only
-account with 150 fictional containers. The app opens in English for browsers outside Poland and Portugal (language switch in the sidebar or on the login screen).
+account with 150 fictional containers, customs clearance, documents, orders and delivery bookings in progress.
+From the main address click **“Enter as demo”** on the login screen (or login `demo`, password `demoportfolio2026`).
+With the same password you see the system through the partners' eyes: `demo-spedytor` (forwarder), `demo-agencja`
+(customs agency), `demo-magazyn` (warehouse) — each sees only its own containers. The app opens in English for browsers outside Poland and Portugal (language switch in the sidebar or on the login screen).
 Try the **Automations** screen and press **“Simulate a day”**.
 
 <table>
@@ -49,6 +55,13 @@ and no validation; partners worked on copies.
 
 The app gives every party the same container state — from the purchase order, through the vessel and
 customs clearance, to unloading — with a history of every change and data separated per company and partner.
+The delivery slot is agreed with the forwarder through a one-time link, without creating an account for them.
+
+Container lifecycle (10 statuses, Polish names as in the app's data):
+`ZAPOWIEDZIANY (announced) → W_PRODUKCJI (in production) → TRANSPORT_WSTEPNY (pre-carriage) → W_TRANSPORCIE (at sea) → W_PORCIE (in port) → ODPRAWA (customs) → AWIZOWANY (slot booked) → W_DOSTAWIE (on the way) → DOSTARCZONY (delivered) → ZREALIZOWANY (closed)`
+
+Customs clearance has its own status:
+`BRAK → DOKUMENTY_KOMPLETNE → ZLECONA → DRAFT_WYSLANY → DRAFT_POTWIERDZONY → ODPRAWIONY → ZWOLNIONY → ROZLICZONY`, plus `REWIZJA` (inspection).
 
 ## Automation — what the app does on its own
 
@@ -69,6 +82,20 @@ than usual).
 
 Full matrix (what is automated, what stays with a person, and why):
 [`docs/dla-rekrutera/MACIERZ-AUTOMATYZACJI.md`](docs/dla-rekrutera/MACIERZ-AUTOMATYZACJI.md) (Polish).
+
+## Analysis documents (Polish)
+
+| Document | What it covers |
+|---|---|
+| [01. Problem and scope](docs/01-problem-i-zakres.md) | problem, stakeholders, what is in scope, what the system deliberately does not do and why |
+| [02. Process](docs/02-proces.md) | process before and after, actors, status cycle, decision points — Mermaid diagrams |
+| [03. User flow](docs/03-user-flow.md) | map of the 18 core screens and transitions, alternative paths, dead ends |
+| [04. Data model](docs/04-model-danych.md) | ER diagram, entities, integrity rules, known model inconsistencies |
+| [05. Requirements](docs/05-wymagania.md) | 28 requirements with acceptance criteria, where they live in code and which test guards them |
+| [06. Decisions](docs/06-decyzje.md) | log of 12 decisions: context, options considered, choice, consequences |
+| [07. Limitations](docs/07-ograniczenia.md) | known issues, places without validation, docs vs code gaps, next steps |
+
+Technical details (deployment, integrations, side modules): [`docs/TECHNICZNE.md`](docs/TECHNICZNE.md).
 
 ## Documents for reviewers (Polish)
 
@@ -91,11 +118,19 @@ The repository is run like a three-person team — business analyst **[BA]**, de
 a STRIDE review, implementation with a test per acceptance criterion, security review and BA acceptance
 ([`CONTRIBUTING.md`](CONTRIBUTING.md)).
 
-## Stack
+## Stack and why
 
-FastAPI (Python) · SQLAlchemy + Alembic · PostgreSQL · React + TypeScript (Vite) · pytest, vitest, Playwright ·
-Docker + Coolify · n8n. CI: 3000+ tests, backend coverage ≥ 92% enforced, Semgrep, Trivy, Bandit, secret scan,
-role × route permission matrix checked by a test.
+| Part | Why |
+|---|---|
+| **FastAPI** (Python) | typed API with automatic OpenAPI docs used by the UI, n8n automations and integrations; chosen over Django and Flask ([06](docs/06-decyzje.md), D12) |
+| **SQLAlchemy + Alembic** | the same model on SQLite (local, tests) and PostgreSQL (production); versioned migrations run when the image starts |
+| **PostgreSQL** | partial unique indexes (container number unique only among active ones), CHECK constraints, trigram search |
+| **React + TypeScript (Vite)** | UI in three languages (PL / EN / PT) for users in Poland and Portugal, served by the backend under one address |
+| **pytest, vitest, Playwright** | process rules (statuses, permissions, booking links) have tests — requirements in [05](docs/05-wymagania.md) name the test that guards each one |
+| **Docker + Coolify** | the same deployment on an own server or a VPS; the image builds the UI and runs migrations itself |
+
+CI: 3000+ tests, backend coverage ≥ 92% enforced, Semgrep, Trivy, Bandit, secret scan, role × route permission
+matrix checked by a test, accessibility (axe, WCAG 2.1 AA) and Lighthouse on the login page.
 
 ## Run locally
 
@@ -105,7 +140,39 @@ docker compose up --build
 # UI: http://localhost:8080   API: http://localhost:8000/docs
 ```
 
-Demo data (wipes the target database): see [Jak uruchomić](README.md#jak-uruchomić).
+Ports 8000 and 8080 are fixed in `docker-compose.yml` — free them or change the mapping if they are taken.
+
+**Without Docker** (SQLite; Node 26 and Python 3.14 — the same versions as the production image and CI; the
+dependency lock works from Python 3.12):
+
+```bash
+cd frontend && npm ci && npm run build      # UI goes to frontend/dist
+cd ../backend
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app                          # http://localhost:8000  (admin / admin123)
+```
+
+**Demo data** — without it the queue is empty. The script **wipes all data** in the target database and loads
+150 fictional containers and a read-only `demo` account:
+
+```bash
+cd backend
+export DEMO_READONLY_LOGINS=demo DEMO_PASSWORD='<at least 12 characters>'
+python -m scripts.seed_demo --wyczysc-wszystko
+uvicorn app.main:app                          # log in as demo
+```
+
+Backend tests: `pip install -r requirements-dev.txt && python -m pytest tests/`. Frontend: `cd frontend && npm test`.
+
+## Scope and limitations
+
+In scope is the core process: the queue, the container lifecycle, customs clearance, documents, delivery
+planning and booking, unloading, data separation and change history. What the system deliberately does not
+do — it does not write to SAP, does not yet track containers with the shipping line, does not block a status
+when documents are missing — is described in [01](docs/01-problem-i-zakres.md); known issues and limitations
+in [07](docs/07-ograniczenia.md). Side modules (transport quotes, AIS vessel tracking, invoices, complaints,
+analytics) are described in [`docs/TECHNICZNE.md`](docs/TECHNICZNE.md).
 
 ## Contact
 
