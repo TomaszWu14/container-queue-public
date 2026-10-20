@@ -27,6 +27,11 @@ function NavIcon({ n }: { n: string }) {
 }
 
 // Data builda (ISO z obrazu) → "gg:mm:ss / dd.mm.rrrr" w czasie lokalnym.
+// nazwa linku z licznikiem obok (WCAG 2.5.3 „etykieta w nazwie”, axe label-content-name-mismatch):
+// widoczny tekst „Kolejka 150” musi zawierać się w nazwie dostępnej, inaczej czytnik mówi tylko „Kolejka”
+export const withCount = (label: string, count: number | null | undefined) =>
+  count != null ? `${label} ${count}` : label
+
 function formatBuildTime(raw: string): string {
   const d = new Date(raw)
   if (Number.isNaN(d.getTime())) return raw   // stary format / "unknown" — pokaż jak jest
@@ -194,15 +199,15 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
       <nav className="tn-menu" id="tn-menu">
         {role === 'customs' ? (
           <NavLink to="/kolejka" end className="tn-link tn-primary"
-                   title={t('customsModule')} aria-label={t('customsModule')}>
+                   title={t('customsModule')} aria-label={withCount(t('customsModule'), total)}>
             <NavIcon n="customs" /><span className="tn-label">{t('customsModule')}</span>
-            {total != null && <span className="sb-badge" title={t('navQueueCountHint')}>{total}</span>}
+            {total != null && <>{' '}<span className="sb-badge" title={t('navQueueCountHint')}>{total}</span></>}
           </NavLink>
         ) : (
           <NavLink to="/kolejka" className="tn-link tn-primary" data-tour="kolejka"
-                   title={t('queue')} aria-label={t('queue')}>
+                   title={t('queue')} aria-label={withCount(t('queue'), total)}>
             <NavIcon n="queue" /><span className="tn-label">{t('queue')}</span>
-            {total != null && <span className="sb-badge" title={t('navQueueCountHint')}>{total}</span>}
+            {total != null && <>{' '}<span className="sb-badge" title={t('navQueueCountHint')}>{total}</span></>}
           </NavLink>
         )}
 
