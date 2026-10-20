@@ -11,7 +11,8 @@ PUBLIC: set[tuple[str, str]] = {
     ("POST", "/api/auth/2fa/verify"), ("POST", "/api/auth/forgot-password"),
     ("POST", "/api/auth/reset-password"),
     # infrastruktura: monitoring, ekran logowania, raport błędów frontu, stary link
-    ("GET", "/api/health"), ("GET", "/api/public/branding"), ("POST", "/api/client-error"),
+    ("GET", "/api/health"), ("GET", "/api/public/branding"),
+    ("GET", "/api/public/whoami"), ("POST", "/api/client-error"),
     ("GET", "/api/health/deep"),   # OBS-009: sam status 200/503, szczegóły tylko dla admina
     ("GET", "/dzis"),
     # awizacja przez link dla spedytora/kierowcy
