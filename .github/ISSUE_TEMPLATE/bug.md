@@ -21,7 +21,7 @@ labels: ["błąd"]
 **Oczekiwane:** …
 **Faktyczne:** … (komunikat, kod odpowiedzi, `X-Request-ID` z nagłówka odpowiedzi, jeśli jest)
 
-## Waga (jak w `BUGS-FOUND.md`)
+## Waga (jak w `docs/testy/BUGS-FOUND.md`)
 
 krytyczna (utrata/wyciek danych, prod nie działa) · wysoka (błędne dane, obejście uprawnień) ·
 średnia (awaria przy nietypowych danych, ryzyko DoS) · niska (niespójność, martwy kod)
