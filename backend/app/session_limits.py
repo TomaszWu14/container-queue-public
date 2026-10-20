@@ -47,6 +47,9 @@ def access_lifetime(start: datetime.datetime | None = None) -> datetime.timedelt
     return _left(start or _now(), datetime.timedelta(minutes=minutes))
 
 
-def refresh_lifetime(start: datetime.datetime) -> datetime.timedelta:
-    """Refresh token: okno bezczynności, nie poza limit 12 h od zalogowania."""
-    return _left(start, datetime.timedelta(minutes=settings.session_idle_minutes))
+def refresh_lifetime(start: datetime.datetime, idle: bool = True) -> datetime.timedelta:
+    """Refresh token: okno bezczynności, nie poza limit 12 h od zalogowania.
+    idle=False (wspólne konto demo, tylko odczyt): sam limit 12 h — wyjście z karty na pół
+    godziny nie wyrzuca odwiedzającego z pokazu."""
+    life = datetime.timedelta(minutes=settings.session_idle_minutes) if idle else deadline(start) - _now()
+    return _left(start, life)

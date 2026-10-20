@@ -157,8 +157,9 @@ export default function App() {
     navigate('/', { replace: true })
   }
 
-  // wylogowanie po bezczynności (domyślnie 30 min, ustawienie serwera SESSION_IDLE_MINUTES)
-  useIdleLogout(!!user, user?.session_idle_minutes ?? 30, () => { void logout() })
+  // wylogowanie po bezczynności (domyślnie 30 min, ustawienie serwera SESSION_IDLE_MINUTES);
+  // wspólne konto demo (tylko odczyt) bez niego — wyjście z karty nie przerywa pokazu
+  useIdleLogout(!!user && !user.is_demo, user?.session_idle_minutes ?? 30, () => { void logout() })
 
   if (!checked) return <AppSkeleton />
 

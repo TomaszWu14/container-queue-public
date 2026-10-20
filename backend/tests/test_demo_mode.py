@@ -173,3 +173,27 @@ def test_demo_token_reuse_does_not_log_out_other_visitors(client, db_session, mo
         db.commit()
     assert client.post("/api/auth/refresh", json={"refresh_token": old}).status_code == 401
     assert client.get("/api/auth/me", headers=other).status_code == 200
+
+
+def test_demo_session_survives_leaving_the_tab(client, db_session, monkeypatch):
+    # wspólne konto demo (tylko odczyt): powrót do karty po >30 min bez ruchu nie wyrzuca —
+    # refresh token żyje do limitu 12 h od zalogowania, nie okno bezczynności
+    import jwt
+
+    from app.security import ALGORITHM
+    _add_demo(db_session, monkeypatch)
+    tokens = client.post("/api/auth/login", data={"username": "demo", "password": PW}).json()
+    claims = jwt.decode(tokens["refresh_token"], settings.secret_key, algorithms=[ALGORITHM])
+    assert claims["exp"] - claims["iat"] > (settings.session_max_hours - 1) * 3600
+    rotated = client.post("/api/auth/refresh", json={"refresh_token": tokens["refresh_token"]}).json()
+    claims = jwt.decode(rotated["refresh_token"], settings.secret_key, algorithms=[ALGORITHM])
+    assert claims["exp"] - claims["iat"] > (settings.session_max_hours - 1) * 3600
+
+
+def test_regular_account_keeps_idle_window(client):
+    import jwt
+
+    from app.security import ALGORITHM
+    tokens = client.post("/api/auth/login", data={"username": "admin", "password": "admin123"}).json()
+    claims = jwt.decode(tokens["refresh_token"], settings.secret_key, algorithms=[ALGORITHM])
+    assert claims["exp"] - claims["iat"] <= settings.session_idle_minutes * 60

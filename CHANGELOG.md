@@ -172,6 +172,8 @@ Przegląd dostępów: konta nieużywane od 90 dni, admini bez 2FA, dostęp do ws
 Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
 
 ### Fixed
+- **Demo wyrzucało po wyjściu z karty**: konto demo (tylko odczyt) nie ma już 30-minutowego okna bezczynności —
+  sesja trwa do limitu 12 h od zalogowania; zwykłe konta bez zmian.
 - **Demo zrywało sesje wszystkim naraz**: powtórzony stary token odświeżania jednego odwiedzającego (np. telefon zgubił
   odpowiedź) był traktowany jak kradzież i wylogowywał wszystkich na wspólnym koncie demo. Teraz odrzucany jest tylko ten token.
 - **Demo działało raz tak, raz nie**: start kontenera demo (każde wdrożenie z `main`) kasował i wgrywał dane od nowa,
