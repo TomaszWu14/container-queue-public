@@ -1181,9 +1181,9 @@ pyparsing==3.3.3 \
     --hash=sha256:928ae7e20211f3b6f3915a72f06a0cfd29ab9d24279dd6346b6b1a7146397d36 \
     --hash=sha256:ece8c00a69cf01b45d0b1dedabb469c90d8caf996d4fda40f147627a122849a4
     # via oletools
-pypdf==6.21.0 \
-    --hash=sha256:3aec619699dacb1b73f57e87d9adaa4424814517b2cc028de20adba5a37af4c4 \
-    --hash=sha256:c16174c8653abafbe4d023b3c9227d226938d9579ffb5a73b4fac7756c0895a6
+pypdf==6.21.1 \
+    --hash=sha256:2d62c383acd6e0dff0a96322ba8b1135229343b084d73c6f6cfd947fd291afcb \
+    --hash=sha256:553e2d42f5bb3bb2a785a7d3de8ef90bb7df74b5413eff5a7b4388007ea9254b
     # via -r requirements.in
 pypdfium2==5.13.0 \
     --hash=sha256:07f58e91b8c45ca144a1ff3008faf3c73ef8a5e9fb32988831788363288228cd \
