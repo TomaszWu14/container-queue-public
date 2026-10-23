@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Cotygodniowy ruch z GitHuba** (`.github/workflows/github-traffic.yml`): w poniedziałek push przez ntfy z wyświetleniami,
+  osobami i klonowaniami z 7 dni oraz top źródłami dla publicznych repo portfolio; sekrety `TRAFFIC_TOKEN` i `NTFY_URL`
+  (konfiguracja: `docs/operacje/RUNBOOK.md` §6), bez nich przebieg kończy się na zielono.
 - **Aktywność gościa demo**: przy wpisie gościa w Administracja → Odwiedzający demo (i w CSV) widać liczbę ekranów,
   przybliżony czas wizyty i 3 najczęściej oglądane sekcje (front wysyła sygnał `POST /api/public/demo-visitor/view`
   przy zmianie ekranu; liczy się tylko gość z ważnym ciasteczkiem bramki, bez IP). Push „gość ogląda demo” po

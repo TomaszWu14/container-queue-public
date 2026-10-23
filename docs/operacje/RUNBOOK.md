@@ -79,6 +79,28 @@ w menedżerze sekretów poza serwerem.
 Typowe objawy: start pada z „Konfiguracja wymaga zmiany dla produkcji: …” = brak zmiennej (§3);
 `WEB_CONCURRENCY>1` na SQLite = odmowa startu (zamierzona); 429 w panelu = limit API (pętla w kliencie?).
 
+### Cotygodniowy ruch z GitHuba
+
+Workflow **GitHub traffic** (`.github/workflows/github-traffic.yml`, skrypt `.github/scripts/github_traffic.py`)
+w każdy poniedziałek ok. 06:17 UTC wysyła push przez ntfy: suma wyświetleń, unikalnych osób i klonowań z 7 pełnych
+dni dla publicznych repo portfolio, a pod spodem repo z ruchem (malejąco) z top 3 źródłami odwiedzin (źródła to
+agregat 14 dni GitHuba). Lista repo jest w stałej `REPOS` w skrypcie. Bez sekretów przebieg kończy się na zielono
+z komunikatem „raport pominięty”.
+
+1. **Token** — GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** →
+   Generate new token: Resource owner `TomaszWu14`; Repository access: *Only select repositories* — repo z listy
+   `REPOS`; Permissions → Repository → **Administration: Read-only** (wymagane przez Traffic API;
+   Metadata: Read-only dodaje się samo). Ustaw datę wygaśnięcia i zanotuj ją do rotacji.
+2. **Sekrety** w tym repo: Settings → Secrets and variables → Actions → New repository secret:
+   `TRAFFIC_TOKEN` (token z kroku 1) i `NTFY_URL` (pełny URL tematu, np. `https://ntfy.sh/<tajny-temat>`,
+   tylko http/https); opcjonalnie `NTFY_TOKEN`, gdy serwer ntfy wymaga logowania.
+3. **Test** — Actions → GitHub traffic → Run workflow. Lokalnie podgląd bez wysyłki:
+   `TRAFFIC_TOKEN=… python .github/scripts/github_traffic.py --dry-run`.
+
+Repo, do którego token nie ma dostępu (403/404), pojawia się w wiadomości jako „brak dostępu (sprawdź token)” —
+zwykle token wygasł albo repo nie zostało zaznaczone. GitHub nie podaje, **kto** odwiedził ani sklonował
+repo — tylko liczby i źródła odwiedzin.
+
 ## 7. Incydent bezpieczeństwa
 
 1. **Zatrzymaj szkodę:** przy podejrzeniu przejęcia konta — dezaktywuj konto i unieważnij sesje (panel: konto →
