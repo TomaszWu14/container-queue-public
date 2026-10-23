@@ -6,9 +6,10 @@ Nie zapisujemy IP ani user-agenta (minimalizacja danych).
 import datetime
 import logging
 import unicodedata
+from typing import cast
 
 import jwt
-from sqlalchemy import delete
+from sqlalchemy import CursorResult, delete
 from sqlalchemy.orm import Session
 
 from .config import settings
@@ -40,7 +41,8 @@ def clean_field(value: str) -> str:
 
 def purge_expired(db: Session) -> int:
     cutoff = utcnow() - datetime.timedelta(days=RETENTION_DAYS)
-    count = db.execute(delete(DemoVisitor).where(DemoVisitor.created_at < cutoff)).rowcount
+    result = db.execute(delete(DemoVisitor).where(DemoVisitor.created_at < cutoff))
+    count = cast(CursorResult, result).rowcount  # DELETE zwraca CursorResult
     db.commit()
     return count
 
