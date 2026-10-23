@@ -8,6 +8,7 @@ from .applog import *  # noqa: F401,F403
 from .avizo import *  # noqa: F401,F403
 from .complaints import *  # noqa: F401,F403
 from .container import *  # noqa: F401,F403
+from .demo_visitors import *  # noqa: F401,F403
 from .dictionaries import *  # noqa: F401,F403
 from .enums import *  # noqa: F401,F403
 from .intake import *  # noqa: F401,F403

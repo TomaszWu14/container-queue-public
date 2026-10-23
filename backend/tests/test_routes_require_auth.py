@@ -13,6 +13,7 @@ PUBLIC: set[tuple[str, str]] = {
     # infrastruktura: monitoring, ekran logowania, raport błędów frontu, stary link
     ("GET", "/api/health"), ("GET", "/api/public/branding"),
     ("GET", "/api/public/whoami"), ("POST", "/api/client-error"),
+    ("POST", "/api/public/demo-visitor"),   # bramka demo: odwiedzający jeszcze nie ma konta
     ("GET", "/api/health/deep"),   # OBS-009: sam status 200/503, szczegóły tylko dla admina
     ("GET", "/dzis"),
     # awizacja przez link dla spedytora/kierowcy

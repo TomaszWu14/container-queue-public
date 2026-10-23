@@ -99,6 +99,9 @@ class Settings(BaseSettings):
     # hasło konta demo (to samo DEMO_PASSWORD co dla scripts/seed_demo.py) — jawne na ekranie
     # logowania i w przycisku „Wejdź jako demo”, tylko gdy DEMO_READONLY_LOGINS ustawione
     demo_password: str = ""
+    # bramka „przedstaw się” przed wejściem na konto demo (imię, nazwisko, firma + RODO);
+    # działa tylko gdy DEMO_READONLY_LOGINS ustawione. DEMO_VISITOR_GATE=false wyłącza.
+    demo_visitor_gate: bool = True
     # adres „Zgłoś problem” na ekranie logowania i w banerze demo; puste = bez kontaktu
     support_email: str = ""
     # dozwolone nagłówki Host (CSV) — ochrona przed host-header injection; puste = bez filtra

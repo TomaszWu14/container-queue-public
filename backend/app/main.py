@@ -15,7 +15,7 @@ from sqlalchemy import func, select, text
 from sqlalchemy.exc import IntegrityError
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from . import master_quality
+from . import demo_visitors, master_quality
 from .applog import RequestLogMiddleware, applog_loop
 from .config import settings
 from .csrf import CsrfOriginMiddleware
@@ -77,6 +77,7 @@ from .routers import (
     supplier_maps,
     supplier_profiles,
     supplier_samples,
+    demo_visitors as demo_visitors_router,
     system,
     tracking,
     warehouse_ops,
@@ -139,6 +140,7 @@ _START_TIME = time.monotonic()  # do /api/health uptime_s — moment importu mod
 async def lifespan(_: FastAPI):
     validate_settings()
     bootstrap()
+    demo_visitors.purge_on_startup()   # retencja 90 dni także bez ruchu w formularzu
     # zrzut dziennika serwera biega na KAŻDEJ instancji (bufor jest per-proces, więc
     # nawet instancja wtórna musi sama zrzucać własny bufor do bazy)
     tasks = [asyncio.create_task(applog_loop())]
@@ -337,6 +339,7 @@ app.include_router(analytics.router)
 app.include_router(driver.router)
 app.include_router(mag1.router)
 app.include_router(system.router)
+app.include_router(demo_visitors_router.router)   # bramka „przedstaw się” przed demo
 app.include_router(portal.router)
 app.include_router(customer_orders.router)
 app.include_router(consolidation.router)

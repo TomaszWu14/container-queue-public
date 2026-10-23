@@ -33,6 +33,7 @@ NO_AUDIT: dict[tuple[str, str], str] = {
     ("POST", "/api/knowledge/bulletins/{bulletin_id}/ack"): "potwierdzenie przeczytania — sam jest śladem",
     # --- bez zmiany danych / wpis sam jest zapisem zdarzenia
     ("POST", "/api/client-error"): "publiczny raport błędu frontu (log aplikacji)",
+    ("POST", "/api/public/demo-visitor"): "sam wpis w demo_visitors jest śladem (90 dni); audyt dublowałby dane osobowe",
     ("POST", "/api/assistant/ask"): "pytanie do asystenta — odczyt",
     ("POST", "/api/admin/system/verify-backup"): "kontrola kopii — bez zmiany danych",
     ("POST", "/api/containers/{container_id}/messages"): "wiadomość = wpis z autorem i czasem",

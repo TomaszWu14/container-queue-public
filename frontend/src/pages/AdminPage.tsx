@@ -9,6 +9,7 @@ import UsersTab from './admin/UsersTab'
 import SystemTab from './admin/SystemTab'
 import AuthLogTab from './admin/AuthLogTab'
 import ColorsTab from './admin/ColorsTab'
+import DemoVisitorsTab from './admin/DemoVisitorsTab'
 import DictionariesTab from './masterdata/DictionariesTab'
 import SectionShell, { SectionMore } from './SectionShell'
 
@@ -39,6 +40,7 @@ export default function AdminPage() {
       case 'powiadomienia': return <NotificationRulesTab />
       case 'sms': return <SmsSettingsTab />
       case 'log-logowan': return <AuthLogTab />
+      case 'odwiedzajacy-demo': return <DemoVisitorsTab />
       case 'kolory': return <ColorsTab />
       default: return null
     }

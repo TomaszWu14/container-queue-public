@@ -27,6 +27,9 @@ os.environ.setdefault("PASSWORD_MIN_LENGTH", "8")
 # wymóg jest testowany punktowo (test_2fa_admin_required) przez monkeypatch ustawień
 os.environ.setdefault("REQUIRE_2FA_ADMIN", "false")
 
+# bramka „przedstaw się” przed demo: wyłączona w testach, włącza ją punktowo test_demo_visitor_gate
+os.environ.setdefault("DEMO_VISITOR_GATE", "false")
+
 import pytest
 from fastapi.testclient import TestClient
 

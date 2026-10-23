@@ -517,6 +517,9 @@ routes:
   "PATCH /api/customers/{customer_id}": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}  # scoping: get_scoped
   "GET /api/public/branding": {anon: public}
   "GET /api/public/whoami": {anon: public}   # diagnostyka proxy: IP odwiedzającego wg aplikacji
+  "POST /api/public/demo-visitor": {anon: public}   # bramka demo: przedstawienie się (rate-limit, honeypot)
+  "GET /api/admin/demo-visitors": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
+  "GET /api/admin/demo-visitors.csv": {anon: 401, admin: 200, logistics: 403, warehouse: 403, forwarder: 403, customs: 403, purchasing: 403, sales: 403}
 
   # --- purchase_orders ---
   "GET /api/purchase-orders": {anon: 401, admin: 200, logistics: 200, warehouse: 403, forwarder: 403, customs: 403, purchasing: 200, sales: 403}  # scoping: scope_company
