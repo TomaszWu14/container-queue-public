@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import demo_visitors as svc
+from .. import visitor_notify
 from ..config import settings
 from ..database import get_db
 from ..deps import AdminOnly as admin_only
@@ -41,6 +42,7 @@ def register_visitor(body: VisitorIn, response: Response, db: Session = Depends(
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
                             "Zgoda na informację o przetwarzaniu danych jest wymagana.")
     _, token = svc.register(db, body.first_name, body.last_name, body.company)
+    visitor_notify.notify_visitor(body.first_name, body.last_name, body.company)
     response.set_cookie(svc.VISITOR_COOKIE, token, max_age=svc.COOKIE_DAYS * 86400,
                         httponly=True, samesite="lax", secure=settings.secure_cookies)
 

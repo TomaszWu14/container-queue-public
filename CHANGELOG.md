@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Powiadomienie o gościu demo**: po każdym udanym wpisie w bramce przed demo właściciel dostaje push na telefon
+  przez ntfy (`NTFY_URL`, opcjonalnie `NTFY_TOKEN`); wysyłka w tle, bez `NTFY_URL` nic nie wychodzi. Klauzula RODO
+  w formularzu mówi o tym powiadomieniu.
 - **Bramka przed demo**: przed wejściem na konto demo odwiedzający przedstawia się (imię, nazwisko, firma + zgoda RODO, honeypot); dane na serwerze 90 dni (bez IP i user-agenta), ciasteczko HttpOnly na 30 dni; lista i CSV dla admina w Administracja → Odwiedzający demo; `DEMO_VISITOR_GATE=false` wyłącza.
 - **Wydania** (`docs/WYDANIA.md`): tag `vX.Y.Z` → wydanie na GitHubie z notatkami z CHANGELOG i opcjonalny deploy demo w Coolify
   (workflow „Wydanie”); `scripts/przygotuj_wydanie.py` przenosi [Unreleased] do nowej wersji i podbija numer w aplikacji.
