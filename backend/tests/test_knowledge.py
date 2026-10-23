@@ -147,3 +147,16 @@ def test_acl001_partners_without_knowledge_base_and_edit_only_author(client, adm
     own = client.post("/api/knowledge/notes", headers=log, json=body).json()
     assert client.patch(f"/api/knowledge/notes/{own['id']}", headers=log, json=body).status_code == 200
     assert client.delete(f"/api/knowledge/notes/{own['id']}", headers=admin_headers).status_code == 204
+
+
+def test_note_url_only_http_schemes(client, admin_headers):
+    base = {"scope_type": "screen", "scope_key": "kolejka", "title": "t"}
+    for bad in ("javascript:alert(1)", "data:text/html,x", "//evil.example", "ftp://x"):
+        r = client.post("/api/knowledge/notes", headers=admin_headers, json={**base, "url": bad})
+        assert r.status_code == 422, bad
+    r = client.post("/api/knowledge/notes", headers=admin_headers,
+                    json={**base, "url": " https://example.com/a "})
+    assert r.status_code == 201
+    assert r.json()["url"] == "https://example.com/a"
+    r = client.post("/api/knowledge/notes", headers=admin_headers, json={**base, "url": ""})
+    assert r.status_code == 201
