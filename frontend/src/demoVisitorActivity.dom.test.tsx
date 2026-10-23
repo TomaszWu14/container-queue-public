@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { Link, MemoryRouter } from 'react-router-dom'
 import DemoVisitTracker from './DemoVisitTracker'
 import DemoVisitorsTab from './pages/admin/DemoVisitorsTab'
+import DemoVisitorForm from './pages/DemoVisitorForm'
 import demoFeature from './i18n/features/demo-wizytowka'
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals() })
@@ -48,5 +49,14 @@ describe('Aktywność gościa demo', () => {
       + '(bez adresu IP), żeby wiedzieć, co zainteresowało gości. Poza tym nikomu danych nie przekazuję.')
     expect(en.visitorGdpr).toContain('I also record how many and which screens of the demo you viewed '
       + '(without your IP address) to see what visitors find interesting. Apart from that I do not share')
+  })
+
+  it('bramka gościa nie ujawnia adresu jawnym tekstem (anty-boty), tylko „[at]”', () => {
+    const { container } = render(<DemoVisitorForm onDone={() => {}} onBack={() => {}} />)
+    expect(container.innerHTML).not.toContain('tomasz.wierzbowski@op.pl')
+    expect(container.innerHTML).toContain('tomasz.wierzbowski [at] op.pl')
+    const { pl, en } = demoFeature as unknown as Record<'pl' | 'en', Record<string, string>>
+    expect(pl.visitorGdpr).toContain('tomasz.wierzbowski [at] op.pl')
+    expect(en.visitorGdpr).toContain('tomasz.wierzbowski [at] op.pl')
   })
 })

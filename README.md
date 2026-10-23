@@ -28,7 +28,7 @@ link wpuszcza na konto demo, gdy się przedstawisz (imię, nazwisko, firma). Z g
 odczytu, 150 fikcyjnych kontenerów z odprawą, dokumentami, zamówieniami i awizacjami w toku; ekran powitalny
 prowadzi przez 4 miejsca na 5 minut. Tym samym hasłem zobaczysz system oczami partnerów: `demo-spedytor`,
 `demo-agencja`, `demo-magazyn` — każdy widzi tylko swoje kontenery. Coś nie działa?
-Napisz: tomasz.wierzbowski@op.pl. Lokalnie uruchomisz to samo trzema komendami — sekcja
+Napisz: tomasz.wierzbowski [at] op.pl. Lokalnie uruchomisz to samo trzema komendami — sekcja
 [Jak uruchomić](#jak-uruchomić).
 
 <table>
