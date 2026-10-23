@@ -2,14 +2,14 @@
 import csv
 import io
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import demo_visitors as svc
-from .. import visitor_notify
+from .. import visitor_activity, visitor_notify
 from ..config import settings
 from ..database import get_db
 from ..deps import AdminOnly as admin_only
@@ -47,6 +47,19 @@ def register_visitor(body: VisitorIn, response: Response, db: Session = Depends(
                         httponly=True, samesite="lax", secure=settings.secure_cookies)
 
 
+class ViewIn(BaseModel):
+    path: str = Field(max_length=300)
+
+
+@router.post("/public/demo-visitor/view", status_code=status.HTTP_204_NO_CONTENT,
+             dependencies=[Depends(public_rate_limit)])
+def record_view(body: ViewIn, request: Request, db: Session = Depends(get_db)):
+    """Sygnał z frontu przy zmianie ekranu na koncie demo; liczy tylko gościa z ważnym ciasteczkiem.
+
+    Zawsze 204 (bez zdradzania, czy coś zaliczono); błąd zapisu = tylko log."""
+    visitor_activity.record_view(db, request.cookies.get(svc.VISITOR_COOKIE), body.path)
+
+
 def _rows(db: Session) -> list[DemoVisitor]:
     return list(db.scalars(select(DemoVisitor).order_by(DemoVisitor.created_at.desc(),
                                                          DemoVisitor.id.desc()).limit(5000)))
@@ -55,16 +68,23 @@ def _rows(db: Session) -> list[DemoVisitor]:
 @router.get("/admin/demo-visitors")
 def list_visitors(db: Session = Depends(get_db), user: User = admin_only):
     return [{"id": v.id, "first_name": v.first_name, "last_name": v.last_name,
-             "company": v.company, "created_at": v.created_at.isoformat()} for v in _rows(db)]
+             "company": v.company, "created_at": v.created_at.isoformat(),
+             "page_views": v.page_views or 0,
+             "last_seen_at": v.last_seen_at.isoformat() if v.last_seen_at else None,
+             "duration_min": visitor_activity.duration_min(v),
+             "top_sections": visitor_activity.top_sections(v)} for v in _rows(db)]
 
 
 @router.get("/admin/demo-visitors.csv")
 def export_visitors(db: Session = Depends(get_db), user: User = admin_only):
     buf = io.StringIO()
     writer = csv.writer(buf)
-    writer.writerow(["data", "imie", "nazwisko", "firma"])
+    writer.writerow(["data", "imie", "nazwisko", "firma", "ekrany", "czas_min", "najczesciej"])
     for v in _rows(db):
+        minutes = visitor_activity.duration_min(v)
         writer.writerow([v.created_at.strftime("%Y-%m-%d %H:%M"), csv_safe(v.first_name),
-                         csv_safe(v.last_name), csv_safe(v.company)])
+                         csv_safe(v.last_name), csv_safe(v.company), v.page_views or 0,
+                         "" if minutes is None else minutes,
+                         csv_safe(", ".join(visitor_activity.top_sections(v)))])
     return StreamingResponse(iter(["﻿" + buf.getvalue()]), media_type="text/csv",
                              headers={"Content-Disposition": 'attachment; filename="demo-odwiedzajacy.csv"'})

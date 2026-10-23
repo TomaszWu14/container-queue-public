@@ -34,6 +34,7 @@ NO_AUDIT: dict[tuple[str, str], str] = {
     # --- bez zmiany danych / wpis sam jest zapisem zdarzenia
     ("POST", "/api/client-error"): "publiczny raport błędu frontu (log aplikacji)",
     ("POST", "/api/public/demo-visitor"): "sam wpis w demo_visitors jest śladem (90 dni); audyt dublowałby dane osobowe",
+    ("POST", "/api/public/demo-visitor/view"): "licznik ekranów gościa demo — statystyka, nie zmiana danych biznesowych",
     ("POST", "/api/assistant/ask"): "pytanie do asystenta — odczyt",
     ("POST", "/api/admin/system/verify-backup"): "kontrola kopii — bez zmiany danych",
     ("POST", "/api/containers/{container_id}/messages"): "wiadomość = wpis z autorem i czasem",

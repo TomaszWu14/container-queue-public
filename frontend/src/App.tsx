@@ -11,6 +11,7 @@ import { CSRF_HEADERS } from './csrf'
 import GlobalSearch from './GlobalSearch'
 import Onboarding from './Onboarding'
 import DemoMode from './DemoMode'
+import DemoVisitTracker from './DemoVisitTracker'
 import { hiddenInDemo, setDemoSession } from './demoLimits'
 import Sidebar from './Sidebar'
 import { detectLang, Lang, LangContext, useT } from './i18n'
@@ -177,6 +178,7 @@ export default function App() {
           <div className="app-shell" data-tour="ctrlk">
             {user.impersonated && <ImpersonationBanner role={user.role} />}
             {user.is_demo && <DemoMode />}
+            {user.is_demo && <DemoVisitTracker />}
             <GlobalSearch />
             {!user.is_demo && <Onboarding />}
             <Sidebar onLogout={logout} />

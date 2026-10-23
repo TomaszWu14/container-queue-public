@@ -106,6 +106,11 @@ class Settings(BaseSettings):
     # (np. https://ntfy.sh/<tajny-temat>); puste = bez powiadomień. NTFY_TOKEN = Bearer (opcjonalny)
     ntfy_url: str = ""
     ntfy_token: str = ""
+    # frazy firm (CSV, np. „acme, globex”) — gość z taką firmą = push „UWAGA firma z listy” (urgent);
+    # wartość tylko w env, nigdy w repo. Dopasowanie bez wielkości liter i polskich znaków
+    ntfy_watch_companies: str = ""
+    # jednorazowy push „gość ogląda demo”, gdy gość obejrzy dokładnie tyle ekranów; 0 = wyłączone
+    ntfy_engaged_views: int = Field(default=10, ge=0)
     # adres „Zgłoś problem” na ekranie logowania i w banerze demo; puste = bez kontaktu
     support_email: str = ""
     # dozwolone nagłówki Host (CSV) — ochrona przed host-header injection; puste = bez filtra

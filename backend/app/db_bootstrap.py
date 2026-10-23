@@ -279,6 +279,8 @@ def ensure_new_columns() -> None:
             'transit_time_long_days': "INTEGER",
             'is_active': "BOOLEAN DEFAULT 1",
         },
+        'demo_visitors': {'page_views': "INTEGER DEFAULT 0 NOT NULL",   # demovis002
+                          'last_seen_at': "TIMESTAMP", 'sections': "JSON"},
         'carriers': {'is_active': "BOOLEAN DEFAULT 1 NOT NULL",
                      'demurrage_free_days': "INTEGER"},
         'quotes': {

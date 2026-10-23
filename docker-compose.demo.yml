@@ -52,6 +52,13 @@ services:
       DEMO_READONLY_LOGINS: demo,demo-spedytor,demo-agencja,demo-magazyn
       DEMO_PASSWORD: demoportfolio2026   # celowo jawne: konto tylko do odczytu, podane w README
       SUPPORT_EMAIL: tomasz.wierzbowski@op.pl   # „Zgłoś problem” na ekranie logowania i w banerze demo
+      # bramka „przedstaw się” przed demo + push ntfy o gościach (docs/ZMIENNE-SRODOWISKOWE.md);
+      # NTFY_* puste = bez powiadomień; NTFY_WATCH_COMPANIES tylko w panelu Coolify, nigdy w repo
+      DEMO_VISITOR_GATE: ${DEMO_VISITOR_GATE:-true}
+      NTFY_URL: ${NTFY_URL:-}
+      NTFY_TOKEN: ${NTFY_TOKEN:-}
+      NTFY_WATCH_COMPANIES: ${NTFY_WATCH_COMPANIES:-}
+      NTFY_ENGAGED_VIEWS: ${NTFY_ENGAGED_VIEWS:-10}
       PUBLIC_BASE_URL: https://container.queue.twapp.pl
       # filtr nagłówka Host na stałe w pliku: wartość z panelu Coolify bez tego adresu dawała
       # „Invalid host header” dla całego demo (2026-10-16); 127.0.0.1 = healthcheck kontenera
