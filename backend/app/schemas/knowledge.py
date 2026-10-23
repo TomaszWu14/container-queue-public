@@ -26,6 +26,15 @@ class KnowledgeNoteIn(BaseModel):
             raise ValueError(f"nieznany scope_type: {v}")
         return v
 
+    @field_validator("url")
+    @classmethod
+    def _url(cls, v: str) -> str:
+        # link w pinezce renderuje się jako <a href> — tylko http(s) (bez javascript:/data:)
+        v = v.strip()
+        if v and not v.lower().startswith(("http://", "https://")):
+            raise ValueError("adres musi zaczynać się od http:// lub https://")
+        return v
+
 
 class KnowledgeNoteOut(ORMModel):
     id: int
