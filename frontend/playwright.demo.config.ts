@@ -7,7 +7,7 @@ const API_PORT = process.env.DEMO_API_PORT ?? '8011'
 const WEB_PORT = process.env.DEMO_WEB_PORT ?? '5181'
 const DEMO_ENV = {
   DATABASE_URL: 'sqlite:///./e2e-demo.db', RUN_BACKGROUND_JOBS: 'false', API_RATE_LIMIT_PER_MINUTE: '0', PUBLIC_RATE_LIMIT_PER_MINUTE: '0',
-  REQUIRE_2FA_ADMIN: 'false', DEMO_READONLY_LOGINS: 'demo,demo-spedytor,demo-agencja,demo-magazyn',
+  REQUIRE_2FA_ADMIN: 'false', DEMO_READONLY_LOGINS: 'demo,demo-spedytor,demo-agencja,demo-magazyn', DEMO_VISITOR_GATE: 'false',
   DEMO_PASSWORD: 'Demo-Portfolio-2026', UPLOADS_DIR: './e2e-demo-uploads',
 }
 

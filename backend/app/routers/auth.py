@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from .. import login_devices, totp_store
+from .. import demo_visitors, login_devices, totp_store
 from ..audit import record
 from ..automation_policy import is_service_login
 from ..config import settings
@@ -113,6 +113,10 @@ def login(request: Request, response: Response,
     acct_key = f"acct:{form.username.strip().lower()}"
     # wspólne konto demo: blokada konta (SEC-012) odcięłaby je wszystkim — zostają limity IP
     demo = is_demo_login(form.username)
+    if demo and demo_visitors.gate_active() and not demo_visitors.has_valid_cookie(
+            db, request.cookies.get(demo_visitors.VISITOR_COOKIE)):
+        # 428: front pokazuje formularz „przedstaw się” i ponawia wejście na demo
+        raise HTTPException(status.HTTP_428_PRECONDITION_REQUIRED, demo_visitors.GATE_MESSAGE)
     login_limiter.check(ip_key, limit=settings.login_max_attempts_per_ip)
     login_limiter.check(pair_key)
     if not demo:

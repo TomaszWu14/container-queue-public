@@ -49,10 +49,13 @@ jobs:
           if [ -z "$login" ] || [ -z "$password" ]; then
             problems+=("Brak przycisku „Wejdź jako demo”: /api/public/branding bez konta demo: ${brand:0:200}")
           else
-            token=$(get -X POST "$DEMO_URL/api/auth/login" -H 'X-Requested-With: XMLHttpRequest' \
-              --data-urlencode "username=$login" --data-urlencode "password=$password" \
-              | jq -r '.access_token // empty' 2>/dev/null)
-            if [ -z "$token" ]; then
+            resp=$(get -w '\n%{http_code}' -X POST "$DEMO_URL/api/auth/login" -H 'X-Requested-With: XMLHttpRequest' \
+              --data-urlencode "username=$login" --data-urlencode "password=$password")
+            code=${resp##*$'\n'}
+            token=$(jq -r '.access_token // empty' <<<"${resp%$'\n'*}" 2>/dev/null)
+            if [ "$code" = 428 ]; then
+              : # bramka „przedstaw się” (DEMO_VISITOR_GATE) działa — monitor nie wpisuje się na listę odwiedzających
+            elif [ -z "$token" ]; then
               problems+=("Logowanie kontem demo nie działa")
             else
               auth=(-H "Authorization: Bearer $token")

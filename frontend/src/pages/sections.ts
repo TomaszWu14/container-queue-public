@@ -32,6 +32,7 @@ export const SECTIONS: Section[] = [
   sec('admin', 'secGroupSystem', 'powiadomienia', 'notifRulesTab', ADMIN, 'notifRules'),
   sec('admin', 'secGroupSystem', 'sms', 'smsSettingsTab', ADMIN, 'sms'),
   sec('admin', 'secGroupSystem', 'log-logowan', 'authLogTitle', ADMIN, 'authLog'),
+  sec('admin', 'secGroupSystem', 'odwiedzajacy-demo', 'visitorsTitle', ADMIN, 'demoVisitors'),
   sec('admin', 'secGroupSystem', 'kolory', 'colTitle', ADMIN, 'colors'),
 
   sec('md', 'secGroupFiles', 'dostawcy', 'suppliers', EDITORS, 'suppliers'),

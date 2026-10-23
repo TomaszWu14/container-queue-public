@@ -5,6 +5,7 @@ import { LANGS, Lang, LangContext, useT } from '../i18n'
 import PasswordInput from '../PasswordInput'
 import { useBranding } from './loginBranding'
 import { clearIdleLogout, wasIdleLogout } from '../idleLogout'
+import DemoVisitorForm from './DemoVisitorForm'
 
 /*
  * Ekran wejścia — wariant „2b Panel logowania" z Claude Design (Landing.dc.html):
@@ -103,6 +104,8 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
   // 2FA: drugi krok logowania — backend zwrócił pending_token zamiast cookies
   const [pendingToken, setPendingToken] = useState('')
   const [totpCode, setTotpCode] = useState('')
+  // bramka demo: backend odpowiada 428, dopóki odwiedzający się nie przedstawi
+  const [visitorGate, setVisitorGate] = useState(false)
 
   const autoTried = useRef(false)
   useEffect(() => {
@@ -124,6 +127,7 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
         onLogin()
       }
     } catch (err) {
+      if (err instanceof ApiError && err.status === 428) { setVisitorGate(true); return }
       // tylko 401 = złe dane; 5xx/sieć nie może udawać "błędny login lub hasło"
       setError(err instanceof ApiError && err.status === 401 ? t('loginError') : t('loginServerError'))
     } finally {
@@ -177,7 +181,10 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
             <div className="kl2-note">{t('loginAccountsInfo')}</div>
             {idleOut && <div className="kl2-note" role="status">{t('idleLoggedOut')}</div>}
           </div>
-          {pendingToken ? (
+          {visitorGate && demo ? (
+            <DemoVisitorForm onBack={() => setVisitorGate(false)}
+                             onDone={() => { setVisitorGate(false); void signIn(demo.login, demo.password) }} />
+          ) : pendingToken ? (
             <form onSubmit={submitTotp} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div className="kl2-note">{t('totpStepInfo')}</div>
               <div className="kl2-field">
