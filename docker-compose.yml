@@ -27,6 +27,11 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-}
       SECURE_COOKIES: ${SECURE_COOKIES:-false}
       TRACKING_INTERVAL_HOURS: ${TRACKING_INTERVAL_HOURS:-12}
+      # push ntfy o gościach bramki demo — puste = bez powiadomień (docs/ZMIENNE-SRODOWISKOWE.md)
+      NTFY_URL: ${NTFY_URL:-}
+      NTFY_TOKEN: ${NTFY_TOKEN:-}
+      NTFY_WATCH_COMPANIES: ${NTFY_WATCH_COMPANIES:-}
+      NTFY_ENGAGED_VIEWS: ${NTFY_ENGAGED_VIEWS:-10}
       UPLOADS_DIR: /data/uploads
     volumes:
       - uploads:/data/uploads

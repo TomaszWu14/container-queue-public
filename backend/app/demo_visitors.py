@@ -65,13 +65,19 @@ def register(db: Session, first_name: str, last_name: str, company: str) -> tupl
     return visitor, token
 
 
-def has_valid_cookie(db: Session, token: str | None) -> bool:
+def visitor_id(token: str | None) -> int | None:
+    """Id wpisu z podpisanego ciasteczka bramki; None = brak, podróbka, wygasłe albo obcy typ."""
     if not token:
-        return False
+        return None
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=["HS256"])
         if payload.get("typ") != "demo_visitor":
-            return False
-        return db.get(DemoVisitor, int(payload["sub"])) is not None
-    except (jwt.PyJWTError, KeyError, ValueError):
-        return False
+            return None
+        return int(payload["sub"])
+    except (jwt.PyJWTError, KeyError, ValueError, TypeError):
+        return None
+
+
+def has_valid_cookie(db: Session, token: str | None) -> bool:
+    vid = visitor_id(token)
+    return vid is not None and db.get(DemoVisitor, vid) is not None

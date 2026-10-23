@@ -8,6 +8,11 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Aktywność gościa demo**: przy wpisie gościa w Administracja → Odwiedzający demo (i w CSV) widać liczbę ekranów,
+  przybliżony czas wizyty i 3 najczęściej oglądane sekcje (front wysyła sygnał `POST /api/public/demo-visitor/view`
+  przy zmianie ekranu; liczy się tylko gość z ważnym ciasteczkiem bramki, bez IP). Push „gość ogląda demo” po
+  `NTFY_ENGAGED_VIEWS` ekranach (domyślnie 10, 0 = wyłączone); firma z `NTFY_WATCH_COMPANIES` = push „UWAGA firma
+  z listy” z `Priority: urgent`. Klauzula RODO mówi o zapisie oglądanych ekranów.
 - **Powiadomienie o gościu demo**: po każdym udanym wpisie w bramce przed demo właściciel dostaje push na telefon
   przez ntfy (`NTFY_URL`, opcjonalnie `NTFY_TOKEN`); wysyłka w tle, bez `NTFY_URL` nic nie wychodzi. Klauzula RODO
   w formularzu mówi o tym powiadomieniu.

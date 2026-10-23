@@ -4,7 +4,10 @@ import { formatDateTime } from '../../dates'
 import { useT } from '../../i18n'
 import { DictTable } from './shared'
 
-interface Visitor { id: number; first_name: string; last_name: string; company: string; created_at: string }
+interface Visitor {
+  id: number; first_name: string; last_name: string; company: string; created_at: string
+  page_views?: number; duration_min?: number | null; top_sections?: string[]
+}
 
 export default function DemoVisitorsTab() {
   const t = useT()
@@ -24,14 +27,18 @@ export default function DemoVisitorsTab() {
         {t('visitorsCsv')}
       </button>
       <DictTable cols={[{ label: t('visitorsWhen'), width: '160px' }, t('visitorFirstName'),
-                        t('visitorLastName'), t('visitorCompany')]}>
+                        t('visitorLastName'), t('visitorCompany'), t('visitorsViews'), t('visitorsTime'),
+                        t('visitorsTop')]}>
         {rows.map(v => (
           <tr key={v.id}>
             <td>{formatDateTime(v.created_at)}</td><td>{v.first_name}</td>
             <td>{v.last_name}</td><td>{v.company}</td>
+            <td>{v.page_views ?? 0}</td>
+            <td>{v.duration_min == null ? '—' : t('visitorsMinutes').replace('{n}', String(v.duration_min))}</td>
+            <td>{(v.top_sections ?? []).join(', ') || '—'}</td>
           </tr>
         ))}
-        {rows.length === 0 && <tr><td colSpan={4}>{t('visitorsEmpty')}</td></tr>}
+        {rows.length === 0 && <tr><td colSpan={7}>{t('visitorsEmpty')}</td></tr>}
       </DictTable>
     </div>
   )
