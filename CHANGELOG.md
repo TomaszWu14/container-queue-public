@@ -8,6 +8,9 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 ## [Unreleased]
 
 ### Added
+- **Cotygodniowy ruch z GitHuba** (`.github/workflows/github-traffic.yml`): w poniedziałek push przez ntfy z wyświetleniami,
+  osobami i klonowaniami z 7 dni oraz top źródłami dla publicznych repo portfolio; sekrety `TRAFFIC_TOKEN` i `NTFY_URL`
+  (konfiguracja: `docs/operacje/RUNBOOK.md` §6), bez nich przebieg kończy się na zielono.
 - **Powiadomienie o gościu demo**: po każdym udanym wpisie w bramce przed demo właściciel dostaje push na telefon
   przez ntfy (`NTFY_URL`, opcjonalnie `NTFY_TOKEN`); wysyłka w tle, bez `NTFY_URL` nic nie wychodzi. Klauzula RODO
   w formularzu mówi o tym powiadomieniu.
