@@ -5,6 +5,8 @@
 
 *[English version](README.en.md)*
 
+▶ Zobacz demo: https://container.queue.twapp.pl/demo (przy wejściu demo poprosi o imię, nazwisko i firmę)
+
 **Jeden wspólny obraz dostaw kontenerowych dla logistyki kilku spółek, magazynów, spedytorów i agencji
 celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 
@@ -22,7 +24,7 @@ celnej — w miejsce arkusza Excel rozsyłanego mailem.**
 </details>
 
 🌐 **Demo online bez logowania: [container.queue.twapp.pl/demo](https://container.queue.twapp.pl/demo)** —
-link od razu wpuszcza na konto demo. Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
+link wpuszcza na konto demo, gdy się przedstawisz (imię, nazwisko, firma). Z głównego adresu: na ekranie logowania kliknij **„Wejdź jako demo”** (albo login `demo`, hasło `demoportfolio2026`). Konto tylko do
 odczytu, 150 fikcyjnych kontenerów z odprawą, dokumentami, zamówieniami i awizacjami w toku; ekran powitalny
 prowadzi przez 4 miejsca na 5 minut. Tym samym hasłem zobaczysz system oczami partnerów: `demo-spedytor`,
 `demo-agencja`, `demo-magazyn` — każdy widzi tylko swoje kontenery. Coś nie działa?
