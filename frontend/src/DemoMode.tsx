@@ -6,6 +6,7 @@ import DemoGuide, { stepsFor } from './DemoGuide'
 import { useT } from './i18n'
 import { Modal } from './Modal'
 import { useUser } from './userContext'
+import { obfuscateEmail } from './obfuscateEmail'
 
 // Instancja portfolio (konto z DEMO_READONLY_LOGINS, user.is_demo): stały baner „dane fikcyjne,
 // tylko podgląd” + ekran powitalny z czterema miejscami do obejrzenia (zamiast ogólnego onboardingu).
@@ -49,7 +50,7 @@ export default function DemoMode() {
     <>
       <div className="demo-banner" data-testid="demo-banner" role="status">
         <span>{t('demoBanner')}</span>
-        {support && <span>{t('demoBannerReport')} <a href={`mailto:${support}`}>{support}</a></span>}
+        {support && <span>{t('demoBannerReport')} <span>{obfuscateEmail(support)}</span></span>}
         <button type="button" className="btn small" onClick={() => setOpen(true)}>
           {t('demoBannerTour')}
         </button>

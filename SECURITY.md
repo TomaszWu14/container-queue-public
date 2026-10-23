@@ -3,7 +3,7 @@
 ## Zgłaszanie podatności
 Podatności zgłaszaj **prywatnie** — nie przez publiczne issue ani PR (repozytorium jest publiczne):
 
-- e-mail: tomasz.wierzbowski@op.pl (adres kontaktowy z `README.md`),
+- e-mail: tomasz.wierzbowski [at] op.pl (adres kontaktowy z `README.md`),
 - albo GitHub *Security → Report a vulnerability*, jeśli opcja jest włączona w repozytorium
   (TODO właściciel: włączyć *Private vulnerability reporting* w *Settings → Code security*).
 

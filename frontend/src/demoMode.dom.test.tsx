@@ -41,7 +41,9 @@ describe('Ekran logowania — instancja portfolio', () => {
     stubFetch({ support_email: 'autor@example.org' })
     render(<MemoryRouter><LoginPage onLogin={() => {}} /></MemoryRouter>)
     const box = await screen.findByTestId('support-box')
-    expect(box.querySelector('a')?.getAttribute('href')).toBe('mailto:autor@example.org')
+    expect(box.querySelector('a')).toBeNull()   // bez mailto: — adres nie leży jawnie w HTML
+    expect(box.textContent).toContain('autor [at] example.org')
+    expect(box.textContent).not.toContain('autor@example.org')
     expect(screen.queryByText('admin@example.com')).toBeNull()
   })
 
@@ -79,7 +81,8 @@ describe('Konto demo po zalogowaniu', () => {
     const { unmount } = render(<MemoryRouter><DemoMode /></MemoryRouter>)
     expect(screen.getByTestId('demo-banner').textContent).toContain('dane fikcyjne')
     expect(screen.getByRole('dialog').textContent).toContain('Kalendarz rozładunków')
-    await waitFor(() => expect(screen.getByTestId('demo-banner').textContent).toContain('autor@example.org'))
+    await waitFor(() => expect(screen.getByTestId('demo-banner').textContent).toContain('autor [at] example.org'))
+    expect(screen.getByTestId('demo-banner').textContent).not.toContain('autor@example.org')
     fireEvent.click(screen.getByRole('button', { name: 'Zaczynam' }))
     expect(screen.queryByRole('dialog')).toBeNull()
     unmount()

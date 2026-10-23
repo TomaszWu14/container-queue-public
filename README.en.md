@@ -177,4 +177,4 @@ analytics) are described in [`docs/TECHNICZNE.md`](docs/TECHNICZNE.md).
 ## Contact
 
 Built solo, July–October 2026: interviews and requirements, process and data model, decisions,
-implementation, tests and deployment. Questions: tomasz.wierzbowski@op.pl
+implementation, tests and deployment. Questions: tomasz.wierzbowski [at] op.pl

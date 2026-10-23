@@ -6,6 +6,7 @@ import PasswordInput from '../PasswordInput'
 import { useBranding } from './loginBranding'
 import { clearIdleLogout, wasIdleLogout } from '../idleLogout'
 import DemoVisitorForm from './DemoVisitorForm'
+import { obfuscateEmail } from '../obfuscateEmail'
 
 /*
  * Ekran wejścia — wariant „2b Panel logowania" z Claude Design (Landing.dc.html):
@@ -257,7 +258,7 @@ export default function LoginPage({ onLogin, autoDemo = false }: { onLogin: () =
             <div className="kl2-admin" data-testid="support-box">
               <div className="kl2-admin-label">{t('supportLabel')}</div>
               <div className="kl2-admin-help">{t('supportHelp')}</div>
-              <a href={`mailto:${brand.support_email}`}>{brand.support_email}</a>
+              <span>{obfuscateEmail(brand.support_email)}</span>
             </div>
           ) : (
             <div className="kl2-admin">
