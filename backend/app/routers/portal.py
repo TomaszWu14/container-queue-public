@@ -129,7 +129,8 @@ def public_branding(db: Session = Depends(get_db)):
             "demo_hint": settings.demo_login_hint,
             **_demo_account(),
             "demo_story_container_id": _demo_story_id(db),
-            "support_email": settings.support_email}
+            # bez „@” — boty czytające publiczne API nie wyciągną adresu (front i tak pokazuje „[at]”)
+            "support_email": settings.support_email.replace("@", " [at] ")}
 
 
 @router.get("/public/whoami", dependencies=[Depends(public_rate_limit)])

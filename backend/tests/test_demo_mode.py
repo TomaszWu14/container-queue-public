@@ -85,7 +85,8 @@ def test_branding_exposes_demo_account_and_support_only_on_demo_instance(client,
     monkeypatch.setattr(settings, "support_email", "autor@example.org")
     body = client.get("/api/public/branding").json()
     assert (body["demo_login"], body["demo_password"]) == ("demo", PW)
-    assert body["support_email"] == "autor@example.org"
+    assert body["support_email"] == "autor [at] example.org"
+    assert "@" not in body["support_email"]
 
 
 def test_me_flags_demo_account(client, db_session, monkeypatch, admin_headers):
