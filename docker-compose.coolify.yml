@@ -126,6 +126,13 @@ services:
       LOG_FILE: ${LOG_FILE:-}
       # strażnik HEALTHCHECK (INFRA-008): tyle kolejnych braków odpowiedzi (co 30 s) → restart; 0 = wyłączony
       HEALTH_RESTART_AFTER: ${HEALTH_RESTART_AFTER:-6}
+      # bramka „przedstaw się” przed demo + push ntfy o gościach (docs/ZMIENNE-SRODOWISKOWE.md);
+      # NTFY_* puste = bez powiadomień; NTFY_WATCH_COMPANIES tylko w panelu Coolify, nigdy w repo
+      DEMO_VISITOR_GATE: ${DEMO_VISITOR_GATE:-true}
+      NTFY_URL: ${NTFY_URL:-}
+      NTFY_TOKEN: ${NTFY_TOKEN:-}
+      NTFY_WATCH_COMPANIES: ${NTFY_WATCH_COMPANIES:-}
+      NTFY_ENGAGED_VIEWS: ${NTFY_ENGAGED_VIEWS:-10}
     volumes:
       - uploads:/data/uploads
       - backups:/data/backups   # trwałe kopie zapasowe — przeżywają redeploy (BEZ tego backupy giną)

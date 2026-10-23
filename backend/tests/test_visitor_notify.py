@@ -17,6 +17,7 @@ def gate(db_session, monkeypatch):
     monkeypatch.setattr(settings, "demo_visitor_gate", True)
     monkeypatch.setattr(settings, "ntfy_url", URL)
     monkeypatch.setattr(settings, "ntfy_token", "")
+    monkeypatch.setattr(settings, "ntfy_watch_companies", "")
     db_session.add(User(login="demo", full_name="Demo", role=Role.warehouse,
                         hashed_password=hash_password("demopass1"), is_active=True))
     db_session.commit()
@@ -111,3 +112,45 @@ def test_non_http_url_is_skipped(monkeypatch, sent, caplog, bad):
     visitor_notify.notify_visitor("Jan", "Kowalski", "ACME")
     assert sent == []
     assert "NTFY_URL" in caplog.text
+
+
+# --- A. alarm „uwaga, ta firma” (NTFY_WATCH_COMPANIES; w testach tylko fikcyjne frazy) ---
+
+def test_watched_company_sends_urgent_alarm(client, gate, sent, monkeypatch):
+    monkeypatch.setattr(settings, "ntfy_watch_companies", "globex, acme")
+    assert client.post("/api/public/demo-visitor", json=GOOD).status_code == 204
+    call = sent[0]
+    assert call["headers"]["Priority"] == "urgent"
+    assert call["headers"]["Tags"] == "rotating_light"
+    assert call["headers"]["Title"] == "UWAGA firma z listy: container-queue"
+    assert call["body"] == "⚠️ Jan Żółć (ACME Sp. z o.o.) wszedł do container-queue"
+    for name, value in call["headers"].items():
+        assert value.isascii(), name
+
+
+@pytest.mark.parametrize("company, phrases, watched", [
+    ("ÄCME sp. z o.o.", "acme", True),
+    ("Łódzka  Hurtownia", "lodzka hurtownia", True),
+    ("Firma Zupełnie Inna", "acme, globex", False),
+    ("ACME", "", False),
+    ("ACME", " , a ,", False),          # puste i 1-znakowe frazy nic nie łapią
+])
+def test_watch_matching(monkeypatch, company, phrases, watched):
+    monkeypatch.setattr(settings, "ntfy_watch_companies", phrases)
+    assert visitor_notify.is_watched(company) is watched
+
+
+@pytest.mark.parametrize("phrases", ["", "globex"])
+def test_unwatched_company_keeps_normal_push(client, gate, sent, monkeypatch, phrases):
+    monkeypatch.setattr(settings, "ntfy_watch_companies", phrases)
+    assert client.post("/api/public/demo-visitor", json=GOOD).status_code == 204
+    headers = sent[0]["headers"]
+    assert (headers["Priority"], headers["Tags"]) == ("high", "bell")
+    assert not sent[0]["body"].startswith("⚠️")
+
+
+def test_watched_without_url_sends_nothing(client, gate, sent, monkeypatch):
+    monkeypatch.setattr(settings, "ntfy_watch_companies", "acme")
+    monkeypatch.setattr(settings, "ntfy_url", "")
+    assert client.post("/api/public/demo-visitor", json=GOOD).status_code == 204
+    assert sent == []
