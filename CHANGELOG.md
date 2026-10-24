@@ -11,6 +11,7 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 - **Adres kontaktowy właściciela ukryty przed botami**: w README, SECURITY.md, klauzuli RODO bramki gościa oraz w „Zgłoś problem” (logowanie, baner demo) pokazywany jako `nazwa [at] domena`, bez `mailto:`.
 
 ### Added
+- **Push ntfy z monitora demo** (`demo-monitor.yml`): przy otwarciu zgłoszenia „Demo nie działa” i przy powrocie do normy push na telefon (sekret `NTFY_URL`, bez niego pomijane).
 - **Cotygodniowy ruch z GitHuba** (`.github/workflows/github-traffic.yml`): w poniedziałek push przez ntfy z wyświetleniami,
   osobami i klonowaniami z 7 dni oraz top źródłami dla publicznych repo portfolio; sekrety `TRAFFIC_TOKEN` i `NTFY_URL`
   (konfiguracja: `docs/operacje/RUNBOOK.md` §6), bez nich przebieg kończy się na zielono.
