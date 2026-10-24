@@ -34,7 +34,7 @@ pdfminer.six>=20260107
 # Faktury (CIPL) → Excel: tabele pozycji z warstwy tekstowej PDF (bez OCR) + cięcie
 # PDF-zestawu na dokumenty (pypdf — czysty Python, bez binarnych zależności)
 pdfplumber>=0.11.10
-pypdf>=6.21.1
+pypdf>=6.21.2
 # OCR skanów faktur (binarka tesseract-ocr + pol/eng w obrazie Dockera; render stron
 # robi pypdfium2, który przychodzi z pdfplumber)
 pytesseract>=0.3.13
