@@ -65,6 +65,9 @@ updates:
     labels: ["zależności", "ci"]
     commit-message:
       prefix: "chore(ci)"
+    groups:
+      actions-minor-patch:
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: docker
     directories: ["/", "/backend", "/frontend"]
@@ -77,3 +80,6 @@ updates:
     labels: ["zależności", "docker"]
     commit-message:
       prefix: "chore(deps)"
+    groups:
+      docker-minor-patch:
+        update-types: ["minor", "patch"]

@@ -229,6 +229,7 @@ Mail „logowanie z nowego urządzenia” do właściciela konta (US-075).
   zostawia formularz z powodem z API. Przegrany wyścig dwóch wysyłek zwraca kod `already_submitted`.
 
 ### Changed
+- **Dependabot**: aktualizacje minor/patch akcji GitHub i obrazów Docker też idą w jednym PR-ze na ekosystem (jak pip i npm); major osobno.
 - Baza pilnuje, że kontener jest najwyżej raz w awizacji i decyzja spedycji jest z listy; migracja `uniq001` (US-021).
 - **Kod backendu bez znanych błędów typów** (US-082): lista mypy 75 → 0 (adnotacje i zawężenia typów, bez zmian działania).
 Jedna reguła „ETA + N dni” (ustawienie admina) przy zakładaniu kontenera i w podpowiedzi daty; zmiana ETA przelicza nietkniętą propozycję (US-020, P-02, P-03).
