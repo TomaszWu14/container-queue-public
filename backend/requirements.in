@@ -5,13 +5,13 @@
 #   uv pip compile --universal --python-version 3.12 --generate-hashes [--upgrade] requirements.in -o requirements.txt
 # Test tests/test_dependency_lock.py pilnuje zgodności locka z tym plikiem.
 # Narzędzia testów i lintu (pytest, ruff) → requirements-dev.in — nie trafiają do obrazu.
-fastapi>=0.143.3
+fastapi>=0.156.8
 uvicorn[standard]>=0.53.0
-sqlalchemy>=2.1.4
+sqlalchemy>=2.1.5
 alembic>=1.20.0
 psycopg2-binary>=2.9.13
 pydantic>=2.14.1
-pydantic-settings>=2.16.0
+pydantic-settings>=2.16.1
 PyJWT>=2.15.1
 # hashowanie haseł: czyste bcrypt (bez passlib — nierozwijany). Format $2b$ jest
 # zgodny wstecz, więc istniejące hasła działają bez migracji danych.
