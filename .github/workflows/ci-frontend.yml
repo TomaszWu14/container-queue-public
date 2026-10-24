@@ -28,6 +28,7 @@ jobs:
     # draft: inna nazwa checku — pominięty bieg nie przesłoni wyniku w automerge (REQUIRED)
     name: ${{ github.event.pull_request.draft && 'Frontend — typy i build (draft — pominięty)' || 'Frontend — typy i build' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     # pomijaj drafty; workflow_dispatch nie ma pull_request → wyrażenie = true (rusza)
     if: ${{ !github.event.pull_request.draft }}
     defaults:
