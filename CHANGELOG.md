@@ -7,6 +7,11 @@ Wpis w tym pliku jest częścią Definition of Done (`CONTRIBUTING.md`).
 
 ## [Unreleased]
 
+### Added
+- **Piksel portfolio.twapp.pl**: przy każdej zmianie ekranu demo (łącznie z `/demo` i `/login`) front
+  ładuje niewidoczny 1x1 GIF z `https://portfolio.twapp.pl/px/kolejka-kontenerow`, żeby portfolio
+  liczyło obejrzane ekrany tego demo; `img-src` w CSP (backend i nginx panelu) dopuszcza tę domenę.
+
 ### Changed
 - **Adres kontaktowy właściciela ukryty przed botami**: w README, SECURITY.md, klauzuli RODO bramki gościa oraz w „Zgłoś problem” (logowanie, baner demo) pokazywany jako `nazwa [at] domena`, bez `mailto:`.
 

@@ -199,7 +199,8 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     """Nagłówki bezpieczeństwa dla API i panelu (CSP, nosniff, anty-clickjacking, SEC-011).
     Te same wartości ma nginx panelu z docker-compose (frontend/nginx.conf, test pilnuje)."""
 
-    CSP = ("default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; "
+    CSP = ("default-src 'self'; img-src 'self' data: https://portfolio.twapp.pl; "
+           "style-src 'self' 'unsafe-inline'; "
            f"script-src 'self' {PRINT_CSP_HASH}; connect-src 'self'; frame-ancestors 'none'; "
            "base-uri 'self'; form-action 'self'")
     HEADERS = {

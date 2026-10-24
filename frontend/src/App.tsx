@@ -12,6 +12,7 @@ import GlobalSearch from './GlobalSearch'
 import Onboarding from './Onboarding'
 import DemoMode from './DemoMode'
 import DemoVisitTracker from './DemoVisitTracker'
+import PortfolioPixel from './PortfolioPixel'
 import { hiddenInDemo, setDemoSession } from './demoLimits'
 import Sidebar from './Sidebar'
 import { detectLang, Lang, LangContext, useT } from './i18n'
@@ -168,6 +169,7 @@ export default function App() {
     <ToastProvider>
     <LangContext.Provider value={{ lang, setLang }}>
       <DeployWatch />
+      <PortfolioPixel />
       <ConfirmProvider>
       <UserContext.Provider value={{ user, reload }}>
         {user && user.must_change_password ? (
