@@ -102,6 +102,10 @@ class Settings(BaseSettings):
     # bramka „przedstaw się” przed wejściem na konto demo (imię, nazwisko, firma + RODO);
     # działa tylko gdy DEMO_READONLY_LOGINS ustawione. DEMO_VISITOR_GATE=false wyłącza.
     demo_visitor_gate: bool = True
+    # przepustka z portfolio: gość, który przedstawił się na portfolio (ciasteczko `gosc`), wchodzi na
+    # demo bez własnego formularza. PORTFOLIO_PASS=false wyłącza; PORTFOLIO_URL musi być https://
+    portfolio_url: str = "https://portfolio.twapp.pl"
+    portfolio_pass: bool = True
     # push (ntfy) do właściciela po każdym udanym wpisie w bramce demo: pełny URL tematu
     # (np. https://ntfy.sh/<tajny-temat>); puste = bez powiadomień. NTFY_TOKEN = Bearer (opcjonalny)
     ntfy_url: str = ""
