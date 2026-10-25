@@ -2,8 +2,9 @@ name: Monitor demo
 
 # Co 15 min sprawdza publiczne demo tak, jak widzi je rekruter: serwer żyje, ekran logowania
 # ma przycisk „Wejdź jako demo”, konto demo się loguje i widzi kontenery oraz statki, a serwer
-# widzi prawdziwe IP odwiedzających (inaczej wszyscy dzielą limity na IP). Awaria → issue
-# „Demo nie działa” (jedno, z kolejnymi komentarzami); powrót do normy → issue zamknięte.
+# widzi prawdziwe IP odwiedzających (inaczej wszyscy dzielą limity na IP). Za bramką portfolio
+# (ForwardAuth, od 24.10) API daje 401 z formularzem portfolio — wtedy sprawdzamy tylko /api/health.
+# Awaria → issue „Demo nie działa” (jedno, z kolejnymi komentarzami); powrót do normy → issue zamknięte.
 on:
   schedule:
     - cron: '7,22,37,52 * * * *'   # co 15 min, poza pełną godziną (mniej opóźnień w GitHub)
@@ -39,20 +40,34 @@ jobs:
           [ "$(jq -r '.status // empty' <<<"$health" 2>/dev/null)" = ok ] \
             || problems+=("Serwer nie odpowiada poprawnie na /api/health: ${health:0:200}")
           # wersja na serwerze vs main: „brak statków” po scaleniu zwykle znaczy, że demo nie jest wdrożone
-          deployed=$(jq -r '.version // empty' <<<"$health" 2>/dev/null)
+          # „|| …”: krok działa pod `bash -e` (shell: bash w GitHub), a jq 1.7 kończy się kodem 5 na
+          # treści, która nie jest JSON-em (np. strona błędu proxy) — bez tego cały krok padał (exit 5)
+          deployed=$(jq -r '.version // empty' <<<"$health" 2>/dev/null) || deployed=''
           version_note="Wersja na serwerze: ${deployed:-nieznana}; main: ${GITHUB_SHA:0:7}"
           case "$GITHUB_SHA" in "$deployed"*) ;; *) [ -n "$deployed" ] && version_note+=" — demo nie ma najnowszych zmian (Coolify → Redeploy)";; esac
 
-          brand=$(get "$DEMO_URL/api/public/branding") || brand=''
-          login=$(jq -r '.demo_login // empty' <<<"$brand" 2>/dev/null)
-          password=$(jq -r '.demo_password // empty' <<<"$brand" 2>/dev/null)
-          if [ -z "$login" ] || [ -z "$password" ]; then
+          # Od 24.10 demo stoi za ForwardAuth portfolio: bez ciasteczka `gosc` wszystko poza /api/health
+          # daje 401 z formularzem bramki (link do portfolio.twapp.pl/wejscie) — bramka działa, ale API
+          # aplikacji nie widać. Wtedy pomijamy konto demo, dane i whoami; dowodem życia jest /api/health.
+          za_bramka=''
+          brand=$(get -w '\n%{http_code}' "$DEMO_URL/api/public/branding") || brand=$'\n000'
+          bcode=${brand##*$'\n'}; brand=${brand%$'\n'*}
+          if [ "$bcode" = 401 ] && grep -qF 'portfolio.twapp.pl/wejscie' <<<"$brand"; then
+            za_bramka=1
+            login='' password=''
+          else
+            login=$(jq -r '.demo_login // empty' <<<"$brand" 2>/dev/null) || login=''
+            password=$(jq -r '.demo_password // empty' <<<"$brand" 2>/dev/null) || password=''
+          fi
+          if [ -n "$za_bramka" ]; then
+            :
+          elif [ -z "$login" ] || [ -z "$password" ]; then
             problems+=("Brak przycisku „Wejdź jako demo”: /api/public/branding bez konta demo: ${brand:0:200}")
           else
             resp=$(get -w '\n%{http_code}' -X POST "$DEMO_URL/api/auth/login" -H 'X-Requested-With: XMLHttpRequest' \
-              --data-urlencode "username=$login" --data-urlencode "password=$password")
+              --data-urlencode "username=$login" --data-urlencode "password=$password") || resp=$'\n000'
             code=${resp##*$'\n'}
-            token=$(jq -r '.access_token // empty' <<<"${resp%$'\n'*}" 2>/dev/null)
+            token=$(jq -r '.access_token // empty' <<<"${resp%$'\n'*}" 2>/dev/null) || token=''
             if [ "$code" = 428 ]; then
               : # bramka „przedstaw się” (DEMO_VISITOR_GATE) działa — monitor nie wpisuje się na listę odwiedzających
             elif [ -z "$token" ]; then
@@ -66,10 +81,12 @@ jobs:
             fi
           fi
 
-          whoami=$(get "$DEMO_URL/api/public/whoami") || whoami=''
+          whoami=''
+          [ -n "$za_bramka" ] || whoami=$(get "$DEMO_URL/api/public/whoami") || whoami=''
           if [ "$(jq -r '.private' <<<"$whoami" 2>/dev/null)" = true ]; then
-            problems+=("Serwer widzi adres proxy zamiast odwiedzającego ($(jq -r .ip <<<"$whoami")) — wszyscy dzielą limity na IP; popraw TRUSTED_PROXY_COUNT / TRUSTED_PROXY_CIDRS")
+            problems+=("Serwer widzi adres proxy zamiast odwiedzającego ($(jq -r .ip <<<"$whoami" 2>/dev/null || true)) — wszyscy dzielą limity na IP; popraw TRUSTED_PROXY_COUNT / TRUSTED_PROXY_CIDRS")
           fi
+          [ -z "$za_bramka" ] || version_note+=". Za bramką portfolio – sprawdzono tylko zdrowie."
 
           if [ ${#problems[@]} -eq 0 ]; then
             echo "Demo działa. $version_note" | tee -a "$GITHUB_STEP_SUMMARY"
