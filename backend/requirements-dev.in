@@ -10,7 +10,7 @@ pytest>=9.1.1
 # pokrycie w CI (TEST-005; konfiguracja: pyproject.toml [tool.coverage.*])
 pytest-cov>=7.1.0
 # lint w CI (konfiguracja: pyproject.toml [tool.ruff]); ta sama wersja w .pre-commit-config.yaml
-ruff>=0.17.1
+ruff>=0.17.2
 # równoległe testy w CI (-n auto, baza SQLite per worker — tests/conftest.py)
 pytest-xdist>=3.8.0
 # typy w CI (scripts/mypy_baseline.py) — z locka i cache pip zamiast pip install przy każdym biegu
