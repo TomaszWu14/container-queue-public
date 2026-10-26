@@ -5,13 +5,13 @@
 #   uv pip compile --universal --python-version 3.12 --generate-hashes [--upgrade] requirements.in -o requirements.txt
 # Test tests/test_dependency_lock.py pilnuje zgodności locka z tym plikiem.
 # Narzędzia testów i lintu (pytest, ruff) → requirements-dev.in — nie trafiają do obrazu.
-fastapi>=0.143.3
+fastapi>=0.161.1
 uvicorn[standard]>=0.53.0
-sqlalchemy>=2.1.4
-alembic>=1.20.0
+sqlalchemy>=2.1.6
+alembic>=1.20.1
 psycopg2-binary>=2.9.13
 pydantic>=2.14.1
-pydantic-settings>=2.16.0
+pydantic-settings>=2.16.1
 PyJWT>=2.15.1
 # hashowanie haseł: czyste bcrypt (bez passlib — nierozwijany). Format $2b$ jest
 # zgodny wstecz, więc istniejące hasła działają bez migracji danych.
@@ -28,7 +28,7 @@ msal>=1.39.0
 cryptography>=50.0.2
 # powiadomienia push (US-086): szyfrowanie treści Web Push aes128gcm (RFC 8291); VAPID podpisuje PyJWT
 http-ece>=1.2.1
-sentry-sdk[fastapi]>=2.72.0
+sentry-sdk[fastapi]>=2.73.0
 # ekstrakcja tekstu z PDF (fallback OCR #52 — regex na numer kontenera, brak AI SDK w repo)
 pdfminer.six>=20260107
 # Faktury (CIPL) → Excel: tabele pozycji z warstwy tekstowej PDF (bez OCR) + cięcie
