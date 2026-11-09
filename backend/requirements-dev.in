@@ -6,15 +6,15 @@
 # `-c requirements.txt`: wspólne paczki (np. packaging) w wersjach z locka runtime — oba locki
 # instalują się razem bez konfliktu. Test tests/test_dependency_lock.py pilnuje obu plików.
 -c requirements.txt
-pytest>=9.1.1
+pytest>=9.2.0
 # pokrycie w CI (TEST-005; konfiguracja: pyproject.toml [tool.coverage.*])
 pytest-cov>=7.1.0
 # lint w CI (konfiguracja: pyproject.toml [tool.ruff]); ta sama wersja w .pre-commit-config.yaml
-ruff>=0.17.1
+ruff>=0.17.4
 # równoległe testy w CI (-n auto, baza SQLite per worker — tests/conftest.py)
 pytest-xdist>=3.8.0
 # typy w CI (scripts/mypy_baseline.py) — z locka i cache pip zamiast pip install przy każdym biegu
-mypy==2.4.0
+mypy==2.4.1
 # audyt code smells (skill python-code-smells, tryb B) — ręcznie, nie w CI:
 #   radon cc -s -n C app/   (złożoność ≥ C)    vulture app/ --min-confidence 80   (martwy kod)
 radon>=6.0.1
